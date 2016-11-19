@@ -1,0 +1,5 @@
+module CYaml {
+    umbrella "/Users/jp/Projects/Yams/Sources/CYaml/include"
+    link "CYaml"
+    export *
+}

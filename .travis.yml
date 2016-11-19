@@ -1,0 +1,20 @@
+language: generic
+matrix:
+  include:
+    - script:
+        - xcodebuild -scheme Yams test
+        - pod lib lint
+      env: JOB=Xcode
+      os: osx
+      osx_image: xcode8.1
+      before_install:
+        - gem install cocoapods -v '1.1.1'
+        - pod repo update
+    - script: swift test
+      env: JOB=SPM
+      os: osx
+      osx_image: xcode8.1
+    - script: docker run -v `pwd`:/Yams swiftdocker/swift bash -c "cd /Yams && swift test"
+      env: JOB=Linux
+      sudo: required
+      services: docker
