@@ -1,5 +1,7 @@
 # Yams
 
+![Yams](yams.jpg)
+
 A sweet and swifty [Yaml](http://yaml.org/) parser built on
 [libYAML](http://pyyaml.org/wiki/LibYAML).
 
