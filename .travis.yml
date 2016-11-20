@@ -7,7 +7,9 @@ matrix:
       env: JOB=Xcode
       os: osx
       osx_image: xcode8.1
-    - script: swift test
+    - script:
+        - swift test
+        - swiftlint
       env: JOB=SPM
       os: osx
       osx_image: xcode8.1
@@ -15,3 +17,5 @@ matrix:
       env: JOB=Linux
       sudo: required
       services: docker
+notifications:
+  email: false
