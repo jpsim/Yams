@@ -56,7 +56,7 @@
 		OBJ_16 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		OBJ_17 /* writer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = writer.c; sourceTree = "<group>"; };
 		OBJ_19 /* yaml.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = yaml.h; sourceTree = "<group>"; };
-		OBJ_20 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = /Users/jp/Projects/Yams/Yams.xcodeproj/GeneratedModuleMap/CYaml/module.modulemap; sourceTree = "<group>"; };
+		OBJ_20 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		OBJ_22 /* Yams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Yams.swift; sourceTree = "<group>"; };
 		OBJ_25 /* YamsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YamsTests.swift; sourceTree = "<group>"; };
 		OBJ_27 /* CYaml.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CYaml.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,7 +138,7 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -146,7 +146,6 @@
 				OBJ_23 /* Tests */,
 				OBJ_26 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -253,7 +252,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_26 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -358,7 +357,7 @@
 				HEADER_SEARCH_PATHS = Sources/CYaml/include;
 				INFOPLIST_FILE = Yams.xcodeproj/CYaml_Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
-				MODULEMAP_FILE = Yams.xcodeproj/GeneratedModuleMap/CYaml/module.modulemap;
+				MODULEMAP_FILE = Sources/CYaml/include/module.modulemap;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = CYaml;
@@ -380,7 +379,7 @@
 				HEADER_SEARCH_PATHS = Sources/CYaml/include;
 				INFOPLIST_FILE = Yams.xcodeproj/CYaml_Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
-				MODULEMAP_FILE = Yams.xcodeproj/GeneratedModuleMap/CYaml/module.modulemap;
+				MODULEMAP_FILE = Sources/CYaml/include/module.modulemap;
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = CYaml;

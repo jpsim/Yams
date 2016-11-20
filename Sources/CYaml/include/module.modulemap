@@ -1,0 +1,5 @@
+module CYaml {
+    umbrella header "yaml.h"
+    link "CYaml"
+    export *
+}
