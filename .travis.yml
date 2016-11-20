@@ -10,6 +10,7 @@ matrix:
     - script:
         - swift test
         - swiftlint
+        - sleep 5 # SwiftLint completes too quickly
       env: JOB=SPM
       os: osx
       osx_image: xcode8.1
