@@ -10,7 +10,7 @@ matrix:
     - script:
         - swift test
         - swiftlint
-        - sleep 5 # SwiftLint completes too quickly
+      before_install: brew update && brew install swiftlint
       env: JOB=SPM
       os: osx
       osx_image: xcode8.1
