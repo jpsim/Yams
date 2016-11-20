@@ -367,7 +367,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
 				SWIFT_VERSION = 3.0;
 				TARGET_NAME = CYaml;
-				WARNING_CFLAGS = "-Wshorten-64-to-32";
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Debug;
 		};
@@ -390,7 +390,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
 				SWIFT_VERSION = 3.0;
 				TARGET_NAME = CYaml;
-				WARNING_CFLAGS = "-Wshorten-64-to-32";
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Release;
 		};
