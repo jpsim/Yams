@@ -1,4 +1,4 @@
-#if !COCOAPODS
+#if SWIFT_PACKAGE
 import CYaml
 #endif
 import Foundation
