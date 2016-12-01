@@ -15,33 +15,30 @@ public enum Node {
 }
 
 private class Document {
-    private var document = UnsafeMutablePointer<yaml_document_t>.allocate(capacity: 1)
+    private var document = yaml_document_t()
     private var nodes: [yaml_node_t] {
-        let nodes = document.pointee.nodes
+        let nodes = document.nodes
         return Array(UnsafeBufferPointer(start: nodes.start, count: nodes.top - nodes.start))
     }
     var rootNode: Node {
-        return Node(nodes: nodes, node: yaml_document_get_root_node(document).pointee)
+        return Node(nodes: nodes, node: yaml_document_get_root_node(&document).pointee)
     }
 
     init(string: String) throws {
-        var parser = UnsafeMutablePointer<yaml_parser_t>.allocate(capacity: 1)
-        defer { parser.deallocate(capacity: 1) }
-        yaml_parser_initialize(parser)
-        defer { yaml_parser_delete(parser) }
+        var parser = yaml_parser_t()
+        yaml_parser_initialize(&parser)
+        defer { yaml_parser_delete(&parser) }
 
-        var bytes = string.utf8.map { UInt8($0) }
-        yaml_parser_set_encoding(parser, YAML_UTF8_ENCODING)
-        yaml_parser_set_input_string(parser, &bytes, bytes.count - 1)
-        guard yaml_parser_load(parser, document) == 1 else {
-            throw Error(problem: String(validatingUTF8: parser.pointee.problem)!,
-                        problemOffset: parser.pointee.problem_offset)
+        yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
+        yaml_parser_set_input_string(&parser, string, string.utf8.count)
+        guard yaml_parser_load(&parser, &document) == 1 else {
+            throw Error(problem: String(validatingUTF8: parser.problem)!,
+                        problemOffset: parser.problem_offset)
         }
     }
 
     deinit {
-        yaml_document_delete(document)
-        document.deallocate(capacity: 1)
+        yaml_document_delete(&document)
     }
 }
 
