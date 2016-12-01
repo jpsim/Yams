@@ -12,7 +12,7 @@ import Yams
 
 class YamsTests: XCTestCase {
     func testExample() throws {
-        let node = try Node(string: "- 1: test ")
+        let node = try Node(string: "- 1: test")
         if case let .sequence(seq) = node {
             XCTAssert(seq.count > 0)
             if case let .mapping(map) = seq[0] {
