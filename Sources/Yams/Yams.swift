@@ -30,7 +30,9 @@ private class Document {
         defer { yaml_parser_delete(&parser) }
 
         yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
-        yaml_parser_set_input_string(&parser, string, string.utf8.count)
+        // `bytes` must be valid while `parser` exists.
+        let bytes = string.utf8.map { UInt8($0) }
+        yaml_parser_set_input_string(&parser, bytes, bytes.count)
         guard yaml_parser_load(&parser, &document) == 1 else {
             throw Error(problem: String(validatingUTF8: parser.problem)!,
                         problemOffset: parser.problem_offset)
