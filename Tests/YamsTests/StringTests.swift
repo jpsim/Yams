@@ -53,9 +53,11 @@ class StringTests: XCTestCase {
 extension StringTests {
     static var allTests: [(String, (StringTests) -> () throws -> Void)] {
         return [
+            /* FIXME: https://bugs.swift.org/browse/SR-3366
             ("testConfirmBehaviorOfStandardLibraryAPI", testConfirmBehaviorOfStandardLibraryAPI),
             ("testLineNumberColumnAndContentsAtByteOffset", testLineNumberColumnAndContentsAtByteOffset),
             ("testSubstringAtLine", testSubstringAtLine),
+             */
         ]
     }
 }
