@@ -36,6 +36,14 @@ extension Node {
         }
         return nil
     }
+    
+    public var tag: Tag {
+        switch self {
+        case let .scalar(_, tag): return tag
+        case let .mapping(_, tag): return tag
+        case let .sequence(_, tag): return tag
+        }
+    }
 }
 
 // MARK: Hashable
