@@ -9,64 +9,97 @@
 import Foundation
 
 public enum Node {
-    case scalar(s: String)
-    case mapping([(String, Node)])
-    case sequence([Node])
-}
-
-private class Document {
-    private var document = yaml_document_t()
-    private var nodes: [yaml_node_t] {
-        let nodes = document.nodes
-        return Array(UnsafeBufferPointer(start: nodes.start, count: nodes.top - nodes.start))
-    }
-    var rootNode: Node {
-        return Node(nodes: nodes, node: yaml_document_get_root_node(&document).pointee)
-    }
-
-    init(string: String) throws {
-        var parser = yaml_parser_t()
-        yaml_parser_initialize(&parser)
-        defer { yaml_parser_delete(&parser) }
-
-        yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
-        // `bytes` must be valid while `parser` exists.
-        let bytes = string.utf8.map { UInt8($0) }
-        yaml_parser_set_input_string(&parser, bytes, bytes.count)
-        guard yaml_parser_load(&parser, &document) == 1 else {
-            throw YamsError(from: parser)
-        }
-    }
-
-    deinit {
-        yaml_document_delete(&document)
-    }
+    case scalar(String, Tag)
+    case mapping([Node:Node], Tag)
+    case sequence([Node], Tag)
 }
 
 extension Node {
-    fileprivate init(nodes: [yaml_node_s], node: yaml_node_s) {
-        let newNode: (Int32) -> Node = { Node(nodes: nodes, node: nodes[$0 - 1]) }
-        switch node.type {
-        case YAML_MAPPING_NODE:
-            let pairs = node.data.mapping.pairs
-            let pairsBuffer = UnsafeBufferPointer(start: pairs.start, count: pairs.top - pairs.start)
-            self = .mapping(pairsBuffer.map { pair in
-                guard case let .scalar(value) = newNode(pair.key) else { fatalError("Not a scalar key") }
-                return (value, newNode(pair.value))
-            })
-        case YAML_SEQUENCE_NODE:
-            let items = node.data.sequence.items
-            self = .sequence(UnsafeBufferPointer(start: items.start, count: items.top - items.start).map(newNode))
-        case YAML_SCALAR_NODE:
-            let cstr = node.data.scalar.value
-            let string = String.decodeCString(cstr, as: UTF8.self, repairingInvalidCodeUnits: false)!.result
-            self = .scalar(s: string)
-        default:
-            fatalError("TODO")
+    // MARK: typed access properties
+    public var array: [Node]? {
+        if case let .sequence(array, _) = self {
+            return array
+        }
+        return nil
+    }
+
+    public var dictionary: [Node:Node]? {
+        if case let .mapping(dictionary, _) = self {
+            return dictionary
+        }
+        return nil
+    }
+
+    public var string: String? {
+        if case let .scalar(string, _) = self {
+            return string
+        }
+        return nil
+    }
+}
+
+// MARK: Hashable
+extension Node: Hashable {
+    public var hashValue: Int {
+        switch self {
+        case let .scalar(value, tag):
+            return tag == .implicit ? value.hashValue : (value + tag.description).hashValue
+        case let .mapping(dictionary, _):
+            return (dictionary.first?.key.hashValue) ?? 0
+        case let .sequence(array, _):
+            return array.first?.hashValue ?? 0
         }
     }
 
-    public init(string: String) throws {
-        self = try Document(string: string).rootNode
+    public static func ==(lhs: Node, rhs: Node) -> Bool {
+        switch (lhs, rhs) {
+        case let (.scalar(lhsValue, lhsTag), .scalar(rhsValue, rhsTag)):
+            return lhsValue == rhsValue && lhsTag == rhsTag
+        case let (.mapping(lhsValue, lhsTag), .mapping(rhsValue, rhsTag)):
+            return lhsValue == rhsValue && lhsTag == rhsTag
+        case let (.sequence(lhsValue, lhsTag), .sequence(rhsValue, rhsTag)):
+            return lhsValue == rhsValue && lhsTag == rhsTag
+        default:
+            return false
+        }
+    }
+}
+
+// MARK
+extension Node: ExpressibleByArrayLiteral {
+    public init(arrayLiteral elements: Node...) {
+        self = .sequence(elements, .implicit)
+    }
+}
+
+// MARK: ExpressibleByDictionaryLiteral
+extension Node: ExpressibleByDictionaryLiteral {
+    public init(dictionaryLiteral elements: (Node, Node)...) {
+        var dictionary = [Node:Node](minimumCapacity: elements.count)
+        elements.forEach {
+            dictionary[$0] = $1
+        }
+        self = .mapping(dictionary, .implicit)
+    }
+}
+
+extension Node: ExpressibleByFloatLiteral {
+    public init(floatLiteral value: Double) {
+        self = .scalar(String(value), .implicit)
+    }
+}
+
+// MARK: ExpressibleByStringLiteral
+extension Node: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self = .scalar(value, .implicit)
+    }
+
+    public init(extendedGraphemeClusterLiteral value: String) {
+        self = .scalar(value, .implicit)
+    }
+
+    public init(unicodeScalarLiteral value: String) {
+        self = .scalar(value, .implicit)
     }
 }
