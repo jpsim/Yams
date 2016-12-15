@@ -4,7 +4,7 @@ import CYaml
 import Foundation
 
 
-public enum YamsError: Swift.Error {
+public enum YamlError: Swift.Error {
     // Used in `yaml_emitter_t` and `yaml_parser_t`
     /// YAML_NO_ERROR. No error is produced.
     case no
@@ -30,7 +30,7 @@ public enum YamsError: Swift.Error {
     case emitter(problem: String)
 }
 
-extension YamsError {
+extension YamlError {
     init(from parser: yaml_parser_t) {
         switch parser.error {
         case YAML_MEMORY_ERROR:
@@ -60,7 +60,7 @@ extension YamsError {
     }
 }
 
-extension YamsError {
+extension YamlError {
     public func describing(with yaml: String) -> String {
         switch self {
         case .no:

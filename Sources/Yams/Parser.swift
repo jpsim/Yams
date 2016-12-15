@@ -24,7 +24,7 @@ public class Parser {
     /// Setup Parser.
     ///
     /// - Parameter string: YAML
-    /// - Throws: ParserError or YamsError
+    /// - Throws: ParserError or YamlError
     public init(yaml string: String) throws {
         yaml = string
 
@@ -53,7 +53,7 @@ public class Parser {
     /// Parse next document and return root Node.
     ///
     /// - Returns: next Node
-    /// - Throws: ParserError or YamsError
+    /// - Throws: ParserError or YamlError
     public func nextRoot() throws -> Node? {
         if streamEndProduced { return nil }
         switch try expectNextEvent(is: [YAML_DOCUMENT_START_EVENT, YAML_STREAM_END_EVENT]) {
@@ -129,7 +129,7 @@ extension Parser {
     fileprivate func parse() throws -> Event {
         let event = Event()
         guard yaml_parser_parse(&parser, &event.event) == 1 else {
-            throw YamsError(from: parser)
+            throw YamlError(from: parser)
         }
         return event
     }

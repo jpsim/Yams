@@ -1,5 +1,5 @@
 //
-//  YamsTests.swift
+//  YamlErrorTests.swift
 //  Yams
 //
 //  Created by JP Simard on 2016-11-19.
@@ -10,34 +10,14 @@ import Foundation
 import XCTest
 import Yams
 
-class YamsTests: XCTestCase {
-    func testExample() throws {
-        let node = try Parser(yaml: "- 1: test").nextRoot()!
-        if let seq = node.array {
-            XCTAssert(seq.count > 0)
-            if let map = seq[0].dictionary {
-                XCTAssertEqual(map.count, 1)
-                XCTAssertEqual(map.keys.first, "1")
-                if let string = map["1"] {
-                    XCTAssertEqual(string, "test")
-                } else {
-                    XCTFail("first map value is not a string")
-                }
-            } else {
-                XCTFail("first seq is not a mapping")
-            }
-        } else {
-            XCTFail("node is not a sequence")
-        }
-    }
-
-    func testYamsErrorReader() throws {
+class YamlErrorTests: XCTestCase {
+    func testYamlErrorReader() throws {
         // reader
         let yaml = "test: 'test\u{12}'"
         do {
             _ = try Parser(yaml: yaml).nextRoot()
             XCTFail("should not happen")
-        } catch let error as YamsError {
+        } catch let error as YamlError {
             let expected = [
                 "test: 'test\u{12}'",
                 "           ^ control characters are not allowed"
@@ -48,12 +28,12 @@ class YamsTests: XCTestCase {
         }
     }
 
-    func testYamsErrorScanner() throws {
+    func testYamlErrorScanner() throws {
         let yaml = "test: 'test"
         do {
             _ = try Parser(yaml: yaml).nextRoot()
             XCTFail("should not happen")
-        } catch let error as YamsError {
+        } catch let error as YamlError {
             let expected = [
                 "test: 'test",
                 "           ^ found unexpected end of stream while scanning a quoted scalar"
@@ -64,12 +44,12 @@ class YamsTests: XCTestCase {
         }
     }
     
-    func testYamsErrorParser() throws {
+    func testYamlErrorParser() throws {
         let yaml = "[key1: value1, key2: ,"
         do {
             _ = try Parser(yaml: yaml).nextRoot()
             XCTFail("should not happen")
-        } catch let error as YamsError {
+        } catch let error as YamlError {
             let expected = [
                 "[key1: value1, key2: ,",
                 "^ did not find expected node content while parsing a flow node"
@@ -81,13 +61,12 @@ class YamsTests: XCTestCase {
     }
 }
 
-extension YamsTests {
-    static var allTests: [(String, (YamsTests) -> () throws -> Void)] {
+extension YamlErrorTests {
+    static var allTests: [(String, (YamlErrorTests) -> () throws -> Void)] {
         return [
-            ("testExample", testExample),
-            ("testYamsErrorReader", testYamsErrorReader),
-            ("testYamsErrorScanner", testYamsErrorScanner),
-            ("testYamsErrorParser", testYamsErrorParser),
+            ("testYamlErrorReader", testYamlErrorReader),
+            ("testYamlErrorScanner", testYamlErrorScanner),
+            ("testYamlErrorParser", testYamlErrorParser),
         ]
     }
 }
