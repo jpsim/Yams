@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6C4A22071DF8553C002A0206 /* String+Yams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A22061DF8553C002A0206 /* String+Yams.swift */; };
 		6C4A22091DF855BB002A0206 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A22081DF855BB002A0206 /* StringTests.swift */; };
+		6C6834C81E0281880047B4D1 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6834C71E0281880047B4D1 /* Node.swift */; };
 		E8EDB8851DE2181B0062268D /* api.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* api.c */; };
 		E8EDB8861DE2181B0062268D /* dumper.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* dumper.c */; };
 		E8EDB8871DE2181B0062268D /* emitter.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* emitter.c */; };
@@ -37,6 +38,7 @@
 		6C4A22061DF8553C002A0206 /* String+Yams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Yams.swift"; sourceTree = "<group>"; };
 		6C4A22081DF855BB002A0206 /* StringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTests.swift; sourceTree = "<group>"; };
 		6C4A220A1DF85793002A0206 /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
+		6C6834C71E0281880047B4D1 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		OBJ_10 /* api.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = api.c; sourceTree = "<group>"; };
 		OBJ_11 /* dumper.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dumper.c; sourceTree = "<group>"; };
 		OBJ_12 /* emitter.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = emitter.c; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 		OBJ_21 /* Yams */ = {
 			isa = PBXGroup;
 			children = (
+				6C6834C71E0281880047B4D1 /* Node.swift */,
 				6C4A22061DF8553C002A0206 /* String+Yams.swift */,
 				OBJ_22 /* Yams.swift */,
 			);
@@ -244,6 +247,7 @@
 				E8EDB8871DE2181B0062268D /* emitter.c in Sources */,
 				E8EDB8851DE2181B0062268D /* api.c in Sources */,
 				E8EDB8861DE2181B0062268D /* dumper.c in Sources */,
+				6C6834C81E0281880047B4D1 /* Node.swift in Sources */,
 				E8EDB8881DE2181B0062268D /* loader.c in Sources */,
 				E8EDB88C1DE2181B0062268D /* writer.c in Sources */,
 				E8EDB88B1DE2181B0062268D /* scanner.c in Sources */,
