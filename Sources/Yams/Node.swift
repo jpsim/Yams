@@ -10,8 +10,22 @@ import Foundation
 
 public enum Node {
     case scalar(String, Tag)
-    case mapping([(Node,Node)], Tag)
+    case mapping([Pair], Tag)
     case sequence([Node], Tag)
+}
+
+public struct Pair: Equatable {
+    let key: Node
+    let value: Node
+
+    init(_ key: Node, _ value: Node) {
+        self.key = key
+        self.value = value
+    }
+
+    public static func ==(lhs: Pair, rhs: Pair) -> Bool {
+        return lhs.key == rhs.key && lhs.value == rhs.value
+    }
 }
 
 extension Node {
@@ -27,7 +41,7 @@ extension Node {
         if case let .mapping(pairs, _) = self {
             var dictionary = [Node:Node](minimumCapacity: pairs.count)
             pairs.forEach {
-                dictionary[$0.0] = $0.1
+                dictionary[$0.key] = $0.value
             }
             return dictionary
         }
@@ -87,7 +101,7 @@ extension Node: ExpressibleByArrayLiteral {
 // MARK: ExpressibleByDictionaryLiteral
 extension Node: ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (Node, Node)...) {
-        self = .mapping(elements, .implicit)
+        self = .mapping(elements.map(Pair.init), .implicit)
     }
 }
 
@@ -110,25 +124,4 @@ extension Node: ExpressibleByStringLiteral {
     public init(unicodeScalarLiteral value: String) {
         self = .scalar(value, .implicit)
     }
-}
-
-// Define `==` between arrays of tuples, because tuple can not be Equatable
-fileprivate func ==<A: Equatable, B: Equatable>(lhs: [(A, B)], rhs: [(A, B)]) -> Bool {
-    let lhsCount = lhs.count
-    if lhsCount != rhs.count {
-        return false
-    }
-
-    // Test referential equality.
-    if lhsCount == 0 /* || lhs._buffer.identity == rhs._buffer.identity */ {
-        return true
-    }
-
-    for idx in 0..<lhsCount {
-        if lhs[idx] != rhs[idx] {
-            return false
-        }
-    }
-
-    return true
 }

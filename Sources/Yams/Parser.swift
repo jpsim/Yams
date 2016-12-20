@@ -167,13 +167,13 @@ extension Parser {
     }
 
     private func loadMapping(from firstEvent: Event) throws -> Node {
-        var pairs = [(Node,Node)]()
+        var pairs = [Pair]()
         var event = try parse()
         while event.type != YAML_MAPPING_END_EVENT {
             let key = try loadNode(from: event)
             event = try parse()
             let value = try loadNode(from: event)
-            pairs.append((key, value))
+            pairs.append(Pair(key, value))
             event = try parse()
         }
         let node = Node.mapping(pairs, firstEvent.mappingTag)
