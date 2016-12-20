@@ -10,7 +10,7 @@ import Foundation
 
 public enum Node {
     case scalar(String, Tag)
-    case mapping([Node:Node], Tag)
+    case mapping([(Node,Node)], Tag)
     case sequence([Node], Tag)
 }
 
@@ -24,7 +24,11 @@ extension Node {
     }
 
     public var dictionary: [Node:Node]? {
-        if case let .mapping(dictionary, _) = self {
+        if case let .mapping(pairs, _) = self {
+            var dictionary = [Node:Node](minimumCapacity: pairs.count)
+            pairs.forEach {
+                dictionary[$0.0] = $0.1
+            }
             return dictionary
         }
         return nil
@@ -52,10 +56,10 @@ extension Node: Hashable {
         switch self {
         case let .scalar(value, tag):
             return tag == .implicit ? value.hashValue : (value + tag.description).hashValue
-        case let .mapping(dictionary, _):
-            return (dictionary.first?.key.hashValue) ?? 0
+        case let .mapping(pairs, _):
+            return pairs.count
         case let .sequence(array, _):
-            return array.first?.hashValue ?? 0
+            return array.count
         }
     }
 
@@ -83,11 +87,7 @@ extension Node: ExpressibleByArrayLiteral {
 // MARK: ExpressibleByDictionaryLiteral
 extension Node: ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (Node, Node)...) {
-        var dictionary = [Node:Node](minimumCapacity: elements.count)
-        elements.forEach {
-            dictionary[$0] = $1
-        }
-        self = .mapping(dictionary, .implicit)
+        self = .mapping(elements, .implicit)
     }
 }
 
@@ -110,4 +110,25 @@ extension Node: ExpressibleByStringLiteral {
     public init(unicodeScalarLiteral value: String) {
         self = .scalar(value, .implicit)
     }
+}
+
+// Define `==` between arrays of tuples, because tuple can not be Equatable
+fileprivate func ==<A: Equatable, B: Equatable>(lhs: [(A, B)], rhs: [(A, B)]) -> Bool {
+    let lhsCount = lhs.count
+    if lhsCount != rhs.count {
+        return false
+    }
+
+    // Test referential equality.
+    if lhsCount == 0 /* || lhs._buffer.identity == rhs._buffer.identity */ {
+        return true
+    }
+
+    for idx in 0..<lhsCount {
+        if lhs[idx] != rhs[idx] {
+            return false
+        }
+    }
+
+    return true
 }
