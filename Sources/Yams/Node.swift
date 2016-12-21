@@ -10,15 +10,15 @@ import Foundation
 
 public enum Node {
     case scalar(String, Tag)
-    case mapping([Pair], Tag)
+    case mapping([Pair<Node>], Tag)
     case sequence([Node], Tag)
 }
 
-public struct Pair: Equatable {
-    let key: Node
-    let value: Node
+public struct Pair<Value: Equatable>: Equatable {
+    let key: Value
+    let value: Value
 
-    init(_ key: Node, _ value: Node) {
+    init(_ key: Value, _ value: Value) {
         self.key = key
         self.value = value
     }
