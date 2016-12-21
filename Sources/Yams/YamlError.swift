@@ -3,7 +3,6 @@ import CYaml
 #endif
 import Foundation
 
-
 public enum YamlError: Swift.Error {
     // Used in `yaml_emitter_t` and `yaml_parser_t`
     /// YAML_NO_ERROR. No error is produced.

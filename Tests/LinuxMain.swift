@@ -6,5 +6,5 @@ XCTMain([
     testCase(ParserTests.allTests),
     testCase(ResolverTests.allTests),
     testCase(StringTests.allTests),
-    testCase(YamlErrorTests.allTests),
+    testCase(YamlErrorTests.allTests)
 ])

@@ -11,9 +11,7 @@ import Foundation
 public final class Resolver {
     let tagPatternPairs: [(KnownTag, NSRegularExpression)]
     init(_ tagPatternPairs: [(KnownTag, String)] = []) {
-        self.tagPatternPairs = tagPatternPairs.map {
-            ($0, try! NSRegularExpression(pattern: $1, options: .allowCommentsAndWhitespace))
-        }
+        self.tagPatternPairs = tagPatternPairs.map { ($0, pattern($1)) }
     }
 
     public func resolveTag(of node: Node) -> KnownTag? {
@@ -42,34 +40,34 @@ extension Resolver {
         (.bool, [
             "^(?:yes|Yes|YES|no|No|NO",
             "|true|True|TRUE|false|False|FALSE",
-            "|on|On|ON|off|Off|OFF)$",
+            "|on|On|ON|off|Off|OFF)$"
             ].joined()),
         (.int, [
             "^(?:[-+]?0b[0-1_]+",
             "|[-+]?0o?[0-7_]+",
             "|[-+]?(?:0|[1-9][0-9_]*)",
             "|[-+]?0x[0-9a-fA-F_]+",
-            "|[-+]?[1-9][0-9_]*(?::[0-5]?[0-9])+)$",
+            "|[-+]?[1-9][0-9_]*(?::[0-5]?[0-9])+)$"
             ].joined()),
         (.float, [
             "^(?:[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?",
             "|[-+]?\\.(?:inf|Inf|INF)",
-            "|\\.(?:nan|NaN|NAN))$",
+            "|\\.(?:nan|NaN|NAN))$"
             ].joined()),
         (.merge, "^(?:<<)$"),
         (.null, [
             "^(?: ~",
             "|null|Null|NULL",
-            "| )$",
+            "| )$"
             ].joined()),
         (.timestamp, [
             "^(?:[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]",
             "|[0-9][0-9][0-9][0-9] -[0-9][0-9]? -[0-9][0-9]?",
             "(?:[Tt]|[ \\t]+)[0-9][0-9]?",
             ":[0-9][0-9] :[0-9][0-9] (?:\\.[0-9]*)?",
-            "(?:[ \\t]*(?:Z|[-+][0-9][0-9]?(?::[0-9][0-9])?))?)$",
+            "(?:[ \\t]*(?:Z|[-+][0-9][0-9]?(?::[0-9][0-9])?))?)$"
             ].joined()),
-        (.value, "^(?:=)$"),
+        (.value, "^(?:=)$")
     ])
 }
 
@@ -78,7 +76,11 @@ extension Resolver {
 #endif
 
 func pattern(_ string: String) -> NSRegularExpression {
-    return try! .init(pattern: string, options: .allowCommentsAndWhitespace)
+    do {
+        return try .init(pattern: string, options: .allowCommentsAndWhitespace)
+    } catch {
+        fatalError("Never happen this!")
+    }
 }
 
 extension NSRegularExpression {
@@ -90,4 +92,3 @@ extension NSRegularExpression {
         return false
     }
 }
-

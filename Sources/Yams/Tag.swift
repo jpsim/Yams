@@ -86,7 +86,7 @@ extension Tag: Hashable {
         }
     }
 
-    public static func ==(lhs: Tag, rhs: Tag) -> Bool {
+    public static func == (lhs: Tag, rhs: Tag) -> Bool {
         switch (lhs.state, rhs.state) {
         case let (.known(lhs), .known(rhs)): return lhs == rhs
         case let (.unknown(lhs), .unknown(rhs)): return lhs == rhs

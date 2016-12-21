@@ -23,7 +23,7 @@ public struct Pair<Value: Equatable>: Equatable {
         self.value = value
     }
 
-    public static func ==(lhs: Pair, rhs: Pair) -> Bool {
+    public static func == (lhs: Pair, rhs: Pair) -> Bool {
         return lhs.key == rhs.key && lhs.value == rhs.value
     }
 }
@@ -54,7 +54,7 @@ extension Node {
         }
         return nil
     }
-    
+
     public var tag: Tag {
         switch self {
         case let .scalar(_, tag): return tag
@@ -77,7 +77,7 @@ extension Node: Hashable {
         }
     }
 
-    public static func ==(lhs: Node, rhs: Node) -> Bool {
+    public static func == (lhs: Node, rhs: Node) -> Bool {
         switch (lhs, rhs) {
         case let (.scalar(lhsValue, lhsTag), .scalar(rhsValue, rhsTag)):
             return lhsValue == rhsValue && lhsTag.resolved(with: lhs) == rhsTag.resolved(with: rhs)

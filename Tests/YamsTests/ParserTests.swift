@@ -35,7 +35,7 @@ class ParserTests: XCTestCase {
 extension ParserTests {
     static var allTests: [(String, (ParserTests) -> () throws -> Void)] {
         return [
-            ("testExample", testExample),
+            ("testExample", testExample)
         ]
     }
 }

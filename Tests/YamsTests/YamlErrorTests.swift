@@ -43,7 +43,7 @@ class YamlErrorTests: XCTestCase {
             XCTFail("should not happen")
         }
     }
-    
+
     func testYamlErrorParser() throws {
         let yaml = "[key1: value1, key2: ,"
         do {
@@ -66,7 +66,7 @@ extension YamlErrorTests {
         return [
             ("testYamlErrorReader", testYamlErrorReader),
             ("testYamlErrorScanner", testYamlErrorScanner),
-            ("testYamlErrorParser", testYamlErrorParser),
+            ("testYamlErrorParser", testYamlErrorParser)
         ]
     }
 }

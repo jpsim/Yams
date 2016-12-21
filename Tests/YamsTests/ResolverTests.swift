@@ -97,7 +97,7 @@ extension ResolverTests {
     static var allTests: [(String, (ResolverTests) -> () throws -> Void)] {
         return [
             ("testBasic", testBasic),
-            ("testDefault", testDefault),
+            ("testDefault", testDefault)
         ]
     }
 }

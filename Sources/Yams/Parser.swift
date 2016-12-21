@@ -143,7 +143,7 @@ extension Parser {
         }
         return node
     }
-    
+
     private func loadScalar(from event: Event) throws -> Node {
         let node = Node.scalar(event.scalarValue, Tag(event.scalarTag))
         if let anchor = event.scalarAnchor {
@@ -183,7 +183,6 @@ extension Parser {
         return node
     }
 }
-
 
 /// Representation of `yaml_event_t`
 fileprivate class Event {
