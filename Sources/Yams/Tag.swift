@@ -12,88 +12,86 @@
 import Foundation
 
 // http://www.yaml.org/spec/1.2/spec.html#Schema
-public enum Tag {
-    case implicit
+public enum KnownTag: String {
     // Failsafe Schema
-    case map
-    case seq
-    case str
+    case str = "tag:yaml.org,2002:str"
+    case seq = "tag:yaml.org,2002:seq"
+    case map = "tag:yaml.org,2002:map"
     // JSON Schema
-    case null
-    case bool
-    case int
-    case float
-    // unknown
-    case local(String)
+    case bool = "tag:yaml.org,2002:bool"
+    case float =  "tag:yaml.org,2002:float"
+    case null = "tag:yaml.org,2002:null"
+    case int = "tag:yaml.org,2002:int"
+    // http://yaml.org/type/index.html
+    case binary = "tag:yaml.org,2002:binary"
+    case merge = "tag:yaml.org,2002:merge"
+    case omap = "tag:yaml.org,2002:omap"
+    case pairs = "tag:yaml.org,2002:pairs"
+    case set = "tag:yaml.org,2002:set"
+    case timestamp = "tag:yaml.org,2002:timestamp"
+    case value = "tag:yaml.org,2002:value"
+//    case yaml = "tag:yaml.org,2002:yaml"
 }
 
-extension Tag {
-    public init(_ string: String? = nil) {
-        guard let string = string else {
-            self = .implicit
+fileprivate enum State {
+    case implicit
+    case known(KnownTag)
+    case unknown(String)
+}
+
+public class Tag {
+    fileprivate var state: State
+    fileprivate let resolver: Resolver?
+
+    init(_ string: String?, _ resolver: Resolver = .default) {
+        guard let string = string, !string.isEmpty && string != "!" else {
+            state = .implicit
+            self.resolver = resolver
             return
         }
-        switch string {
-        case "!": self = .implicit
-        case YAML_MAP_TAG: self = .map
-        case YAML_SEQ_TAG: self = .seq
-        case YAML_STR_TAG: self = .str
-        case YAML_NULL_TAG: self = .null
-        case YAML_BOOL_TAG: self = .bool
-        case YAML_INT_TAG: self = .int
-        case YAML_FLOAT_TAG: self = .float
-        default: self = .local(string)
+        if let knownTag = KnownTag(rawValue: string) {
+            state = .known(knownTag)
+            self.resolver = nil
+        } else {
+            state = .unknown(string)
+            self.resolver = nil
         }
     }
 
-    public var localTag: String? {
-        if case let .local(string) = self {
-            return string
+    var knownTag: KnownTag? {
+        if case let .known(tag) = state {
+            return tag
         }
         return nil
     }
 
-    public func may(be tag: Tag) -> Bool {
-        switch self {
-        case .implicit: return true
-        case tag: return true
-        default: return false
+    func resolved(with node: Node) -> Tag {
+        if case .implicit = state, let tag = resolver?.resolveTag(of: node) {
+            state = .known(tag)
         }
+        return self
     }
-}
 
-extension Tag: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .implicit: return "!"
-        case .map: return YAML_MAP_TAG
-        case .seq: return YAML_SEQ_TAG
-        case .str: return YAML_STR_TAG
-        case .null: return YAML_NULL_TAG
-        case .bool: return YAML_BOOL_TAG
-        case .int: return YAML_INT_TAG
-        case .float: return YAML_FLOAT_TAG
-        case let .local(string): return string
-        }
+    static var implicit: Tag {
+        return Tag(nil, .default)
     }
 }
 
 extension Tag: Hashable {
     public var hashValue: Int {
-        return description.hashValue
+        switch state {
+        case .implicit: return 1
+        case let .known(tag): return tag.hashValue
+        case let .unknown(string): return string.hashValue
+        }
     }
 
     public static func ==(lhs: Tag, rhs: Tag) -> Bool {
-        switch (lhs, rhs) {
-        case (.implicit, .implicit): return true
-        case (.map, .map): return true
-        case (.seq, .seq): return true
-        case (.str, .str): return true
-        case (.null, .null): return true
-        case (.bool, .bool): return true
-        case (.int, .int): return true
-        case (.float, .float): return true
-        case let (.local(lhs), .local(rhs)): return lhs == rhs
+        switch (lhs.state, rhs.state) {
+        case let (.known(lhs), .known(rhs)): return lhs == rhs
+        case let (.unknown(lhs), .unknown(rhs)): return lhs == rhs
+        case (.implicit, _): fallthrough
+        case (_, .implicit): fatalError("Never happen this!")
         default: return false
         }
     }

@@ -25,7 +25,7 @@ public class Parser {
     ///
     /// - Parameter string: YAML
     /// - Throws: ParserError or YamlError
-    public init(yaml string: String) throws {
+    public init(yaml string: String, resolver: Resolver = .default) throws {
         yaml = string
 
         yaml_parser_initialize(&parser)
@@ -145,7 +145,7 @@ extension Parser {
     }
     
     private func loadScalar(from event: Event) throws -> Node {
-        let node = Node.scalar(event.scalarValue, event.scalarTag)
+        let node = Node.scalar(event.scalarValue, Tag(event.scalarTag))
         if let anchor = event.scalarAnchor {
             anchors[anchor] = node
         }
@@ -159,7 +159,7 @@ extension Parser {
             array.append(try loadNode(from: event))
             event = try parse()
         }
-        let node = Node.sequence(array, firstEvent.sequenceTag)
+        let node = Node.sequence(array, Tag(firstEvent.sequenceTag))
         if let anchor = firstEvent.sequenceAnchor {
             anchors[anchor] = node
         }
@@ -176,7 +176,7 @@ extension Parser {
             pairs.append(Pair(key, value))
             event = try parse()
         }
-        let node = Node.mapping(pairs, firstEvent.mappingTag)
+        let node = Node.mapping(pairs, Tag(firstEvent.mappingTag))
         if let anchor = firstEvent.mappingAnchor {
             anchors[anchor] = node
         }
@@ -203,9 +203,9 @@ fileprivate class Event {
     var scalarAnchor: String? {
         return string(from: event.data.scalar.anchor)
     }
-    var scalarTag: Tag {
+    var scalarTag: String? {
         return (event.data.scalar.plain_implicit != 0 || event.data.scalar.quoted_implicit != 0)
-            ? .implicit : Tag(string(from: event.data.scalar.tag))
+            ? nil : string(from: event.data.scalar.tag)
     }
     var scalarValue: String {
         // scalar may contain NULL characters
@@ -218,18 +218,18 @@ fileprivate class Event {
     var sequenceAnchor: String? {
         return string(from: event.data.sequence_start.anchor)
     }
-    var sequenceTag: Tag {
+    var sequenceTag: String? {
         return event.data.sequence_start.implicit != 0
-            ? .implicit : Tag(string(from: event.data.sequence_start.tag))
+            ? nil : string(from: event.data.sequence_start.tag)
     }
 
     // mapping
     var mappingAnchor: String? {
         return string(from: event.data.scalar.anchor)
     }
-    var mappingTag: Tag {
+    var mappingTag: String? {
         return event.data.mapping_start.implicit != 0
-            ? .implicit : Tag(string(from: event.data.sequence_start.tag))
+            ? nil : string(from: event.data.sequence_start.tag)
     }
 }
 

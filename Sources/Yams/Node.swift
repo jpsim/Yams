@@ -68,8 +68,8 @@ extension Node {
 extension Node: Hashable {
     public var hashValue: Int {
         switch self {
-        case let .scalar(value, tag):
-            return tag == .implicit ? value.hashValue : (value + tag.description).hashValue
+        case let .scalar(value, _):
+            return value.hashValue
         case let .mapping(pairs, _):
             return pairs.count
         case let .sequence(array, _):
@@ -80,25 +80,24 @@ extension Node: Hashable {
     public static func ==(lhs: Node, rhs: Node) -> Bool {
         switch (lhs, rhs) {
         case let (.scalar(lhsValue, lhsTag), .scalar(rhsValue, rhsTag)):
-            return lhsValue == rhsValue && lhsTag == rhsTag
+            return lhsValue == rhsValue && lhsTag.resolved(with: lhs) == rhsTag.resolved(with: rhs)
         case let (.mapping(lhsValue, lhsTag), .mapping(rhsValue, rhsTag)):
-            return lhsValue == rhsValue && lhsTag == rhsTag
+            return lhsValue == rhsValue && lhsTag.resolved(with: lhs) == rhsTag.resolved(with: rhs)
         case let (.sequence(lhsValue, lhsTag), .sequence(rhsValue, rhsTag)):
-            return lhsValue == rhsValue && lhsTag == rhsTag
+            return lhsValue == rhsValue && lhsTag.resolved(with: lhs) == rhsTag.resolved(with: rhs)
         default:
             return false
         }
     }
 }
 
-// MARK
+// MARK: - ExpressibleBy*Literal
 extension Node: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: Node...) {
         self = .sequence(elements, .implicit)
     }
 }
 
-// MARK: ExpressibleByDictionaryLiteral
 extension Node: ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (Node, Node)...) {
         self = .mapping(elements.map(Pair.init), .implicit)
@@ -111,7 +110,6 @@ extension Node: ExpressibleByFloatLiteral {
     }
 }
 
-// MARK: ExpressibleByStringLiteral
 extension Node: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
         self = .scalar(value, .implicit)

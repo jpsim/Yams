@@ -8,152 +8,78 @@
 
 import Foundation
 
-public protocol ResolverProtocol {
-    init(resolve scalar: Node)
-    var toAny: Any { get }
-    var isNull: Bool { get }
-    var toBool: Bool? { get }
-    var toInt: Int? { get }
-    var toFloat: Double? { get }
-}
-
-public struct Resolver {
-    /// Failsafe Schema <http://www.yaml.org/spec/1.2/spec.html#id2802346>
-    public struct Failsafe {
-        fileprivate let node: Node
-    }
-    /// JSON Schema <http://www.yaml.org/spec/1.2/spec.html#id2803231>
-    public struct JSON {
-        fileprivate let node: Node
-    }
-    /// Core Schema <http://www.yaml.org/spec/1.2/spec.html#id2804923>
-    public struct Core {
-        fileprivate let node: Node
-    }
-    /// Core+ Schema <http://yaml.org/type/index.html>
-//    public struct CorePlus {
-//        fileprivate let node: Node
-//    }
-}
-
-extension Resolver.Failsafe: ResolverProtocol {
-    public init(resolve scalar: Node) {
-        node = scalar
-    }
-
-    public var toAny: Any { return node.string ?? NSNull() }
-    public var isNull: Bool { return false }
-    public var toBool: Bool? { return nil }
-    public var toInt: Int? { return nil }
-    public var toFloat: Double? { return nil }
-}
-
-extension Resolver.JSON: ResolverProtocol {
-    public init(resolve scalar: Node) {
-        node = scalar
-    }
-
-    public var toAny: Any {
-        if isNull { return NSNull() }
-        return toBool ?? toInt ?? toFloat ?? node.string ?? NSNull()
-    }
-
-    public var isNull: Bool {
-        guard node.tag.may(be: .null) else { return false }
-        return node.string == "null"
-    }
-
-    public var toBool: Bool? {
-        guard node.tag.may(be: .bool), let string = node.string else { return nil }
-        switch string {
-        case "true": return true
-        case "false": return false
-        default: return nil
+public final class Resolver {
+    let tagPatternPairs: [(KnownTag, NSRegularExpression)]
+    init(_ tagPatternPairs: [(KnownTag, String)] = []) {
+        self.tagPatternPairs = tagPatternPairs.map {
+            ($0, try! NSRegularExpression(pattern: $1, options: .allowCommentsAndWhitespace))
         }
     }
 
-    public var toInt: Int? {
-        guard node.tag.may(be: .int), let string = node.string else { return nil }
-        if string.hasPrefix("+") {
-            return nil
+    public func resolveTag(of node: Node) -> KnownTag? {
+        switch node {
+        case let .scalar(string, tag):
+            return tag.knownTag ?? resolveTag(from: string) ?? .str
+        case let .mapping(_, tag):
+            return tag.knownTag ?? .map
+        case let .sequence(_, tag):
+            return tag.knownTag ?? .seq
         }
-        return Int(string)
     }
 
-    public var toFloat: Double? {
-        guard node.tag.may(be: .float), let string = node.string else { return nil }
-        switch string {
-        case ".inf": return .infinity
-        case "-.inf": return -.infinity
-        case ".nan": return .nan
-        default: return Double(string)
+    public func resolveTag(from string: String) -> KnownTag? {
+        for (tag, regexp) in tagPatternPairs where regexp.matches(in: string) {
+            return tag
         }
+        return nil
+
     }
 }
 
-extension Resolver.Core: ResolverProtocol {
-    public init(resolve scalar: Node) {
-        node = scalar
-    }
-
-    public var toAny: Any {
-        if isNull { return NSNull() }
-        return toBool ?? toInt ?? toFloat ?? node.string ?? NSNull()
-    }
-
-    public var isNull: Bool {
-        guard node.tag.may(be: .null), let string = node.string else { return false }
-        switch string {
-        case "~", "null", "Null", "NULL":
-            return true
-        default:
-            return false
-        }
-    }
-
-    public var toBool: Bool? {
-        guard node.tag.may(be: .bool), let string = node.string else { return nil }
-        switch string {
-        case "true", "True", "TRUE":
-            return true
-        case "false", "False", "FALSE":
-            return false
-        default:
-            return nil
-        }
-    }
-
-    public var toInt: Int? {
-        guard node.tag.may(be: .int), let string = node.string else { return nil }
-        if string.hasPrefix("0x") {
-            let hexadecimal = string.substring(from: string.index(string.startIndex, offsetBy: 2))
-            return Int(hexadecimal, radix: 16)
-        }
-        if string.hasPrefix("0o") {
-            let octal = string.substring(from: string.index(string.startIndex, offsetBy: 2))
-            return Int(octal, radix: 8)
-        }
-        return Int(string)
-    }
-
-    public var toFloat: Double? {
-        guard node.tag.may(be: .float), let string = node.string else { return nil }
-        switch string {
-        case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
-            return .infinity
-        case "-.inf", "-.Inf", "-.INF":
-            return -.infinity
-        case ".nan", ".NaN", ".NAN":
-            return .nan
-        default:
-            return Double(string)
-        }
-    }
+extension Resolver {
+    public static let basic = Resolver()
+    public static let `default` = Resolver([
+        (.bool, [
+            "^(?:yes|Yes|YES|no|No|NO",
+            "|true|True|TRUE|false|False|FALSE",
+            "|on|On|ON|off|Off|OFF)$",
+            ].joined()),
+        (.int, [
+            "^(?:[-+]?0b[0-1_]+",
+            "|[-+]?0o?[0-7_]+",
+            "|[-+]?(?:0|[1-9][0-9_]*)",
+            "|[-+]?0x[0-9a-fA-F_]+",
+            "|[-+]?[1-9][0-9_]*(?::[0-5]?[0-9])+)$",
+            ].joined()),
+        (.float, [
+            "^(?:[-+]?(\\.[0-9]+|[0-9]+(\\.[0-9]*)?)([eE][-+]?[0-9]+)?",
+            "|[-+]?\\.(?:inf|Inf|INF)",
+            "|\\.(?:nan|NaN|NAN))$",
+            ].joined()),
+        (.merge, "^(?:<<)$"),
+        (.null, [
+            "^(?: ~",
+            "|null|Null|NULL",
+            "| )$",
+            ].joined()),
+        (.timestamp, [
+            "^(?:[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]",
+            "|[0-9][0-9][0-9][0-9] -[0-9][0-9]? -[0-9][0-9]?",
+            "(?:[Tt]|[ \\t]+)[0-9][0-9]?",
+            ":[0-9][0-9] :[0-9][0-9] (?:\\.[0-9]*)?",
+            "(?:[ \\t]*(?:Z|[-+][0-9][0-9]?(?::[0-9][0-9])?))?)$",
+            ].joined()),
+        (.value, "^(?:=)$"),
+    ])
 }
 
 #if os(Linux)
     typealias NSRegularExpression = RegularExpression
 #endif
+
+func pattern(_ string: String) -> NSRegularExpression {
+    return try! .init(pattern: string, options: .allowCommentsAndWhitespace)
+}
 
 extension NSRegularExpression {
     fileprivate func matches(in string: String) -> Bool {

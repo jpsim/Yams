@@ -11,134 +11,93 @@ import XCTest
 
 class ResolverTests: XCTestCase {
 
-    func testFailsafe() {
-        typealias TestResolver = Resolver.Failsafe
-        XCTAssertEqual(TestResolver(resolve: "null").isNull, false)
-        XCTAssertEqual(TestResolver(resolve: "Null").isNull, false)
-        XCTAssertEqual(TestResolver(resolve: "NULL").isNull, false)
-        XCTAssertEqual(TestResolver(resolve: "~").isNull, false)
-        XCTAssertEqual(TestResolver(resolve: "").isNull, false)
+    func testBasic() {
+        let resolver = Resolver.basic
+        XCTAssertEqual(resolver.resolveTag(of: "null"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "Null"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "NULL"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "~"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: ""), .str)
 
-        XCTAssertEqual(TestResolver(resolve: "true").toBool, nil)
-        XCTAssertEqual(TestResolver(resolve: "True").toBool, nil)
-        XCTAssertEqual(TestResolver(resolve: "TRUE").toBool, nil)
-        XCTAssertEqual(TestResolver(resolve: "false").toBool, nil)
-        XCTAssertEqual(TestResolver(resolve: "False").toBool, nil)
-        XCTAssertEqual(TestResolver(resolve: "FALSE").toBool, nil)
+        XCTAssertEqual(resolver.resolveTag(of: "true"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "True"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "TRUE"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "false"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "False"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "FALSE"), .str)
 
-        XCTAssertEqual(TestResolver(resolve: "0").toInt, nil)
-        XCTAssertEqual(TestResolver(resolve: "+1").toInt, nil)
-        XCTAssertEqual(TestResolver(resolve: "0o7").toInt, nil)
-        XCTAssertEqual(TestResolver(resolve: "0x3A").toInt, nil)
-        XCTAssertEqual(TestResolver(resolve: "-19").toInt, nil)
+        XCTAssertEqual(resolver.resolveTag(of: "0"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "+1"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "0o7"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "0x3A"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "-19"), .str)
 
-        XCTAssertEqual(TestResolver(resolve: "0.").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "-0.0").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: ".5").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "+12e03").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "-2E+05").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: ".inf").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: ".Inf").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: ".INF").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "+.inf").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "+.Inf").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "+.INF").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "-.inf").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "-.Inf").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "-.INF").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: ".nan").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: ".NaN").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: ".NAN").toFloat, nil)
+        XCTAssertEqual(resolver.resolveTag(of: "0."), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "-0.0"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: ".5"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "+12e03"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "-2E+05"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: ".inf"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: ".Inf"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: ".INF"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "+.inf"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "+.Inf"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "+.INF"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "-.inf"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "-.Inf"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: "-.INF"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: ".nan"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: ".NaN"), .str)
+        XCTAssertEqual(resolver.resolveTag(of: ".NAN"), .str)
     }
 
-    func testJSON() {
-        typealias TestResolver = Resolver.JSON
-        XCTAssertEqual(TestResolver(resolve: "null").isNull, true)
-        XCTAssertEqual(TestResolver(resolve: "Null").isNull, false)
-        XCTAssertEqual(TestResolver(resolve: "NULL").isNull, false)
-        XCTAssertEqual(TestResolver(resolve: "~").isNull, false)
-        XCTAssertEqual(TestResolver(resolve: "").isNull, false)
+    func testDefault() {
+        let resolver = Resolver.default
 
-        XCTAssertEqual(TestResolver(resolve: "true").toBool, true)
-        XCTAssertEqual(TestResolver(resolve: "True").toBool, nil)
-        XCTAssertEqual(TestResolver(resolve: "TRUE").toBool, nil)
-        XCTAssertEqual(TestResolver(resolve: "false").toBool, false)
-        XCTAssertEqual(TestResolver(resolve: "False").toBool, nil)
-        XCTAssertEqual(TestResolver(resolve: "FALSE").toBool, nil)
+        XCTAssertEqual(resolver.resolveTag(of: "null"), .null)
+        XCTAssertEqual(resolver.resolveTag(of: "Null"), .null)
+        XCTAssertEqual(resolver.resolveTag(of: "NULL"), .null)
+        XCTAssertEqual(resolver.resolveTag(of: "~"), .null)
+        XCTAssertEqual(resolver.resolveTag(of: ""), .null)
 
-        XCTAssertEqual(TestResolver(resolve: "0").toInt, 0)
-        XCTAssertEqual(TestResolver(resolve: "+1").toInt, nil)
-        XCTAssertEqual(TestResolver(resolve: "0o7").toInt, nil)
-        XCTAssertEqual(TestResolver(resolve: "0x3A").toInt, nil)
-        XCTAssertEqual(TestResolver(resolve: "-19").toInt, -19)
+        XCTAssertEqual(resolver.resolveTag(of: "true"), .bool)
+        XCTAssertEqual(resolver.resolveTag(of: "True"), .bool)
+        XCTAssertEqual(resolver.resolveTag(of: "TRUE"), .bool)
+        XCTAssertEqual(resolver.resolveTag(of: "false"), .bool)
+        XCTAssertEqual(resolver.resolveTag(of: "False"), .bool)
+        XCTAssertEqual(resolver.resolveTag(of: "FALSE"), .bool)
 
-        XCTAssertEqual(TestResolver(resolve: "0.").toFloat, 0.0)
-        XCTAssertEqual(TestResolver(resolve: "-0.0").toFloat, -0.0)
-        XCTAssertEqual(TestResolver(resolve: ".5").toFloat, 0.5)
-        XCTAssertEqual(TestResolver(resolve: "+12e03").toFloat, +12e03)
-        XCTAssertEqual(TestResolver(resolve: "-2E+05").toFloat, -2E+05)
-        XCTAssertEqual(TestResolver(resolve: ".inf").toFloat, .infinity)
-        XCTAssertEqual(TestResolver(resolve: ".Inf").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: ".INF").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "+.inf").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "+.Inf").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "+.INF").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "-.inf").toFloat, -.infinity)
-        XCTAssertEqual(TestResolver(resolve: "-.Inf").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: "-.INF").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: ".nan").toFloat?.isNaN, true)
-        XCTAssertEqual(TestResolver(resolve: ".NaN").toFloat, nil)
-        XCTAssertEqual(TestResolver(resolve: ".NAN").toFloat, nil)
-    }
+        XCTAssertEqual(resolver.resolveTag(of: "0"), .int)
+        XCTAssertEqual(resolver.resolveTag(of: "+1"), .int)
+        XCTAssertEqual(resolver.resolveTag(of: "0o7"), .int)
+        XCTAssertEqual(resolver.resolveTag(of: "0x3A"), .int)
+        XCTAssertEqual(resolver.resolveTag(of: "-19"), .int)
 
-    func testCore() {
-        typealias TestResolver = Resolver.Core
-
-        XCTAssertEqual(TestResolver(resolve: "null").isNull, true)
-        XCTAssertEqual(TestResolver(resolve: "Null").isNull, true)
-        XCTAssertEqual(TestResolver(resolve: "NULL").isNull, true)
-        XCTAssertEqual(TestResolver(resolve: "~").isNull, true)
-        XCTAssertEqual(TestResolver(resolve: "").isNull, false)
-
-        XCTAssertEqual(TestResolver(resolve: "true").toBool, true)
-        XCTAssertEqual(TestResolver(resolve: "True").toBool, true)
-        XCTAssertEqual(TestResolver(resolve: "TRUE").toBool, true)
-        XCTAssertEqual(TestResolver(resolve: "false").toBool, false)
-        XCTAssertEqual(TestResolver(resolve: "False").toBool, false)
-        XCTAssertEqual(TestResolver(resolve: "FALSE").toBool, false)
-
-        XCTAssertEqual(TestResolver(resolve: "0").toInt, 0)
-        XCTAssertEqual(TestResolver(resolve: "+1").toInt, 1)
-        XCTAssertEqual(TestResolver(resolve: "0o7").toInt, 0o7)
-        XCTAssertEqual(TestResolver(resolve: "0x3A").toInt, 0x3A)
-        XCTAssertEqual(TestResolver(resolve: "-19").toInt, -19)
-
-        XCTAssertEqual(TestResolver(resolve: "0.").toFloat, 0.0)
-        XCTAssertEqual(TestResolver(resolve: "-0.0").toFloat, -0.0)
-        XCTAssertEqual(TestResolver(resolve: ".5").toFloat, 0.5)
-        XCTAssertEqual(TestResolver(resolve: "+12e03").toFloat, +12e03)
-        XCTAssertEqual(TestResolver(resolve: "-2E+05").toFloat, -2E+05)
-        XCTAssertEqual(TestResolver(resolve: ".inf").toFloat, .infinity)
-        XCTAssertEqual(TestResolver(resolve: ".Inf").toFloat, .infinity)
-        XCTAssertEqual(TestResolver(resolve: ".INF").toFloat, .infinity)
-        XCTAssertEqual(TestResolver(resolve: "+.inf").toFloat, .infinity)
-        XCTAssertEqual(TestResolver(resolve: "+.Inf").toFloat, .infinity)
-        XCTAssertEqual(TestResolver(resolve: "+.INF").toFloat, .infinity)
-        XCTAssertEqual(TestResolver(resolve: "-.inf").toFloat, -.infinity)
-        XCTAssertEqual(TestResolver(resolve: "-.Inf").toFloat, -.infinity)
-        XCTAssertEqual(TestResolver(resolve: "-.INF").toFloat, -.infinity)
-        XCTAssertEqual(TestResolver(resolve: ".nan").toFloat?.isNaN, true)
-        XCTAssertEqual(TestResolver(resolve: ".NaN").toFloat?.isNaN, true)
-        XCTAssertEqual(TestResolver(resolve: ".NAN").toFloat?.isNaN, true)
+        XCTAssertEqual(resolver.resolveTag(of: "0."), .float)
+        XCTAssertEqual(resolver.resolveTag(of: "-0.0"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: ".5"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: "+12e03"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: "-2E+05"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: ".inf"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: ".Inf"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: ".INF"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: "+.inf"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: "+.Inf"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: "+.INF"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: "-.inf"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: "-.Inf"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: "-.INF"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: ".nan"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: ".NaN"), .float)
+        XCTAssertEqual(resolver.resolveTag(of: ".NAN"), .float)
     }
 }
 
 extension ResolverTests {
     static var allTests: [(String, (ResolverTests) -> () throws -> Void)] {
         return [
-            ("testFailsafe", testFailsafe),
-            ("testJSON", testJSON),
-            ("testCore", testCore),
+            ("testBasic", testBasic),
+            ("testDefault", testDefault),
         ]
     }
 }
