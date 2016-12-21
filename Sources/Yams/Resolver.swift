@@ -9,12 +9,12 @@
 import Foundation
 
 public final class Resolver {
-    let tagPatternPairs: [(KnownTag, NSRegularExpression)]
-    init(_ tagPatternPairs: [(KnownTag, String)] = []) {
-        self.tagPatternPairs = tagPatternPairs.map { ($0, pattern($1)) }
+    let tagNamePatternPairs: [(Tag.Name, NSRegularExpression)]
+    init(_ tagPatternPairs: [(Tag.Name, String)] = []) {
+        self.tagNamePatternPairs = tagPatternPairs.map { ($0, pattern($1)) }
     }
 
-    public func resolveTag(of node: Node) -> KnownTag? {
+    public func resolveTag(of node: Node) -> Tag.Name? {
         switch node {
         case let .scalar(string, tag):
             return tag.knownTag ?? resolveTag(from: string) ?? .str
@@ -25,12 +25,11 @@ public final class Resolver {
         }
     }
 
-    public func resolveTag(from string: String) -> KnownTag? {
-        for (tag, regexp) in tagPatternPairs where regexp.matches(in: string) {
+    public func resolveTag(from string: String) -> Tag.Name? {
+        for (tag, regexp) in tagNamePatternPairs where regexp.matches(in: string) {
             return tag
         }
         return nil
-
     }
 }
 
