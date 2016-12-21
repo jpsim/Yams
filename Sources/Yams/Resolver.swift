@@ -17,11 +17,11 @@ public final class Resolver {
     public func resolveTag(of node: Node) -> Tag.Name? {
         switch node {
         case let .scalar(string, tag):
-            return tag.knownTag ?? resolveTag(from: string) ?? .str
+            return tag.name ?? resolveTag(from: string) ?? .str
         case let .mapping(_, tag):
-            return tag.knownTag ?? .map
+            return tag.name ?? .map
         case let .sequence(_, tag):
-            return tag.knownTag ?? .seq
+            return tag.name ?? .seq
         }
     }
 

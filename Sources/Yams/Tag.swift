@@ -19,26 +19,21 @@ public class Tag {
         }
     }
 
+    var name: Name?
+
     init(_ string: String?, _ resolver: Resolver = .default) {
         guard let string = string, !string.isEmpty && string != "!" else {
-            state = .implicit
+            name = nil
             self.resolver = resolver
             return
         }
-        state = .resolved(Name(rawValue: string))
+        name = Name(rawValue: string)
         self.resolver = nil
     }
 
-    var knownTag: Name? {
-        if case let .resolved(name) = state {
-            return name
-        }
-        return nil
-    }
-
     func resolved(with node: Node) -> Tag {
-        if case .implicit = state, let tag = resolver?.resolveTag(of: node) {
-            state = .resolved(tag)
+        if name == nil, let tag = resolver?.resolveTag(of: node) {
+            name = tag
         }
         return self
     }
@@ -48,28 +43,19 @@ public class Tag {
     }
 
     // fileprivate
-    fileprivate var state: State
     fileprivate let resolver: Resolver?
-
-    fileprivate enum State {
-        case implicit
-        case resolved(Name)
-    }
 }
 
 extension Tag: Hashable {
     public var hashValue: Int {
-        switch state {
-        case .implicit: return 1
-        case let .resolved(tag): return tag.hashValue
-        }
+        return name?.hashValue ?? 1
     }
 
     public static func == (lhs: Tag, rhs: Tag) -> Bool {
-        switch (lhs.state, rhs.state) {
-        case let (.resolved(lhs), .resolved(rhs)): return lhs == rhs
-        case (.implicit, _): fallthrough
-        case (_, .implicit): fatalError("Never happen this!")
+        switch (lhs.name, rhs.name) {
+        case let (lhs?, rhs?): return lhs == rhs
+        case (.none, _): fallthrough
+        case (_, .none): fatalError("Never happen this!")
         default: return false
         }
     }
