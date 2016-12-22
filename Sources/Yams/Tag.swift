@@ -21,29 +21,36 @@ public class Tag {
 
     var name: Name?
 
-    init(_ string: String?, _ resolver: Resolver = .default) {
-        guard let string = string, !string.isEmpty && string != "!" else {
+    init(_ string: String?,
+         _ resolver: Resolver /*= .default*/,
+         _ constructor: Constructor /*= .default*/) {
+        self.resolver = resolver
+        self.constructor = constructor
+        if let string = string, !string.isEmpty && string != "!" {
+            name = Name(rawValue: string)
+        } else {
             name = nil
-            self.resolver = resolver
-            return
         }
-        name = Name(rawValue: string)
-        self.resolver = nil
     }
 
     func resolved(with node: Node) -> Tag {
-        if name == nil, let tag = resolver?.resolveTag(of: node) {
-            name = tag
+        if name == nil {
+            name = resolver.resolveTag(of: node)
         }
         return self
     }
 
+    func any(from node: Node) -> Any {
+        return constructor.any(from: node)
+    }
+
     static var implicit: Tag {
-        return Tag(nil, .default)
+        return Tag(nil, .default, .default)
     }
 
     // fileprivate
-    fileprivate let resolver: Resolver?
+    fileprivate let resolver: Resolver
+    fileprivate let constructor: Constructor
 }
 
 extension Tag: Hashable {

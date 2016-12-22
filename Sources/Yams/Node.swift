@@ -48,6 +48,13 @@ extension Node {
         return nil
     }
 
+    var pairs: [Pair<Node>]? {
+        if case let .mapping(pairs, _) = self {
+            return pairs
+        }
+        return nil
+    }
+
     public var string: String? {
         if case let .scalar(string, _) = self {
             return string
@@ -57,10 +64,35 @@ extension Node {
 
     public var tag: Tag {
         switch self {
-        case let .scalar(_, tag): return tag
-        case let .mapping(_, tag): return tag
-        case let .sequence(_, tag): return tag
+        case let .scalar(_, tag): return tag.resolved(with: self)
+        case let .mapping(_, tag): return tag.resolved(with: self)
+        case let .sequence(_, tag): return tag.resolved(with: self)
         }
+    }
+
+    public var isScalar: Bool {
+        if case .scalar = self {
+            return true
+        }
+        return false
+    }
+
+    public var isMapping: Bool {
+        if case .mapping = self {
+            return true
+        }
+        return false
+    }
+
+    public var isSequence: Bool {
+        if case .sequence = self {
+            return true
+        }
+        return false
+    }
+
+    public var any: Any {
+        return tag.any(from: self)
     }
 }
 

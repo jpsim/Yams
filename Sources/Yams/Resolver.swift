@@ -14,10 +14,10 @@ public final class Resolver {
         self.tagNamePatternPairs = tagPatternPairs.map { ($0, pattern($1)) }
     }
 
-    public func resolveTag(of node: Node) -> Tag.Name? {
+    public func resolveTag(of node: Node) -> Tag.Name {
         switch node {
         case let .scalar(string, tag):
-            return tag.name ?? resolveTag(from: string) ?? .str
+            return tag.name ?? resolveTag(from: string)
         case let .mapping(_, tag):
             return tag.name ?? .map
         case let .sequence(_, tag):
@@ -25,11 +25,11 @@ public final class Resolver {
         }
     }
 
-    public func resolveTag(from string: String) -> Tag.Name? {
+    public func resolveTag(from string: String) -> Tag.Name {
         for (tag, regexp) in tagNamePatternPairs where regexp.matches(in: string) {
             return tag
         }
-        return nil
+        return .str
     }
 }
 

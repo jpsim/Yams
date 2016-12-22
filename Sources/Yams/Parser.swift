@@ -20,13 +20,21 @@ public class Parser {
     // MARK: public
     public let yaml: String
     public var error: Swift.Error? = nil
+    public let resolver: Resolver
+    public let constructor: Constructor
 
     /// Setup Parser.
     ///
     /// - Parameter string: YAML
+    /// - Parameter resolver: Resolver
+    /// - Parameter constructor: Constructor
     /// - Throws: ParserError or YamlError
-    public init(yaml string: String, resolver: Resolver = .default) throws {
+    public init(yaml string: String,
+                resolver: Resolver = .default,
+                constructor: Constructor = .default) throws {
         yaml = string
+        self.resolver = resolver
+        self.constructor = constructor
 
         yaml_parser_initialize(&parser)
 #if USE_UTF16
@@ -145,7 +153,7 @@ extension Parser {
     }
 
     private func loadScalar(from event: Event) throws -> Node {
-        let node = Node.scalar(event.scalarValue, Tag(event.scalarTag))
+        let node = Node.scalar(event.scalarValue, Tag(event.scalarTag, resolver, constructor))
         if let anchor = event.scalarAnchor {
             anchors[anchor] = node
         }
@@ -159,7 +167,7 @@ extension Parser {
             array.append(try loadNode(from: event))
             event = try parse()
         }
-        let node = Node.sequence(array, Tag(firstEvent.sequenceTag))
+        let node = Node.sequence(array, Tag(firstEvent.sequenceTag, resolver, constructor))
         if let anchor = firstEvent.sequenceAnchor {
             anchors[anchor] = node
         }
@@ -176,7 +184,7 @@ extension Parser {
             pairs.append(Pair(key, value))
             event = try parse()
         }
-        let node = Node.mapping(pairs, Tag(firstEvent.mappingTag))
+        let node = Node.mapping(pairs, Tag(firstEvent.mappingTag, resolver, constructor))
         if let anchor = firstEvent.mappingAnchor {
             anchors[anchor] = node
         }
