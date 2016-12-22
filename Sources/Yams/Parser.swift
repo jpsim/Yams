@@ -11,6 +11,88 @@
 #endif
 import Foundation
 
+/// Parse all YAML documents in a String
+/// and produce corresponding Swift objects.
+///
+/// - Parameters:
+///   - yaml: String
+///   - resolver: Resolver
+///   - constructor: Constructor
+/// - Returns: YamlSequence
+/// - Throws: ParserError or YamlError
+public func load_all(yaml: String,
+                     _ resolver: Resolver = .default,
+                     _ constructor: Constructor = .default) throws -> YamlSequence<Any> {
+    let parser = try Parser(yaml: yaml, resolver: resolver, constructor: constructor)
+    return YamlSequence { try parser.nextRoot()?.any }
+}
+
+/// Parse the first YAML document in a String
+/// and produce the corresponding Swift object.
+///
+/// - Parameters:
+///   - yaml: String
+///   - resolver: Resolver
+///   - constructor: Constructor
+/// - Returns: Any
+/// - Throws: ParserError or YamlError
+public func load(yaml: String,
+                 _ resolver: Resolver = .default,
+                 _ constructor: Constructor = .default) throws -> Any? {
+    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor).nextRoot()?.any
+}
+
+/// Parse all YAML documents in a String
+/// and produce corresponding representation trees.
+///
+/// - Parameters:
+///   - yaml: String
+///   - resolver: Resolver
+///   - constructor: Constructor
+/// - Returns: YamlSequence
+/// - Throws: ParserError or YamlError
+public func compose_all(yaml: String,
+                        _ resolver: Resolver = .default,
+                        _ constructor: Constructor = .default) throws -> YamlSequence<Node> {
+    let parser = try Parser(yaml: yaml, resolver: resolver, constructor: constructor)
+    return YamlSequence(parser.nextRoot)
+}
+
+/// Parse the first YAML document in a String
+/// and produce the corresponding representation tree.
+///
+/// - Parameters:
+///   - yaml: String
+///   - resolver: Resolver
+///   - constructor: Constructor
+/// - Returns: Any
+/// - Throws: ParserError or YamlError
+public func compose(yaml: String,
+                    _ resolver: Resolver = .default,
+                    _ constructor: Constructor = .default) throws -> Any? {
+    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor).nextRoot()?.any
+}
+
+/// Sequence that holds error
+public struct YamlSequence<T>: Sequence, IteratorProtocol {
+    public private(set) var error: Swift.Error? = nil
+
+    public mutating func next() -> T? {
+        do {
+            return try closure()
+        } catch {
+            self.error = error
+            return nil
+        }
+    }
+
+    fileprivate init(_ closure: @escaping () throws -> T?) {
+        self.closure = closure
+    }
+
+    private let closure: () throws -> T?
+}
+
 public enum ParserError: Swift.Error {
     case unexpectedEvent(UInt32)
     case undefinedAlias(String)
@@ -19,7 +101,6 @@ public enum ParserError: Swift.Error {
 public class Parser {
     // MARK: public
     public let yaml: String
-    public var error: Swift.Error? = nil
     public let resolver: Resolver
     public let constructor: Constructor
 
@@ -82,17 +163,6 @@ public class Parser {
 #else
     private let utf8CString: ContiguousArray<CChar>
 #endif
-}
-
-extension Parser: IteratorProtocol {
-    public func next() -> Node? {
-        do {
-            return try nextRoot()
-        } catch {
-            self.error = error
-            return nil
-        }
-    }
 }
 
 extension ParserError: CustomStringConvertible {

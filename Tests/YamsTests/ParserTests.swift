@@ -19,7 +19,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "- Sammy Sosa",
             "- Ken Griffey"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected = [
             "Mark McGwire",
             "Sammy Sosa",
@@ -34,7 +34,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "avg: 0.278 # Batting average",
             "rbi: 147   # Runs Batted In"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "hr": 65,
             "avg": 0.278,
@@ -54,7 +54,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  - Chicago Cubs",
             "  - Atlanta Braves"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "american": [
                 "Boston Red Sox",
@@ -81,7 +81,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  hr:   63",
             "  avg:  0.288"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [Any] = [
             [
                 "name": "Mark McGwire",
@@ -103,7 +103,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "- [Mark McGwire, 65, 0.278]",
             "- [Sammy Sosa  , 63, 0.288]"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [Any] = [
             ["name", "hr", "avg"],
             ["Mark McGwire", 65, 0.278],
@@ -120,7 +120,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "    avg: 0.288",
             "  }"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected = [
             "Mark McGwire": ["hr": 65, "avg": 0.278],
             "Sammy Sosa": [
@@ -144,7 +144,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "- Chicago Cubs",
             "- St Louis Cardinals"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [Any] = [
             "Mark McGwire",
             "Sammy Sosa",
@@ -166,7 +166,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "action: grand slam",
             "..."
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "time": "20:03:20",
             "player": "Sammy Sosa",
@@ -186,7 +186,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  - Sammy Sosa",
             "  - Ken Griffey"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "hr": [
                 "Mark McGwire",
@@ -211,7 +211,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  - *SS # Subsequent occurrence",
             "  - Ken Griffey"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "hr": [
                 "Mark McGwire",
@@ -238,7 +238,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             ": [ 2001-07-02, 2001-08-12,",
             "    2001-08-14 ]",
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected = [
             ["Detroit Tigers", "Chicago cubs"]: [
                 "2001-07-23"
@@ -263,7 +263,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "- item    : Big Shoes",
             "  quantity: 1"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [Any] = [
             ["item"    : "Super Hoop",
              "quantity": 1],
@@ -282,7 +282,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  \\//||\\/||",
             "  // ||  ||__"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected = [
             "\\//||\\/||",
             "// ||  ||__"
@@ -297,7 +297,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  year was crippled",
             "  by a knee injury."
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected = [
             "Mark McGwire's",
             "year was crippled",
@@ -317,7 +317,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "",
             " What a year!"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected = [
             "Sammy Sosa completed another fine season with great stats.",
             "",
@@ -339,7 +339,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  65 Home Runs",
             "  0.278 Batting Average"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "name": "Mark McGwire",
             "accomplishment": "Mark set a major league home run record in 1998.\n",
@@ -360,7 +360,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "quoted: ' # Not a ''comment''.'",
             "tie-fighter: '|\\-*-/|'"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "unicode": "Sosa did fine.\u{263A}",
             "control": "\u{8}1998\t1999\t2000\n",
@@ -382,7 +382,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  quoted scalar.\n\"",
             ""
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "plain": "This unquoted scalar spans many lines.",
             "quoted": "So does this quoted scalar. "
@@ -397,7 +397,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "octal: 0o14",
             "hexadecimal: 0xC"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "canonical": 12345,
             "decimal": 12345,
@@ -415,7 +415,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "negative infinity: -.inf",
             "not a number: .NaN"
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "canonical": 1.23015e+3,
             "exponential": 12.3015e+02,
@@ -443,7 +443,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             " different documents.",
             ""
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "not-date": "2002-04-28",
             "picture": Data(base64Encoded: [
@@ -459,7 +459,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     func testSpecExample2_27_Invoice() throws { // swiftlint:disable:this function_body_length
         let example = [
-            "--- !<tag:clarkevans.com,2002:invoice>", // FIXME: local tag parsing
+            "--- !<tag:clarkevans.com,2002:invoice>", // TODO: local tag parsing
             "invoice: 34843",
             "date   : 2001-01-23",
             "bill-to: &id001",
@@ -489,7 +489,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "    Backup contact is Nancy",
             "    Billsmer @ 338-4338."
             ].joined(separator: "\n")
-        let objects = try Parser(yaml: example).next()!.any
+        let objects = try Yams.load(yaml: example)
         let billTo: [String:Any] = [
             "given" : "Chris",
             "family" : "Dumars",
@@ -556,8 +556,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "      foo = bar",
             ""
             ].joined(separator: "\n")
-        let iterator = try Parser(yaml: example)
-        let objects = AnyIterator(iterator).map { $0.any }
+        let objects = Array(try Yams.load_all(yaml: example))
         let expected: [Any] = [
             [
                 "Time": "2001-11-23 15:01:42 -5",
