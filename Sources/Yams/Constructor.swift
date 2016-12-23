@@ -251,11 +251,13 @@ public final class Constructor {
             return nanosecond
         }
         datecomponents.timeZone = {
-//            guard components[7] != nil else { return TimeZone(secondsFromGMT: 0) }
-
             var seconds = 0
-            seconds += components[9].flatMap({ Int($0) }).map({ $0 * 60 * 60 }) ?? 0 // hour
-            seconds += components[10].flatMap({ Int($0) }).map({ $0 * 60 }) ?? 0 // minute
+            if let hourInSecond = components[9].flatMap({ Int($0) }).map({ $0 * 60 * 60 }) {
+                seconds += hourInSecond
+            }
+            if let minuteInSecond = components[10].flatMap({ Int($0) }).map({ $0 * 60 }) {
+                seconds += minuteInSecond
+            }
             if components[8] == "-" { // sign
                 seconds *= -1
             }

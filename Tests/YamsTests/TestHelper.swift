@@ -47,7 +47,7 @@ func timestamp(_ timeZoneHour: Int = 0,
                                         _ context: @autoclosure @escaping () -> String = "",
                                         file: StaticString = #file, line: UInt = #line) -> Bool {
     // use inner function for capturing `file` and `line`
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     @discardableResult func equal(_ lhs: Any?, _ rhs: Any?,
                                   _ context: @autoclosure @escaping () -> String = "") -> Bool {
         switch (lhs, rhs) {

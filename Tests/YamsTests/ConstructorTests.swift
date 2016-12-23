@@ -399,4 +399,4 @@ extension ConstructorTests {
             ("testValue", testValue)
         ]
     }
-}
+} // swiftlint:disable:this file_length
