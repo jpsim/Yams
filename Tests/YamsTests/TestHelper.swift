@@ -86,6 +86,10 @@ func timestamp(_ timeZoneHour: Int = 0,
         case let (lhs as AnyHashable, rhs as AnyHashable):
             XCTAssertEqual(lhs, rhs, context(), file: file, line: line)
             return lhs == rhs
+        case let (lhs as (Any, Any), rhs as (Any, Any)):
+            return equal(lhs.0, rhs.0) && equal(lhs.1, rhs.1)
+        case let (lhs as Set<AnyHashable>, rhs as Set<AnyHashable>):
+            return lhs == rhs
         default:
             let message = { "Can't compare \(type(of: lhs))(\(dumped(lhs))) to \(type(of: rhs))(\(dumped(rhs)))" }
             XCTFail(joined(message(), context()), file: file, line: line)

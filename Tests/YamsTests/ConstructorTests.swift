@@ -225,6 +225,73 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         YamsAssertEqual(objects, expected)
     }
 
+    func testOmap() throws {
+        let example = [
+            "# Explicitly typed ordered map (dictionary).",
+            "Bestiary: !!omap",
+            "  - aardvark: African pig-like ant eater. Ugly.",
+            "  - anteater: South-American ant eater. Two species.",
+            "  - anaconda: South-American constrictor snake. Scaly.",
+            "  # Etc.",
+            "# Flow style",
+            "Numbers: !!omap [ one: 1, two: 2, three : 3 ]",
+            ""
+            ].joined(separator: "\n")
+        let objects = try Yams.load(yaml: example)
+        let expected: [String:Any] = [
+            "Bestiary": [
+                ("aardvark", "African pig-like ant eater. Ugly."),
+                ("anteater", "South-American ant eater. Two species."),
+                ("anaconda", "South-American constrictor snake. Scaly.")
+            ] as [(Any, Any)],
+            "Numbers": [("one", 1), ("two", 2), ("three", 3)] as [(Any, Any)]
+        ]
+        YamsAssertEqual(objects, expected)
+    }
+
+    func testPairs() throws {
+        let example = [
+            "# Explicitly typed pairs.",
+            "Block tasks: !!pairs",
+            "  - meeting: with team.",
+            "  - meeting: with boss.",
+            "  - break: lunch.",
+            "  - meeting: with client.",
+            "Flow tasks: !!pairs [ meeting: with team, meeting: with boss ]",
+            ""
+            ].joined(separator: "\n")
+        let objects = try Yams.load(yaml: example)
+        let expected: [String:Any] = [
+            "Block tasks": [
+                ("meeting", "with team."),
+                ("meeting", "with boss."),
+                ("break", "lunch."),
+                ("meeting", "with client.")
+                ] as [(Any, Any)],
+            "Flow tasks": [("meeting", "with team"), ("meeting", "with boss")] as [(Any, Any)]
+        ]
+        YamsAssertEqual(objects, expected)
+    }
+
+    func testSet() throws {
+        let example = [
+            "# Explicitly typed set.",
+            "baseball players: !!set",
+            "  ? Mark McGwire",
+            "  ? Sammy Sosa",
+            "  ? Ken Griffey",
+            "# Flow style",
+            "baseball teams: !!set { Boston Red Sox, Detroit Tigers, New York Yankees }",
+            ""
+            ].joined(separator: "\n")
+        let objects = try Yams.load(yaml: example)
+        let expected: [String:Any] = [
+            "baseball players": ["Mark McGwire", "Sammy Sosa", "Ken Griffey"] as Set<AnyHashable>,
+            "baseball teams": ["Boston Red Sox", "Detroit Tigers", "New York Yankees"] as Set<AnyHashable>
+        ]
+        YamsAssertEqual(objects, expected)
+    }
+
     func testSeq() throws {
         let example = [
             "# Ordered sequence of nodes",
@@ -324,6 +391,9 @@ extension ConstructorTests {
             ("testMap", testMap),
             ("testMerge", testMerge),
             ("testNull", testNull),
+            ("testOmap", testOmap),
+            ("testPairs", testPairs),
+            ("testSet", testSet),
             ("testSeq", testSeq),
             ("testTimestamp", testTimestamp),
             ("testValue", testValue)

@@ -192,6 +192,32 @@ public final class Constructor {
         return data ?? string
     }
 
+    public func omap(from node: Node) -> Any {
+        // Note: we do not check for duplicate keys.
+        guard let array = node.array else { fatalError("Never happen this") }
+        return array.flatMap { subnode -> (Any, Any)? in
+            // TODO: Should rais error if subnode is not mapping or pairs.count != 1
+            guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
+            return (any(from: pair.key), any(from: pair.value))
+        }
+    }
+
+    public func pairs(from node: Node) -> Any {
+        // Note: the same code as `omap(from:)`.
+        guard let array = node.array else { fatalError("Never happen this") }
+        return array.flatMap { subnode -> (Any, Any)? in
+            // TODO: Should rais error if subnode is not mapping or pairs.count != 1
+            guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
+            return (any(from: pair.key), any(from: pair.value))
+        }
+    }
+
+    public func set(from node: Node) -> Any {
+        guard let pairs = node.pairs else { fatalError("Never happen this") }
+        // TODO: YAML supports Hashable elements other than str.
+        return Set(pairs.map({ str(from: $0.key) as AnyHashable }))
+    }
+
     public func timestamp(from node: Node) -> Any {
         guard let string = node.string else { fatalError("Never happen this") }
 
@@ -268,9 +294,9 @@ extension Constructor {
         // http://yaml.org/type/index.html
         .binary: Constructor.binary,
         // .merge is supported in `Constructor.map`.
-//        .omap: Constructor.omap,
-//        .pairs: Constructor.pairs,
-//        .set: Constructor.set,
+        .omap: Constructor.omap,
+        .pairs: Constructor.pairs,
+        .set: Constructor.set,
         .timestamp: Constructor.timestamp
         // .value is supported in `Constructor.str` and `Constructor.map`.
         ])
