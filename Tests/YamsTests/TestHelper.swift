@@ -6,7 +6,32 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
+import Foundation
 import XCTest
+
+func timestamp(_ timeZoneHour: Int = 0,
+               _ year: Int? = nil,
+               _ month: Int? = nil,
+               _ day: Int? = nil,
+               _ hour: Int? = nil,
+               _ minute: Int? = nil,
+               _ second: Int? = nil,
+               _ fraction: Double? = nil ) -> Date {
+    let calendar = Calendar(identifier: .gregorian)
+    let timeZone = TimeZone(secondsFromGMT: timeZoneHour * 60 * 60)
+    #if os(Linux)
+        let NSEC_PER_SEC = 1000000000
+    #endif
+    let nanosecond = fraction.map { Int($0 * Double(NSEC_PER_SEC)) }
+    let datecomponents = DateComponents(calendar: calendar, timeZone: timeZone,
+                          year: year, month: month, day: day,
+                          hour: hour, minute: minute, second: second, nanosecond: nanosecond)
+    // Using `DateComponents.date` causes crash on Linux
+    guard let date = NSCalendar(identifier: .gregorian)?.date(from: datecomponents) else {
+        fatalError("Never happen this")
+    }
+    return date
+}
 
 /// AssertEqual for Any
 ///
@@ -17,10 +42,12 @@ import XCTest
 ///   - file: file path string
 ///   - line: line number
 /// - Returns: true if lhs is equal to rhs
-@discardableResult func YamsAssertEqual(_ lhs: Any?, _ rhs: Any?,
+
+@discardableResult func YamsAssertEqual(_ lhs: Any?, _ rhs: Any?, // swiftlint:disable:this function_body_length
                                         _ context: @autoclosure @escaping () -> String = "",
                                         file: StaticString = #file, line: UInt = #line) -> Bool {
     // use inner function for capturing `file` and `line`
+    // swiftlint:disable:next cyclomatic_complexity
     @discardableResult func equal(_ lhs: Any?, _ rhs: Any?,
                                   _ context: @autoclosure @escaping () -> String = "") -> Bool {
         switch (lhs, rhs) {

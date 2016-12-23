@@ -166,12 +166,18 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "action: grand slam",
             "..."
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
-            "time": "20:03:20",
-            "player": "Sammy Sosa",
-            "action": "strike (miss)"
+        let objects = Array(try Yams.load_all(yaml: example))
+        let expected: [[String:Any]] = [
+            [
+                "time": 72200,
+                "player": "Sammy Sosa",
+                "action": "strike (miss)"
+            ], [
+                "time": 72227,
+                "player": "Sammy Sosa",
+                "action": "grand slam"
             ]
+        ]
         YamsAssertEqual(objects, expected)
     }
 
@@ -502,7 +508,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
         ]
         let expected: [String:Any] = [
             "invoice" : 34843,
-            "date" : "2001-01-23",
+            "date" : timestamp(0, 2001, 1, 23),
             "bill-to" : billTo,
             "ship-to" : billTo,
             "product" : [
@@ -559,17 +565,17 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
         let objects = Array(try Yams.load_all(yaml: example))
         let expected: [Any] = [
             [
-                "Time": "2001-11-23 15:01:42 -5",
+                "Time": timestamp(-5, 2001, 11, 23, 15, 1, 42),
                 "User": "ed",
                 "Warning": "This is an error message for the log file"
             ],
             [
-                "Time": "2001-11-23 15:02:31 -5",
+                "Time": timestamp(-5, 2001, 11, 23, 15, 2, 31),
                 "User": "ed",
                 "Warning": "A slightly different error message."
             ],
             [
-                "Date": "2001-11-23 15:03:17 -5",
+                "Date": timestamp(-5, 2001, 11, 23, 15, 3, 17),
                 "User": "ed",
                 "Fatal": "Unknown variable \"bar\"",
                 "Stack": [

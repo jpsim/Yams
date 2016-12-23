@@ -92,10 +92,10 @@ public final class Constructor {
 
     public func bool(from node: Node) -> Any {
         guard let string = node.string else { fatalError("Never happen this") }
-        switch string {
-        case "true", "True", "TRUE":
+        switch string.lowercased() {
+        case "true", "yes", "on":
             return true
-        case "false", "False", "FALSE":
+        case "false", "no", "off":
             return false
         default:
             return string
@@ -103,7 +103,7 @@ public final class Constructor {
     }
 
     public func float(from node: Node) -> Any {
-        guard let string = node.string else { fatalError("Never happen this") }
+        guard var string = node.string else { fatalError("Never happen this") }
         switch string {
         case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
             return Double.infinity
@@ -112,6 +112,24 @@ public final class Constructor {
         case ".nan", ".NaN", ".NAN":
             return Double.nan
         default:
+            string = string.replacingOccurrences(of: "_", with: "")
+            if string.contains(":") {
+                var sign: Double = 1
+                if string.hasPrefix("-") {
+                    sign = -1
+                    string = string.substring(from: string.index(after: string.startIndex))
+                } else if string.hasPrefix("+") {
+                    string = string.substring(from: string.index(after: string.startIndex))
+                }
+                let digits = string.components(separatedBy: ":").flatMap(Double.init).reversed()
+                var base = 1.0
+                var value = 0.0
+                digits.forEach {
+                    value += $0 * base
+                    base *= 60
+                }
+                return sign * value
+            }
             return Double(string) ?? string
         }
     }
@@ -119,7 +137,7 @@ public final class Constructor {
     public func null(from node: Node) -> Any {
         guard let string = node.string else { fatalError("Never happen this") }
         switch string {
-        case "~", "null", "Null", "NULL":
+        case "", "~", "null", "Null", "NULL":
             return NSNull()
         default:
             return string
@@ -127,18 +145,43 @@ public final class Constructor {
     }
 
     public func int(from node: Node) -> Any {
-        guard let string = node.string else { fatalError("Never happen this") }
+        guard var string = node.string else { fatalError("Never happen this") }
+        string = string.replacingOccurrences(of: "_", with: "")
+        if string == "0" {
+            return 0
+        }
         if string.hasPrefix("0x") {
             let hexadecimal = string.substring(from: string.index(string.startIndex, offsetBy: 2))
             return Int(hexadecimal, radix: 16) ?? string
+        }
+        if string.hasPrefix("0b") {
+            let octal = string.substring(from: string.index(string.startIndex, offsetBy: 2))
+            return Int(octal, radix: 2) ?? string
         }
         if string.hasPrefix("0o") {
             let octal = string.substring(from: string.index(string.startIndex, offsetBy: 2))
             return Int(octal, radix: 8) ?? string
         }
-        if string.hasPrefix("0b") {
-            let octal = string.substring(from: string.index(string.startIndex, offsetBy: 2))
-            return Int(octal, radix: 2) ?? string
+        if string.hasPrefix("0") {
+            let octal = string.substring(from: string.index(after: string.startIndex))
+            return Int(octal, radix: 8) ?? string
+        }
+        if string.contains(":") {
+            var sign = 1
+            if string.hasPrefix("-") {
+                sign = -1
+                string = string.substring(from: string.index(after: string.startIndex))
+            } else if string.hasPrefix("+") {
+                string = string.substring(from: string.index(after: string.startIndex))
+            }
+            let digits = string.components(separatedBy: ":").flatMap({ Int($0) }).reversed()
+            var base = 1
+            var value = 0
+            digits.forEach {
+                value += $0 * base
+                base *= 60
+            }
+            return sign * value
         }
         return Int(string) ?? string
     }
@@ -151,9 +194,65 @@ public final class Constructor {
 
     public func timestamp(from node: Node) -> Any {
         guard let string = node.string else { fatalError("Never happen this") }
-        return ISO8601Formatter.date(from: string) ?? string
+
+        let range = NSRange(location: 0, length: string.utf16.count)
+        guard let result = timestampPattern.firstMatch(in: string, options: [], range: range),
+           result.range.location != NSNotFound else {
+            return string
+        }
+        #if os(Linux)
+            let components = (1..<result.numberOfRanges).map(result.range(at:)).map(string.substring)
+        #else
+            let components = (1..<result.numberOfRanges).map(result.rangeAt).map(string.substring)
+        #endif
+
+        var datecomponents = DateComponents()
+        datecomponents.calendar = Calendar(identifier: .gregorian)
+        datecomponents.year = components[0].flatMap { Int($0) }
+        datecomponents.month = components[1].flatMap { Int($0) }
+        datecomponents.day = components[2].flatMap { Int($0) }
+        datecomponents.hour = components[3].flatMap { Int($0) }
+        datecomponents.minute = components[4].flatMap { Int($0) }
+        datecomponents.second = components[5].flatMap { Int($0) }
+        datecomponents.nanosecond = components[6].flatMap {
+            let length = $0.characters.count
+            let nanosecond: Int?
+            if length < 9 {
+                nanosecond = Int($0 + String(repeating: "0", count: 9 - length))
+            } else {
+                nanosecond = Int($0.substring(to: $0.index($0.startIndex, offsetBy: 9)))
+            }
+            return nanosecond
+        }
+        datecomponents.timeZone = {
+//            guard components[7] != nil else { return TimeZone(secondsFromGMT: 0) }
+
+            var seconds = 0
+            seconds += components[9].flatMap({ Int($0) }).map({ $0 * 60 * 60 }) ?? 0 // hour
+            seconds += components[10].flatMap({ Int($0) }).map({ $0 * 60 }) ?? 0 // minute
+            if components[8] == "-" { // sign
+                seconds *= -1
+            }
+            return TimeZone(secondsFromGMT: seconds)
+        }()
+        // Using `DateComponents.date` causes crash on Linux
+        return NSCalendar(identifier: .gregorian)?.date(from: datecomponents) ?? string
     }
 }
+
+fileprivate let timestampPattern: NSRegularExpression = pattern([
+    "^([0-9][0-9][0-9][0-9])",          // year
+    "-([0-9][0-9]?)",                   // month
+    "-([0-9][0-9]?)",                   // day
+    "(?:(?:[Tt]|[ \\t]+)",
+    "([0-9][0-9]?)",                    // hour
+    ":([0-9][0-9])",                    // minute
+    ":([0-9][0-9])",                    // second
+    "(?:\\.([0-9]*))?",                 // fraction
+    "(?:[ \\t]*(Z|([-+])([0-9][0-9]?)", // tz_sign, tz_hour
+    "(?::([0-9][0-9]))?))?)?$"          // tz_minute
+    ].joined()
+)
 
 extension Constructor {
     public static let `default` = Constructor([
@@ -181,6 +280,19 @@ fileprivate let ISO8601Formatter: DateFormatter = {
     let dateFormatter = DateFormatter()
     dateFormatter.locale = Locale(identifier: "en_US_POSIX")
     dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-    dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
+    dateFormatter.dateFormat = "yyyy-MM-ddTHH:mm:ssZ"
     return dateFormatter
 }()
+
+fileprivate extension String {
+    func substring(with range: NSRange) -> String? {
+        guard range.location != NSNotFound else { return nil }
+        let utf16lowerBound = utf16.index(utf16.startIndex, offsetBy: range.location)
+        let utf16upperBound = utf16.index(utf16lowerBound, offsetBy: range.length)
+        guard let lowerBound = utf16lowerBound.samePosition(in: self),
+            let upperBound = utf16upperBound.samePosition(in: self) else {
+                fatalError("Never happen this")
+        }
+        return substring(with: lowerBound..<upperBound)
+    }
+}
