@@ -24,8 +24,8 @@ public class Tag {
     var name: Name?
 
     init(_ string: String?,
-         _ resolver: Resolver /*= .default*/,
-         _ constructor: Constructor /*= .default*/) {
+         _ resolver: Resolver,
+         _ constructor: Constructor) {
         self.resolver = resolver
         self.constructor = constructor
         if let string = string, !string.isEmpty && string != "!" {
@@ -33,6 +33,14 @@ public class Tag {
         } else {
             name = nil
         }
+    }
+
+    init(_ name: Name,
+         _ resolver: Resolver,
+         _ constructor: Constructor) {
+        self.resolver = resolver
+        self.constructor = constructor
+        self.name = name
     }
 
     func resolved(with node: Node) -> Tag {

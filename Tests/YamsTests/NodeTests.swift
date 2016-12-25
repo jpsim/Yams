@@ -36,10 +36,28 @@ class NodeTests: XCTestCase {
         XCTAssertEqual(sequence, expected)
     }
 
+    func testExpressibleByIntegerLiteral() {
+        let sequence: Node = 0
+        let expected: Node = .scalar(String(0), .implicit)
+        XCTAssertEqual(sequence, expected)
+    }
+
     func testExpressibleByStringLiteral() {
         let sequence: Node = "string"
         let expected: Node = .scalar("string", .implicit)
         XCTAssertEqual(sequence, expected)
+    }
+
+    func testSubscriptMapping() {
+        let mapping: Node = ["key1": "value1", "key2": "value2"]
+        let valueForKey1 = mapping["key1"]?.string
+        XCTAssertEqual(valueForKey1, "value1")
+    }
+
+    func testSubscriptSequence() {
+        let mapping: Node = ["value1", "value2", "value3"]
+        let valueAtSecond = mapping[1]?.string
+        XCTAssertEqual(valueAtSecond, "value2")
     }
 }
 
@@ -49,7 +67,10 @@ extension NodeTests {
             ("testExpressibleByArrayLiteral", testExpressibleByArrayLiteral),
             ("testExpressibleByDictionaryLiteral", testExpressibleByDictionaryLiteral),
             ("testExpressibleByFloatLiteral", testExpressibleByFloatLiteral),
-            ("testExpressibleByStringLiteral", testExpressibleByStringLiteral)
+            ("testExpressibleByIntegerLiteral", testExpressibleByIntegerLiteral),
+            ("testExpressibleByStringLiteral", testExpressibleByStringLiteral),
+            ("testSubscriptMapping", testSubscriptMapping),
+            ("testSubscriptSequence", testSubscriptSequence)
         ]
     }
 }

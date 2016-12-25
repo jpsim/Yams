@@ -69,6 +69,17 @@ extension Node {
     public var timestamp: Date? {
         return tag.constructor.timestamp(from: self)
     }
+
+    public subscript(node: Node) -> Node? {
+        switch self {
+        case .scalar: return nil
+        case let .mapping(pairs, _):
+            return pairs.reversed().first(where: { $0.key == node })?.value
+        case let .sequence(sequence, _):
+            guard let index = node.int, 0 <= index, index < sequence.count else { return nil }
+            return sequence[index]
+        }
+    }
 }
 
 // MARK: Hashable
@@ -113,7 +124,13 @@ extension Node: ExpressibleByDictionaryLiteral {
 
 extension Node: ExpressibleByFloatLiteral {
     public init(floatLiteral value: Double) {
-        self = .scalar(String(value), .implicit)
+        self = .scalar(String(value), Tag(.float, .default, .default))
+    }
+}
+
+extension Node: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: Int) {
+        self = .scalar(String(value), Tag(.int, .default, .default))
     }
 }
 
