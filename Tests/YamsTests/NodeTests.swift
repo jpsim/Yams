@@ -48,6 +48,32 @@ class NodeTests: XCTestCase {
         XCTAssertEqual(sequence, expected)
     }
 
+    func testTypedAccessorProperties() {
+        let scalarBool: Node = "true"
+        XCTAssertEqual(scalarBool.bool, true)
+
+        let scalarFloat: Node = "1.0"
+        XCTAssertEqual(scalarFloat.float, 1.0)
+
+        let scalarNull: Node = "null"
+        XCTAssertEqual(scalarNull.null, NSNull())
+
+        let scalarInt: Node = "1"
+        XCTAssertEqual(scalarInt.int, 1)
+
+        let base64String = [
+            " R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5",
+            " OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+",
+            " +f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC",
+            " AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
+            ].joined()
+        let scalarBinary: Node = .scalar(base64String, .implicit)
+        XCTAssertEqual(scalarBinary.binary, Data(base64Encoded: base64String, options: .ignoreUnknownCharacters)!)
+
+        let scalarTimestamp: Node = "2001-12-15T02:59:43.1Z"
+        XCTAssertEqual(scalarTimestamp.timestamp, timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.1))
+    }
+
     func testSubscriptMapping() {
         let mapping: Node = ["key1": "value1", "key2": "value2"]
         let valueForKey1 = mapping["key1"]?.string
