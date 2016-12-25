@@ -19,6 +19,8 @@ public class Tag {
         }
     }
 
+    // internal
+    let constructor: Constructor
     var name: Name?
 
     init(_ string: String?,
@@ -40,17 +42,12 @@ public class Tag {
         return self
     }
 
-    func any(from node: Node) -> Any {
-        return constructor.any(from: node)
-    }
-
     static var implicit: Tag {
         return Tag(nil, .default, .default)
     }
 
     // fileprivate
     fileprivate let resolver: Resolver
-    fileprivate let constructor: Constructor
 }
 
 extension Tag: Hashable {

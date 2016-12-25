@@ -9,7 +9,7 @@
 import Foundation
 
 public final class Constructor {
-    public typealias Method = (Constructor) -> (Node) -> Any
+    public typealias Method = (Constructor) -> (Node) -> Any?
     let tagMethodMap: [Tag.Name:Method]
 
     public init(_ map: [Tag.Name:Method]) {
@@ -17,8 +17,8 @@ public final class Constructor {
     }
 
     public func any(from node: Node) -> Any {
-        if let tagName = node.tag.name, let method = tagMethodMap[tagName] {
-            return method(self)(node)
+        if let tagName = node.tag.name, let method = tagMethodMap[tagName], let result = method(self)(node) {
+            return result
         }
         switch node {
         case .scalar:
@@ -81,30 +81,30 @@ public final class Constructor {
                 return str(from: pair.value)
             }
         }
-        guard let string = node.string else { fatalError("Never happen this") }
-        return string
+        guard let scalar = node.scalar else { fatalError("Never happen this") }
+        return scalar
     }
 
     public func seq(from node: Node) -> [Any] {
-        guard let array = node.array else { fatalError("Never happen this") }
+        guard let array = node.sequence else { fatalError("Never happen this") }
         return array.map { any(from: $0) }
     }
 
-    public func bool(from node: Node) -> Any {
-        guard let string = node.string else { fatalError("Never happen this") }
-        switch string.lowercased() {
+    public func bool(from node: Node) -> Bool? {
+        guard let scalar = node.scalar else { fatalError("Never happen this") }
+        switch scalar.lowercased() {
         case "true", "yes", "on":
             return true
         case "false", "no", "off":
             return false
         default:
-            return string
+            return nil
         }
     }
 
-    public func float(from node: Node) -> Any {
-        guard var string = node.string else { fatalError("Never happen this") }
-        switch string {
+    public func float(from node: Node) -> Double? {
+        guard var scalar = node.scalar else { fatalError("Never happen this") }
+        switch scalar {
         case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
             return Double.infinity
         case "-.inf", "-.Inf", "-.INF":
@@ -112,16 +112,16 @@ public final class Constructor {
         case ".nan", ".NaN", ".NAN":
             return Double.nan
         default:
-            string = string.replacingOccurrences(of: "_", with: "")
-            if string.contains(":") {
+            scalar = scalar.replacingOccurrences(of: "_", with: "")
+            if scalar.contains(":") {
                 var sign: Double = 1
-                if string.hasPrefix("-") {
+                if scalar.hasPrefix("-") {
                     sign = -1
-                    string = string.substring(from: string.index(after: string.startIndex))
-                } else if string.hasPrefix("+") {
-                    string = string.substring(from: string.index(after: string.startIndex))
+                    scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
+                } else if scalar.hasPrefix("+") {
+                    scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
                 }
-                let digits = string.components(separatedBy: ":").flatMap(Double.init).reversed()
+                let digits = scalar.components(separatedBy: ":").flatMap(Double.init).reversed()
                 var base = 1.0
                 var value = 0.0
                 digits.forEach {
@@ -130,51 +130,51 @@ public final class Constructor {
                 }
                 return sign * value
             }
-            return Double(string) ?? string
+            return Double(scalar)
         }
     }
 
-    public func null(from node: Node) -> Any {
-        guard let string = node.string else { fatalError("Never happen this") }
-        switch string {
+    public func null(from node: Node) -> NSNull? {
+        guard let scalar = node.scalar else { fatalError("Never happen this") }
+        switch scalar {
         case "", "~", "null", "Null", "NULL":
             return NSNull()
         default:
-            return string
+            return nil
         }
     }
 
-    public func int(from node: Node) -> Any {
-        guard var string = node.string else { fatalError("Never happen this") }
-        string = string.replacingOccurrences(of: "_", with: "")
-        if string == "0" {
+    public func int(from node: Node) -> Int? {
+        guard var scalar = node.scalar else { fatalError("Never happen this") }
+        scalar = scalar.replacingOccurrences(of: "_", with: "")
+        if scalar == "0" {
             return 0
         }
-        if string.hasPrefix("0x") {
-            let hexadecimal = string.substring(from: string.index(string.startIndex, offsetBy: 2))
-            return Int(hexadecimal, radix: 16) ?? string
+        if scalar.hasPrefix("0x") {
+            let hexadecimal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
+            return Int(hexadecimal, radix: 16)
         }
-        if string.hasPrefix("0b") {
-            let octal = string.substring(from: string.index(string.startIndex, offsetBy: 2))
-            return Int(octal, radix: 2) ?? string
+        if scalar.hasPrefix("0b") {
+            let octal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
+            return Int(octal, radix: 2)
         }
-        if string.hasPrefix("0o") {
-            let octal = string.substring(from: string.index(string.startIndex, offsetBy: 2))
-            return Int(octal, radix: 8) ?? string
+        if scalar.hasPrefix("0o") {
+            let octal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
+            return Int(octal, radix: 8)
         }
-        if string.hasPrefix("0") {
-            let octal = string.substring(from: string.index(after: string.startIndex))
-            return Int(octal, radix: 8) ?? string
+        if scalar.hasPrefix("0") {
+            let octal = scalar.substring(from: scalar.index(after: scalar.startIndex))
+            return Int(octal, radix: 8)
         }
-        if string.contains(":") {
+        if scalar.contains(":") {
             var sign = 1
-            if string.hasPrefix("-") {
+            if scalar.hasPrefix("-") {
                 sign = -1
-                string = string.substring(from: string.index(after: string.startIndex))
-            } else if string.hasPrefix("+") {
-                string = string.substring(from: string.index(after: string.startIndex))
+                scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
+            } else if scalar.hasPrefix("+") {
+                scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
             }
-            let digits = string.components(separatedBy: ":").flatMap({ Int($0) }).reversed()
+            let digits = scalar.components(separatedBy: ":").flatMap({ Int($0) }).reversed()
             var base = 1
             var value = 0
             digits.forEach {
@@ -183,18 +183,18 @@ public final class Constructor {
             }
             return sign * value
         }
-        return Int(string) ?? string
+        return Int(scalar)
     }
 
-    public func binary(from node: Node) -> Any {
-        guard let string = node.string else { fatalError("Never happen this") }
-        let data = Data(base64Encoded: string, options: .ignoreUnknownCharacters)
-        return data ?? string
+    public func binary(from node: Node) -> Data? {
+        guard let scalar = node.scalar else { fatalError("Never happen this") }
+        let data = Data(base64Encoded: scalar, options: .ignoreUnknownCharacters)
+        return data
     }
 
-    public func omap(from node: Node) -> Any {
+    public func omap(from node: Node) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
-        guard let array = node.array else { fatalError("Never happen this") }
+        guard let array = node.sequence else { fatalError("Never happen this") }
         return array.flatMap { subnode -> (Any, Any)? in
             // TODO: Should rais error if subnode is not mapping or pairs.count != 1
             guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
@@ -202,9 +202,9 @@ public final class Constructor {
         }
     }
 
-    public func pairs(from node: Node) -> Any {
+    public func pairs(from node: Node) -> [(Any, Any)] {
         // Note: the same code as `omap(from:)`.
-        guard let array = node.array else { fatalError("Never happen this") }
+        guard let array = node.sequence else { fatalError("Never happen this") }
         return array.flatMap { subnode -> (Any, Any)? in
             // TODO: Should rais error if subnode is not mapping or pairs.count != 1
             guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
@@ -212,24 +212,24 @@ public final class Constructor {
         }
     }
 
-    public func set(from node: Node) -> Any {
+    public func set(from node: Node) -> Set<AnyHashable> {
         guard let pairs = node.pairs else { fatalError("Never happen this") }
         // TODO: YAML supports Hashable elements other than str.
         return Set(pairs.map({ str(from: $0.key) as AnyHashable }))
     }
 
-    public func timestamp(from node: Node) -> Any {
-        guard let string = node.string else { fatalError("Never happen this") }
+    public func timestamp(from node: Node) -> Date? {
+        guard let scalar = node.scalar else { fatalError("Never happen this") }
 
-        let range = NSRange(location: 0, length: string.utf16.count)
-        guard let result = timestampPattern.firstMatch(in: string, options: [], range: range),
+        let range = NSRange(location: 0, length: scalar.utf16.count)
+        guard let result = timestampPattern.firstMatch(in: scalar, options: [], range: range),
            result.range.location != NSNotFound else {
-            return string
+            return nil
         }
         #if os(Linux)
-            let components = (1..<result.numberOfRanges).map(result.range(at:)).map(string.substring)
+            let components = (1..<result.numberOfRanges).map(result.range(at:)).map(scalar.substring)
         #else
-            let components = (1..<result.numberOfRanges).map(result.rangeAt).map(string.substring)
+            let components = (1..<result.numberOfRanges).map(result.rangeAt).map(scalar.substring)
         #endif
 
         var datecomponents = DateComponents()
@@ -264,7 +264,7 @@ public final class Constructor {
             return TimeZone(secondsFromGMT: seconds)
         }()
         // Using `DateComponents.date` causes crash on Linux
-        return NSCalendar(identifier: .gregorian)?.date(from: datecomponents) ?? string
+        return NSCalendar(identifier: .gregorian)?.date(from: datecomponents)
     }
 }
 

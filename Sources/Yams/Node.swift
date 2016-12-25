@@ -29,39 +29,6 @@ public struct Pair<Value: Equatable>: Equatable {
 }
 
 extension Node {
-    // MARK: typed access properties
-    public var array: [Node]? {
-        if case let .sequence(array, _) = self {
-            return array
-        }
-        return nil
-    }
-
-    public var dictionary: [Node:Node]? {
-        if case let .mapping(pairs, _) = self {
-            var dictionary = [Node: Node](minimumCapacity: pairs.count)
-            pairs.forEach {
-                dictionary[$0.key] = $0.value
-            }
-            return dictionary
-        }
-        return nil
-    }
-
-    var pairs: [Pair<Node>]? {
-        if case let .mapping(pairs, _) = self {
-            return pairs
-        }
-        return nil
-    }
-
-    public var string: String? {
-        if case let .scalar(string, _) = self {
-            return string
-        }
-        return nil
-    }
-
     public var tag: Tag {
         switch self {
         case let .scalar(_, tag): return tag.resolved(with: self)
@@ -70,29 +37,37 @@ extension Node {
         }
     }
 
-    public var isScalar: Bool {
-        if case .scalar = self {
-            return true
-        }
-        return false
-    }
-
-    public var isMapping: Bool {
-        if case .mapping = self {
-            return true
-        }
-        return false
-    }
-
-    public var isSequence: Bool {
-        if case .sequence = self {
-            return true
-        }
-        return false
-    }
-
+    // MARK: typed accessor properties
     public var any: Any {
-        return tag.any(from: self)
+        return tag.constructor.any(from: self)
+    }
+
+    public var string: String? {
+        return tag.constructor.str(from: self)
+    }
+
+    public var bool: Bool? {
+        return tag.constructor.bool(from: self)
+    }
+
+    public var float: Double? {
+        return tag.constructor.float(from: self)
+    }
+
+    public var null: NSNull? {
+        return tag.constructor.null(from: self)
+    }
+
+    public var int: Int? {
+        return tag.constructor.int(from: self)
+    }
+
+    public var binary: Data? {
+        return tag.constructor.binary(from: self)
+    }
+
+    public var timestamp: Date? {
+        return tag.constructor.timestamp(from: self)
     }
 }
 
@@ -153,5 +128,50 @@ extension Node: ExpressibleByStringLiteral {
 
     public init(unicodeScalarLiteral value: String) {
         self = .scalar(value, .implicit)
+    }
+}
+
+extension Node {
+    // MARK: Internal convenient accessor
+    var sequence: [Node]? {
+        if case let .sequence(sequence, _) = self {
+            return sequence
+        }
+        return nil
+    }
+
+    var pairs: [Pair<Node>]? {
+        if case let .mapping(pairs, _) = self {
+            return pairs
+        }
+        return nil
+    }
+
+    var scalar: String? {
+        if case let .scalar(scalar, _) = self {
+            return scalar
+        }
+        return nil
+    }
+
+    var isScalar: Bool {
+        if case .scalar = self {
+            return true
+        }
+        return false
+    }
+
+    var isMapping: Bool {
+        if case .mapping = self {
+            return true
+        }
+        return false
+    }
+
+    var isSequence: Bool {
+        if case .sequence = self {
+            return true
+        }
+        return false
     }
 }
