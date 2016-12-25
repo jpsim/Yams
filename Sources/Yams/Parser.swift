@@ -69,8 +69,8 @@ public func compose_all(yaml: String,
 /// - Throws: ParserError or YamlError
 public func compose(yaml: String,
                     _ resolver: Resolver = .default,
-                    _ constructor: Constructor = .default) throws -> Any? {
-    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor).nextRoot()?.any
+                    _ constructor: Constructor = .default) throws -> Node? {
+    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor).nextRoot()
 }
 
 /// Sequence that holds error
