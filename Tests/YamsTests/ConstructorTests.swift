@@ -128,9 +128,9 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
             "Block style": [
-                "Clark" : "Evans",
-                "Brian" : "Ingerson",
-                "Oren"  : "Ben-Kiki"
+                "Clark": "Evans",
+                "Brian": "Ingerson",
+                "Oren": "Ben-Kiki"
             ],
             "Flow style": ["Clark": "Evans", "Brian": "Ingerson", "Oren": "Ben-Kiki"]
         ]
@@ -342,9 +342,9 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
         let expected: [String:Any] = [
-            "canonical":        timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.1),
-            "valid iso8601":    timestamp(-5, 2001, 12, 14, 21, 59, 43, 0.1),
-            "space separated":  timestamp(-5, 2001, 12, 14, 21, 59, 43, 0.1),
+            "canonical": timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.1),
+            "valid iso8601": timestamp(-5, 2001, 12, 14, 21, 59, 43, 0.1),
+            "space separated": timestamp(-5, 2001, 12, 14, 21, 59, 43, 0.1),
             "no time zone (Z)": timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.1),
             "date (00:00:00Z)": timestamp( 0, 2002, 12, 14)
         ]

@@ -156,7 +156,7 @@ public class Parser {
     }
 
     // MARK: private
-    fileprivate var anchors = [String:Node]()
+    fileprivate var anchors = [String: Node]()
     fileprivate var parser = yaml_parser_t()
 #if USE_UTF16
     private let data: Data

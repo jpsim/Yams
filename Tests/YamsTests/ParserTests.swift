@@ -85,13 +85,13 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
         let expected: [Any] = [
             [
                 "name": "Mark McGwire",
-                "hr":   65,
-                "avg":  0.278
+                "hr": 65,
+                "avg": 0.278
             ],
             [
                 "name": "Sammy Sosa",
-                "hr":   63,
-                "avg":  0.288
+                "hr": 63,
+                "avg": 0.288
             ]
         ]
         YamsAssertEqual(objects, expected)
@@ -271,11 +271,11 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
         let expected: [Any] = [
-            ["item"    : "Super Hoop",
+            ["item": "Super Hoop",
              "quantity": 1],
-            ["item"   : "Basketball",
+            ["item": "Basketball",
              "quantity": 4],
-            ["item"    : "Big Shoes",
+            ["item": "Big Shoes",
              "quantity": 1]
         ]
         YamsAssertEqual(objects, expected)
@@ -497,37 +497,37 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
         let billTo: [String:Any] = [
-            "given" : "Chris",
-            "family" : "Dumars",
-            "address" : [
-                "lines" : "458 Walkman Dr.\nSuite #292\n",
-                "city" : "Royal Oak",
-                "state" : "MI",
-                "postal" : 48046
+            "given": "Chris",
+            "family": "Dumars",
+            "address": [
+                "lines": "458 Walkman Dr.\nSuite #292\n",
+                "city": "Royal Oak",
+                "state": "MI",
+                "postal": 48046
             ]
         ]
         let expected: [String:Any] = [
-            "invoice" : 34843,
-            "date" : timestamp(0, 2001, 1, 23),
-            "bill-to" : billTo,
-            "ship-to" : billTo,
-            "product" : [
+            "invoice": 34843,
+            "date": timestamp(0, 2001, 1, 23),
+            "bill-to": billTo,
+            "ship-to": billTo,
+            "product": [
                 [
-                    "sku" : "BL394D",
-                    "quantity" : 4,
-                    "description" : "Basketball",
-                    "price" : 450.0
+                    "sku": "BL394D",
+                    "quantity": 4,
+                    "description": "Basketball",
+                    "price": 450.0
                 ],
                 [
-                    "sku" : "BL4438H",
-                    "quantity" : 1,
-                    "description" : "Super Hoop",
-                    "price" : 2392.0
+                    "sku": "BL4438H",
+                    "quantity": 1,
+                    "description": "Super Hoop",
+                    "price": 2392.0
                 ]
             ],
-            "tax" : 251.42,
-            "total" : 4443.52,
-            "comments" : "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338."
+            "tax": 251.42,
+            "total": 4443.52,
+            "comments": "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338."
         ]
         YamsAssertEqual(objects, expected)
     }

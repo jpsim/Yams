@@ -39,7 +39,7 @@ extension Node {
 
     public var dictionary: [Node:Node]? {
         if case let .mapping(pairs, _) = self {
-            var dictionary = [Node:Node](minimumCapacity: pairs.count)
+            var dictionary = [Node: Node](minimumCapacity: pairs.count)
             pairs.forEach {
                 dictionary[$0.key] = $0.value
             }

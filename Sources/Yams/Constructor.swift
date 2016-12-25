@@ -67,7 +67,7 @@ public final class Constructor {
 
     public func map(from node: Node) -> [AnyHashable:Any] {
         guard let pairs = flatten_mapping(node).pairs else { fatalError("Never happen this") }
-        var dictionary = [AnyHashable:Any](minimumCapacity: pairs.count)
+        var dictionary = [AnyHashable: Any](minimumCapacity: pairs.count)
         pairs.forEach {
             // TODO: YAML supports keys other than str.
             dictionary[str(from: $0.key)] = any(from: $0.value)
