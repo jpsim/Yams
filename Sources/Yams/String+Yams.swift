@@ -23,7 +23,7 @@ extension String {
         var outStartIndex = startIndex, outEndIndex = startIndex, outContentsEndIndex = startIndex
         getLineStart(&outStartIndex, end: &outEndIndex, contentsEnd: &outContentsEndIndex,
                      for: startIndex..<startIndex)
-        while (outEndIndex <= index && outEndIndex < endIndex) {
+        while outEndIndex <= index && outEndIndex < endIndex {
             number += 1
             let range = outEndIndex..<outEndIndex
             getLineStart(&outStartIndex, end: &outEndIndex, contentsEnd: &outContentsEndIndex,
@@ -47,7 +47,7 @@ extension String {
         var outStartIndex = startIndex, outEndIndex = startIndex, outContentsEndIndex = startIndex
         getLineStart(&outStartIndex, end: &outEndIndex, contentsEnd: &outContentsEndIndex,
                      for: startIndex..<startIndex)
-        while (number < line  && outEndIndex < endIndex) {
+        while number < line && outEndIndex < endIndex {
             number += 1
             let range = outEndIndex..<outEndIndex
             getLineStart(&outStartIndex, end: &outEndIndex, contentsEnd: &outContentsEndIndex,
