@@ -43,31 +43,31 @@ extension Node {
     }
 
     public var string: String? {
-        return tag.constructor.str(from: self)
+        return String.construct(from: self)
     }
 
     public var bool: Bool? {
-        return tag.constructor.bool(from: self)
+        return Bool.construct(from: self)
     }
 
     public var float: Double? {
-        return tag.constructor.float(from: self)
+        return Double.construct(from: self)
     }
 
     public var null: NSNull? {
-        return tag.constructor.null(from: self)
+        return NSNull.construct(from: self)
     }
 
     public var int: Int? {
-        return tag.constructor.int(from: self)
+        return Int.construct(from: self)
     }
 
     public var binary: Data? {
-        return tag.constructor.binary(from: self)
+        return Data.construct(from: self)
     }
 
     public var timestamp: Date? {
-        return tag.constructor.timestamp(from: self)
+        return Date.construct(from: self)
     }
 
     public subscript(node: Node) -> Node? {

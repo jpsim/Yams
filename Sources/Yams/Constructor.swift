@@ -9,88 +9,61 @@
 import Foundation
 
 public final class Constructor {
-    public typealias Method = (Constructor) -> (Node) -> Any?
-    let tagMethodMap: [Tag.Name:Method]
+    public typealias Map = [Tag.Name: (Node) -> Any?]
 
-    public init(_ map: [Tag.Name:Method]) {
-        tagMethodMap = map
+    public init(_ map: Map) {
+        methodMap = map
     }
 
     public func any(from node: Node) -> Any {
-        if let tagName = node.tag.name, let method = tagMethodMap[tagName], let result = method(self)(node) {
+        if let tagName = node.tag.name, let method = methodMap[tagName], let result = method(node) {
             return result
         }
         switch node {
         case .scalar:
-            return str(from: node)
+            return String._construct(from: node)
         case .mapping:
-            return map(from: node)
+            return [AnyHashable: Any]._construct(from: node)
         case .sequence:
-            return seq(from: node)
+            return [Any].construct(from: node)
         }
     }
 
-    func flatten_mapping(_ node: Node) -> Node {
-        guard var pairs = node.pairs else { fatalError("Never happen this") }
-        var merge = [Pair<Node>]()
-        var index = pairs.startIndex
-        while index < pairs.count {
-            let pair = pairs[index]
-            if pair.key.tag.name == .merge {
-                pairs.remove(at: index)
-                switch pair.value {
-                case .mapping:
-                    let flattened_node = flatten_mapping(pair.value)
-                    if let pairs = flattened_node.pairs {
-                        merge.append(contentsOf: pairs)
-                    }
-                case let .sequence(array, _):
-                    let submerge = array
-                        .filter { $0.isMapping } // TODO: Should raise error on other than mapping
-                        .flatMap { flatten_mapping($0).pairs }
-                        .reversed()
-                    submerge.forEach {
-                        merge.append(contentsOf: $0)
-                    }
-                default:
-                    break // TODO: Should raise error on other than mapping or sequence
-                }
-            } else if pair.key.tag.name == .value {
-                pair.key.tag.name = .str
-                index += 1
-            } else {
-                index += 1
-            }
-        }
-        return .mapping(merge + pairs, node.tag)
-    }
+    private let methodMap: Map
+}
 
-    public func map(from node: Node) -> [AnyHashable:Any] {
-        guard let pairs = flatten_mapping(node).pairs else { fatalError("Never happen this") }
-        var dictionary = [AnyHashable: Any](minimumCapacity: pairs.count)
-        pairs.forEach {
-            // TODO: YAML supports keys other than str.
-            dictionary[str(from: $0.key)] = any(from: $0.value)
-        }
-        return dictionary
-    }
+extension Constructor {
+    public static let `default` = Constructor(defaultMap)
 
-    public func str(from node: Node) -> String {
-        if case let .mapping(pairs, _) = node {
-            for pair in pairs where pair.key.tag.name == .value {
-                return str(from: pair.value)
-            }
-        }
-        guard let scalar = node.scalar else { fatalError("Never happen this") }
-        return scalar
-    }
+    // We can not write extension of map because that is alias of specialized dictionary
+    public static let defaultMap: Map = [
+        // Failsafe Schema
+        .map: [AnyHashable: Any].construct,
+        .str: String.construct,
+        .seq: [Any].construct,
+        // JSON Schema
+        .bool: Bool.construct,
+        .float: Double.construct,
+        .null: NSNull.construct,
+        .int: Int.construct,
+        // http://yaml.org/type/index.html
+        .binary: Data.construct,
+        // .merge is supported in `[AnyHashable: Any].construct`.
+        .omap: [Any].construct_omap,
+        .pairs: [Any].construct_pairs,
+        .set: Set<AnyHashable>.construct,
+        .timestamp: Date.construct
+        // .value is supported in `String.construct` and `[AnyHashable: Any].construct`.
+    ]
+}
 
-    public func seq(from node: Node) -> [Any] {
-        guard let array = node.sequence else { fatalError("Never happen this") }
-        return array.map { any(from: $0) }
-    }
+// MARK: - ScalarConstructible
+public protocol ScalarConstructible {
+    static func construct(from node: Node) -> Self?
+}
 
-    public func bool(from node: Node) -> Bool? {
+extension Bool: ScalarConstructible {
+    public static func construct(from node: Node) -> Bool? {
         guard let scalar = node.scalar else { fatalError("Never happen this") }
         switch scalar.lowercased() {
         case "true", "yes", "on":
@@ -101,130 +74,24 @@ public final class Constructor {
             return nil
         }
     }
+}
 
-    public func float(from node: Node) -> Double? {
-        guard var scalar = node.scalar else { fatalError("Never happen this") }
-        switch scalar {
-        case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
-            return Double.infinity
-        case "-.inf", "-.Inf", "-.INF":
-            return -Double.infinity
-        case ".nan", ".NaN", ".NAN":
-            return Double.nan
-        default:
-            scalar = scalar.replacingOccurrences(of: "_", with: "")
-            if scalar.contains(":") {
-                var sign: Double = 1
-                if scalar.hasPrefix("-") {
-                    sign = -1
-                    scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
-                } else if scalar.hasPrefix("+") {
-                    scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
-                }
-                let digits = scalar.components(separatedBy: ":").flatMap(Double.init).reversed()
-                var base = 1.0
-                var value = 0.0
-                digits.forEach {
-                    value += $0 * base
-                    base *= 60
-                }
-                return sign * value
-            }
-            return Double(scalar)
-        }
-    }
-
-    public func null(from node: Node) -> NSNull? {
-        guard let scalar = node.scalar else { fatalError("Never happen this") }
-        switch scalar {
-        case "", "~", "null", "Null", "NULL":
-            return NSNull()
-        default:
-            return nil
-        }
-    }
-
-    public func int(from node: Node) -> Int? {
-        guard var scalar = node.scalar else { fatalError("Never happen this") }
-        scalar = scalar.replacingOccurrences(of: "_", with: "")
-        if scalar == "0" {
-            return 0
-        }
-        if scalar.hasPrefix("0x") {
-            let hexadecimal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
-            return Int(hexadecimal, radix: 16)
-        }
-        if scalar.hasPrefix("0b") {
-            let octal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
-            return Int(octal, radix: 2)
-        }
-        if scalar.hasPrefix("0o") {
-            let octal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
-            return Int(octal, radix: 8)
-        }
-        if scalar.hasPrefix("0") {
-            let octal = scalar.substring(from: scalar.index(after: scalar.startIndex))
-            return Int(octal, radix: 8)
-        }
-        if scalar.contains(":") {
-            var sign = 1
-            if scalar.hasPrefix("-") {
-                sign = -1
-                scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
-            } else if scalar.hasPrefix("+") {
-                scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
-            }
-            let digits = scalar.components(separatedBy: ":").flatMap({ Int($0) }).reversed()
-            var base = 1
-            var value = 0
-            digits.forEach {
-                value += $0 * base
-                base *= 60
-            }
-            return sign * value
-        }
-        return Int(scalar)
-    }
-
-    public func binary(from node: Node) -> Data? {
+extension Data: ScalarConstructible {
+    public static func construct(from node: Node) -> Data? {
         guard let scalar = node.scalar else { fatalError("Never happen this") }
         let data = Data(base64Encoded: scalar, options: .ignoreUnknownCharacters)
         return data
     }
+}
 
-    public func omap(from node: Node) -> [(Any, Any)] {
-        // Note: we do not check for duplicate keys.
-        guard let array = node.sequence else { fatalError("Never happen this") }
-        return array.flatMap { subnode -> (Any, Any)? in
-            // TODO: Should rais error if subnode is not mapping or pairs.count != 1
-            guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
-            return (any(from: pair.key), any(from: pair.value))
-        }
-    }
-
-    public func pairs(from node: Node) -> [(Any, Any)] {
-        // Note: the same code as `omap(from:)`.
-        guard let array = node.sequence else { fatalError("Never happen this") }
-        return array.flatMap { subnode -> (Any, Any)? in
-            // TODO: Should rais error if subnode is not mapping or pairs.count != 1
-            guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
-            return (any(from: pair.key), any(from: pair.value))
-        }
-    }
-
-    public func set(from node: Node) -> Set<AnyHashable> {
-        guard let pairs = node.pairs else { fatalError("Never happen this") }
-        // TODO: YAML supports Hashable elements other than str.
-        return Set(pairs.map({ str(from: $0.key) as AnyHashable }))
-    }
-
-    public func timestamp(from node: Node) -> Date? {
+extension Date: ScalarConstructible {
+    public static func construct(from node: Node) -> Date? {
         guard let scalar = node.scalar else { fatalError("Never happen this") }
 
         let range = NSRange(location: 0, length: scalar.utf16.count)
         guard let result = timestampPattern.firstMatch(in: scalar, options: [], range: range),
-           result.range.location != NSNotFound else {
-            return nil
+            result.range.location != NSNotFound else {
+                return nil
         }
         #if os(Linux)
             let components = (1..<result.numberOfRanges).map(result.range(at:)).map(scalar.substring)
@@ -266,51 +133,216 @@ public final class Constructor {
         // Using `DateComponents.date` causes crash on Linux
         return NSCalendar(identifier: .gregorian)?.date(from: datecomponents)
     }
+
+    private static let timestampPattern: NSRegularExpression = pattern([
+        "^([0-9][0-9][0-9][0-9])",          // year
+        "-([0-9][0-9]?)",                   // month
+        "-([0-9][0-9]?)",                   // day
+        "(?:(?:[Tt]|[ \\t]+)",
+        "([0-9][0-9]?)",                    // hour
+        ":([0-9][0-9])",                    // minute
+        ":([0-9][0-9])",                    // second
+        "(?:\\.([0-9]*))?",                 // fraction
+        "(?:[ \\t]*(Z|([-+])([0-9][0-9]?)", // tz_sign, tz_hour
+        "(?::([0-9][0-9]))?))?)?$"          // tz_minute
+        ].joined()
+    )
 }
 
-fileprivate let timestampPattern: NSRegularExpression = pattern([
-    "^([0-9][0-9][0-9][0-9])",          // year
-    "-([0-9][0-9]?)",                   // month
-    "-([0-9][0-9]?)",                   // day
-    "(?:(?:[Tt]|[ \\t]+)",
-    "([0-9][0-9]?)",                    // hour
-    ":([0-9][0-9])",                    // minute
-    ":([0-9][0-9])",                    // second
-    "(?:\\.([0-9]*))?",                 // fraction
-    "(?:[ \\t]*(Z|([-+])([0-9][0-9]?)", // tz_sign, tz_hour
-    "(?::([0-9][0-9]))?))?)?$"          // tz_minute
-    ].joined()
-)
-
-extension Constructor {
-    public static let `default` = Constructor([
-        // Failsafe Schema
-        .str: Constructor.str,
-        .seq: Constructor.seq,
-        .map: Constructor.map,
-        // JSON Schema
-        .bool: Constructor.bool,
-        .float: Constructor.float,
-        .null: Constructor.null,
-        .int: Constructor.int,
-        // http://yaml.org/type/index.html
-        .binary: Constructor.binary,
-        // .merge is supported in `Constructor.map`.
-        .omap: Constructor.omap,
-        .pairs: Constructor.pairs,
-        .set: Constructor.set,
-        .timestamp: Constructor.timestamp
-        // .value is supported in `Constructor.str` and `Constructor.map`.
-        ])
+extension Double: ScalarConstructible {
+    public static func construct(from node: Node) -> Double? {
+        guard var scalar = node.scalar else { fatalError("Never happen this") }
+        switch scalar {
+        case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
+            return Double.infinity
+        case "-.inf", "-.Inf", "-.INF":
+            return -Double.infinity
+        case ".nan", ".NaN", ".NAN":
+            return Double.nan
+        default:
+            scalar = scalar.replacingOccurrences(of: "_", with: "")
+            if scalar.contains(":") {
+                var sign: Double = 1
+                if scalar.hasPrefix("-") {
+                    sign = -1
+                    scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
+                } else if scalar.hasPrefix("+") {
+                    scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
+                }
+                let digits = scalar.components(separatedBy: ":").flatMap(Double.init).reversed()
+                var base = 1.0
+                var value = 0.0
+                digits.forEach {
+                    value += $0 * base
+                    base *= 60
+                }
+                return sign * value
+            }
+            return Double(scalar)
+        }
+    }
 }
 
-fileprivate let ISO8601Formatter: DateFormatter = {
-    let dateFormatter = DateFormatter()
-    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-    dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-    dateFormatter.dateFormat = "yyyy-MM-ddTHH:mm:ssZ"
-    return dateFormatter
-}()
+extension Int: ScalarConstructible {
+    public static func construct(from node: Node) -> Int? {
+        guard var scalar = node.scalar else { fatalError("Never happen this") }
+        scalar = scalar.replacingOccurrences(of: "_", with: "")
+        if scalar == "0" {
+            return 0
+        }
+        if scalar.hasPrefix("0x") {
+            let hexadecimal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
+            return Int(hexadecimal, radix: 16)
+        }
+        if scalar.hasPrefix("0b") {
+            let octal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
+            return Int(octal, radix: 2)
+        }
+        if scalar.hasPrefix("0o") {
+            let octal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
+            return Int(octal, radix: 8)
+        }
+        if scalar.hasPrefix("0") {
+            let octal = scalar.substring(from: scalar.index(after: scalar.startIndex))
+            return Int(octal, radix: 8)
+        }
+        if scalar.contains(":") {
+            var sign = 1
+            if scalar.hasPrefix("-") {
+                sign = -1
+                scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
+            } else if scalar.hasPrefix("+") {
+                scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
+            }
+            let digits = scalar.components(separatedBy: ":").flatMap({ Int($0) }).reversed()
+            var base = 1
+            var value = 0
+            digits.forEach {
+                value += $0 * base
+                base *= 60
+            }
+            return sign * value
+        }
+        return Int(scalar)
+    }
+}
+
+extension String: ScalarConstructible {
+    public static func construct(from node: Node) -> String? {
+        return _construct(from: node)
+    }
+
+    fileprivate static func _construct(from node: Node) -> String {
+        if case let .mapping(pairs, _) = node {
+            for pair in pairs where pair.key.tag.name == .value {
+                return _construct(from: pair.value)
+            }
+        }
+        guard let scalar = node.scalar else { fatalError("Never happen this") }
+        return scalar
+    }
+}
+
+// MARK: - Types that can't conform to ScalarConstructible
+extension NSNull/*: ScalarConstructible*/ {
+    public static func construct(from node: Node) -> NSNull? {
+        guard let scalar = node.scalar else { fatalError("Never happen this") }
+        switch scalar {
+        case "", "~", "null", "Null", "NULL":
+            return NSNull()
+        default:
+            return nil
+        }
+    }
+}
+
+// MARK: mapping
+extension Dictionary {
+    public static func construct(from node: Node) -> [AnyHashable: Any]? {
+        return _construct(from: node)
+    }
+
+    public static func _construct(from node: Node) -> [AnyHashable: Any] {
+        guard let pairs = flatten_mapping(node).pairs else { fatalError("Never happen this") }
+        var dictionary = [AnyHashable: Any](minimumCapacity: pairs.count)
+        pairs.forEach {
+            // TODO: YAML supports keys other than str.
+            dictionary[String._construct(from: $0.key)] = node.tag.constructor.any(from: $0.value)
+        }
+        return dictionary
+    }
+
+    private static func flatten_mapping(_ node: Node) -> Node {
+        guard var pairs = node.pairs else { fatalError("Never happen this") }
+        var merge = [Pair<Node>]()
+        var index = pairs.startIndex
+        while index < pairs.count {
+            let pair = pairs[index]
+            if pair.key.tag.name == .merge {
+                pairs.remove(at: index)
+                switch pair.value {
+                case .mapping:
+                    let flattened_node = flatten_mapping(pair.value)
+                    if let pairs = flattened_node.pairs {
+                        merge.append(contentsOf: pairs)
+                    }
+                case let .sequence(array, _):
+                    let submerge = array
+                        .filter { $0.isMapping } // TODO: Should raise error on other than mapping
+                        .flatMap { flatten_mapping($0).pairs }
+                        .reversed()
+                    submerge.forEach {
+                        merge.append(contentsOf: $0)
+                    }
+                default:
+                    break // TODO: Should raise error on other than mapping or sequence
+                }
+            } else if pair.key.tag.name == .value {
+                pair.key.tag.name = .str
+                index += 1
+            } else {
+                index += 1
+            }
+        }
+        return .mapping(merge + pairs, node.tag)
+    }
+}
+
+extension Set {
+    public static func construct(from node: Node) -> Set<AnyHashable>? {
+        guard let pairs = node.pairs else { fatalError("Never happen this") }
+        // TODO: YAML supports Hashable elements other than str.
+        return Set<AnyHashable>(pairs.map({ String._construct(from: $0.key) as AnyHashable }))
+    }
+}
+
+// MARK: sequence
+extension Array {
+    public static func construct(from node: Node) -> [Any] {
+        guard let array = node.sequence else { fatalError("Never happen this") }
+        return array.map { node.tag.constructor.any(from: $0) }
+    }
+
+    public static func construct_omap(from node: Node) -> [(Any, Any)] {
+        // Note: we do not check for duplicate keys.
+        guard let array = node.sequence else { fatalError("Never happen this") }
+        return array.flatMap { subnode -> (Any, Any)? in
+            // TODO: Should rais error if subnode is not mapping or pairs.count != 1
+            guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
+            return (node.tag.constructor.any(from: pair.key), node.tag.constructor.any(from: pair.value))
+        }
+    }
+
+    public static func construct_pairs(from node: Node) -> [(Any, Any)] {
+        // Note: we do not check for duplicate keys.
+        guard let array = node.sequence else { fatalError("Never happen this") }
+        return array.flatMap { subnode -> (Any, Any)? in
+            // TODO: Should rais error if subnode is not mapping or pairs.count != 1
+            guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
+            return (node.tag.constructor.any(from: pair.key), node.tag.constructor.any(from: pair.value))
+        }
+    }
+}
 
 fileprivate extension String {
     func substring(with range: NSRange) -> String? {
