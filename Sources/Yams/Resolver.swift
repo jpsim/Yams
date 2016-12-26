@@ -25,7 +25,7 @@ public final class Resolver {
         }
     }
 
-    public func resolveTag(from string: String) -> Tag.Name {
+    private func resolveTag(from string: String) -> Tag.Name {
         for (tag, regexp) in tagNamePatternPairs where regexp.matches(in: string) {
             return tag
         }

@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Yams
+import Yams
 
 class ResolverTests: XCTestCase {
 

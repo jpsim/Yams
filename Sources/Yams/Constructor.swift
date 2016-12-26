@@ -23,9 +23,9 @@ public final class Constructor {
         case .scalar:
             return String._construct(from: node)
         case .mapping:
-            return [AnyHashable: Any]._construct(from: node)
+            return [AnyHashable: Any]._construct_mapping(from: node)
         case .sequence:
-            return [Any].construct(from: node)
+            return [Any].construct_seq(from: node)
         }
     }
 
@@ -38,9 +38,9 @@ extension Constructor {
     // We can not write extension of map because that is alias of specialized dictionary
     public static let defaultMap: Map = [
         // Failsafe Schema
-        .map: [AnyHashable: Any].construct,
+        .map: [AnyHashable: Any].construct_mapping,
         .str: String.construct,
-        .seq: [Any].construct,
+        .seq: [Any].construct_seq,
         // JSON Schema
         .bool: Bool.construct,
         .float: Double.construct,
@@ -51,7 +51,7 @@ extension Constructor {
         // .merge is supported in `[AnyHashable: Any].construct`.
         .omap: [Any].construct_omap,
         .pairs: [Any].construct_pairs,
-        .set: Set<AnyHashable>.construct,
+        .set: Set<AnyHashable>.construct_set,
         .timestamp: Date.construct
         // .value is supported in `String.construct` and `[AnyHashable: Any].construct`.
     ]
@@ -59,6 +59,8 @@ extension Constructor {
 
 // MARK: - ScalarConstructible
 public protocol ScalarConstructible {
+    // We don't use overloading `init?(_ node: Node)`
+    // because that causes difficulties on using `init` as cosure
     static func construct(from node: Node) -> Self?
 }
 
@@ -258,11 +260,11 @@ extension NSNull/*: ScalarConstructible*/ {
 
 // MARK: mapping
 extension Dictionary {
-    public static func construct(from node: Node) -> [AnyHashable: Any]? {
-        return _construct(from: node)
+    public static func construct_mapping(from node: Node) -> [AnyHashable: Any]? {
+        return _construct_mapping(from: node)
     }
 
-    public static func _construct(from node: Node) -> [AnyHashable: Any] {
+    fileprivate static func _construct_mapping(from node: Node) -> [AnyHashable: Any] {
         guard let pairs = flatten_mapping(node).pairs else { fatalError("Never happen this") }
         var dictionary = [AnyHashable: Any](minimumCapacity: pairs.count)
         pairs.forEach {
@@ -309,7 +311,7 @@ extension Dictionary {
 }
 
 extension Set {
-    public static func construct(from node: Node) -> Set<AnyHashable>? {
+    public static func construct_set(from node: Node) -> Set<AnyHashable>? {
         guard let pairs = node.pairs else { fatalError("Never happen this") }
         // TODO: YAML supports Hashable elements other than str.
         return Set<AnyHashable>(pairs.map({ String._construct(from: $0.key) as AnyHashable }))
@@ -318,7 +320,7 @@ extension Set {
 
 // MARK: sequence
 extension Array {
-    public static func construct(from node: Node) -> [Any] {
+    public static func construct_seq(from node: Node) -> [Any] {
         guard let array = node.sequence else { fatalError("Never happen this") }
         return array.map { node.tag.constructor.any(from: $0) }
     }

@@ -29,6 +29,7 @@ public struct Pair<Value: Equatable>: Equatable {
 }
 
 extension Node {
+    /// Accessing this property causes resolving tag by tag.resolver.
     public var tag: Tag {
         switch self {
         case let .scalar(_, tag): return tag.resolved(with: self)
