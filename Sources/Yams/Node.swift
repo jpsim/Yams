@@ -70,6 +70,37 @@ extension Node {
         return Date.construct(from: self)
     }
 
+    // MARK: Typed accessor methods
+
+    /// - Returns: Array of `Node`
+    public func array() -> [Node] {
+        guard case let .sequence(sequence, _) = self else {
+            return []
+        }
+        return sequence
+    }
+
+    /// Typed Array using cast: e.g. `array() as [String]`
+    ///
+    /// - Returns: Array of `Type`
+    public func array<Type: ScalarConstructible>() -> [Type] {
+        guard case let .sequence(sequence, _) = self else {
+            return []
+        }
+        return sequence.flatMap(Type.construct)
+    }
+
+    /// Typed Array using type parameter: e.g. `array(of: String.self)`
+    ///
+    /// - Parameter type: Type conforms to ScalarConstructible
+    /// - Returns: Array of `Type`
+    public func array<Type: ScalarConstructible>(of type: Type.Type) -> [Type] {
+        guard case let .sequence(sequence, _) = self else {
+            return []
+        }
+        return sequence.flatMap(Type.construct)
+    }
+
     public subscript(node: Node) -> Node? {
         switch self {
         case .scalar: return nil

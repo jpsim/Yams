@@ -74,6 +74,37 @@ class NodeTests: XCTestCase {
         XCTAssertEqual(scalarTimestamp.timestamp, timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.1))
     }
 
+    func testArray() {
+        let base64String = [
+            " R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5",
+            " OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+",
+            " +f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC",
+            " AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
+            ].joined()
+        let sequence: Node = [
+            "true",
+            "1.0",
+            "1",
+            .scalar(base64String, .implicit)
+        ]
+        XCTAssertEqual(sequence.array(), ["true", "1.0", "1", .scalar(base64String, .implicit)] as [Node])
+        XCTAssertEqual(sequence.array(of: String.self), ["true", "1.0", "1", base64String])
+        XCTAssertEqual(sequence.array() as [String], ["true", "1.0", "1", base64String])
+        XCTAssertEqual(sequence.array(of: Bool.self), [true])
+        XCTAssertEqual(sequence.array() as [Bool], [true])
+        XCTAssertEqual(sequence.array(of: Double.self), [1.0, 1.0])
+        XCTAssertEqual(sequence.array() as [Double], [1.0, 1.0])
+        XCTAssertEqual(sequence.array(of: Int.self), [1])
+        XCTAssertEqual(sequence.array() as [Int], [1])
+
+        let expectedData = [
+            Data(base64Encoded: "true", options: .ignoreUnknownCharacters)!,
+            Data(base64Encoded: base64String, options: .ignoreUnknownCharacters)!
+        ]
+        XCTAssertEqual(sequence.array(of: Data.self), expectedData)
+        XCTAssertEqual(sequence.array() as [Data], expectedData)
+    }
+
     func testSubscriptMapping() {
         let mapping: Node = ["key1": "value1", "key2": "value2"]
         let valueForKey1 = mapping["key1"]?.string
@@ -96,7 +127,8 @@ extension NodeTests {
             ("testExpressibleByIntegerLiteral", testExpressibleByIntegerLiteral),
             ("testExpressibleByStringLiteral", testExpressibleByStringLiteral),
             ("testSubscriptMapping", testSubscriptMapping),
-            ("testSubscriptSequence", testSubscriptSequence)
+            ("testSubscriptSequence", testSubscriptSequence),
+            ("testArray", testArray)
         ]
     }
 }
