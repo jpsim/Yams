@@ -11,7 +11,7 @@
 #endif
 import Foundation
 
-public class Tag {
+public final class Tag {
     public struct Name: RawRepresentable {
         public let rawValue: String
         public init(rawValue: String) {

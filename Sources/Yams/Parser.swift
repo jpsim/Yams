@@ -98,7 +98,7 @@ public enum ParserError: Swift.Error {
     case undefinedAlias(String)
 }
 
-public class Parser {
+public final class Parser {
     // MARK: public
     public let yaml: String
     public let resolver: Resolver
