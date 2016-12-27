@@ -80,7 +80,7 @@ func pattern(_ string: String) -> NSRegularExpression {
     do {
         return try .init(pattern: string, options: [])
     } catch {
-        fatalError("Never happen this!")
+        fatalError("unreachable")
     }
 }
 

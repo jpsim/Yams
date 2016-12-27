@@ -67,7 +67,7 @@ extension Tag: Hashable {
         switch (lhs.name, rhs.name) {
         case let (lhs?, rhs?): return lhs == rhs
         case (.none, _): fallthrough
-        case (_, .none): fatalError("Never happen this!")
+        case (_, .none): fatalError("unreachable")
         default: return false
         }
     }

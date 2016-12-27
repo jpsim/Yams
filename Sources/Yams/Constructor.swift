@@ -66,8 +66,8 @@ public protocol ScalarConstructible {
 
 extension Bool: ScalarConstructible {
     public static func construct(from node: Node) -> Bool? {
-        guard let scalar = node.scalar else { fatalError("Never happen this") }
-        switch scalar.lowercased() {
+        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
+        switch node.scalar!.lowercased() {
         case "true", "yes", "on":
             return true
         case "false", "no", "off":
@@ -80,15 +80,16 @@ extension Bool: ScalarConstructible {
 
 extension Data: ScalarConstructible {
     public static func construct(from node: Node) -> Data? {
-        guard let scalar = node.scalar else { fatalError("Never happen this") }
-        let data = Data(base64Encoded: scalar, options: .ignoreUnknownCharacters)
+        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
+        let data = Data(base64Encoded: node.scalar!, options: .ignoreUnknownCharacters)
         return data
     }
 }
 
 extension Date: ScalarConstructible {
     public static func construct(from node: Node) -> Date? {
-        guard let scalar = node.scalar else { fatalError("Never happen this") }
+        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
+        let scalar = node.scalar!
 
         let range = NSRange(location: 0, length: scalar.utf16.count)
         guard let result = timestampPattern.firstMatch(in: scalar, options: [], range: range),
@@ -153,7 +154,8 @@ extension Date: ScalarConstructible {
 
 extension Double: ScalarConstructible {
     public static func construct(from node: Node) -> Double? {
-        guard var scalar = node.scalar else { fatalError("Never happen this") }
+        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
+        var scalar = node.scalar!
         switch scalar {
         case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
             return Double.infinity
@@ -187,7 +189,8 @@ extension Double: ScalarConstructible {
 
 extension Int: ScalarConstructible {
     public static func construct(from node: Node) -> Int? {
-        guard var scalar = node.scalar else { fatalError("Never happen this") }
+        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
+        var scalar = node.scalar!
         scalar = scalar.replacingOccurrences(of: "_", with: "")
         if scalar == "0" {
             return 0
@@ -240,16 +243,16 @@ extension String: ScalarConstructible {
                 return _construct(from: pair.value)
             }
         }
-        guard let scalar = node.scalar else { fatalError("Never happen this") }
-        return scalar
+        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
+        return node.scalar!
     }
 }
 
 // MARK: - Types that can't conform to ScalarConstructible
 extension NSNull/*: ScalarConstructible*/ {
     public static func construct(from node: Node) -> NSNull? {
-        guard let scalar = node.scalar else { fatalError("Never happen this") }
-        switch scalar {
+        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
+        switch node.scalar! {
         case "", "~", "null", "Null", "NULL":
             return NSNull()
         default:
@@ -265,7 +268,8 @@ extension Dictionary {
     }
 
     fileprivate static func _construct_mapping(from node: Node) -> [AnyHashable: Any] {
-        guard let pairs = flatten_mapping(node).pairs else { fatalError("Never happen this") }
+        assert(node.isMapping) // swiftlint:disable:next force_unwrapping
+        let pairs = flatten_mapping(node).pairs!
         var dictionary = [AnyHashable: Any](minimumCapacity: pairs.count)
         pairs.forEach {
             // TODO: YAML supports keys other than str.
@@ -275,7 +279,8 @@ extension Dictionary {
     }
 
     private static func flatten_mapping(_ node: Node) -> Node {
-        guard var pairs = node.pairs else { fatalError("Never happen this") }
+        assert(node.isMapping) // swiftlint:disable:next force_unwrapping
+        var pairs = node.pairs!
         var merge = [Pair<Node>]()
         var index = pairs.startIndex
         while index < pairs.count {
@@ -312,23 +317,23 @@ extension Dictionary {
 
 extension Set {
     public static func construct_set(from node: Node) -> Set<AnyHashable>? {
-        guard let pairs = node.pairs else { fatalError("Never happen this") }
         // TODO: YAML supports Hashable elements other than str.
-        return Set<AnyHashable>(pairs.map({ String._construct(from: $0.key) as AnyHashable }))
+        assert(node.isMapping) // swiftlint:disable:next force_unwrapping
+        return Set<AnyHashable>(node.pairs!.map({ String._construct(from: $0.key) as AnyHashable }))
     }
 }
 
 // MARK: sequence
 extension Array {
     public static func construct_seq(from node: Node) -> [Any] {
-        guard let array = node.sequence else { fatalError("Never happen this") }
-        return array.map { node.tag.constructor.any(from: $0) }
+        // swiftlint:disable:next force_unwrapping
+        return node.sequence!.map(node.tag.constructor.any)
     }
 
     public static func construct_omap(from node: Node) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
-        guard let array = node.sequence else { fatalError("Never happen this") }
-        return array.flatMap { subnode -> (Any, Any)? in
+        assert(node.isSequence) // swiftlint:disable:next force_unwrapping
+        return node.sequence!.flatMap { subnode -> (Any, Any)? in
             // TODO: Should rais error if subnode is not mapping or pairs.count != 1
             guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
             return (node.tag.constructor.any(from: pair.key), node.tag.constructor.any(from: pair.value))
@@ -337,8 +342,8 @@ extension Array {
 
     public static func construct_pairs(from node: Node) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
-        guard let array = node.sequence else { fatalError("Never happen this") }
-        return array.flatMap { subnode -> (Any, Any)? in
+        assert(node.isSequence) // swiftlint:disable:next force_unwrapping
+        return node.sequence!.flatMap { subnode -> (Any, Any)? in
             // TODO: Should rais error if subnode is not mapping or pairs.count != 1
             guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
             return (node.tag.constructor.any(from: pair.key), node.tag.constructor.any(from: pair.value))
@@ -353,7 +358,7 @@ fileprivate extension String {
         let utf16upperBound = utf16.index(utf16lowerBound, offsetBy: range.length)
         guard let lowerBound = utf16lowerBound.samePosition(in: self),
             let upperBound = utf16upperBound.samePosition(in: self) else {
-                fatalError("Never happen this")
+                fatalError("unreachable")
         }
         return substring(with: lowerBound..<upperBound)
     }

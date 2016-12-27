@@ -78,7 +78,7 @@ extension YamlError {
         case let .composer(context, problem, line, column):
             return describing(with: yaml, context ?? "", problem, line, column)
         default:
-            fatalError()
+            fatalError("unreachable")
         }
     }
 
