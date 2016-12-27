@@ -29,7 +29,7 @@ public struct Pair<Value: Equatable>: Equatable {
 }
 
 extension Node {
-    /// Accessing this property causes resolving tag by tag.resolver.
+    /// Accessing this property causes the tag to be resolved by tag.resolver.
     public var tag: Tag {
         switch self {
         case let .scalar(_, tag): return tag.resolved(with: self)
@@ -181,7 +181,7 @@ extension Node: ExpressibleByStringLiteral {
 }
 
 extension Node {
-    // MARK: Internal convenient accessor
+    // MARK: Internal convenience accessors
     var sequence: [Node]? {
         if case let .sequence(sequence, _) = self {
             return sequence

@@ -104,7 +104,7 @@ public final class Parser {
     public let resolver: Resolver
     public let constructor: Constructor
 
-    /// Setup Parser.
+    /// Set up Parser.
     ///
     /// - Parameter string: YAML
     /// - Parameter resolver: Resolver

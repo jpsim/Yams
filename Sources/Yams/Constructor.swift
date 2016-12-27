@@ -137,7 +137,7 @@ extension Date: ScalarConstructible {
             }
             return TimeZone(secondsFromGMT: seconds)
         }()
-        // Using `DateComponents.date` causes crash on Linux
+        // Using `DateComponents.date` causes `NSUnimplemented()` crash on Linux at swift-3.0.2-RELEASE
         return NSCalendar(identifier: .gregorian)?.date(from: datecomponents)
     }
 
@@ -242,6 +242,7 @@ extension String: ScalarConstructible {
     }
 
     fileprivate static func _construct(from node: Node) -> String {
+        // This will happen while `Dicrionaty.flatten_mapping()` if `node.tag.name` was `.value`
         if case let .mapping(pairs, _) = node {
             for pair in pairs where pair.key.tag.name == .value {
                 return _construct(from: pair.value)
@@ -324,6 +325,8 @@ extension Set {
         // TODO: YAML supports Hashable elements other than str.
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
         return Set<AnyHashable>(node.pairs!.map({ String._construct(from: $0.key) as AnyHashable }))
+        // Explicitly declaring generic parameter as `<AnyHashable>` is required at above,
+        // because this is inside extension of `Set` and Swift 3.0.2 can't infer the type without that.
     }
 }
 
@@ -338,7 +341,7 @@ extension Array {
         // Note: we do not check for duplicate keys.
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
         return node.sequence!.flatMap { subnode -> (Any, Any)? in
-            // TODO: Should rais error if subnode is not mapping or pairs.count != 1
+            // TODO: Should raise error if subnode is not mapping or pairs.count != 1
             guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
             return (node.tag.constructor.any(from: pair.key), node.tag.constructor.any(from: pair.value))
         }
@@ -348,7 +351,7 @@ extension Array {
         // Note: we do not check for duplicate keys.
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
         return node.sequence!.flatMap { subnode -> (Any, Any)? in
-            // TODO: Should rais error if subnode is not mapping or pairs.count != 1
+            // TODO: Should raise error if subnode is not mapping or pairs.count != 1
             guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
             return (node.tag.constructor.any(from: pair.key), node.tag.constructor.any(from: pair.value))
         }
