@@ -97,9 +97,13 @@ extension Date: ScalarConstructible {
                 return nil
         }
         #if os(Linux)
-            let components = (1..<result.numberOfRanges).map(result.range(at:)).map(scalar.substring)
+            let components = (1..<result.numberOfRanges).map {
+                scalar.substring(with: result.range(at: $0))
+            }
         #else
-            let components = (1..<result.numberOfRanges).map(result.rangeAt).map(scalar.substring)
+            let components = (1..<result.numberOfRanges).map {
+                scalar.substring(with: result.rangeAt($0))
+            }
         #endif
 
         var datecomponents = DateComponents()
