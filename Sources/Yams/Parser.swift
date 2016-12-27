@@ -132,7 +132,7 @@ public final class Parser {
             yaml_parser_set_input_string(&parser, input, bytes.count - 1)
         }
 #endif
-        try expectNextEvent(is: [YAML_STREAM_START_EVENT])
+        try expectNextEvent(oneOf: [YAML_STREAM_START_EVENT])
     }
 
     deinit {
@@ -145,10 +145,10 @@ public final class Parser {
     /// - Throws: ParserError or YamlError
     public func nextRoot() throws -> Node? {
         if streamEndProduced { return nil }
-        switch try expectNextEvent(is: [YAML_DOCUMENT_START_EVENT, YAML_STREAM_END_EVENT]) {
+        switch try expectNextEvent(oneOf: [YAML_DOCUMENT_START_EVENT, YAML_STREAM_END_EVENT]) {
         case YAML_DOCUMENT_START_EVENT:
             let node = try loadNode(from: parse())
-            try expectNextEvent(is: [YAML_DOCUMENT_END_EVENT])
+            try expectNextEvent(oneOf: [YAML_DOCUMENT_END_EVENT])
             return node
         default: // YAML_STREAM_END_EVENT
             return nil
@@ -181,7 +181,7 @@ extension Parser {
     }
 
     @discardableResult
-    fileprivate func expectNextEvent(is eventTypes: [yaml_event_type_t]) throws -> yaml_event_type_t {
+    fileprivate func expectNextEvent(oneOf eventTypes: [yaml_event_type_t]) throws -> yaml_event_type_t {
         let event = try parse()
         guard eventTypes.contains(event.type) else {
             throw ParserError.unexpectedEvent(event.type.rawValue)
@@ -281,8 +281,11 @@ fileprivate class Event {
         return string(from: event.data.scalar.anchor)
     }
     var scalarTag: String? {
-        return (event.data.scalar.plain_implicit != 0 || event.data.scalar.quoted_implicit != 0)
-            ? nil : string(from: event.data.scalar.tag)
+        guard event.data.scalar.plain_implicit == 0,
+            event.data.scalar.quoted_implicit == 0 else {
+                return nil
+        }
+        return string(from: event.data.scalar.tag)
     }
     var scalarValue: String {
         // scalar may contain NULL characters
