@@ -170,21 +170,7 @@ extension Double: ScalarConstructible {
         default:
             scalar = scalar.replacingOccurrences(of: "_", with: "")
             if scalar.contains(":") {
-                var sign: Double = 1
-                if scalar.hasPrefix("-") {
-                    sign = -1
-                    scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
-                } else if scalar.hasPrefix("+") {
-                    scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
-                }
-                let digits = scalar.components(separatedBy: ":").flatMap(Double.init).reversed()
-                var base = 1.0
-                var value = 0.0
-                digits.forEach {
-                    value += $0 * base
-                    base *= 60
-                }
-                return sign * value
+                return Double(sexagesimal: scalar)
             }
             return Double(scalar)
         }
@@ -216,21 +202,7 @@ extension Int: ScalarConstructible {
             return Int(octal, radix: 8)
         }
         if scalar.contains(":") {
-            var sign = 1
-            if scalar.hasPrefix("-") {
-                sign = -1
-                scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
-            } else if scalar.hasPrefix("+") {
-                scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
-            }
-            let digits = scalar.components(separatedBy: ":").flatMap({ Int($0) }).reversed()
-            var base = 1
-            var value = 0
-            digits.forEach {
-                value += $0 * base
-                base *= 60
-            }
-            return sign * value
+            return Int(sexagesimal: scalar)
         }
         return Int(scalar)
     }
@@ -368,5 +340,49 @@ fileprivate extension String {
                 fatalError("unreachable")
         }
         return substring(with: lowerBound..<upperBound)
+    }
+}
+
+// MARK: - SexagesimalConvertible
+fileprivate protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
+    init?(_ value: String)
+    static func * (lhs: Self, rhs: Self) -> Self
+    static func *= (lhs: inout Self, rhs: Self)
+    static func += (lhs: inout Self, rhs: Self)
+}
+
+extension SexagesimalConvertible {
+    fileprivate init(sexagesimal value: String) {
+        self = value.sexagesimal()
+    }
+}
+
+extension Double: SexagesimalConvertible {}
+extension Int: SexagesimalConvertible {
+    fileprivate init?(_ value: String) {
+        self.init(value, radix: 10)
+    }
+}
+
+fileprivate extension String {
+    func sexagesimal<T>() -> T where T: SexagesimalConvertible {
+        assert(contains(":"))
+        var scalar = self
+
+        var sign: T = 1
+        if scalar.hasPrefix("-") {
+            sign = -1
+            scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
+        } else if scalar.hasPrefix("+") {
+            scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
+        }
+        let digits = scalar.components(separatedBy: ":").flatMap({ T($0) }).reversed()
+        var base: T = 1
+        var value: T = 0
+        digits.forEach {
+            value += $0 * base
+            base *= 60
+        }
+        return sign * value
     }
 }
