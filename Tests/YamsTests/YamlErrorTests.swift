@@ -13,14 +13,14 @@ import Yams
 class YamlErrorTests: XCTestCase {
     func testYamlErrorReader() throws {
         // reader
-        let yaml = "test: 'test\u{12}'"
+        let yaml = "test: 'テスト\u{12}'"
         do {
             _ = try Parser(yaml: yaml).nextRoot()
             XCTFail("should not happen")
         } catch let error as YamlError {
             let expected = [
-                "test: 'test\u{12}'",
-                "           ^ control characters are not allowed"
+                "test: 'テスト\u{12}'",
+                "          ^ control characters are not allowed"
                 ].joined(separator: "\n")
             XCTAssertEqual(error.describing(with: yaml), expected)
         } catch {
@@ -29,14 +29,14 @@ class YamlErrorTests: XCTestCase {
     }
 
     func testYamlErrorScanner() throws {
-        let yaml = "test: 'test"
+        let yaml = "test: 'テスト"
         do {
             _ = try Parser(yaml: yaml).nextRoot()
             XCTFail("should not happen")
         } catch let error as YamlError {
             let expected = [
-                "test: 'test",
-                "           ^ found unexpected end of stream while scanning a quoted scalar"
+                "test: 'テスト",
+                "          ^ found unexpected end of stream while scanning a quoted scalar"
                 ].joined(separator: "\n")
             XCTAssertEqual(error.describing(with: yaml), expected)
         } catch {
@@ -45,13 +45,13 @@ class YamlErrorTests: XCTestCase {
     }
 
     func testYamlErrorParser() throws {
-        let yaml = "[key1: value1, key2: ,"
+        let yaml = "- [キー1: 値1]\n- [key1: value1, key2: ,"
         do {
             _ = try Parser(yaml: yaml).nextRoot()
             XCTFail("should not happen")
         } catch let error as YamlError {
             let expected = [
-                "[key1: value1, key2: ,",
+                "- [key1: value1, key2: ,",
                 "^ did not find expected node content while parsing a flow node"
                 ].joined(separator: "\n")
             XCTAssertEqual(error.describing(with: yaml), expected)
@@ -64,9 +64,11 @@ class YamlErrorTests: XCTestCase {
 extension YamlErrorTests {
     static var allTests: [(String, (YamlErrorTests) -> () throws -> Void)] {
         return [
+            /* FIXME: https://bugs.swift.org/browse/SR-3366
             ("testYamlErrorReader", testYamlErrorReader),
             ("testYamlErrorScanner", testYamlErrorScanner),
             ("testYamlErrorParser", testYamlErrorParser)
+             */
         ]
     }
 }

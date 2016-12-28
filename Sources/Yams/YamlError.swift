@@ -67,8 +67,13 @@ extension YamlError {
         case .memory:
             return "Memory error"
         case let .reader(problem, byteOffset, value):
-            guard let (_, column, contents) = yaml.lineNumberColumnAndContents(at: byteOffset)
-                else { return "\(problem) at byte offset: \(byteOffset), value: \(value)" }
+            #if USE_UTF16
+                guard let (_, column, contents) = yaml.utf16LineNumberColumnAndContents(at: byteOffset / 2)
+                    else { return "\(problem) at byte offset: \(byteOffset), value: \(value)" }
+            #else
+                guard let (_, column, contents) = yaml.utf8LineNumberColumnAndContents(at: byteOffset)
+                    else { return "\(problem) at byte offset: \(byteOffset), value: \(value)" }
+            #endif
             return contents.endingWithNewLine
                 + String(repeating: " ", count: column - 1) + "^ " + problem
         case let .scanner(context, problem, line, column):
