@@ -18,7 +18,7 @@ import Foundation
 ///   - yaml: String
 ///   - resolver: Resolver
 ///   - constructor: Constructor
-/// - Returns: YamlSequence
+/// - Returns: YamlSequence<Any>
 /// - Throws: ParserError or YamlError
 public func load_all(yaml: String,
                      _ resolver: Resolver = .default,
@@ -34,7 +34,7 @@ public func load_all(yaml: String,
 ///   - yaml: String
 ///   - resolver: Resolver
 ///   - constructor: Constructor
-/// - Returns: Any
+/// - Returns: Any?
 /// - Throws: ParserError or YamlError
 public func load(yaml: String,
                  _ resolver: Resolver = .default,
@@ -49,7 +49,7 @@ public func load(yaml: String,
 ///   - yaml: String
 ///   - resolver: Resolver
 ///   - constructor: Constructor
-/// - Returns: YamlSequence
+/// - Returns: YamlSequence<Node>
 /// - Throws: ParserError or YamlError
 public func compose_all(yaml: String,
                         _ resolver: Resolver = .default,
@@ -65,7 +65,7 @@ public func compose_all(yaml: String,
 ///   - yaml: String
 ///   - resolver: Resolver
 ///   - constructor: Constructor
-/// - Returns: Any
+/// - Returns: Node?
 /// - Throws: ParserError or YamlError
 public func compose(yaml: String,
                     _ resolver: Resolver = .default,
