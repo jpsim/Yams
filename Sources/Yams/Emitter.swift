@@ -18,7 +18,6 @@ public func serialize_all<S>(
     width: Int = 0,
     allowUnicode: Bool = false,
     lineBreak: yaml_break_t = YAML_ANY_BREAK,
-    encoding: yaml_encoding_t = YAML_ANY_ENCODING,
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil) throws -> String
@@ -29,14 +28,17 @@ public func serialize_all<S>(
             width: width,
             allowUnicode: allowUnicode,
             lineBreak: lineBreak,
-            encoding: encoding,
             explicitStart: explicitStart,
             explicitEnd: explicitEnd,
             version: version)
         try emitter.open()
         try nodes.forEach(emitter.serialize)
         try emitter.close()
-        return emitter.stream
+        #if USE_UTF16
+            return String(data: emitter.data, encoding: .utf16)!
+        #else
+            return String(data: emitter.data, encoding: .utf8)!
+        #endif
 }
 
 public func serialize(
@@ -46,24 +48,19 @@ public func serialize(
     width: Int = 0,
     allowUnicode: Bool = false,
     lineBreak: yaml_break_t = YAML_ANY_BREAK,
-    encoding: yaml_encoding_t = YAML_ANY_ENCODING,
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil) throws -> String {
-        let emitter = Emitter(
-            canonical: canonical,
-            indent: indent,
-            width: width,
-            allowUnicode: allowUnicode,
-            lineBreak: lineBreak,
-            encoding: encoding,
-            explicitStart: explicitStart,
-            explicitEnd: explicitEnd,
-            version: version)
-        try emitter.open()
-        try emitter.serialize(node: node)
-        try emitter.close()
-        return emitter.stream
+    return try serialize_all(
+        nodes: [node],
+        canonical: canonical,
+        indent: indent,
+        width: width,
+        allowUnicode: allowUnicode,
+        lineBreak: lineBreak,
+        explicitStart: explicitStart,
+        explicitEnd: explicitEnd,
+        version: version)
 }
 
 public enum EmitterError: Swift.Error {
@@ -71,11 +68,10 @@ public enum EmitterError: Swift.Error {
 }
 
 public final class Emitter {
-    public var stream = ""
+    public var data = Data()
 
     let documentStartImplicit: Int32
     let documentEndImplicit: Int32
-    let encoding: yaml_encoding_t
     let version: (major: Int, minor: Int)?
 
     public init(canonical: Bool = false,
@@ -83,31 +79,20 @@ public final class Emitter {
                 width: Int = 0,
                 allowUnicode: Bool = false,
                 lineBreak: yaml_break_t = YAML_ANY_BREAK,
-                encoding: yaml_encoding_t = YAML_ANY_ENCODING,
                 explicitStart: Bool = false,
                 explicitEnd: Bool = false,
                 version: (major: Int, minor: Int)? = nil) {
         documentStartImplicit = explicitStart ? 0 : 1
         documentEndImplicit = explicitStart ? 0 : 1
-        self.encoding = encoding
         self.version = version
 
         // configure emitter
         yaml_emitter_initialize(&emitter)
 
         yaml_emitter_set_output(&self.emitter, { pointer, buffer, size in
-            let buffer = UnsafeBufferPointer(start: buffer, count: size)
-            let encoding: String.Encoding
-            #if USE_UTF16
-                encoding = .utf16BigEndian
-            #else
-                encoding = .utf8
-            #endif
-            guard let string = String(bytes: buffer, encoding: encoding) else {
-                return 0
-            }
+            guard let buffer = buffer else { return 0 }
             let emitter = unsafeBitCast(pointer, to: Emitter.self)
-            emitter.stream.write(string)
+            emitter.data.append(buffer, count: size)
             return 1
         }, unsafeBitCast(self, to: UnsafeMutableRawPointer.self))
 
@@ -116,7 +101,11 @@ public final class Emitter {
         yaml_emitter_set_width(&emitter, Int32(width))
         yaml_emitter_set_unicode(&emitter, allowUnicode ? 1 : 0)
         yaml_emitter_set_break(&emitter, lineBreak)
-        yaml_emitter_set_encoding(&emitter, encoding)
+        #if USE_UTF16
+            yaml_emitter_set_encoding(&emitter, YAML_UTF16BE_ENCODING)
+        #else
+            yaml_emitter_set_encoding(&emitter, YAML_UTF8_ENCODING)
+        #endif
     }
 
     deinit {
@@ -127,7 +116,11 @@ public final class Emitter {
         switch state {
         case .initialized:
             var event = yaml_event_t()
-            yaml_stream_start_event_initialize(&event, encoding)
+            #if USE_UTF16
+                yaml_stream_start_event_initialize(&event, YAML_UTF16BE_ENCODING)
+            #else
+                yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING)
+            #endif
             try emit(&event)
             state = .opened
         case .opened:
