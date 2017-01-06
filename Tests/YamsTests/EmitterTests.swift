@@ -59,6 +59,36 @@ class EmitterTests: XCTestCase {
             XCTAssertEqual(yaml, expected)
         }
     }
+
+    func testAllowUnicode() throws {
+        do {
+            let node: Node = "あ"
+            do {
+                let yaml = try Yams.serialize(node: node)
+                let expected = "\"\\u3042\"\n"
+                XCTAssertEqual(yaml, expected)
+            }
+            do {
+                let yaml = try Yams.serialize(node: node, allowUnicode: true)
+                let expected = "'あ'\n"
+                XCTAssertEqual(yaml, expected)
+            }
+        }
+        do {
+            // Emoji will be escaped whether `allowUnicode` is true or not
+            let node: Node = "😀"
+            do {
+                let yaml = try Yams.serialize(node: node)
+                let expected = "\"\\U0001F600\"\n"
+                XCTAssertEqual(yaml, expected)
+            }
+            do {
+                let yaml = try Yams.serialize(node: node, allowUnicode: true)
+                let expected = "\"\\U0001F600\"\n"
+                XCTAssertEqual(yaml, expected)
+            }
+        }
+    }
 }
 
 extension EmitterTests {
@@ -67,7 +97,8 @@ extension EmitterTests {
             ("testScalar", testScalar),
             ("testSequence", testSequence),
             ("testMapping", testMapping),
-            ("testLineBreaks", testLineBreaks)
+            ("testLineBreaks", testLineBreaks),
+            ("testAllowUnicode", testAllowUnicode)
         ]
     }
 }
