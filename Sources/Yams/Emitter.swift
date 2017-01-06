@@ -17,7 +17,7 @@ public func serialize_all<S>(
     indent: Int = 0,
     width: Int = 0,
     allowUnicode: Bool = false,
-    lineBreak: yaml_break_t = YAML_ANY_BREAK,
+    lineBreak: Emitter.LineBreak = .ln,
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil) throws -> String
@@ -47,7 +47,7 @@ public func serialize(
     indent: Int = 0,
     width: Int = 0,
     allowUnicode: Bool = false,
-    lineBreak: yaml_break_t = YAML_ANY_BREAK,
+    lineBreak: Emitter.LineBreak = .ln,
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil) throws -> String {
@@ -68,6 +68,15 @@ public enum EmitterError: Swift.Error {
 }
 
 public final class Emitter {
+    public enum LineBreak {
+        /// Use CR for line breaks (Mac style).
+        case cr
+        /// Use LN for line breaks (Unix style).
+        case ln
+        /// Use CR LN for line breaks (DOS style).
+        case crln
+    }
+
     public var data = Data()
 
     let documentStartImplicit: Int32
@@ -78,7 +87,7 @@ public final class Emitter {
                 indent: Int = 0,
                 width: Int = 0,
                 allowUnicode: Bool = false,
-                lineBreak: yaml_break_t = YAML_ANY_BREAK,
+                lineBreak: LineBreak = .ln,
                 explicitStart: Bool = false,
                 explicitEnd: Bool = false,
                 version: (major: Int, minor: Int)? = nil) {
@@ -100,7 +109,12 @@ public final class Emitter {
         yaml_emitter_set_indent(&emitter, Int32(indent))
         yaml_emitter_set_width(&emitter, Int32(width))
         yaml_emitter_set_unicode(&emitter, allowUnicode ? 1 : 0)
-        yaml_emitter_set_break(&emitter, lineBreak)
+        switch lineBreak {
+        case .cr: yaml_emitter_set_break(&emitter, YAML_CR_BREAK)
+        case .ln: yaml_emitter_set_break(&emitter, YAML_LN_BREAK)
+        case .crln: yaml_emitter_set_break(&emitter, YAML_CRLN_BREAK)
+        }
+
         #if USE_UTF16
             yaml_emitter_set_encoding(&emitter, YAML_UTF16BE_ENCODING)
         #else

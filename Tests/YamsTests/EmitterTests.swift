@@ -40,6 +40,25 @@ class EmitterTests: XCTestCase {
             ].joined(separator: "\n")
         XCTAssertEqual(yaml, expected)
     }
+
+    func testLineBreaks() throws {
+        let node: Node = "key"
+        do {
+            let yaml = try Yams.serialize(node: node, lineBreak: .ln)
+            let expected = "'key'\n"
+            XCTAssertEqual(yaml, expected)
+        }
+        do {
+            let yaml = try Yams.serialize(node: node, lineBreak: .cr)
+            let expected = "'key'\r"
+            XCTAssertEqual(yaml, expected)
+        }
+        do {
+            let yaml = try Yams.serialize(node: node, lineBreak: .crln)
+            let expected = "'key'\r\n"
+            XCTAssertEqual(yaml, expected)
+        }
+    }
 }
 
 extension EmitterTests {
@@ -48,6 +67,7 @@ extension EmitterTests {
             ("testScalar", testScalar),
             ("testSequence", testSequence),
             ("testMapping", testMapping),
+            ("testLineBreaks", testLineBreaks)
         ]
     }
 }
