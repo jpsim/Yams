@@ -208,7 +208,7 @@ extension Emitter {
 
     private func serializeScalarNode(_ node: Node) throws {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        var value = node.scalar!.utf8CString, tag = node.tag.name!.rawValue.utf8CString
+        var value = node.scalar!.utf8CString, tag = node.tag.name.rawValue.utf8CString
         let implicit: Int32 = node.tag.name == .str ? 1 : 0
         var event = yaml_event_t()
         _ = value.withUnsafeMutableBytes { value in
@@ -229,7 +229,7 @@ extension Emitter {
 
     private func serializeSequenceNode(_ node: Node) throws {
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
-        var sequence = node.sequence!, tag = node.tag.name!.rawValue.utf8CString
+        var sequence = node.sequence!, tag = node.tag.name.rawValue.utf8CString
         let implicit: Int32 = node.tag.name == .seq ? 1 : 0
         let sequence_style = YAML_BLOCK_SEQUENCE_STYLE
         var event = yaml_event_t()
@@ -249,7 +249,7 @@ extension Emitter {
 
     private func serializeMappingNode(_ node: Node) throws {
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
-        var pairs = node.pairs!, tag = node.tag.name!.rawValue.utf8CString
+        var pairs = node.pairs!, tag = node.tag.name.rawValue.utf8CString
         let implicit: Int32 = node.tag.name == Tag.Name.map ? 1 : 0
         let mapping_style = YAML_BLOCK_MAPPING_STYLE
         var event = yaml_event_t()

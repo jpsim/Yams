@@ -16,7 +16,7 @@ public final class Constructor {
     }
 
     public func any(from node: Node) -> Any {
-        if let tagName = node.tag.name, let method = methodMap[tagName], let result = method(node) {
+        if let method = methodMap[node.tag.name], let result = method(node) {
             return result
         }
         switch node {

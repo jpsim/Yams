@@ -223,7 +223,7 @@ extension Parser {
     }
 
     private func loadScalar(from event: Event) throws -> Node {
-        let node = Node.scalar(event.scalarValue, Tag(event.scalarTag, resolver, constructor))
+        let node = Node.scalar(event.scalarValue, tag(event.scalarTag))
         if let anchor = event.scalarAnchor {
             anchors[anchor] = node
         }
@@ -237,7 +237,7 @@ extension Parser {
             array.append(try loadNode(from: event))
             event = try parse()
         }
-        let node = Node.sequence(array, Tag(firstEvent.sequenceTag, resolver, constructor))
+        let node = Node.sequence(array, tag(firstEvent.sequenceTag))
         if let anchor = firstEvent.sequenceAnchor {
             anchors[anchor] = node
         }
@@ -254,11 +254,15 @@ extension Parser {
             pairs.append(Pair(key, value))
             event = try parse()
         }
-        let node = Node.mapping(pairs, Tag(firstEvent.mappingTag, resolver, constructor))
+        let node = Node.mapping(pairs, tag(firstEvent.mappingTag))
         if let anchor = firstEvent.mappingAnchor {
             anchors[anchor] = node
         }
         return node
+    }
+
+    private func tag(_ string: String?) -> Tag {
+        return Tag(string, resolver, constructor)
     }
 }
 
