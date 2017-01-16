@@ -60,7 +60,7 @@ extension Constructor {
 // MARK: - ScalarConstructible
 public protocol ScalarConstructible {
     // We don't use overloading `init?(_ node: Node)`
-    // because that causes difficulties on using `init` as cosure
+    // because that causes difficulties on using `init` as closure
     static func construct(from node: Node) -> Self?
 }
 
