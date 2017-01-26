@@ -67,7 +67,7 @@ public protocol ScalarConstructible {
 extension Bool: ScalarConstructible {
     public static func construct(from node: Node) -> Bool? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        switch node.scalar!.lowercased() {
+        switch node.scalar!.string.lowercased() {
         case "true", "yes", "on":
             return true
         case "false", "no", "off":
@@ -81,7 +81,7 @@ extension Bool: ScalarConstructible {
 extension Data: ScalarConstructible {
     public static func construct(from node: Node) -> Data? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        let data = Data(base64Encoded: node.scalar!, options: .ignoreUnknownCharacters)
+        let data = Data(base64Encoded: node.scalar!.string, options: .ignoreUnknownCharacters)
         return data
     }
 }
@@ -89,7 +89,7 @@ extension Data: ScalarConstructible {
 extension Date: ScalarConstructible {
     public static func construct(from node: Node) -> Date? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        let scalar = node.scalar!
+        let scalar = node.scalar!.string
 
         let range = NSRange(location: 0, length: scalar.utf16.count)
         guard let result = timestampPattern.firstMatch(in: scalar, options: [], range: range),
@@ -159,7 +159,7 @@ extension Date: ScalarConstructible {
 extension Double: ScalarConstructible {
     public static func construct(from node: Node) -> Double? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        var scalar = node.scalar!
+        var scalar = node.scalar!.string
         switch scalar {
         case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
             return Double.infinity
@@ -180,7 +180,7 @@ extension Double: ScalarConstructible {
 extension Int: ScalarConstructible {
     public static func construct(from node: Node) -> Int? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        var scalar = node.scalar!
+        var scalar = node.scalar!.string
         scalar = scalar.replacingOccurrences(of: "_", with: "")
         if scalar == "0" {
             return 0
@@ -215,13 +215,13 @@ extension String: ScalarConstructible {
 
     fileprivate static func _construct(from node: Node) -> String {
         // This will happen while `Dicrionaty.flatten_mapping()` if `node.tag.name` was `.value`
-        if case let .mapping(pairs, _) = node {
+        if case let .mapping(pairs, _, _) = node {
             for pair in pairs where pair.key.tag.name == .value {
                 return _construct(from: pair.value)
             }
         }
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        return node.scalar!
+        return node.scalar!.string
     }
 }
 
@@ -229,7 +229,7 @@ extension String: ScalarConstructible {
 extension NSNull/*: ScalarConstructible*/ {
     public static func construct(from node: Node) -> NSNull? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        switch node.scalar! {
+        switch node.scalar!.string {
         case "", "~", "null", "Null", "NULL":
             return NSNull()
         default:
@@ -246,7 +246,7 @@ extension Dictionary {
 
     fileprivate static func _construct_mapping(from node: Node) -> [AnyHashable: Any] {
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
-        let pairs = flatten_mapping(node).pairs!
+        let pairs = flatten_mapping(node).mapping!.pairs
         var dictionary = [AnyHashable: Any](minimumCapacity: pairs.count)
         pairs.forEach {
             // TODO: YAML supports keys other than str.
@@ -257,7 +257,8 @@ extension Dictionary {
 
     private static func flatten_mapping(_ node: Node) -> Node {
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
-        var pairs = node.pairs!
+        let mapping = node.mapping!
+        var pairs = mapping.pairs
         var merge = [Pair<Node>]()
         var index = pairs.startIndex
         while index < pairs.count {
@@ -267,13 +268,13 @@ extension Dictionary {
                 switch pair.value {
                 case .mapping:
                     let flattened_node = flatten_mapping(pair.value)
-                    if let pairs = flattened_node.pairs {
+                    if let pairs = flattened_node.mapping?.pairs {
                         merge.append(contentsOf: pairs)
                     }
-                case let .sequence(array, _):
+                case let .sequence(array, _, _):
                     let submerge = array
                         .filter { $0.isMapping } // TODO: Should raise error on other than mapping
-                        .flatMap { flatten_mapping($0).pairs }
+                        .flatMap { flatten_mapping($0).mapping?.pairs }
                         .reversed()
                     submerge.forEach {
                         merge.append(contentsOf: $0)
@@ -288,7 +289,7 @@ extension Dictionary {
                 index += 1
             }
         }
-        return .mapping(merge + pairs, node.tag)
+        return .mapping(merge + pairs, node.tag, mapping.style)
     }
 }
 
@@ -296,7 +297,7 @@ extension Set {
     public static func construct_set(from node: Node) -> Set<AnyHashable>? {
         // TODO: YAML supports Hashable elements other than str.
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
-        return Set<AnyHashable>(node.pairs!.map({ String._construct(from: $0.key) as AnyHashable }))
+        return Set<AnyHashable>(node.mapping!.pairs.map({ String._construct(from: $0.key) as AnyHashable }))
         // Explicitly declaring generic parameter as `<AnyHashable>` is required at above,
         // because this is inside extension of `Set` and Swift 3.0.2 can't infer the type without that.
     }
@@ -306,15 +307,15 @@ extension Set {
 extension Array {
     public static func construct_seq(from node: Node) -> [Any] {
         // swiftlint:disable:next force_unwrapping
-        return node.sequence!.map(node.tag.constructor.any)
+        return node.sequence!.nodes.map(node.tag.constructor.any)
     }
 
     public static func construct_omap(from node: Node) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
-        return node.sequence!.flatMap { subnode -> (Any, Any)? in
+        return node.sequence!.nodes.flatMap { subnode -> (Any, Any)? in
             // TODO: Should raise error if subnode is not mapping or pairs.count != 1
-            guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
+            guard let pairs = subnode.mapping?.pairs, let pair = pairs.first else { return nil }
             return (node.tag.constructor.any(from: pair.key), node.tag.constructor.any(from: pair.value))
         }
     }
@@ -322,9 +323,9 @@ extension Array {
     public static func construct_pairs(from node: Node) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
-        return node.sequence!.flatMap { subnode -> (Any, Any)? in
+        return node.sequence!.nodes.flatMap { subnode -> (Any, Any)? in
             // TODO: Should raise error if subnode is not mapping or pairs.count != 1
-            guard let pairs = subnode.pairs, let pair = pairs.first else { return nil }
+            guard let pairs = subnode.mapping?.pairs, let pair = pairs.first else { return nil }
             return (node.tag.constructor.any(from: pair.key), node.tag.constructor.any(from: pair.value))
         }
     }

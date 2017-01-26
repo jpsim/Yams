@@ -12,33 +12,57 @@ import Yams
 class EmitterTests: XCTestCase {
 
     func testScalar() throws {
-        let node: Node = "key"
-        let yaml = try Yams.serialize(node: node)
-        let expected = "'key'\n"
-        XCTAssertEqual(yaml, expected)
+        var node: Node = "key"
+
+        let expectedAnyAndPlainIsSingleQuoted = "'key'\n"
+        node.scalar?.style = .any
+        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyAndPlainIsSingleQuoted)
+        node.scalar?.style = .plain
+        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyAndPlainIsSingleQuoted)
+        node.scalar?.style = .singleQuoted
+        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyAndPlainIsSingleQuoted)
+
+        node.scalar?.style = .doubleQuoted
+        XCTAssertEqual(try Yams.serialize(node: node), "\"key\"\n")
+        node.scalar?.style = .literal
+        XCTAssertEqual(try Yams.serialize(node: node), "|-\n  key\n")
+        node.scalar?.style = .folded
+        XCTAssertEqual(try Yams.serialize(node: node), ">-\n  key\n")
     }
 
     func testSequence() throws {
-        let node: Node = ["a", "b", "c"]
-        let yaml = try Yams.serialize(node: node)
-        let expected = [
+        var node: Node = ["a", "b", "c"]
+
+        let expectedAnyIsBlock = [
             "- 'a'",
             "- 'b'",
             "- 'c'",
             ""
-        ].joined(separator: "\n")
-        XCTAssertEqual(yaml, expected)
+            ].joined(separator: "\n")
+        node.sequence?.style = .any
+        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyIsBlock)
+        node.sequence?.style = .block
+        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyIsBlock)
+
+        node.sequence?.style = .flow
+        XCTAssertEqual(try Yams.serialize(node: node), "['a', 'b', 'c']\n")
     }
 
     func testMapping() throws {
-        let node: Node = ["key1": "value1", "key2": "value2"]
-        let yaml = try Yams.serialize(node: node)
-        let expected = [
+        var node: Node = ["key1": "value1", "key2": "value2"]
+
+        let expectedAnyIsBlock = [
             "'key1': 'value1'",
             "'key2': 'value2'",
             ""
             ].joined(separator: "\n")
-        XCTAssertEqual(yaml, expected)
+        node.mapping?.style = .any
+        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyIsBlock)
+        node.mapping?.style = .block
+        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyIsBlock)
+
+        node.mapping?.style = .flow
+        XCTAssertEqual(try Yams.serialize(node: node), "{'key1': 'value1', 'key2': 'value2'}\n")
     }
 
     func testLineBreaks() throws {

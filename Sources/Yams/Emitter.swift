@@ -208,8 +208,10 @@ extension Emitter {
 
     private func serializeScalarNode(_ node: Node) throws {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        var value = node.scalar!.utf8CString, tag = node.tag.name.rawValue.utf8CString
+        let scalar = node.scalar!
+        var value = scalar.string.utf8CString, tag = node.tag.name.rawValue.utf8CString
         let implicit: Int32 = node.tag.name == .str ? 1 : 0
+        let scalar_style = yaml_scalar_style_t(rawValue: scalar.style.rawValue)
         var event = yaml_event_t()
         _ = value.withUnsafeMutableBytes { value in
             tag.withUnsafeMutableBytes { tag in
@@ -221,7 +223,7 @@ extension Emitter {
                     Int32(value.count - 1),
                     0,
                     implicit,
-                    YAML_ANY_SCALAR_STYLE)
+                    scalar_style)
             }
         }
         try emit(&event)
@@ -231,7 +233,7 @@ extension Emitter {
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
         var sequence = node.sequence!, tag = node.tag.name.rawValue.utf8CString
         let implicit: Int32 = node.tag.name == .seq ? 1 : 0
-        let sequence_style = YAML_BLOCK_SEQUENCE_STYLE
+        let sequence_style = yaml_sequence_style_t(rawValue: sequence.style.rawValue)
         var event = yaml_event_t()
         _ = tag.withUnsafeMutableBytes { tag in
             yaml_sequence_start_event_initialize(
@@ -242,16 +244,17 @@ extension Emitter {
                 sequence_style)
         }
         try emit(&event)
-        try sequence.forEach(self.serializeNode)
+        try sequence.nodes.forEach(self.serializeNode)
         yaml_sequence_end_event_initialize(&event)
         try emit(&event)
     }
 
     private func serializeMappingNode(_ node: Node) throws {
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
-        var pairs = node.pairs!, tag = node.tag.name.rawValue.utf8CString
+        let mapping = node.mapping!
+        var pairs = mapping.pairs, tag = node.tag.name.rawValue.utf8CString
         let implicit: Int32 = node.tag.name == Tag.Name.map ? 1 : 0
-        let mapping_style = YAML_BLOCK_MAPPING_STYLE
+        let mapping_style = yaml_mapping_style_t(rawValue: mapping.style.rawValue)
         var event = yaml_event_t()
         _ = tag.withUnsafeMutableBytes { tag in
             yaml_mapping_start_event_initialize(

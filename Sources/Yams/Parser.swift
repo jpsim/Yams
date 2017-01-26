@@ -223,7 +223,7 @@ extension Parser {
     }
 
     private func loadScalar(from event: Event) throws -> Node {
-        let node = Node.scalar(event.scalarValue, tag(event.scalarTag))
+        let node = Node.scalar(event.scalarValue, tag(event.scalarTag), event.scalarStyle)
         if let anchor = event.scalarAnchor {
             anchors[anchor] = node
         }
@@ -237,7 +237,7 @@ extension Parser {
             array.append(try loadNode(from: event))
             event = try parse()
         }
-        let node = Node.sequence(array, tag(firstEvent.sequenceTag))
+        let node = Node.sequence(array, tag(firstEvent.sequenceTag), event.sequenceStyle)
         if let anchor = firstEvent.sequenceAnchor {
             anchors[anchor] = node
         }
@@ -254,7 +254,7 @@ extension Parser {
             pairs.append(Pair(key, value))
             event = try parse()
         }
-        let node = Node.mapping(pairs, tag(firstEvent.mappingTag))
+        let node = Node.mapping(pairs, tag(firstEvent.mappingTag), event.mappingStyle)
         if let anchor = firstEvent.mappingAnchor {
             anchors[anchor] = node
         }
@@ -284,6 +284,10 @@ fileprivate class Event {
     var scalarAnchor: String? {
         return string(from: event.data.scalar.anchor)
     }
+    var scalarStyle: Node.Scalar.Style {
+        // swiftlint:disable:next force_unwrapping
+        return Node.Scalar.Style(rawValue: event.data.scalar.style.rawValue)!
+    }
     var scalarTag: String? {
         guard event.data.scalar.plain_implicit == 0,
             event.data.scalar.quoted_implicit == 0 else {
@@ -303,6 +307,10 @@ fileprivate class Event {
     var sequenceAnchor: String? {
         return string(from: event.data.sequence_start.anchor)
     }
+    var sequenceStyle: Node.Sequence.Style {
+        // swiftlint:disable:next force_unwrapping
+        return Node.Sequence.Style(rawValue: event.data.sequence_start.style.rawValue)!
+    }
     var sequenceTag: String? {
         return event.data.sequence_start.implicit != 0
             ? nil : string(from: event.data.sequence_start.tag)
@@ -311,6 +319,10 @@ fileprivate class Event {
     // mapping
     var mappingAnchor: String? {
         return string(from: event.data.scalar.anchor)
+    }
+    var mappingStyle: Node.Mapping.Style {
+        // swiftlint:disable:next force_unwrapping
+        return Node.Mapping.Style(rawValue: event.data.mapping_start.style.rawValue)!
     }
     var mappingTag: String? {
         return event.data.mapping_start.implicit != 0
