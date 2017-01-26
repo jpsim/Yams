@@ -121,7 +121,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  }"
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
-        let expected = [
+        let expected: [String:[String:Any]] = [
             "Mark McGwire": ["hr": 65, "avg": 0.278],
             "Sammy Sosa": [
                 "hr": 63,
