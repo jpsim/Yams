@@ -254,13 +254,13 @@ extension Node: ExpressibleByDictionaryLiteral {
 
 extension Node: ExpressibleByFloatLiteral {
     public init(floatLiteral value: Double) {
-        self = .scalar(String(value), Tag(.float, .default, .default), .any)
+        self = .scalar(String(value), Tag(.float), .any)
     }
 }
 
 extension Node: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: Int) {
-        self = .scalar(String(value), Tag(.int, .default, .default), .any)
+        self = .scalar(String(value), Tag(.int), .any)
     }
 }
 

@@ -262,7 +262,8 @@ extension Parser {
     }
 
     private func tag(_ string: String?) -> Tag {
-        return Tag(string, resolver, constructor)
+        let tagName = string.map(Tag.Name.init(rawValue:)) ?? .implicit
+        return Tag(tagName, resolver, constructor)
     }
 }
 

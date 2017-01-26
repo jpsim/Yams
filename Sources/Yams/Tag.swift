@@ -23,21 +23,9 @@ public final class Tag {
     let constructor: Constructor
     var name: Name
 
-    init(_ string: String?,
-         _ resolver: Resolver,
-         _ constructor: Constructor) {
-        self.resolver = resolver
-        self.constructor = constructor
-        if let string = string, !string.isEmpty {
-            name = Name(rawValue: string)
-        } else {
-            name = .implicit
-        }
-    }
-
     init(_ name: Name,
-         _ resolver: Resolver,
-         _ constructor: Constructor) {
+         _ resolver: Resolver = .default,
+         _ constructor: Constructor = .default) {
         self.resolver = resolver
         self.constructor = constructor
         self.name = name
@@ -57,7 +45,7 @@ public final class Tag {
     }
 
     static var implicit: Tag {
-        return Tag(nil, .default, .default)
+        return Tag(.implicit)
     }
 
     // fileprivate
