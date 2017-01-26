@@ -16,7 +16,7 @@ matrix:
       env: JOB=SPM
       os: osx
       osx_image: xcode8.2
-    - script: docker run -v `pwd`:/Yams norionomura/sourcekit:301 bash -c "cd /Yams && swift test"
+    - script: docker run -v `pwd`:/Yams norionomura/sourcekit:302 bash -c "cd /Yams && swift test"
       env: JOB=Linux
       sudo: required
       services: docker
