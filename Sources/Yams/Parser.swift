@@ -75,7 +75,7 @@ public func compose(yaml: String,
 
 /// Sequence that holds error
 public struct YamlSequence<T>: Sequence, IteratorProtocol {
-    public private(set) var error: Swift.Error? = nil
+    public private(set) var error: Swift.Error?
 
     public mutating func next() -> T? {
         do {
