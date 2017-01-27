@@ -2,9 +2,9 @@ language: generic
 matrix:
   include:
     - script:
-        - xcodebuild -scheme Yams test # -sdk macosx -destination arch=x86_64
-        - xcodebuild -scheme Yams test -sdk iphonesimulator -destination "name=iPhone 6s"
-        - xcodebuild -scheme Yams test -sdk appletvsimulator -destination "name=Apple TV 1080p"
+        - xcodebuild -scheme Yams build-for-testing test-without-building # -sdk macosx -destination arch=x86_64
+        - xcodebuild -scheme Yams build-for-testing test-without-building -sdk iphonesimulator -destination "name=iPhone 6s"
+        - xcodebuild -scheme Yams build-for-testing test-without-building -sdk appletvsimulator -destination "name=Apple TV 1080p"
         - xcodebuild -scheme Yams build -sdk watchsimulator -destination "name=Apple Watch - 38mm"
         - pod lib lint
       env: JOB=Xcode
