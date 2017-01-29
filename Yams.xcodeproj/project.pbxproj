@@ -21,6 +21,8 @@
 		6C6834D11E0297390047B4D1 /* ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6834D01E0297390047B4D1 /* ParserTests.swift */; };
 		6C6834D31E02B9760047B4D1 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6834D21E02B9760047B4D1 /* Resolver.swift */; };
 		6C6834D51E02BC1F0047B4D1 /* ResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6834D41E02BC1F0047B4D1 /* ResolverTests.swift */; };
+		6C78C5651E29B27D0096215F /* RepresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C78C5631E29B1CE0096215F /* RepresenterTests.swift */; };
+		6CC2E33F1E22347B00F62269 /* Representer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CC2E33E1E22347B00F62269 /* Representer.swift */; };
 		6CE603981E13502E00A13D8D /* Emitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE603971E13502E00A13D8D /* Emitter.swift */; };
 		6CF6CE091E0E3B1000CB87D4 /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF6CE081E0E3B1000CB87D4 /* PerformanceTests.swift */; };
 		E8EDB8851DE2181B0062268D /* api.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* api.c */; };
@@ -63,6 +65,8 @@
 		6C6834D01E0297390047B4D1 /* ParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParserTests.swift; sourceTree = "<group>"; };
 		6C6834D21E02B9760047B4D1 /* Resolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resolver.swift; sourceTree = "<group>"; };
 		6C6834D41E02BC1F0047B4D1 /* ResolverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResolverTests.swift; sourceTree = "<group>"; };
+		6C78C5631E29B1CE0096215F /* RepresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepresenterTests.swift; sourceTree = "<group>"; };
+		6CC2E33E1E22347B00F62269 /* Representer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Representer.swift; sourceTree = "<group>"; };
 		6CE603971E13502E00A13D8D /* Emitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emitter.swift; sourceTree = "<group>"; };
 		6CF6CE071E0E3A5900CB87D4 /* Fixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fixtures; sourceTree = "<group>"; };
 		6CF6CE081E0E3B1000CB87D4 /* PerformanceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
@@ -116,6 +120,7 @@
 				6CE603971E13502E00A13D8D /* Emitter.swift */,
 				6C6834C71E0281880047B4D1 /* Node.swift */,
 				6C6834CB1E0283980047B4D1 /* Parser.swift */,
+				6CC2E33E1E22347B00F62269 /* Representer.swift */,
 				6C6834D21E02B9760047B4D1 /* Resolver.swift */,
 				6CBAEE191E3839500021BF87 /* Yams.h */,
 				6C4A22061DF8553C002A0206 /* String+Yams.swift */,
@@ -144,6 +149,7 @@
 				6C3C90B81E0FFB6B009DEFE8 /* NodeTests.swift */,
 				6C6834D01E0297390047B4D1 /* ParserTests.swift */,
 				6CF6CE081E0E3B1000CB87D4 /* PerformanceTests.swift */,
+				6C78C5631E29B1CE0096215F /* RepresenterTests.swift */,
 				6C6834D41E02BC1F0047B4D1 /* ResolverTests.swift */,
 				6C4A22081DF855BB002A0206 /* StringTests.swift */,
 				6C0488EB1E0BE113006F9F80 /* TestHelper.swift */,
@@ -306,6 +312,7 @@
 			files = (
 				E8EDB8871DE2181B0062268D /* emitter.c in Sources */,
 				E8EDB8851DE2181B0062268D /* api.c in Sources */,
+				6CC2E33F1E22347B00F62269 /* Representer.swift in Sources */,
 				6CE603981E13502E00A13D8D /* Emitter.swift in Sources */,
 				E8EDB8861DE2181B0062268D /* dumper.c in Sources */,
 				6C6834CC1E0283980047B4D1 /* Parser.swift in Sources */,
@@ -330,6 +337,7 @@
 				6CF6CE091E0E3B1000CB87D4 /* PerformanceTests.swift in Sources */,
 				6C4A22091DF855BB002A0206 /* StringTests.swift in Sources */,
 				6C0488EC1E0BE113006F9F80 /* TestHelper.swift in Sources */,
+				6C78C5651E29B27D0096215F /* RepresenterTests.swift in Sources */,
 				6C3C90B91E0FFB6B009DEFE8 /* NodeTests.swift in Sources */,
 				6C0A00D51E152D6200222704 /* EmitterTests.swift in Sources */,
 				6C0488EE1E0CBD56006F9F80 /* ConstructorTests.swift in Sources */,

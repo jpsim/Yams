@@ -15,6 +15,12 @@ public enum Node {
 }
 
 extension Node {
+    public init(_ string: String, _ tag: Tag.Name = .implicit, _ style: Scalar.Style = .any) {
+        self = .scalar(string, Tag(tag), style)
+    }
+}
+
+extension Node {
     public struct Scalar {
         public var string: String
         public var tag: Tag
