@@ -11,8 +11,8 @@
 #endif
 import Foundation
 
-public func dump<S>(
-    objects: S,
+public func dump<Objects>(
+    objects: Objects,
     canonical: Bool = false,
     indent: Int = 0,
     width: Int = 0,
@@ -21,7 +21,7 @@ public func dump<S>(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil) throws -> String
-    where S: Sequence, S.Iterator.Element: NodeRepresentable {
+    where Objects: Sequence, Objects.Iterator.Element: NodeRepresentable {
         return try serialize(
             nodes: objects.map { try $0.represented() },
             canonical: canonical,
@@ -57,8 +57,8 @@ public func dump<Object>(
             version: version)
 }
 
-public func serialize<S>(
-    nodes: S,
+public func serialize<Nodes>(
+    nodes: Nodes,
     canonical: Bool = false,
     indent: Int = 0,
     width: Int = 0,
@@ -67,7 +67,7 @@ public func serialize<S>(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil) throws -> String
-    where S: Sequence, S.Iterator.Element == Node {
+    where Nodes: Sequence, Nodes.Iterator.Element == Node {
         let emitter = Emitter(
             canonical: canonical,
             indent: indent,
