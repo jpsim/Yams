@@ -256,7 +256,6 @@ extension Emitter {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
         let scalar = node.scalar!
         var value = scalar.string.utf8CString, tag = node.tag.name.rawValue.utf8CString
-        let implicit: Int32 = node.tag.name == .str ? 1 : 0
         let scalar_style = yaml_scalar_style_t(rawValue: scalar.style.rawValue)
         var event = yaml_event_t()
         _ = value.withUnsafeMutableBytes { value in
@@ -267,8 +266,8 @@ extension Emitter {
                     tag.baseAddress?.assumingMemoryBound(to: UInt8.self),
                     value.baseAddress?.assumingMemoryBound(to: UInt8.self),
                     Int32(value.count - 1),
-                    0,
-                    implicit,
+                    1,
+                    1,
                     scalar_style)
             }
         }

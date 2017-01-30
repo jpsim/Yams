@@ -14,13 +14,13 @@ class EmitterTests: XCTestCase {
     func testScalar() throws {
         var node: Node = "key"
 
-        let expectedAnyAndPlainIsSingleQuoted = "'key'\n"
+        let expectedAnyAndPlain = "key\n...\n"
         node.scalar?.style = .any
-        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyAndPlainIsSingleQuoted)
+        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyAndPlain)
         node.scalar?.style = .plain
-        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyAndPlainIsSingleQuoted)
+        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyAndPlain)
         node.scalar?.style = .singleQuoted
-        XCTAssertEqual(try Yams.serialize(node: node), expectedAnyAndPlainIsSingleQuoted)
+        XCTAssertEqual(try Yams.serialize(node: node), "'key'\n")
 
         node.scalar?.style = .doubleQuoted
         XCTAssertEqual(try Yams.serialize(node: node), "\"key\"\n")
@@ -34,9 +34,9 @@ class EmitterTests: XCTestCase {
         var node: Node = ["a", "b", "c"]
 
         let expectedAnyIsBlock = [
-            "- 'a'",
-            "- 'b'",
-            "- 'c'",
+            "- a",
+            "- b",
+            "- c",
             ""
             ].joined(separator: "\n")
         node.sequence?.style = .any
@@ -45,15 +45,15 @@ class EmitterTests: XCTestCase {
         XCTAssertEqual(try Yams.serialize(node: node), expectedAnyIsBlock)
 
         node.sequence?.style = .flow
-        XCTAssertEqual(try Yams.serialize(node: node), "['a', 'b', 'c']\n")
+        XCTAssertEqual(try Yams.serialize(node: node), "[a, b, c]\n")
     }
 
     func testMapping() throws {
         var node: Node = ["key1": "value1", "key2": "value2"]
 
         let expectedAnyIsBlock = [
-            "'key1': 'value1'",
-            "'key2': 'value2'",
+            "key1: value1",
+            "key2: value2",
             ""
             ].joined(separator: "\n")
         node.mapping?.style = .any
@@ -62,26 +62,22 @@ class EmitterTests: XCTestCase {
         XCTAssertEqual(try Yams.serialize(node: node), expectedAnyIsBlock)
 
         node.mapping?.style = .flow
-        XCTAssertEqual(try Yams.serialize(node: node), "{'key1': 'value1', 'key2': 'value2'}\n")
+        XCTAssertEqual(try Yams.serialize(node: node), "{key1: value1, key2: value2}\n")
     }
 
     func testLineBreaks() throws {
         let node: Node = "key"
-        do {
-            let yaml = try Yams.serialize(node: node, lineBreak: .ln)
-            let expected = "'key'\n"
-            XCTAssertEqual(yaml, expected)
-        }
-        do {
-            let yaml = try Yams.serialize(node: node, lineBreak: .cr)
-            let expected = "'key'\r"
-            XCTAssertEqual(yaml, expected)
-        }
-        do {
-            let yaml = try Yams.serialize(node: node, lineBreak: .crln)
-            let expected = "'key'\r\n"
-            XCTAssertEqual(yaml, expected)
-        }
+        let expected = [
+            "key",
+            "...",
+            ""
+        ]
+        XCTAssertEqual(try Yams.serialize(node: node, lineBreak: .ln),
+                       expected.joined(separator: "\n"))
+        XCTAssertEqual(try Yams.serialize(node: node, lineBreak: .cr),
+                       expected.joined(separator: "\r"))
+        XCTAssertEqual(try Yams.serialize(node: node, lineBreak: .crln),
+                       expected.joined(separator: "\r\n"))
     }
 
     func testAllowUnicode() throws {
@@ -94,7 +90,7 @@ class EmitterTests: XCTestCase {
             }
             do {
                 let yaml = try Yams.serialize(node: node, allowUnicode: true)
-                let expected = "'あ'\n"
+                let expected = "あ\n...\n"
                 XCTAssertEqual(yaml, expected)
             }
         }
