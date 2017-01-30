@@ -11,6 +11,52 @@
 #endif
 import Foundation
 
+public func dump<S>(
+    objects: S,
+    canonical: Bool = false,
+    indent: Int = 0,
+    width: Int = 0,
+    allowUnicode: Bool = false,
+    lineBreak: Emitter.LineBreak = .ln,
+    explicitStart: Bool = false,
+    explicitEnd: Bool = false,
+    version: (major: Int, minor: Int)? = nil) throws -> String
+    where S: Sequence, S.Iterator.Element: NodeRepresentable {
+        return try serialize(
+            nodes: objects.map { try $0.represented() },
+            canonical: canonical,
+            indent: indent,
+            width: width,
+            allowUnicode: allowUnicode,
+            lineBreak: lineBreak,
+            explicitStart: explicitStart,
+            explicitEnd: explicitEnd,
+            version: version)
+}
+
+public func dump<Object>(
+    object: Object,
+    canonical: Bool = false,
+    indent: Int = 0,
+    width: Int = 0,
+    allowUnicode: Bool = false,
+    lineBreak: Emitter.LineBreak = .ln,
+    explicitStart: Bool = false,
+    explicitEnd: Bool = false,
+    version: (major: Int, minor: Int)? = nil) throws -> String
+    where Object: NodeRepresentable {
+        return try dump(
+            objects: [object],
+            canonical: canonical,
+            indent: indent,
+            width: width,
+            allowUnicode: allowUnicode,
+            lineBreak: lineBreak,
+            explicitStart: explicitStart,
+            explicitEnd: explicitEnd,
+            version: version)
+}
+
 public func serialize<S>(
     nodes: S,
     canonical: Bool = false,
