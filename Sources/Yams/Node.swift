@@ -118,7 +118,7 @@ extension Node {
 
 }
 
-public struct Pair<Value: Equatable>: Equatable {
+public struct Pair<Value: Comparable & Equatable>: Comparable, Equatable {
     let key: Value
     let value: Value
 
@@ -129,6 +129,10 @@ public struct Pair<Value: Equatable>: Equatable {
 
     public static func == (lhs: Pair, rhs: Pair) -> Bool {
         return lhs.key == rhs.key && lhs.value == rhs.value
+    }
+
+    public static func < (lhs: Pair<Value>, rhs: Pair<Value>) -> Bool {
+        return lhs.key < rhs.key
     }
 }
 
@@ -242,6 +246,34 @@ extension Node: Hashable {
         default:
             return false
         }
+    }
+}
+
+extension Node: Comparable {
+    public static func <(lhs: Node, rhs: Node) -> Bool {
+        switch (lhs, rhs) {
+        case let (.scalar(lhsValue, _, _), .scalar(rhsValue, _, _)):
+            return lhsValue < rhsValue
+        case let (.mapping(lhsValue, _, _), .mapping(rhsValue, _, _)):
+            return lhsValue < rhsValue
+        case let (.sequence(lhsValue, _, _), .sequence(rhsValue, _, _)):
+            return lhsValue < rhsValue
+        default:
+            return false
+        }
+    }
+}
+
+extension Array where Element: Comparable {
+    static func < (lhs: Array, rhs: Array) -> Bool {
+        for (lhs, rhs) in zip(lhs, rhs) {
+            if lhs < rhs {
+                return true
+            } else if lhs > rhs {
+                return false
+            }
+        }
+        return lhs.count < rhs.count
     }
 }
 
