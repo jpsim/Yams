@@ -11,7 +11,7 @@
 #endif
 import Foundation
 
-public func serialize_all<S>(
+public func serialize<S>(
     nodes: S,
     canonical: Bool = false,
     indent: Int = 0,
@@ -51,7 +51,7 @@ public func serialize(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil) throws -> String {
-    return try serialize_all(
+    return try serialize(
         nodes: [node],
         canonical: canonical,
         indent: indent,
