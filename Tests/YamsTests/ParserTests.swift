@@ -12,6 +12,21 @@ import Yams
 
 class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
 
+    func testMultibyteCharacters() throws {
+        let example = [
+            "Bulbasaur: フシギダネ",
+            "Charmander: ヒトカゲ",
+            "Squirtle: ゼニガメ"
+            ].joined(separator: "\n")
+        let objects = try Yams.load(yaml: example)
+        let expected = [
+            "Bulbasaur": "フシギダネ",
+            "Charmander": "ヒトカゲ",
+            "Squirtle": "ゼニガメ"
+        ]
+        YamsAssertEqual(objects, expected)
+    }
+
     // MARK: - samples in http://www.yaml.org/spec/1.2/spec.html
     func testSpecExample2_1_SequenceOfScalars() throws {
         let example = [
@@ -599,6 +614,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
 extension ParserTests {
     static var allTests: [(String, (ParserTests) -> () throws -> Void)] {
         return [
+            ("testMultibyteCharacters", testMultibyteCharacters),
             ("testSpecExample2_1_SequenceOfScalars", testSpecExample2_1_SequenceOfScalars),
             ("testSpecExample2_2_MappingScalarsToScalars", testSpecExample2_2_MappingScalarsToScalars),
             ("testSpecExample2_3_MappingScalarsToSequences", testSpecExample2_3_MappingScalarsToSequences),

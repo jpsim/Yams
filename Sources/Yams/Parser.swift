@@ -291,6 +291,7 @@ fileprivate class Event {
         // scalar may contain NULL characters
         let buffer = UnsafeBufferPointer(start: event.data.scalar.value,
                                          count: event.data.scalar.length)
+        // libYAML convert scalar characters into UTF8 if input is other than YAML_UTF8_ENCODING
         return String(bytes: buffer, encoding: .utf8)!
     }
 

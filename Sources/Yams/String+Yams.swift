@@ -9,16 +9,40 @@
 import Foundation
 
 extension String {
-    /// line number, column and contents at byteOffset.
+    /// line number, column and contents at utf8 offset.
     ///
-    /// - Parameter byteOffset: Int
+    /// - Parameter offset: Int
     /// - Returns: lineNumber: line number start from 1,
     ///            column: utf16 column start from 1,
     ///            contents: substring of line
-    func lineNumberColumnAndContents(at byteOffset: Int) -> (lineNumber: Int, column: Int, contents: String)? {
+    func utf8LineNumberColumnAndContents(at offset: Int) -> (lineNumber: Int, column: Int, contents: String)? {
         guard let index = utf8
-            .index(utf8.startIndex, offsetBy: byteOffset, limitedBy: utf8.endIndex)?
+            .index(utf8.startIndex, offsetBy: offset, limitedBy: utf8.endIndex)?
             .samePosition(in: self) else { return nil }
+        return lineNumberColumnAndContents(at: index)
+    }
+
+    /// line number, column and contents at utf16 offset.
+    ///
+    /// - Parameter offset: Int
+    /// - Returns: lineNumber: line number start from 1,
+    ///            column: utf16 column start from 1,
+    ///            contents: substring of line
+    func utf16LineNumberColumnAndContents(at offset: Int) -> (lineNumber: Int, column: Int, contents: String)? {
+        guard let index = utf16
+            .index(utf16.startIndex, offsetBy: offset, limitedBy: utf16.endIndex)?
+            .samePosition(in: self) else { return nil }
+        return lineNumberColumnAndContents(at: index)
+    }
+
+    /// line number, column and contents at Index.
+    ///
+    /// - Parameter index: String.Index
+    /// - Returns: lineNumber: line number start from 1,
+    ///            column: utf16 column start from 1,
+    ///            contents: substring of line
+    func lineNumberColumnAndContents(at index: Index) -> (lineNumber: Int, column: Int, contents: String) {
+        assert((startIndex..<endIndex).contains(index))
         var number = 0
         var outStartIndex = startIndex, outEndIndex = startIndex, outContentsEndIndex = startIndex
         getLineStart(&outStartIndex, end: &outEndIndex, contentsEnd: &outContentsEndIndex,
