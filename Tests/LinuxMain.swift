@@ -3,6 +3,11 @@ import XCTest
 @testable import YamsTests
 
 XCTMain([
+    testCase(ConstructorTests.allTests),
+    testCase(NodeTests.allTests),
+    testCase(ParserTests.allTests),
+    testCase(PerformanceTests.allTests),
+    testCase(ResolverTests.allTests),
     testCase(StringTests.allTests),
-    testCase(YamsTests.allTests),
+    testCase(YamlErrorTests.allTests)
 ])

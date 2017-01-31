@@ -7,9 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6C0488EC1E0BE113006F9F80 /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0488EB1E0BE113006F9F80 /* TestHelper.swift */; };
+		6C0488EE1E0CBD56006F9F80 /* ConstructorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0488ED1E0CBD56006F9F80 /* ConstructorTests.swift */; };
+		6C0D2A361E0A934B00C45545 /* Constructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0D2A351E0A934B00C45545 /* Constructor.swift */; };
+		6C3C90B91E0FFB6B009DEFE8 /* NodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3C90B81E0FFB6B009DEFE8 /* NodeTests.swift */; };
 		6C4A22071DF8553C002A0206 /* String+Yams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A22061DF8553C002A0206 /* String+Yams.swift */; };
 		6C4A22091DF855BB002A0206 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A22081DF855BB002A0206 /* StringTests.swift */; };
+		6C6834C81E0281880047B4D1 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6834C71E0281880047B4D1 /* Node.swift */; };
 		6CBAEE1A1E3839500021BF87 /* Yams.h in Headers */ = {isa = PBXBuildFile; fileRef = 6CBAEE191E3839500021BF87 /* Yams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6C6834CC1E0283980047B4D1 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6834CB1E0283980047B4D1 /* Parser.swift */; };
+		6C6834CD1E02847D0047B4D1 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6834C91E0281D90047B4D1 /* Tag.swift */; };
+		6C6834D11E0297390047B4D1 /* ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6834D01E0297390047B4D1 /* ParserTests.swift */; };
+		6C6834D31E02B9760047B4D1 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6834D21E02B9760047B4D1 /* Resolver.swift */; };
+		6C6834D51E02BC1F0047B4D1 /* ResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6834D41E02BC1F0047B4D1 /* ResolverTests.swift */; };
+		6CF6CE091E0E3B1000CB87D4 /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF6CE081E0E3B1000CB87D4 /* PerformanceTests.swift */; };
 		E8EDB8851DE2181B0062268D /* api.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* api.c */; };
 		E8EDB8861DE2181B0062268D /* dumper.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* dumper.c */; };
 		E8EDB8871DE2181B0062268D /* emitter.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* emitter.c */; };
@@ -19,8 +30,8 @@
 		E8EDB88B1DE2181B0062268D /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* scanner.c */; };
 		E8EDB88C1DE2181B0062268D /* writer.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* writer.c */; };
 		E8EDB88E1DE218420062268D /* yaml.h in Headers */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* yaml.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		OBJ_50 /* Yams.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* Yams.swift */; };
-		OBJ_59 /* YamsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* YamsTests.swift */; };
+		OBJ_50 /* YamlError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* YamlError.swift */; };
+		OBJ_59 /* YamlErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* YamlErrorTests.swift */; };
 		OBJ_62 /* Yams.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_28 /* Yams.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,10 +46,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6C0488EB1E0BE113006F9F80 /* TestHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
+		6C0488ED1E0CBD56006F9F80 /* ConstructorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstructorTests.swift; sourceTree = "<group>"; };
+		6C0D2A351E0A934B00C45545 /* Constructor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constructor.swift; sourceTree = "<group>"; };
+		6C3C90B81E0FFB6B009DEFE8 /* NodeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeTests.swift; sourceTree = "<group>"; };
 		6C4A22061DF8553C002A0206 /* String+Yams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Yams.swift"; sourceTree = "<group>"; };
 		6C4A22081DF855BB002A0206 /* StringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTests.swift; sourceTree = "<group>"; };
 		6C4A220A1DF85793002A0206 /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
+		6C6834C71E0281880047B4D1 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		6CBAEE191E3839500021BF87 /* Yams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Yams.h; sourceTree = "<group>"; };
+		6C6834C91E0281D90047B4D1 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
+		6C6834CB1E0283980047B4D1 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		6C6834D01E0297390047B4D1 /* ParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParserTests.swift; sourceTree = "<group>"; };
+		6C6834D21E02B9760047B4D1 /* Resolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resolver.swift; sourceTree = "<group>"; };
+		6C6834D41E02BC1F0047B4D1 /* ResolverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResolverTests.swift; sourceTree = "<group>"; };
+		6CF6CE071E0E3A5900CB87D4 /* Fixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fixtures; sourceTree = "<group>"; };
+		6CF6CE081E0E3B1000CB87D4 /* PerformanceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
 		OBJ_10 /* api.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = api.c; sourceTree = "<group>"; };
 		OBJ_11 /* dumper.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dumper.c; sourceTree = "<group>"; };
 		OBJ_12 /* emitter.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = emitter.c; sourceTree = "<group>"; };
@@ -48,8 +71,8 @@
 		OBJ_16 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		OBJ_17 /* writer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = writer.c; sourceTree = "<group>"; };
 		OBJ_19 /* yaml.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = yaml.h; sourceTree = "<group>"; };
-		OBJ_22 /* Yams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Yams.swift; sourceTree = "<group>"; };
-		OBJ_25 /* YamsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YamsTests.swift; sourceTree = "<group>"; };
+		OBJ_22 /* YamlError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YamlError.swift; sourceTree = "<group>"; };
+		OBJ_25 /* YamlErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YamlErrorTests.swift; sourceTree = "<group>"; };
 		OBJ_28 /* Yams.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Yams.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_29 /* YamsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = YamsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -85,9 +108,14 @@
 		OBJ_21 /* Yams */ = {
 			isa = PBXGroup;
 			children = (
+				6C0D2A351E0A934B00C45545 /* Constructor.swift */,
+				6C6834C71E0281880047B4D1 /* Node.swift */,
+				6C6834CB1E0283980047B4D1 /* Parser.swift */,
+				6C6834D21E02B9760047B4D1 /* Resolver.swift */,
 				6CBAEE191E3839500021BF87 /* Yams.h */,
 				6C4A22061DF8553C002A0206 /* String+Yams.swift */,
-				OBJ_22 /* Yams.swift */,
+				6C6834C91E0281D90047B4D1 /* Tag.swift */,
+				OBJ_22 /* YamlError.swift */,
 			);
 			name = Yams;
 			path = Sources/Yams;
@@ -105,8 +133,15 @@
 		OBJ_24 /* YamsTests */ = {
 			isa = PBXGroup;
 			children = (
+				6CF6CE071E0E3A5900CB87D4 /* Fixtures */,
+				6C0488ED1E0CBD56006F9F80 /* ConstructorTests.swift */,
+				6C3C90B81E0FFB6B009DEFE8 /* NodeTests.swift */,
+				6C6834D01E0297390047B4D1 /* ParserTests.swift */,
+				6CF6CE081E0E3B1000CB87D4 /* PerformanceTests.swift */,
+				6C6834D41E02BC1F0047B4D1 /* ResolverTests.swift */,
 				6C4A22081DF855BB002A0206 /* StringTests.swift */,
-				OBJ_25 /* YamsTests.swift */,
+				6C0488EB1E0BE113006F9F80 /* TestHelper.swift */,
+				OBJ_25 /* YamlErrorTests.swift */,
 			);
 			name = YamsTests;
 			path = Tests/YamsTests;
@@ -187,6 +222,7 @@
 				OBJ_49 /* Sources */,
 				OBJ_51 /* Frameworks */,
 				E8EDB88D1DE2183E0062268D /* Headers */,
+				6C0D2A341E0A6F5000C45545 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -240,6 +276,23 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		6C0D2A341E0A6F5000C45545 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		OBJ_49 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -248,13 +301,18 @@
 				E8EDB8871DE2181B0062268D /* emitter.c in Sources */,
 				E8EDB8851DE2181B0062268D /* api.c in Sources */,
 				E8EDB8861DE2181B0062268D /* dumper.c in Sources */,
+				6C6834CC1E0283980047B4D1 /* Parser.swift in Sources */,
+				6C6834C81E0281880047B4D1 /* Node.swift in Sources */,
+				6C0D2A361E0A934B00C45545 /* Constructor.swift in Sources */,
+				6C6834D31E02B9760047B4D1 /* Resolver.swift in Sources */,
 				E8EDB8881DE2181B0062268D /* loader.c in Sources */,
 				E8EDB88C1DE2181B0062268D /* writer.c in Sources */,
 				E8EDB88B1DE2181B0062268D /* scanner.c in Sources */,
 				6C4A22071DF8553C002A0206 /* String+Yams.swift in Sources */,
 				E8EDB8891DE2181B0062268D /* parser.c in Sources */,
-				OBJ_50 /* Yams.swift in Sources */,
+				OBJ_50 /* YamlError.swift in Sources */,
 				E8EDB88A1DE2181B0062268D /* reader.c in Sources */,
+				6C6834CD1E02847D0047B4D1 /* Tag.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,8 +320,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				6CF6CE091E0E3B1000CB87D4 /* PerformanceTests.swift in Sources */,
 				6C4A22091DF855BB002A0206 /* StringTests.swift in Sources */,
-				OBJ_59 /* YamsTests.swift in Sources */,
+				6C0488EC1E0BE113006F9F80 /* TestHelper.swift in Sources */,
+				6C3C90B91E0FFB6B009DEFE8 /* NodeTests.swift in Sources */,
+				6C0488EE1E0CBD56006F9F80 /* ConstructorTests.swift in Sources */,
+				OBJ_59 /* YamlErrorTests.swift in Sources */,
+				6C6834D11E0297390047B4D1 /* ParserTests.swift in Sources */,
+				6C6834D51E02BC1F0047B4D1 /* ResolverTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
