@@ -11,6 +11,20 @@
 #endif
 import Foundation
 
+/// Produce YAML String from objects
+///
+/// - Parameters:
+///   - objects: Sequence of Object
+///   - canonical: output should be the "canonical" format as in the YAML specification.
+///   - indent: the intendation increment.
+///   - width: the preferred line width. @c -1 means unlimited.
+///   - allowUnicode: unescaped non-ASCII characters are allowed if true.
+///   - lineBreak: preferred line break.
+///   - explicitStart: explicit document start `---`
+///   - explicitEnd: explicit document end `...`
+///   - version: YAML version directive
+/// - Returns: YAML String
+/// - Throws: `EmitterError` or `YamlError`
 public func dump<Objects>(
     objects: Objects,
     canonical: Bool = false,
@@ -41,6 +55,20 @@ public func dump<Objects>(
             version: version)
 }
 
+/// Produce YAML String from object
+///
+/// - Parameters:
+///   - object: Object
+///   - canonical: output should be the "canonical" format as in the YAML specification.
+///   - indent: the intendation increment.
+///   - width: the preferred line width. @c -1 means unlimited.
+///   - allowUnicode: unescaped non-ASCII characters are allowed if true.
+///   - lineBreak: preferred line break.
+///   - explicitStart: explicit document start `---`
+///   - explicitEnd: explicit document end `...`
+///   - version: YAML version directive
+/// - Returns: YAML String
+/// - Throws: `EmitterError` or `YamlError`
 public func dump(
     object: Any?,
     canonical: Bool = false,
@@ -63,6 +91,20 @@ public func dump(
         version: version)
 }
 
+/// Produce YAML String from `Node`
+///
+/// - Parameters:
+///   - nodes: Sequence of `Node`
+///   - canonical: output should be the "canonical" format as in the YAML specification.
+///   - indent: the intendation increment.
+///   - width: the preferred line width. @c -1 means unlimited.
+///   - allowUnicode: unescaped non-ASCII characters are allowed if true.
+///   - lineBreak: preferred line break.
+///   - explicitStart: explicit document start `---`
+///   - explicitEnd: explicit document end `...`
+///   - version: YAML version directive
+/// - Returns: YAML String
+/// - Throws: `EmitterError` or `YamlError`
 public func serialize<Nodes>(
     nodes: Nodes,
     canonical: Bool = false,
@@ -93,6 +135,20 @@ public func serialize<Nodes>(
         #endif
 }
 
+/// Produce YAML String from `Node`
+///
+/// - Parameters:
+///   - node: `Node`
+///   - canonical: output should be the "canonical" format as in the YAML specification.
+///   - indent: the intendation increment.
+///   - width: the preferred line width. @c -1 means unlimited.
+///   - allowUnicode: unescaped non-ASCII characters are allowed if true.
+///   - lineBreak: preferred line break.
+///   - explicitStart: explicit document start `---`
+///   - explicitEnd: explicit document end `...`
+///   - version: YAML version directive
+/// - Returns: YAML String
+/// - Throws: `EmitterError` or `YamlError`
 public func serialize(
     node: Node,
     canonical: Bool = false,
