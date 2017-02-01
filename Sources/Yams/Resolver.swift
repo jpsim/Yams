@@ -73,7 +73,10 @@ extension Resolver {
 }
 
 #if os(Linux)
+#if swift(>=3.1)
+#else
     typealias NSRegularExpression = RegularExpression
+#endif
 #endif
 
 func pattern(_ string: String) -> NSRegularExpression {
