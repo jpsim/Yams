@@ -250,7 +250,7 @@ extension Node: Hashable {
 }
 
 extension Node: Comparable {
-    public static func <(lhs: Node, rhs: Node) -> Bool {
+    public static func < (lhs: Node, rhs: Node) -> Bool {
         switch (lhs, rhs) {
         case let (.scalar(lhsValue, _, _), .scalar(rhsValue, _, _)):
             return lhsValue < rhsValue

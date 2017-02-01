@@ -21,9 +21,16 @@ public func dump<Objects>(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil) throws -> String
-    where Objects: Sequence, Objects.Iterator.Element: NodeRepresentable {
+    where Objects: Sequence {
+        func representable(from object: Any) throws -> NodeRepresentable {
+            if let representable = object as? NodeRepresentable {
+                return representable
+            }
+            throw EmitterError.objectIsNotRepresentable("\(object) does not conform to NodeRepresentable!")
+        }
+        let nodes = try objects.map(representable(from:)).map { try $0.represented() }
         return try serialize(
-            nodes: objects.map { try $0.represented() },
+            nodes: nodes,
             canonical: canonical,
             indent: indent,
             width: width,
@@ -34,8 +41,8 @@ public func dump<Objects>(
             version: version)
 }
 
-public func dump<Object>(
-    object: Object,
+public func dump(
+    object: Any?,
     canonical: Bool = false,
     indent: Int = 0,
     width: Int = 0,
@@ -43,18 +50,17 @@ public func dump<Object>(
     lineBreak: Emitter.LineBreak = .ln,
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
-    version: (major: Int, minor: Int)? = nil) throws -> String
-    where Object: NodeRepresentable {
-        return try dump(
-            objects: [object],
-            canonical: canonical,
-            indent: indent,
-            width: width,
-            allowUnicode: allowUnicode,
-            lineBreak: lineBreak,
-            explicitStart: explicitStart,
-            explicitEnd: explicitEnd,
-            version: version)
+    version: (major: Int, minor: Int)? = nil) throws -> String {
+    return try serialize(
+        node: object.represented(),
+        canonical: canonical,
+        indent: indent,
+        width: width,
+        allowUnicode: allowUnicode,
+        lineBreak: lineBreak,
+        explicitStart: explicitStart,
+        explicitEnd: explicitEnd,
+        version: version)
 }
 
 public func serialize<Nodes>(
@@ -111,6 +117,7 @@ public func serialize(
 
 public enum EmitterError: Swift.Error {
     case invalidState(String)
+    case objectIsNotRepresentable(String)
 }
 
 public final class Emitter {
