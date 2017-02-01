@@ -26,5 +26,11 @@ matrix:
       env: JOB=Linux
       sudo: required
       services: docker
+    - script:
+        - docker run -v `pwd`:/Yams norionomura/sourcekit:3120170131a bash -c "cd /Yams && swift test"
+        - docker run -v `pwd`:/Yams norionomura/sourcekit:3120170131a bash -c "cd /Yams && swift test -Xswiftc -DUSE_UTF16"
+      env: JOB=Linux-Swift3.1
+      sudo: required
+      services: docker
 notifications:
   email: false
