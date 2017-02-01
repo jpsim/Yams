@@ -211,13 +211,41 @@ extension Node {
     }
 
     public subscript(node: Node) -> Node? {
-        switch self {
-        case .scalar: return nil
-        case let .mapping(pairs, _, _):
-            return pairs.reversed().first(where: { $0.key == node })?.value
-        case let .sequence(nodes, _, _):
-            guard let index = node.int, 0 <= index, index < nodes.count else { return nil }
-            return nodes[index]
+        get {
+            switch self {
+            case .scalar: return nil
+            case let .mapping(pairs, _, _):
+                return pairs.reversed().first(where: { $0.key == node })?.value
+            case let .sequence(nodes, _, _):
+                guard let index = node.int, 0 <= index, index < nodes.count else { return nil }
+                return nodes[index]
+            }
+        }
+        set {
+            guard let newValue = newValue else { return }
+            switch self {
+            case .scalar: return
+            case .mapping(var pairs, let tag, let style):
+                if let index = pairs.index(where: { $0.key == node }) {
+                    pairs[index] = Pair(pairs[index].key, newValue)
+                    self = .mapping(pairs, tag, style)
+                }
+            case .sequence(var nodes, let tag, let style):
+                guard let index = node.int, 0 <= index, index < nodes.count else { return}
+                nodes[index] = newValue
+                self = .sequence(nodes, tag, style)
+            }
+        }
+    }
+
+    public subscript(representable: NodeRepresentable) -> Node? {
+        get {
+            guard let node = try? representable.represented() else { return nil }
+            return self[node]
+        }
+        set {
+            guard let node = try? representable.represented() else { return }
+            self[node] = newValue
         }
     }
 }

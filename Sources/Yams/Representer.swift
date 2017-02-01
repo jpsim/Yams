@@ -29,6 +29,12 @@ public protocol NodeRepresentable {
     func represented() throws -> Node
 }
 
+extension Node: NodeRepresentable {
+    public func represented() throws -> Node {
+        return self
+    }
+}
+
 extension Bool: NodeRepresentable {
     public func represented() throws -> Node {
         return Node(self ? "true" : "false", .bool)
