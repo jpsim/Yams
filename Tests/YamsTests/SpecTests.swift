@@ -1,5 +1,5 @@
 //
-//  ParserTests.swift
+//  SpecTests.swift
 //  Yams
 //
 //  Created by Norio Nomura on 12/15/16.
@@ -10,7 +10,7 @@ import Foundation
 import XCTest
 import Yams
 
-class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
+class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     func testMultibyteCharacters() throws {
         let example = [
@@ -611,8 +611,8 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
     }
 }
 
-extension ParserTests {
-    static var allTests: [(String, (ParserTests) -> () throws -> Void)] {
+extension SpecTests {
+    static var allTests: [(String, (SpecTests) -> () throws -> Void)] {
         return [
             ("testMultibyteCharacters", testMultibyteCharacters),
             ("testSpecExample2_1_SequenceOfScalars", testSpecExample2_1_SequenceOfScalars),
