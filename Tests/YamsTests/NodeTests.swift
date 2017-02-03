@@ -152,6 +152,38 @@ class NodeTests: XCTestCase {
         // ExpressibleByDictionaryLiteral
         XCTAssertEqual(mapping, ["key1": "value1", "key2": "value2"])
     }
+
+    func testSequenceBehavesLikeAnArray() {
+        let node: Node = ["value1", "value2", "value3"]
+        let sequence = node.sequence!
+        XCTAssertEqual(sequence.count, 3)
+        XCTAssertEqual(sequence.endIndex, 3)
+        XCTAssertEqual(sequence.first, "value1")
+        XCTAssertFalse(sequence.isEmpty)
+        XCTAssertEqual(sequence.last, "value3")
+        XCTAssertEqual(sequence.lazy.count, 3)
+        XCTAssertEqual(sequence.startIndex, 0)
+        XCTAssertEqual(sequence.underestimatedCount, 3)
+
+        // subscript
+        var mutableSequence = sequence
+        mutableSequence.append("value4")
+        XCTAssertEqual(mutableSequence.count, 4)
+        XCTAssertEqual(mutableSequence[3], "value4")
+        mutableSequence.remove(at: 2)
+        XCTAssertEqual(mutableSequence.count, 3)
+        XCTAssertEqual(Array(mutableSequence), ["value1", "value2", "value4"])
+
+        // iterator
+        var iterator = sequence.makeIterator()
+        XCTAssertEqual(iterator.next(), "value1")
+        XCTAssertEqual(iterator.next(), "value2")
+        XCTAssertEqual(iterator.next(), "value3")
+        XCTAssertNil(iterator.next())
+
+        // ExpressibleByArrayLiteral
+        XCTAssertEqual(sequence, ["value1", "value2", "value3"])
+    }
 }
 
 extension NodeTests {
@@ -166,7 +198,8 @@ extension NodeTests {
             ("testArray", testArray),
             ("testSubscriptMapping", testSubscriptMapping),
             ("testSubscriptSequence", testSubscriptSequence),
-            ("testMappingBehavesLikeADictionary", testMappingBehavesLikeADictionary)
+            ("testMappingBehavesLikeADictionary", testMappingBehavesLikeADictionary),
+            ("testSequenceBehavesLikeAnArray", testSequenceBehavesLikeAnArray)
         ]
     }
 }

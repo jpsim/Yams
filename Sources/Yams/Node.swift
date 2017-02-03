@@ -434,6 +434,93 @@ extension Node.Mapping {
     }
 }
 
+// MARK: - Node.Sequence
+
+extension Node.Sequence: Equatable {
+    public static func == (lhs: Node.Sequence, rhs: Node.Sequence) -> Bool {
+        return lhs.nodes == rhs.nodes
+    }
+}
+
+extension Node.Sequence: ExpressibleByArrayLiteral {
+    public init(arrayLiteral elements: Node...) {
+        self.init(nodes: elements, tag: .implicit, style: .any)
+    }
+}
+
+extension Node.Sequence: MutableCollection {
+    // Sequence
+    public func makeIterator() -> Array<Node>.Iterator {
+        return nodes.makeIterator()
+    }
+
+    // Collection
+    public typealias Index = Array<Node>.Index
+
+    public var startIndex: Index {
+        return nodes.startIndex
+    }
+
+    public var endIndex: Index {
+        return nodes.endIndex
+    }
+
+    public func index(after index: Index) -> Index {
+        return nodes.index(after: index)
+    }
+
+    public subscript(index: Index) -> Node {
+        get {
+            return nodes[index]
+        }
+        // MutableCollection
+        set {
+            nodes[index] = newValue
+        }
+    }
+
+    public subscript(bounds: Range<Index>) -> Array<Node>.SubSequence {
+        get {
+            return nodes[bounds]
+        }
+        // MutableCollection
+        set {
+            nodes[bounds] = newValue
+        }
+    }
+
+    public var indices: Array<Node>.Indices {
+        return nodes.indices
+    }
+}
+
+extension Node.Sequence: RandomAccessCollection {
+    // BidirectionalCollection
+    public func index(before index: Index) -> Index {
+        return nodes.index(before: index)
+    }
+
+    // RandomAccessCollection
+    public func index(_ index: Index, offsetBy num: Int) -> Index {
+        return nodes.index(index, offsetBy: num)
+    }
+
+    public func distance(from start: Index, to end: Int) -> Index {
+        return nodes.distance(from: start, to: end)
+    }
+}
+
+extension Node.Sequence: RangeReplaceableCollection {
+    public init() {
+        self.init(nodes: [], tag: .implicit, style: .any)
+    }
+
+    public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C)
+        where C : Collection, C.Iterator.Element == Node {
+            nodes.replaceSubrange(subrange, with: newElements)
+    }
+}
+
 // MARK: - internal
 
 extension Node {
