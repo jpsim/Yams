@@ -57,6 +57,17 @@ extension YamlError {
             fatalError("Parser has unknown error: \(parser.error)!")
         }
     }
+
+    init(from emitter: yaml_emitter_t) {
+        switch emitter.error {
+        case YAML_MEMORY_ERROR:
+            self = .memory
+        case YAML_EMITTER_ERROR:
+            self = .emitter(problem: String(validatingUTF8: emitter.problem)!)
+        default:
+            fatalError("Emitter has unknown error: \(emitter.error)!")
+        }
+    }
 }
 
 extension YamlError {

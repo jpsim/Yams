@@ -9,13 +9,15 @@
 import Foundation
 
 extension String {
+    typealias LineNumberColumnAndContents = (lineNumber: Int, column: Int, contents: String)
+
     /// line number, column and contents at utf8 offset.
     ///
     /// - Parameter offset: Int
     /// - Returns: lineNumber: line number start from 1,
     ///            column: utf16 column start from 1,
     ///            contents: substring of line
-    func utf8LineNumberColumnAndContents(at offset: Int) -> (lineNumber: Int, column: Int, contents: String)? {
+    func utf8LineNumberColumnAndContents(at offset: Int) -> LineNumberColumnAndContents? {
         guard let index = utf8
             .index(utf8.startIndex, offsetBy: offset, limitedBy: utf8.endIndex)?
             .samePosition(in: self) else { return nil }
@@ -28,7 +30,7 @@ extension String {
     /// - Returns: lineNumber: line number start from 1,
     ///            column: utf16 column start from 1,
     ///            contents: substring of line
-    func utf16LineNumberColumnAndContents(at offset: Int) -> (lineNumber: Int, column: Int, contents: String)? {
+    func utf16LineNumberColumnAndContents(at offset: Int) -> LineNumberColumnAndContents? {
         guard let index = utf16
             .index(utf16.startIndex, offsetBy: offset, limitedBy: utf16.endIndex)?
             .samePosition(in: self) else { return nil }
@@ -41,7 +43,7 @@ extension String {
     /// - Returns: lineNumber: line number start from 1,
     ///            column: utf16 column start from 1,
     ///            contents: substring of line
-    func lineNumberColumnAndContents(at index: Index) -> (lineNumber: Int, column: Int, contents: String) {
+    func lineNumberColumnAndContents(at index: Index) -> LineNumberColumnAndContents {
         assert((startIndex..<endIndex).contains(index))
         var number = 0
         var outStartIndex = startIndex, outEndIndex = startIndex, outContentsEndIndex = startIndex

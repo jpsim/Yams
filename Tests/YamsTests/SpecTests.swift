@@ -1,5 +1,5 @@
 //
-//  ParserTests.swift
+//  SpecTests.swift
 //  Yams
 //
 //  Created by Norio Nomura on 12/15/16.
@@ -10,21 +10,25 @@ import Foundation
 import XCTest
 import Yams
 
-class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
+class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     func testMultibyteCharacters() throws {
         let example = [
             "Bulbasaur: フシギダネ",
             "Charmander: ヒトカゲ",
-            "Squirtle: ゼニガメ"
+            "Squirtle: ゼニガメ",
+            ""
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject = [
             "Bulbasaur": "フシギダネ",
             "Charmander": "ヒトカゲ",
             "Squirtle": "ゼニガメ"
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object, allowUnicode: true)
+        XCTAssertEqual(yaml, example)
     }
 
     // MARK: - samples in http://www.yaml.org/spec/1.2/spec.html
@@ -32,15 +36,19 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
         let example = [
             "- Mark McGwire",
             "- Sammy Sosa",
-            "- Ken Griffey"
+            "- Ken Griffey",
+            ""
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject = [
             "Mark McGwire",
             "Sammy Sosa",
             "Ken Griffey"
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        XCTAssertEqual(yaml, example)
     }
 
     func testSpecExample2_2_MappingScalarsToScalars() throws {
@@ -49,13 +57,22 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "avg: 0.278 # Batting average",
             "rbi: 147   # Runs Batted In"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [String:Any] = [
             "hr": 65,
             "avg": 0.278,
             "rbi": 147
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "avg: 2.78e-1", // canonical format
+            "hr: 65",
+            "rbi: 147",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_3_MappingScalarsToSequences() throws {
@@ -69,8 +86,8 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  - Chicago Cubs",
             "  - Atlanta Braves"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [String:Any] = [
             "american": [
                 "Boston Red Sox",
                 "Detroit Tigers",
@@ -82,7 +99,21 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
                 "Atlanta Braves"
             ]
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "american:",
+            "- Boston Red Sox",
+            "- Detroit Tigers",
+            "- New York Yankees",
+            "national:",
+            "- New York Mets",
+            "- Chicago Cubs",
+            "- Atlanta Braves",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_4_SequenceOfMappings() throws {
@@ -96,8 +127,8 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  hr:   63",
             "  avg:  0.288"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [Any] = [
             [
                 "name": "Mark McGwire",
                 "hr": 65,
@@ -109,7 +140,19 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
                 "avg": 0.288
             ]
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "- avg: 2.78e-1",
+            "  hr: 65",
+            "  name: Mark McGwire",
+            "- avg: 2.88e-1",
+            "  hr: 63",
+            "  name: Sammy Sosa",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_5_SequenceOfSequences() throws {
@@ -118,13 +161,28 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "- [Mark McGwire, 65, 0.278]",
             "- [Sammy Sosa  , 63, 0.288]"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [Any] = [
             ["name", "hr", "avg"],
             ["Mark McGwire", 65, 0.278],
             ["Sammy Sosa", 63, 0.288]
             ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "- - name",
+            "  - hr",
+            "  - avg",
+            "- - Mark McGwire",
+            "  - 65",
+            "  - 2.78e-1",
+            "- - Sammy Sosa",
+            "  - 63",
+            "  - 2.88e-1",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_6_MappingOfMappings() throws {
@@ -135,15 +193,27 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "    avg: 0.288",
             "  }"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:[String:Any]] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [String:[String:Any]] = [
             "Mark McGwire": ["hr": 65, "avg": 0.278],
             "Sammy Sosa": [
                 "hr": 63,
                 "avg": 0.288
             ]
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "Mark McGwire:",
+            "  avg: 2.78e-1",
+            "  hr: 65",
+            "Sammy Sosa:",
+            "  avg: 2.88e-1",
+            "  hr: 63",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_7_TwoDocumentsInAStream() throws {
@@ -159,13 +229,30 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "- Chicago Cubs",
             "- St Louis Cardinals"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [Any] = [
-            "Mark McGwire",
-            "Sammy Sosa",
-            "Ken Griffey"
+        let objects = Array(try Yams.load_all(yaml: example))
+        let expectedObjects: [Any] = [
+            [
+                "Mark McGwire",
+                "Sammy Sosa",
+                "Ken Griffey"
+            ], [
+                "Chicago Cubs",
+                "St Louis Cardinals"
             ]
-        YamsAssertEqual(objects, expected)
+        ]
+        YamsAssertEqual(objects, expectedObjects)
+
+        let yaml = try Yams.dump(objects: objects)
+        let expectedYaml = [
+            "- Mark McGwire",
+            "- Sammy Sosa",
+            "- Ken Griffey",
+            "---",
+            "- Chicago Cubs",
+            "- St Louis Cardinals",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_8_PlayByPlayFeedFromAGame() throws {
@@ -182,7 +269,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "..."
             ].joined(separator: "\n")
         let objects = Array(try Yams.load_all(yaml: example))
-        let expected: [[String:Any]] = [
+        let expectedObjects: [[String:Any]] = [
             [
                 "time": 72200,
                 "player": "Sammy Sosa",
@@ -193,7 +280,20 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
                 "action": "grand slam"
             ]
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(objects, expectedObjects)
+
+        let yaml = try Yams.dump(objects: objects)
+        let expectedYaml = [
+            "action: strike (miss)",
+            "player: Sammy Sosa",
+            "time: 72200",
+            "---",
+            "action: grand slam",
+            "player: Sammy Sosa",
+            "time: 72227",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_9_SingleDocumentWithTwoComments() throws {
@@ -207,8 +307,8 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  - Sammy Sosa",
             "  - Ken Griffey"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [String:Any] = [
             "hr": [
                 "Mark McGwire",
                 "Sammy Sosa"
@@ -218,7 +318,19 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
                 "Ken Griffey"
             ]
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "hr:",
+            "- Mark McGwire",
+            "- Sammy Sosa",
+            "rbi:",
+            "- Sammy Sosa",
+            "- Ken Griffey",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_10_NodeForSammySosaAppearsTwiceInThisDocument() throws {
@@ -232,8 +344,8 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  - *SS # Subsequent occurrence",
             "  - Ken Griffey"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [String:Any] = [
             "hr": [
                 "Mark McGwire",
                 "Sammy Sosa"
@@ -243,7 +355,19 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
                 "Ken Griffey"
             ]
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "hr:",
+            "- Mark McGwire",
+            "- Sammy Sosa",
+            "rbi:",
+            "- Sammy Sosa",
+            "- Ken Griffey",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_11_MappingBetweenSequences() throws {
@@ -259,8 +383,8 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             ": [ 2001-07-02, 2001-08-12,",
             "    2001-08-14 ]",
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject = [
             ["Detroit Tigers", "Chicago cubs"]: [
                 "2001-07-23"
             ],
@@ -269,7 +393,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
                 "2001-08-14"
             ]
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
         */
     }
 
@@ -284,8 +408,8 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "- item    : Big Shoes",
             "  quantity: 1"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [Any] = [
             ["item": "Super Hoop",
              "quantity": 1],
             ["item": "Basketball",
@@ -293,7 +417,19 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             ["item": "Big Shoes",
              "quantity": 1]
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "- item: Super Hoop",
+            "  quantity: 1",
+            "- item: Basketball",
+            "  quantity: 4",
+            "- item: Big Shoes",
+            "  quantity: 1",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_13_Inliterals_NewlinesArePreserved() throws {
@@ -303,12 +439,21 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  \\//||\\/||",
             "  // ||  ||__"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject = [
             "\\//||\\/||",
             "// ||  ||__"
             ].joined(separator: "\n")
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "'\\//||\\/||", // single quoted style will be selected for multiple line string by libyaml
+            "",
+            "  // ||  ||__'",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_14_InTheFoldedScalars_NewlinesBecomeSpaces() throws {
@@ -318,13 +463,21 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  year was crippled",
             "  by a knee injury."
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject = [
             "Mark McGwire's",
             "year was crippled",
             "by a knee injury."
             ].joined(separator: " ")
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "Mark McGwire's year was crippled by a knee injury.",
+            "...",
+            ""
+        ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_15_InTheFoldedScalars_NewlinesBecomeSpaces() throws {
@@ -338,8 +491,8 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "",
             " What a year!"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject = [
             "Sammy Sosa completed another fine season with great stats.",
             "",
             "  63 Home Runs",
@@ -347,7 +500,15 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "",
             "What a year!"
             ].joined(separator: "\n")
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "\"Sammy Sosa completed another fine season with great stats.\\n\\n  63 Home Runs\\n  0.288",
+            "  Batting Average\\n\\nWhat a year!\"",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_16_IndentationDeterminesScope() throws {
@@ -360,15 +521,28 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  65 Home Runs",
             "  0.278 Batting Average"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [String:Any] = [
             "name": "Mark McGwire",
             "accomplishment": "Mark set a major league home run record in 1998.\n",
             "stats":
                 "65 Home Runs\n" +
             "0.278 Batting Average"
             ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "accomplishment: 'Mark set a major league home run record in 1998.",
+            "",
+            "'",
+            "name: Mark McGwire",
+            "stats: '65 Home Runs",
+            "",
+            "  0.278 Batting Average'",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_17_QuotedScalars() throws {
@@ -381,8 +555,8 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "quoted: ' # Not a ''comment''.'",
             "tie-fighter: '|\\-*-/|'"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [String:Any] = [
             "unicode": "Sosa did fine.\u{263A}",
             "control": "\u{8}1998\t1999\t2000\n",
             "hex esc": "\u{0d}\u{0a} is \r\n",
@@ -390,7 +564,19 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "quoted": " # Not a 'comment'.",
             "tie-fighter": "|\\-*-/|"
             ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "control: \"\\b1998\\t1999\\t2000\\n\"",
+            "hex esc: \"\\r\\n is \\r\\n\"",
+            "quoted: ' # Not a ''comment''.'",
+            "single: '\"Howdy!\" he cried.'",
+            "tie-fighter: '|\\-*-/|'",
+            "unicode: \"Sosa did fine.\\u263A\"",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_18_MultiLineFlowScalars() throws {
@@ -403,12 +589,20 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  quoted scalar.\n\"",
             ""
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [String:Any] = [
             "plain": "This unquoted scalar spans many lines.",
             "quoted": "So does this quoted scalar. "
             ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "plain: This unquoted scalar spans many lines.",
+            "quoted: 'So does this quoted scalar. '",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_19_Integers() throws {
@@ -418,14 +612,24 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "octal: 0o14",
             "hexadecimal: 0xC"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [String:Any] = [
             "canonical": 12345,
             "decimal": 12345,
             "octal": 0o14,
             "hexadecimal": 0xC
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "canonical: 12345",
+            "decimal: 12345",
+            "hexadecimal: 12",
+            "octal: 12",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_20_FloatingPoint() throws {
@@ -436,18 +640,29 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "negative infinity: -.inf",
             "not a number: .NaN"
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [String:Any] = [
             "canonical": 1.23015e+3,
             "exponential": 12.3015e+02,
             "fixed": 1230.15,
             "negative infinity": -1 * Double.infinity,
             "not a number": Double.nan
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "canonical: 1.23015e+3",
+            "exponential: 1.23015e+3",
+            "fixed: 1.23015e+3",
+            "negative infinity: -.inf",
+            "not a number: .nan",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
-    func testSpecExample2_23_VariousExplicitTags() throws {
+    func testSpecExample2_23_VariousExplicitTags() throws { // swiftlint:disable:this function_body_length
         let example = [
             "---",
             "not-date: !!str 2002-04-28",
@@ -464,8 +679,8 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             " different documents.",
             ""
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let object = try Yams.load(yaml: example)
+        let expectedObject: [String:Any] = [
             "not-date": "2002-04-28",
             "picture": Data(base64Encoded: [
                 "R0lGODlhDAAMAIQAAP//9/X",
@@ -475,7 +690,22 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
                 ].joined())!,
             "application specific tag": "The semantics of the tag\nabove may be different for\ndifferent documents.\n"
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "application specific tag: 'The semantics of the tag",
+            "",
+            "  above may be different for",
+            "",
+            "  different documents.",
+            "",
+            "'",
+            "not-date: 2002-04-28",
+            "picture: R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5OTk6enp56enmleECcgggoBADs=",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_27_Invoice() throws { // swiftlint:disable:this function_body_length
@@ -510,7 +740,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "    Backup contact is Nancy",
             "    Billsmer @ 338-4338."
             ].joined(separator: "\n")
-        let objects = try Yams.load(yaml: example)
+        let object = try Yams.load(yaml: example)
         let billTo: [String:Any] = [
             "given": "Chris",
             "family": "Dumars",
@@ -521,7 +751,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
                 "postal": 48046
             ]
         ]
-        let expected: [String:Any] = [
+        let expectedObject: [String:Any] = [
             "invoice": 34843,
             "date": timestamp(0, 2001, 1, 23),
             "bill-to": billTo,
@@ -544,7 +774,51 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             "total": 4443.52,
             "comments": "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338."
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(object, expectedObject)
+
+        let yaml = try Yams.dump(object: object)
+        let expectedYaml = [
+            "bill-to:",
+            "  address:",
+            "    city: Royal Oak",
+            "    lines: '458 Walkman Dr.",
+            "",
+            "      Suite #292",
+            "",
+            "'",
+            "    postal: 48046",
+            "    state: MI",
+            "  family: Dumars",
+            "  given: Chris",
+            "comments: Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338.",
+            "date: 2001-01-23T00:00:00Z",
+            "invoice: 34843",
+            "product:",
+            "- description: Basketball",
+            "  price: 4.5e+2",
+            "  quantity: 4",
+            "  sku: BL394D",
+            "- description: Super Hoop",
+            "  price: 2.392e+3",
+            "  quantity: 1",
+            "  sku: BL4438H",
+            "ship-to:",
+            "  address:",
+            "    city: Royal Oak",
+            "    lines: '458 Walkman Dr.",
+            "",
+            "      Suite #292",
+            "",
+            "'",
+            "    postal: 48046",
+            "    state: MI",
+            "  family: Dumars",
+            "  given: Chris",
+            "tax: 2.5142e+2",
+            "total: 4.44352e+3",
+            ""
+            ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 
     func testSpecExample2_28_LogFile() throws { // swiftlint:disable:this function_body_length
@@ -578,7 +852,7 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let objects = Array(try Yams.load_all(yaml: example))
-        let expected: [Any] = [
+        let expectedObjects: [Any] = [
             [
                 "Time": timestamp(-5, 2001, 11, 23, 15, 1, 42),
                 "User": "ed",
@@ -607,12 +881,38 @@ class ParserTests: XCTestCase { // swiftlint:disable:this type_body_length
                 ]
             ]
         ]
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(objects, expectedObjects)
+
+        let yaml = try Yams.dump(objects: objects)
+        let expectedYaml = [
+            "Time: 2001-11-23T20:01:42Z",
+            "User: ed",
+            "Warning: This is an error message for the log file",
+            "---",
+            "Time: 2001-11-23T20:02:31Z",
+            "User: ed",
+            "Warning: A slightly different error message.",
+            "---",
+            "Date: 2001-11-23T20:03:17Z",
+            "Fatal: Unknown variable \"bar\"",
+            "Stack:",
+            "- code: 'x = MoreObject(\"345\\n\")",
+            "",
+            "'",
+            "  file: TopClass.py",
+            "  line: 23",
+            "- code: foo = bar",
+            "  file: MoreClass.py",
+            "  line: 58",
+            "User: ed",
+            ""
+        ].joined(separator: "\n")
+        XCTAssertEqual(yaml, expectedYaml)
     }
 }
 
-extension ParserTests {
-    static var allTests: [(String, (ParserTests) -> () throws -> Void)] {
+extension SpecTests {
+    static var allTests: [(String, (SpecTests) -> () throws -> Void)] {
         return [
             ("testMultibyteCharacters", testMultibyteCharacters),
             ("testSpecExample2_1_SequenceOfScalars", testSpecExample2_1_SequenceOfScalars),

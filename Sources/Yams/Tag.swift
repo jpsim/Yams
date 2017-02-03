@@ -21,37 +21,31 @@ public final class Tag {
 
     // internal
     let constructor: Constructor
-    var name: Name?
-
-    init(_ string: String?,
-         _ resolver: Resolver,
-         _ constructor: Constructor) {
-        self.resolver = resolver
-        self.constructor = constructor
-        if let string = string, !string.isEmpty && string != "!" {
-            name = Name(rawValue: string)
-        } else {
-            name = nil
-        }
-    }
+    var name: Name
 
     init(_ name: Name,
-         _ resolver: Resolver,
-         _ constructor: Constructor) {
+         _ resolver: Resolver = .default,
+         _ constructor: Constructor = .default) {
         self.resolver = resolver
         self.constructor = constructor
         self.name = name
     }
 
     func resolved(with node: Node) -> Tag {
-        if name == nil {
+        if name == .implicit {
             name = resolver.resolveTag(of: node)
+        } else if name == .nonSpecific {
+            switch node {
+            case .scalar: name = .str
+            case .mapping: name = .map
+            case .sequence: name = .seq
+            }
         }
         return self
     }
 
     static var implicit: Tag {
-        return Tag(nil, .default, .default)
+        return Tag(.implicit)
     }
 
     // fileprivate
@@ -60,16 +54,11 @@ public final class Tag {
 
 extension Tag: Hashable {
     public var hashValue: Int {
-        return name?.hashValue ?? 1
+        return name.hashValue
     }
 
     public static func == (lhs: Tag, rhs: Tag) -> Bool {
-        switch (lhs.name, rhs.name) {
-        case let (lhs?, rhs?): return lhs == rhs
-        case (.none, _): fallthrough
-        case (_, .none): fatalError("unreachable")
-        default: return false
-        }
+        return lhs.name == rhs.name
     }
 }
 
@@ -99,6 +88,12 @@ extension Tag.Name: Hashable {
 
 // http://www.yaml.org/spec/1.2/spec.html#Schema
 extension Tag.Name {
+    // Special
+    /// Tag should be resolved by value.
+    public static let implicit: Tag.Name = ""
+    /// Tag should not be resolved by value, and be resolved as .str, .seq or .map.
+    public static let nonSpecific: Tag.Name = "!"
+
     // Failsafe Schema
     /// "tag:yaml.org,2002:str" <http://yaml.org/type/str.html>
     public static let str: Tag.Name = "tag:yaml.org,2002:str"
