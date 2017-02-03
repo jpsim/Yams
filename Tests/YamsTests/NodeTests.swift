@@ -110,15 +110,17 @@ class NodeTests: XCTestCase {
     }
 
     func testSubscriptMapping() {
-        let mapping: Node = ["key1": "value1", "key2": "value2"]
-        let valueForKey1 = mapping["key1"]?.string
-        XCTAssertEqual(valueForKey1, "value1")
+        let mapping: Node = ["key1": "value1", "key2": "value2", "key3": "value3"]
+        XCTAssertEqual(mapping["key1" as Node]?.string, "value1") // Node resolvable as String
+        XCTAssertEqual(mapping["key2"]?.string, "value2") // String Literal
+        XCTAssertEqual(mapping[String("key3")]?.string, "value3") // String
     }
 
     func testSubscriptSequence() {
         let mapping: Node = ["value1", "value2", "value3"]
-        let valueAtSecond = mapping[1]?.string
-        XCTAssertEqual(valueAtSecond, "value2")
+        XCTAssertEqual(mapping["0" as Node]?.string, "value1") // Node resolvable as Integer
+        XCTAssertEqual(mapping[1]?.string, "value2")         // Integer Literal
+        XCTAssertEqual(mapping[Int(2)]?.string, "value3")    // Int
     }
 
     func testMappingBehavesLikeADictionary() {
