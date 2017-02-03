@@ -120,6 +120,38 @@ class NodeTests: XCTestCase {
         let valueAtSecond = mapping[1]?.string
         XCTAssertEqual(valueAtSecond, "value2")
     }
+
+    func testMappingBehavesLikeADictionary() {
+        let node: Node = ["key1": "value1", "key2": "value2"]
+        let mapping = node.mapping!
+        XCTAssertEqual(mapping.count, 2)
+        XCTAssertEqual(mapping.endIndex, 2)
+        XCTAssertTrue(mapping.first! == ("key1", "value1"))
+        XCTAssertFalse(mapping.isEmpty)
+        XCTAssertEqual(Set(mapping.keys), ["key1", "key2"])
+        XCTAssertEqual(mapping.lazy.count, 2)
+        XCTAssertEqual(mapping.startIndex, 0)
+        XCTAssertEqual(mapping.underestimatedCount, 2)
+        XCTAssertEqual(Set(mapping.values), ["value1", "value2"])
+
+        // subscript
+        var mutableMapping = mapping
+        mutableMapping["key3"] = "value3"
+        XCTAssertEqual(mutableMapping["key3"], "value3")
+        mutableMapping["key3"] = "value3changed"
+        XCTAssertEqual(mutableMapping["key3"], "value3changed")
+        mutableMapping["key3"] = nil
+        XCTAssertNil(mutableMapping["key3"])
+
+        // iterator
+        var iterator = mapping.makeIterator()
+        XCTAssertTrue(iterator.next()! == ("key1", "value1"))
+        XCTAssertTrue(iterator.next()! == ("key2", "value2"))
+        XCTAssertNil(iterator.next())
+
+        // ExpressibleByDictionaryLiteral
+        XCTAssertEqual(mapping, ["key1": "value1", "key2": "value2"])
+    }
 }
 
 extension NodeTests {
@@ -130,9 +162,11 @@ extension NodeTests {
             ("testExpressibleByFloatLiteral", testExpressibleByFloatLiteral),
             ("testExpressibleByIntegerLiteral", testExpressibleByIntegerLiteral),
             ("testExpressibleByStringLiteral", testExpressibleByStringLiteral),
+            ("testTypedAccessorProperties", testTypedAccessorProperties),
+            ("testArray", testArray),
             ("testSubscriptMapping", testSubscriptMapping),
             ("testSubscriptSequence", testSubscriptSequence),
-            ("testArray", testArray)
+            ("testMappingBehavesLikeADictionary", testMappingBehavesLikeADictionary)
         ]
     }
 }

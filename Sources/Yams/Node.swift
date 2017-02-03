@@ -344,6 +344,98 @@ extension Node: ExpressibleByStringLiteral {
     }
 }
 
+// MARK: - Node.Mapping
+
+extension Node.Mapping: Equatable {
+    public static func == (lhs: Node.Mapping, rhs: Node.Mapping) -> Bool {
+        return lhs.pairs == rhs.pairs
+    }
+}
+
+extension Node.Mapping: ExpressibleByDictionaryLiteral {
+    public init(dictionaryLiteral elements: (Node, Node)...) {
+        self.init(pairs: elements.map(Pair.init), tag: .implicit, style: .any)
+    }
+}
+
+extension Node.Mapping: MutableCollection {
+    public typealias Element = (key: Node, value: Node)
+
+    // Sequence
+    public func makeIterator() -> Array<Element>.Iterator {
+        let iterator = pairs.map({ (key: $0.key, value: $0.value) }).makeIterator()
+        return iterator
+    }
+
+    // Collection
+    public typealias Index = Array<Element>.Index
+
+    public var startIndex: Int {
+        return pairs.startIndex
+    }
+
+    public var endIndex: Int {
+        return pairs.endIndex
+    }
+
+    public func index(after index: Int) -> Int {
+        return pairs.index(after:index)
+    }
+
+    public subscript(index: Int) -> Element {
+        get {
+            return (key: pairs[index].key, value: pairs[index].value)
+        }
+        // MutableCollection
+        set {
+            pairs[index] = Pair(newValue.key, newValue.value)
+        }
+    }
+}
+
+extension Node.Mapping {
+    public var keys: LazyMapCollection<Node.Mapping, Node> {
+        return lazy.map { $0.key }
+    }
+
+    public var values: LazyMapCollection<Node.Mapping, Node> {
+        return lazy.map { $0.value }
+    }
+
+    public subscript(string: String) -> Node? {
+        get {
+            return self[Node(string)]
+        }
+        set {
+            self[Node(string)] = newValue
+        }
+    }
+
+    public subscript(node: Node) -> Node? {
+        get {
+            let v = pairs.reversed().first(where: { $0.key == node })
+            return v?.value
+        }
+        set {
+            if let newValue = newValue {
+                if let index = pairs.reversed().index(where: { $0.key == node }) {
+                    let actualIndex = pairs.index(before: index.base)
+                    pairs[actualIndex] = Pair(pairs[actualIndex].key, newValue)
+                } else {
+                    pairs.append(Pair(node, newValue))
+                }
+            } else {
+                if let index = pairs.reversed().index(where: { $0.key == node }) {
+                    let actualIndex = pairs.index(before: index.base)
+                    pairs.remove(at: actualIndex)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - internal
+
 extension Node {
     // MARK: Internal convenience accessors
     var isScalar: Bool {
@@ -367,3 +459,5 @@ extension Node {
         return false
     }
 }
+
+// swiftlint:disable:this file_length
