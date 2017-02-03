@@ -248,6 +248,15 @@ extension Node {
             self[node] = newValue
         }
     }
+
+    public subscript(string: String) -> Node? {
+        get {
+            return self[Node(string)]
+        }
+        set {
+            self[Node(string)] = newValue
+        }
+    }
 }
 
 // MARK: Hashable
