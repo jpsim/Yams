@@ -59,7 +59,7 @@ extension Node {
     }
 
     public struct Mapping {
-        public var pairs: [Pair<Node>]
+        internal var pairs: [Pair<Node>]
         public var tag: Tag
         public var style: Style
 
@@ -88,7 +88,7 @@ extension Node {
     }
 
     public struct Sequence {
-        public var nodes: [Node]
+        internal var nodes: [Node]
         public var tag: Tag
         public var style: Style
 
