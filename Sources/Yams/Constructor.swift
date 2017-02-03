@@ -214,7 +214,7 @@ extension String: ScalarConstructible {
     }
 
     fileprivate static func _construct(from node: Node) -> String {
-        // This will happen while `Dicrionaty.flatten_mapping()` if `node.tag.name` was `.value`
+        // This will happen while `Dictionary.flatten_mapping()` if `node.tag.name` was `.value`
         if case let .mapping(pairs, _, _) = node {
             for pair in pairs where pair.key.tag.name == .value {
                 return _construct(from: pair.value)
@@ -298,7 +298,7 @@ extension Set {
         // TODO: YAML supports Hashable elements other than str.
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
         return Set<AnyHashable>(node.mapping!.pairs.map({ String._construct(from: $0.key) as AnyHashable }))
-        // Explicitly declaring generic parameter as `<AnyHashable>` is required at above,
+        // Explicitly declaring the generic parameter as `<AnyHashable>` above is required,
         // because this is inside extension of `Set` and Swift 3.0.2 can't infer the type without that.
     }
 }
