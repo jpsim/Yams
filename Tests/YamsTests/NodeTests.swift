@@ -110,15 +110,81 @@ class NodeTests: XCTestCase {
     }
 
     func testSubscriptMapping() {
-        let mapping: Node = ["key1": "value1", "key2": "value2"]
-        let valueForKey1 = mapping["key1"]?.string
-        XCTAssertEqual(valueForKey1, "value1")
+        let mapping: Node = ["key1": "value1", "key2": "value2", "key3": "value3"]
+        XCTAssertEqual(mapping["key1" as Node]?.string, "value1") // Node resolvable as String
+        XCTAssertEqual(mapping["key2"]?.string, "value2") // String Literal
+        XCTAssertEqual(mapping[String("key3")]?.string, "value3") // String
     }
 
     func testSubscriptSequence() {
         let mapping: Node = ["value1", "value2", "value3"]
-        let valueAtSecond = mapping[1]?.string
-        XCTAssertEqual(valueAtSecond, "value2")
+        XCTAssertEqual(mapping["0" as Node]?.string, "value1") // Node resolvable as Integer
+        XCTAssertEqual(mapping[1]?.string, "value2")         // Integer Literal
+        XCTAssertEqual(mapping[Int(2)]?.string, "value3")    // Int
+    }
+
+    func testMappingBehavesLikeADictionary() {
+        let node: Node = ["key1": "value1", "key2": "value2"]
+        let mapping = node.mapping!
+        XCTAssertEqual(mapping.count, 2)
+        XCTAssertEqual(mapping.endIndex, 2)
+        XCTAssertTrue(mapping.first! == ("key1", "value1"))
+        XCTAssertFalse(mapping.isEmpty)
+        XCTAssertEqual(Set(mapping.keys), ["key1", "key2"])
+        XCTAssertEqual(mapping.lazy.count, 2)
+        XCTAssertEqual(mapping.startIndex, 0)
+        XCTAssertEqual(mapping.underestimatedCount, 2)
+        XCTAssertEqual(Set(mapping.values), ["value1", "value2"])
+
+        // subscript
+        var mutableMapping = mapping
+        mutableMapping["key3"] = "value3"
+        XCTAssertEqual(mutableMapping["key3"], "value3")
+        mutableMapping["key3"] = "value3changed"
+        XCTAssertEqual(mutableMapping["key3"], "value3changed")
+        mutableMapping["key3"] = nil
+        XCTAssertNil(mutableMapping["key3"])
+
+        // iterator
+        var iterator = mapping.makeIterator()
+        XCTAssertTrue(iterator.next()! == ("key1", "value1"))
+        XCTAssertTrue(iterator.next()! == ("key2", "value2"))
+        XCTAssertNil(iterator.next())
+
+        // ExpressibleByDictionaryLiteral
+        XCTAssertEqual(mapping, ["key1": "value1", "key2": "value2"])
+    }
+
+    func testSequenceBehavesLikeAnArray() {
+        let node: Node = ["value1", "value2", "value3"]
+        let sequence = node.sequence!
+        XCTAssertEqual(sequence.count, 3)
+        XCTAssertEqual(sequence.endIndex, 3)
+        XCTAssertEqual(sequence.first, "value1")
+        XCTAssertFalse(sequence.isEmpty)
+        XCTAssertEqual(sequence.last, "value3")
+        XCTAssertEqual(sequence.lazy.count, 3)
+        XCTAssertEqual(sequence.startIndex, 0)
+        XCTAssertEqual(sequence.underestimatedCount, 3)
+
+        // subscript
+        var mutableSequence = sequence
+        mutableSequence.append("value4")
+        XCTAssertEqual(mutableSequence.count, 4)
+        XCTAssertEqual(mutableSequence[3], "value4")
+        mutableSequence.remove(at: 2)
+        XCTAssertEqual(mutableSequence.count, 3)
+        XCTAssertEqual(Array(mutableSequence), ["value1", "value2", "value4"])
+
+        // iterator
+        var iterator = sequence.makeIterator()
+        XCTAssertEqual(iterator.next(), "value1")
+        XCTAssertEqual(iterator.next(), "value2")
+        XCTAssertEqual(iterator.next(), "value3")
+        XCTAssertNil(iterator.next())
+
+        // ExpressibleByArrayLiteral
+        XCTAssertEqual(sequence, ["value1", "value2", "value3"])
     }
 }
 
@@ -130,9 +196,12 @@ extension NodeTests {
             ("testExpressibleByFloatLiteral", testExpressibleByFloatLiteral),
             ("testExpressibleByIntegerLiteral", testExpressibleByIntegerLiteral),
             ("testExpressibleByStringLiteral", testExpressibleByStringLiteral),
+            ("testTypedAccessorProperties", testTypedAccessorProperties),
+            ("testArray", testArray),
             ("testSubscriptMapping", testSubscriptMapping),
             ("testSubscriptSequence", testSubscriptSequence),
-            ("testArray", testArray)
+            ("testMappingBehavesLikeADictionary", testMappingBehavesLikeADictionary),
+            ("testSequenceBehavesLikeAnArray", testSequenceBehavesLikeAnArray)
         ]
     }
 }

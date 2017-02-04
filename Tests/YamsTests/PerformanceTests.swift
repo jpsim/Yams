@@ -62,11 +62,12 @@ class PerformanceTests: XCTestCase {
             XCTFail("Can't load \(filename)")
             return
         }
+        let spmName = "SourceKittenFramework"
         self.measure {
             do {
                 guard let yaml = try Yams.load(yaml: yamlString) as? [String:Any],
-                    let commands = yaml["commands"] as? [String:Any],
-                    let moduleCommand = commands["<SourceKittenFramework.module>"] as? [String:Any],
+                    let commands = (yaml["commands"] as? [String:[String:Any]])?.values,
+                    let moduleCommand = commands.first(where: { ($0["module-name"] as? String ?? "") == spmName }),
                     let imports = moduleCommand["import-paths"] as? [String],
                     let otherArguments = moduleCommand["other-args"] as? [String],
                     let sources = moduleCommand["sources"] as? [String] else {
@@ -87,10 +88,12 @@ class PerformanceTests: XCTestCase {
             XCTFail("Can't load \(filename)")
             return
         }
+        let spmName = "SourceKittenFramework"
         self.measure {
             do {
                 guard let yaml = try Yams.compose(yaml: yamlString),
-                    let moduleCommand = yaml["commands"]?["<SourceKittenFramework.module>"],
+                    let commands = yaml["commands"]?.mapping?.values,
+                    let moduleCommand = commands.first(where: { $0["module-name"]?.string == spmName }),
                     let imports = moduleCommand["import-paths"]?.array(of: String.self),
                     let otherArguments = moduleCommand["other-args"]?.array(of: String.self),
                     let sources = moduleCommand["sources"]?.array(of: String.self) else {
