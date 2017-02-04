@@ -63,12 +63,14 @@ class YamlErrorTests: XCTestCase {
 
 extension YamlErrorTests {
     static var allTests: [(String, (YamlErrorTests) -> () throws -> Void)] {
-        return [
-            /* FIXME: https://bugs.swift.org/browse/SR-3366
-            ("testYamlErrorReader", testYamlErrorReader),
-            ("testYamlErrorScanner", testYamlErrorScanner),
-            ("testYamlErrorParser", testYamlErrorParser)
-             */
-        ]
+        #if swift(>=3.1)
+            return [
+                ("testYamlErrorReader", testYamlErrorReader),
+                ("testYamlErrorScanner", testYamlErrorScanner),
+                ("testYamlErrorParser", testYamlErrorParser)
+            ]
+        #else
+            return [] // https://bugs.swift.org/browse/SR-3366
+        #endif
     }
 }
