@@ -350,27 +350,27 @@ extension Node: ExpressibleByDictionaryLiteral {
 
 extension Node: ExpressibleByFloatLiteral {
     public init(floatLiteral value: Double) {
-        self = .scalar(.init(String(value), Tag(.float)))
+        self.init(String(value), Tag(.float))
     }
 }
 
 extension Node: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: Int) {
-        self = .scalar(.init(String(value), Tag(.int)))
+        self.init(String(value), Tag(.int))
     }
 }
 
 extension Node: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
-        self = .scalar(.init(value))
+        self.init(value)
     }
 
     public init(extendedGraphemeClusterLiteral value: String) {
-        self = .scalar(.init(value))
+        self.init(value)
     }
 
     public init(unicodeScalarLiteral value: String) {
-        self = .scalar(.init(value))
+        self.init(value)
     }
 }
 

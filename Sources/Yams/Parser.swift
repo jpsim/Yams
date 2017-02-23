@@ -223,7 +223,7 @@ extension Parser {
     }
 
     private func loadScalar(from event: Event) throws -> Node {
-        let node = Node.scalar(.init(event.scalarValue, tag(event.scalarTag), event.scalarStyle))
+        let node = Node(event.scalarValue, tag(event.scalarTag), event.scalarStyle)
         if let anchor = event.scalarAnchor {
             anchors[anchor] = node
         }
