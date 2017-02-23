@@ -24,7 +24,7 @@ class RepresenterTests: XCTestCase {
             "AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
             ].joined()
         let data = Data(base64Encoded: base64EncodedString, options: .ignoreUnknownCharacters)!
-        XCTAssertEqual(try Node(data), .scalar(base64EncodedString, Tag(.binary), .any))
+        XCTAssertEqual(try Node(data), .scalar(.init(base64EncodedString, Tag(.binary))))
     }
 
     func testDate() throws {

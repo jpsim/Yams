@@ -14,41 +14,41 @@ class NodeTests: XCTestCase {
 
     func testExpressibleByArrayLiteral() {
         let sequence: Node = [
-            .scalar("1", .implicit, .any),
-            .scalar("2", .implicit, .any),
-            .scalar("3", .implicit, .any)
+            .scalar(.init("1")),
+            .scalar(.init("2")),
+            .scalar(.init("3"))
         ]
         let expected: Node = .sequence([
-            .scalar("1", .implicit, .any),
-            .scalar("2", .implicit, .any),
-            .scalar("3", .implicit, .any)
+            .scalar(.init("1")),
+            .scalar(.init("2")),
+            .scalar(.init("3"))
             ], .implicit, .any)
         XCTAssertEqual(sequence, expected)
     }
 
     func testExpressibleByDictionaryLiteral() {
-        let sequence: Node = [.scalar("key", .implicit, .any): .scalar("value", .implicit, .any)]
+        let sequence: Node = [.scalar(.init("key")): .scalar(.init("value"))]
         let expected: Node = .mapping([
-            Pair(.scalar("key", .implicit, .any), .scalar("value", .implicit, .any))
+            Pair(.scalar(.init("key")), .scalar(.init("value")))
             ], .implicit, .any)
         XCTAssertEqual(sequence, expected)
     }
 
     func testExpressibleByFloatLiteral() {
         let sequence: Node = 0.0
-        let expected: Node = .scalar(String(0.0), .implicit, .any)
+        let expected: Node = .scalar(.init(String(0.0)))
         XCTAssertEqual(sequence, expected)
     }
 
     func testExpressibleByIntegerLiteral() {
         let sequence: Node = 0
-        let expected: Node = .scalar(String(0), .implicit, .any)
+        let expected: Node = .scalar(.init(String(0)))
         XCTAssertEqual(sequence, expected)
     }
 
     func testExpressibleByStringLiteral() {
         let sequence: Node = "string"
-        let expected: Node = .scalar("string", .implicit, .any)
+        let expected: Node = .scalar(.init("string"))
         XCTAssertEqual(sequence, expected)
     }
 
@@ -71,7 +71,7 @@ class NodeTests: XCTestCase {
             " +f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC",
             " AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
             ].joined()
-        let scalarBinary: Node = .scalar(base64String, .implicit, .any)
+        let scalarBinary: Node = .scalar(.init(base64String))
         XCTAssertEqual(scalarBinary.binary, Data(base64Encoded: base64String, options: .ignoreUnknownCharacters)!)
 
         let scalarTimestamp: Node = "2001-12-15T02:59:43.1Z"
@@ -89,9 +89,9 @@ class NodeTests: XCTestCase {
             "true",
             "1.0",
             "1",
-            .scalar(base64String, .implicit, .any)
+            .scalar(.init(base64String))
         ]
-        XCTAssertEqual(sequence.array(), ["true", "1.0", "1", .scalar(base64String, .implicit, .any)] as [Node])
+        XCTAssertEqual(sequence.array(), ["true", "1.0", "1", .scalar(.init(base64String))] as [Node])
         XCTAssertEqual(sequence.array(of: String.self), ["true", "1.0", "1", base64String])
         XCTAssertEqual(sequence.array() as [String], ["true", "1.0", "1", base64String])
         XCTAssertEqual(sequence.array(of: Bool.self), [true])

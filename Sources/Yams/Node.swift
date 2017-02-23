@@ -9,14 +9,14 @@
 import Foundation
 
 public enum Node {
-    case scalar(String, Tag, Scalar.Style)
+    case scalar(Scalar)
     case mapping([Pair<Node>], Tag, Mapping.Style)
     case sequence([Node], Tag, Sequence.Style)
 }
 
 extension Node {
     public init(_ string: String, _ tag: Tag.Name = .implicit, _ style: Scalar.Style = .any) {
-        self = .scalar(string, Tag(tag), style)
+        self = .scalar(.init(string, Tag(tag), style))
     }
 }
 
@@ -42,18 +42,24 @@ extension Node {
             /// The folded scalar style.
             case folded
         }
+
+        public init(_ string: String, _ tag: Tag = .implicit, _ style: Style = .any) {
+            self.string = string
+            self.tag = tag
+            self.style = style
+        }
     }
 
     public var scalar: Scalar? {
         get {
-            if case let .scalar(string, tag, style) = self {
-                return Scalar(string: string, tag: tag, style: style)
+            if case let .scalar(scalar) = self {
+                return scalar
             }
             return nil
         }
         set {
             if let newValue = newValue {
-                self = .scalar(newValue.string, newValue.tag, newValue.style)
+                self = .scalar(newValue)
             }
         }
     }
@@ -140,7 +146,7 @@ extension Node {
     /// Accessing this property causes the tag to be resolved by tag.resolver.
     public var tag: Tag {
         switch self {
-        case let .scalar(_, tag, _): return tag.resolved(with: self)
+        case let .scalar(scalar): return scalar.tag.resolved(with: self)
         case let .mapping(_, tag, _): return tag.resolved(with: self)
         case let .sequence(_, tag, _): return tag.resolved(with: self)
         }
@@ -263,8 +269,8 @@ extension Node {
 extension Node: Hashable {
     public var hashValue: Int {
         switch self {
-        case let .scalar(value, _, _):
-            return value.hashValue
+        case let .scalar(scalar):
+            return scalar.string.hashValue
         case let .mapping(pairs, _, _):
             return pairs.count
         case let .sequence(array, _, _):
@@ -274,8 +280,9 @@ extension Node: Hashable {
 
     public static func == (lhs: Node, rhs: Node) -> Bool {
         switch (lhs, rhs) {
-        case let (.scalar(lhsValue, lhsTag, _), .scalar(rhsValue, rhsTag, _)):
-            return lhsValue == rhsValue && lhsTag.resolved(with: lhs) == rhsTag.resolved(with: rhs)
+        case let (.scalar(lhsValue), .scalar(rhsValue)):
+            return lhsValue.string == rhsValue.string &&
+                lhsValue.tag.resolved(with: lhs) == rhsValue.tag.resolved(with: rhs)
         case let (.mapping(lhsValue, lhsTag, _), .mapping(rhsValue, rhsTag, _)):
             return lhsValue == rhsValue && lhsTag.resolved(with: lhs) == rhsTag.resolved(with: rhs)
         case let (.sequence(lhsValue, lhsTag, _), .sequence(rhsValue, rhsTag, _)):
@@ -289,8 +296,8 @@ extension Node: Hashable {
 extension Node: Comparable {
     public static func < (lhs: Node, rhs: Node) -> Bool {
         switch (lhs, rhs) {
-        case let (.scalar(lhsValue, _, _), .scalar(rhsValue, _, _)):
-            return lhsValue < rhsValue
+        case let (.scalar(lhs), .scalar(rhs)):
+            return lhs.string < rhs.string
         case let (.mapping(lhsValue, _, _), .mapping(rhsValue, _, _)):
             return lhsValue < rhsValue
         case let (.sequence(lhsValue, _, _), .sequence(rhsValue, _, _)):
@@ -329,27 +336,27 @@ extension Node: ExpressibleByDictionaryLiteral {
 
 extension Node: ExpressibleByFloatLiteral {
     public init(floatLiteral value: Double) {
-        self = .scalar(String(value), Tag(.float), .any)
+        self = .scalar(.init(String(value), Tag(.float)))
     }
 }
 
 extension Node: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: Int) {
-        self = .scalar(String(value), Tag(.int), .any)
+        self = .scalar(.init(String(value), Tag(.int)))
     }
 }
 
 extension Node: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
-        self = .scalar(value, .implicit, .any)
+        self = .scalar(.init(value))
     }
 
     public init(extendedGraphemeClusterLiteral value: String) {
-        self = .scalar(value, .implicit, .any)
+        self = .scalar(.init(value))
     }
 
     public init(unicodeScalarLiteral value: String) {
-        self = .scalar(value, .implicit, .any)
+        self = .scalar(.init(value))
     }
 }
 
