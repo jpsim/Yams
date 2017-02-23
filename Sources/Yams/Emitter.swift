@@ -225,7 +225,7 @@ public final class Emitter {
         }
 
         #if USE_UTF16
-            yaml_emitter_set_encoding(&emitter, YAML_UTF16BE_ENCODING)
+            yaml_emitter_set_encoding(&emitter, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
         #else
             yaml_emitter_set_encoding(&emitter, YAML_UTF8_ENCODING)
         #endif
@@ -240,7 +240,7 @@ public final class Emitter {
         case .initialized:
             var event = yaml_event_t()
             #if USE_UTF16
-                yaml_stream_start_event_initialize(&event, YAML_UTF16BE_ENCODING)
+                yaml_stream_start_event_initialize(&event, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
             #else
                 yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING)
             #endif
@@ -381,3 +381,6 @@ extension Emitter {
         try emit(&event)
     }
 }
+
+private let isLittleEndian = 1 == 1.littleEndian
+
