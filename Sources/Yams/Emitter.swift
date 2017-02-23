@@ -242,7 +242,8 @@ public final class Emitter {
             #if USE_UTF8
                 yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING)
             #else
-                yaml_stream_start_event_initialize(&event, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
+                let encoding = isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING
+                yaml_stream_start_event_initialize(&event, encoding)
             #endif
             try emit(&event)
             state = .opened
