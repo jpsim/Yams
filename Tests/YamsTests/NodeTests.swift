@@ -18,11 +18,11 @@ class NodeTests: XCTestCase {
             .scalar(.init("2")),
             .scalar(.init("3"))
         ]
-        let expected: Node = .sequence([
+        let expected: Node = .sequence(.init([
             .scalar(.init("1")),
             .scalar(.init("2")),
             .scalar(.init("3"))
-            ], .implicit, .any)
+            ]))
         XCTAssertEqual(sequence, expected)
     }
 

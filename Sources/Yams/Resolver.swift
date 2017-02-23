@@ -20,8 +20,8 @@ public final class Resolver {
             return scalar.tag.name == .implicit ? resolveTag(from: scalar.string) : scalar.tag.name
         case let .mapping(mapping):
             return mapping.tag.name == .implicit ? .map : mapping.tag.name
-        case let .sequence(_, tag, _):
-            return tag.name == .implicit ? .seq : tag.name
+        case let .sequence(sequence):
+            return sequence.tag.name == .implicit ? .seq : sequence.tag.name
         }
     }
 

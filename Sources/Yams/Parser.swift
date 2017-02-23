@@ -237,7 +237,7 @@ extension Parser {
             array.append(try loadNode(from: event))
             event = try parse()
         }
-        let node = Node.sequence(array, tag(firstEvent.sequenceTag), event.sequenceStyle)
+        let node = Node.sequence(.init(array, tag(firstEvent.sequenceTag), event.sequenceStyle))
         if let anchor = firstEvent.sequenceAnchor {
             anchors[anchor] = node
         }

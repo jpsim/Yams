@@ -11,7 +11,7 @@ import Foundation
 public enum Node {
     case scalar(Scalar)
     case mapping(Mapping)
-    case sequence([Node], Tag, Sequence.Style)
+    case sequence(Sequence)
 }
 
 extension Node {
@@ -122,14 +122,14 @@ extension Node {
 
     public var sequence: Sequence? {
         get {
-            if case let .sequence(nodes, tag, style) = self {
-                return Sequence(nodes: nodes, tag: tag, style: style)
+            if case let .sequence(sequence) = self {
+                return sequence
             }
             return nil
         }
         set {
             if let newValue = newValue {
-                self = .sequence(newValue.nodes, newValue.tag, newValue.style)
+                self = .sequence(newValue)
             }
         }
     }
@@ -160,7 +160,7 @@ extension Node {
         switch self {
         case let .scalar(scalar): return scalar.tag.resolved(with: self)
         case let .mapping(mapping): return mapping.tag.resolved(with: self)
-        case let .sequence(_, tag, _): return tag.resolved(with: self)
+        case let .sequence(sequence): return sequence.tag.resolved(with: self)
         }
     }
 
@@ -234,9 +234,9 @@ extension Node {
             case .scalar: return nil
             case let .mapping(mapping):
                 return mapping.pairs.reversed().first(where: { $0.key == node })?.value
-            case let .sequence(nodes, _, _):
-                guard let index = node.int, 0 <= index, index < nodes.count else { return nil }
-                return nodes[index]
+            case let .sequence(sequence):
+                guard let index = node.int, 0 <= index, index < sequence.nodes.count else { return nil }
+                return sequence.nodes[index]
             }
         }
         set {
@@ -248,10 +248,10 @@ extension Node {
                     mapping.pairs[index] = Pair(mapping.pairs[index].key, newValue)
                     self = .mapping(mapping)
                 }
-            case .sequence(var nodes, let tag, let style):
-                guard let index = node.int, 0 <= index, index < nodes.count else { return}
-                nodes[index] = newValue
-                self = .sequence(nodes, tag, style)
+            case .sequence(var sequence):
+                guard let index = node.int, 0 <= index, index < sequence.nodes.count else { return}
+                sequence.nodes[index] = newValue
+                self = .sequence(sequence)
             }
         }
     }
@@ -285,8 +285,8 @@ extension Node: Hashable {
             return scalar.string.hashValue
         case let .mapping(mapping):
             return mapping.pairs.count
-        case let .sequence(array, _, _):
-            return array.count
+        case let .sequence(sequence):
+            return sequence.nodes.count
         }
     }
 
@@ -298,8 +298,9 @@ extension Node: Hashable {
         case let (.mapping(lhsValue), .mapping(rhsValue)):
             return lhsValue.pairs == rhsValue.pairs &&
                 lhsValue.tag.resolved(with: lhs) == rhsValue.tag.resolved(with: rhs)
-        case let (.sequence(lhsValue, lhsTag, _), .sequence(rhsValue, rhsTag, _)):
-            return lhsValue == rhsValue && lhsTag.resolved(with: lhs) == rhsTag.resolved(with: rhs)
+        case let (.sequence(lhsValue), .sequence(rhsValue)):
+            return lhsValue.nodes == rhsValue.nodes &&
+                lhsValue.tag.resolved(with: lhs) == rhsValue.tag.resolved(with: rhs)
         default:
             return false
         }
@@ -313,8 +314,8 @@ extension Node: Comparable {
             return lhs.string < rhs.string
         case let (.mapping(lhs), .mapping(rhs)):
             return lhs.pairs < rhs.pairs
-        case let (.sequence(lhsValue, _, _), .sequence(rhsValue, _, _)):
-            return lhsValue < rhsValue
+        case let (.sequence(lhs), .sequence(rhs)):
+            return lhs.nodes < rhs.nodes
         default:
             return false
         }
@@ -337,7 +338,7 @@ extension Array where Element: Comparable {
 // MARK: - ExpressibleBy*Literal
 extension Node: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: Node...) {
-        self = .sequence(elements, .implicit, .any)
+        self = .sequence(.init(elements))
     }
 }
 
@@ -473,7 +474,7 @@ extension Node.Sequence: Equatable {
 
 extension Node.Sequence: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: Node...) {
-        self.init(nodes: elements, tag: .implicit, style: .any)
+        self.init(elements)
     }
 }
 
@@ -541,7 +542,7 @@ extension Node.Sequence: RandomAccessCollection {
 
 extension Node.Sequence: RangeReplaceableCollection {
     public init() {
-        self.init(nodes: [], tag: .implicit, style: .any)
+        self.init([])
     }
 
     public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C)

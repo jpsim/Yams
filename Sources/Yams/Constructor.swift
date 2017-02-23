@@ -271,8 +271,8 @@ extension Dictionary {
                     if let pairs = flattened_node.mapping?.pairs {
                         merge.append(contentsOf: pairs)
                     }
-                case let .sequence(array, _, _):
-                    let submerge = array
+                case let .sequence(sequence):
+                    let submerge = sequence.nodes
                         .filter { $0.isMapping } // TODO: Should raise error on other than mapping
                         .flatMap { flatten_mapping($0).mapping?.pairs }
                         .reversed()
