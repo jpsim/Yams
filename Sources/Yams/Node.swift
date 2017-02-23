@@ -22,6 +22,10 @@ extension Node {
     public init(_ pairs: [(Node, Node)], _ tag: Tag = .implicit, _ style: Mapping.Style = .any) {
             self = .mapping(.init(pairs, tag, style))
     }
+
+    public init(_ nodes: [Node], _ tag: Tag = .implicit, _ style: Sequence.Style = .any) {
+        self = .sequence(.init(nodes, tag, style))
+    }
 }
 
 extension Node {
