@@ -18,6 +18,10 @@ extension Node {
     public init(_ string: String, _ tag: Tag = .implicit, _ style: Scalar.Style = .any) {
         self = .scalar(.init(string, tag, style))
     }
+
+    public init(_ pairs: [(Node, Node)], _ tag: Tag = .implicit, _ style: Mapping.Style = .any) {
+            self = .mapping(.init(pairs.map(Pair.init), tag, style))
+    }
 }
 
 extension Node {
@@ -151,6 +155,10 @@ public struct Pair<Value: Comparable & Equatable>: Comparable, Equatable {
 
     public static func < (lhs: Pair<Value>, rhs: Pair<Value>) -> Bool {
         return lhs.key < rhs.key
+    }
+
+    static func toTuple(pair: Pair) -> (key: Value, value: Value) {
+        return (key: pair.key, value: pair.value)
     }
 }
 
@@ -344,7 +352,7 @@ extension Node: ExpressibleByArrayLiteral {
 
 extension Node: ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (Node, Node)...) {
-        self = .mapping(.init(elements.map(Pair.init)))
+        self = Node(elements)
     }
 }
 
@@ -393,7 +401,7 @@ extension Node.Mapping: MutableCollection {
 
     // Sequence
     public func makeIterator() -> Array<Element>.Iterator {
-        let iterator = pairs.map({ (key: $0.key, value: $0.value) }).makeIterator()
+        let iterator = pairs.map(Pair.toTuple).makeIterator()
         return iterator
     }
 

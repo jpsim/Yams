@@ -28,9 +28,9 @@ class NodeTests: XCTestCase {
 
     func testExpressibleByDictionaryLiteral() {
         let sequence: Node = [Node("key"): Node("value")]
-        let expected: Node = .mapping(.init([
-            Pair(Node("key"), Node("value"))
-            ]))
+        let expected: Node = Node([
+            (Node("key"), Node("value"))
+            ])
         XCTAssertEqual(sequence, expected)
     }
 

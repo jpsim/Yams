@@ -258,8 +258,8 @@ extension Dictionary {
     private static func flatten_mapping(_ node: Node) -> Node {
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
         let mapping = node.mapping!
-        var pairs = mapping.pairs
-        var merge = [Pair<Node>]()
+        var pairs = mapping.pairs.map(Pair.toTuple)
+        var merge = [(key: Node, value: Node)]()
         var index = pairs.startIndex
         while index < pairs.count {
             let pair = pairs[index]
@@ -268,13 +268,13 @@ extension Dictionary {
                 switch pair.value {
                 case .mapping:
                     let flattened_node = flatten_mapping(pair.value)
-                    if let pairs = flattened_node.mapping?.pairs {
+                    if let pairs = flattened_node.mapping?.pairs.map(Pair.toTuple) {
                         merge.append(contentsOf: pairs)
                     }
                 case let .sequence(sequence):
                     let submerge = sequence.nodes
                         .filter { $0.isMapping } // TODO: Should raise error on other than mapping
-                        .flatMap { flatten_mapping($0).mapping?.pairs }
+                        .flatMap { flatten_mapping($0).mapping?.pairs.map(Pair.toTuple) }
                         .reversed()
                     submerge.forEach {
                         merge.append(contentsOf: $0)
@@ -289,7 +289,7 @@ extension Dictionary {
                 index += 1
             }
         }
-        return .mapping(.init(merge + pairs, node.tag, mapping.style))
+        return Node(merge + pairs, node.tag, mapping.style)
     }
 }
 
