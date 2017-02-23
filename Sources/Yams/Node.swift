@@ -15,8 +15,8 @@ public enum Node {
 }
 
 extension Node {
-    public init(_ string: String, _ tag: Tag.Name = .implicit, _ style: Scalar.Style = .any) {
-        self = .scalar(.init(string, Tag(tag), style))
+    public init(_ string: String, _ tag: Tag = .implicit, _ style: Scalar.Style = .any) {
+        self = .scalar(.init(string, tag, style))
     }
 }
 
