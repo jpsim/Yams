@@ -119,8 +119,10 @@ public final class Parser {
 
         yaml_parser_initialize(&parser)
 #if USE_UTF16
-        yaml_parser_set_encoding(&parser, YAML_UTF16BE_ENCODING)
-        data = yaml.data(using: .utf16BigEndian)!
+        // use native endian
+        let isLittleEndian = 1 == 1.littleEndian
+        yaml_parser_set_encoding(&parser, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
+        data = yaml.data(using: isLittleEndian ? .utf16LittleEndian : .utf16BigEndian)!
         data.withUnsafeBytes { bytes in
             yaml_parser_set_input_string(&parser, bytes, data.count)
         }
