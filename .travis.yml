@@ -21,14 +21,14 @@ matrix:
       os: osx
       osx_image: xcode8.2
     - script:
-        - docker run -v `pwd`:/Yams norionomura/sourcekit:301 bash -c "cd /Yams && swift test"
-        - docker run -v `pwd`:/Yams norionomura/sourcekit:301 bash -c "cd /Yams && swift test -Xswiftc -DUSE_UTF16"
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.0.2 swift test
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.0.2 swift test -Xswiftc -DUSE_UTF16
       env: JOB=Linux
       sudo: required
       services: docker
     - script:
-        - docker run -v `pwd`:/Yams norionomura/sourcekit:3120170131a bash -c "cd /Yams && swift test"
-        - docker run -v `pwd`:/Yams norionomura/sourcekit:3120170131a bash -c "cd /Yams && swift test -Xswiftc -DUSE_UTF16"
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm norionomura/swift:3120170222a swift test
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm norionomura/swift:3120170222a swift test -Xswiftc -DUSE_UTF16
       env: JOB=Linux-Swift3.1
       sudo: required
       services: docker
