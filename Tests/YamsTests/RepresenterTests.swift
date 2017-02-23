@@ -8,7 +8,7 @@
 
 import Foundation
 import XCTest
-@testable import Yams
+import Yams
 
 class RepresenterTests: XCTestCase {
     func testBool() throws {
