@@ -20,7 +20,7 @@ extension Node {
     }
 
     public init(_ pairs: [(Node, Node)], _ tag: Tag = .implicit, _ style: Mapping.Style = .any) {
-            self = .mapping(.init(pairs.map(Pair.init), tag, style))
+            self = .mapping(.init(pairs, tag, style))
     }
 }
 
@@ -82,8 +82,8 @@ extension Node {
             case flow
         }
 
-        public init(_ pairs: [Pair<Node>], _ tag: Tag = .implicit, _ style: Style = .any) {
-            self.pairs = pairs
+        public init(_ pairs: [(Node, Node)], _ tag: Tag = .implicit, _ style: Style = .any) {
+            self.pairs = pairs.map(Pair.init)
             self.tag = tag
             self.style = style
         }
@@ -140,7 +140,7 @@ extension Node {
 
 }
 
-public struct Pair<Value: Comparable & Equatable>: Comparable, Equatable {
+struct Pair<Value: Comparable & Equatable>: Comparable, Equatable {
     let key: Value
     let value: Value
 
@@ -149,11 +149,11 @@ public struct Pair<Value: Comparable & Equatable>: Comparable, Equatable {
         self.value = value
     }
 
-    public static func == (lhs: Pair, rhs: Pair) -> Bool {
+    static func == (lhs: Pair, rhs: Pair) -> Bool {
         return lhs.key == rhs.key && lhs.value == rhs.value
     }
 
-    public static func < (lhs: Pair<Value>, rhs: Pair<Value>) -> Bool {
+    static func < (lhs: Pair<Value>, rhs: Pair<Value>) -> Bool {
         return lhs.key < rhs.key
     }
 
@@ -392,7 +392,7 @@ extension Node.Mapping: Equatable {
 
 extension Node.Mapping: ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (Node, Node)...) {
-        self.init(elements.map(Pair.init))
+        self.init(elements)
     }
 }
 
