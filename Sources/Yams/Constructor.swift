@@ -215,8 +215,8 @@ extension String: ScalarConstructible {
 
     fileprivate static func _construct(from node: Node) -> String {
         // This will happen while `Dictionary.flatten_mapping()` if `node.tag.name` was `.value`
-        if case let .mapping(pairs, _, _) = node {
-            for pair in pairs where pair.key.tag.name == .value {
+        if case let .mapping(mapping) = node {
+            for pair in mapping.pairs where pair.key.tag.name == .value {
                 return _construct(from: pair.value)
             }
         }
@@ -289,7 +289,7 @@ extension Dictionary {
                 index += 1
             }
         }
-        return .mapping(merge + pairs, node.tag, mapping.style)
+        return .mapping(.init(merge + pairs, node.tag, mapping.style))
     }
 }
 

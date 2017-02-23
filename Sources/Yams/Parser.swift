@@ -254,7 +254,7 @@ extension Parser {
             pairs.append(Pair(key, value))
             event = try parse()
         }
-        let node = Node.mapping(pairs, tag(firstEvent.mappingTag), event.mappingStyle)
+        let node = Node.mapping(.init(pairs, tag(firstEvent.mappingTag), event.mappingStyle))
         if let anchor = firstEvent.mappingAnchor {
             anchors[anchor] = node
         }

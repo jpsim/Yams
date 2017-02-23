@@ -10,7 +10,7 @@ import Foundation
 
 public enum Node {
     case scalar(Scalar)
-    case mapping([Pair<Node>], Tag, Mapping.Style)
+    case mapping(Mapping)
     case sequence([Node], Tag, Sequence.Style)
 }
 
@@ -77,18 +77,24 @@ extension Node {
             /// The flow mapping style.
             case flow
         }
+
+        public init(_ pairs: [Pair<Node>], _ tag: Tag = .implicit, _ style: Style = .any) {
+            self.pairs = pairs
+            self.tag = tag
+            self.style = style
+        }
     }
 
     public var mapping: Mapping? {
         get {
-            if case let .mapping(pairs, tag, style) = self {
-                return Mapping(pairs: pairs, tag: tag, style: style)
+            if case let .mapping(mapping) = self {
+                return mapping
             }
             return nil
         }
         set {
             if let newValue = newValue {
-                self = .mapping(newValue.pairs, newValue.tag, newValue.style)
+                self = .mapping(newValue)
             }
         }
     }
@@ -105,6 +111,12 @@ extension Node {
             case block
             /// The flow sequence style.
             case flow
+        }
+
+        public init(_ nodes: [Node], _ tag: Tag = .implicit, _ style: Style = .any) {
+            self.nodes = nodes
+            self.tag = tag
+            self.style = style
         }
     }
 
@@ -147,7 +159,7 @@ extension Node {
     public var tag: Tag {
         switch self {
         case let .scalar(scalar): return scalar.tag.resolved(with: self)
-        case let .mapping(_, tag, _): return tag.resolved(with: self)
+        case let .mapping(mapping): return mapping.tag.resolved(with: self)
         case let .sequence(_, tag, _): return tag.resolved(with: self)
         }
     }
@@ -220,8 +232,8 @@ extension Node {
         get {
             switch self {
             case .scalar: return nil
-            case let .mapping(pairs, _, _):
-                return pairs.reversed().first(where: { $0.key == node })?.value
+            case let .mapping(mapping):
+                return mapping.pairs.reversed().first(where: { $0.key == node })?.value
             case let .sequence(nodes, _, _):
                 guard let index = node.int, 0 <= index, index < nodes.count else { return nil }
                 return nodes[index]
@@ -231,10 +243,10 @@ extension Node {
             guard let newValue = newValue else { return }
             switch self {
             case .scalar: return
-            case .mapping(var pairs, let tag, let style):
-                if let index = pairs.index(where: { $0.key == node }) {
-                    pairs[index] = Pair(pairs[index].key, newValue)
-                    self = .mapping(pairs, tag, style)
+            case .mapping(var mapping):
+                if let index = mapping.pairs.index(where: { $0.key == node }) {
+                    mapping.pairs[index] = Pair(mapping.pairs[index].key, newValue)
+                    self = .mapping(mapping)
                 }
             case .sequence(var nodes, let tag, let style):
                 guard let index = node.int, 0 <= index, index < nodes.count else { return}
@@ -271,8 +283,8 @@ extension Node: Hashable {
         switch self {
         case let .scalar(scalar):
             return scalar.string.hashValue
-        case let .mapping(pairs, _, _):
-            return pairs.count
+        case let .mapping(mapping):
+            return mapping.pairs.count
         case let .sequence(array, _, _):
             return array.count
         }
@@ -283,8 +295,9 @@ extension Node: Hashable {
         case let (.scalar(lhsValue), .scalar(rhsValue)):
             return lhsValue.string == rhsValue.string &&
                 lhsValue.tag.resolved(with: lhs) == rhsValue.tag.resolved(with: rhs)
-        case let (.mapping(lhsValue, lhsTag, _), .mapping(rhsValue, rhsTag, _)):
-            return lhsValue == rhsValue && lhsTag.resolved(with: lhs) == rhsTag.resolved(with: rhs)
+        case let (.mapping(lhsValue), .mapping(rhsValue)):
+            return lhsValue.pairs == rhsValue.pairs &&
+                lhsValue.tag.resolved(with: lhs) == rhsValue.tag.resolved(with: rhs)
         case let (.sequence(lhsValue, lhsTag, _), .sequence(rhsValue, rhsTag, _)):
             return lhsValue == rhsValue && lhsTag.resolved(with: lhs) == rhsTag.resolved(with: rhs)
         default:
@@ -298,8 +311,8 @@ extension Node: Comparable {
         switch (lhs, rhs) {
         case let (.scalar(lhs), .scalar(rhs)):
             return lhs.string < rhs.string
-        case let (.mapping(lhsValue, _, _), .mapping(rhsValue, _, _)):
-            return lhsValue < rhsValue
+        case let (.mapping(lhs), .mapping(rhs)):
+            return lhs.pairs < rhs.pairs
         case let (.sequence(lhsValue, _, _), .sequence(rhsValue, _, _)):
             return lhsValue < rhsValue
         default:
@@ -330,7 +343,7 @@ extension Node: ExpressibleByArrayLiteral {
 
 extension Node: ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (Node, Node)...) {
-        self = .mapping(elements.map(Pair.init), .implicit, .any)
+        self = .mapping(.init(elements.map(Pair.init)))
     }
 }
 
@@ -370,7 +383,7 @@ extension Node.Mapping: Equatable {
 
 extension Node.Mapping: ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (Node, Node)...) {
-        self.init(pairs: elements.map(Pair.init), tag: .implicit, style: .any)
+        self.init(elements.map(Pair.init))
     }
 }
 
