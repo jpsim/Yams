@@ -10,7 +10,7 @@ import Foundation
 
 extension Node {
     public struct Mapping {
-        internal var pairs: [Pair<Node>]
+        fileprivate var pairs: [Pair<Node>]
         public var tag: Tag
         public var style: Style
 
@@ -42,6 +42,12 @@ extension Node {
                 self = .mapping(newValue)
             }
         }
+    }
+}
+
+extension Node.Mapping: Comparable {
+    public static func < (lhs: Node.Mapping, rhs: Node.Mapping) -> Bool {
+        return lhs.pairs < rhs.pairs
     }
 }
 
@@ -135,7 +141,7 @@ extension Node.Mapping {
     }
 }
 
-struct Pair<Value: Comparable & Equatable>: Comparable, Equatable {
+private struct Pair<Value: Comparable & Equatable>: Comparable, Equatable {
     let key: Value
     let value: Value
 

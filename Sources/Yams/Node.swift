@@ -188,7 +188,7 @@ extension Node {
             switch self {
             case .scalar: return nil
             case let .mapping(mapping):
-                return mapping.pairs.reversed().first(where: { $0.key == node })?.value
+                return mapping[node]
             case let .sequence(sequence):
                 guard let index = node.int, 0 <= index, index < sequence.nodes.count else { return nil }
                 return sequence.nodes[index]
@@ -199,10 +199,8 @@ extension Node {
             switch self {
             case .scalar: return
             case .mapping(var mapping):
-                if let index = mapping.pairs.index(where: { $0.key == node }) {
-                    mapping.pairs[index] = Pair(mapping.pairs[index].key, newValue)
-                    self = .mapping(mapping)
-                }
+                mapping[node] = newValue
+                self = .mapping(mapping)
             case .sequence(var sequence):
                 guard let index = node.int, 0 <= index, index < sequence.nodes.count else { return}
                 sequence.nodes[index] = newValue
@@ -239,7 +237,7 @@ extension Node: Hashable {
         case let .scalar(scalar):
             return scalar.string.hashValue
         case let .mapping(mapping):
-            return mapping.pairs.count
+            return mapping.count
         case let .sequence(sequence):
             return sequence.nodes.count
         }
@@ -265,7 +263,7 @@ extension Node: Comparable {
         case let (.scalar(lhs), .scalar(rhs)):
             return lhs.string < rhs.string
         case let (.mapping(lhs), .mapping(rhs)):
-            return lhs.pairs < rhs.pairs
+            return lhs < rhs
         case let (.sequence(lhs), .sequence(rhs)):
             return lhs.nodes < rhs.nodes
         default:
