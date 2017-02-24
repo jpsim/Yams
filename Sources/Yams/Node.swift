@@ -71,42 +71,6 @@ extension Node {
             }
         }
     }
-
-    public struct Sequence {
-        internal var nodes: [Node]
-        public var tag: Tag
-        public var style: Style
-
-        public enum Style: UInt32 { // swiftlint:disable:this nesting
-            /// Let the emitter choose the style.
-            case any
-            /// The block sequence style.
-            case block
-            /// The flow sequence style.
-            case flow
-        }
-
-        public init(_ nodes: [Node], _ tag: Tag = .implicit, _ style: Style = .any) {
-            self.nodes = nodes
-            self.tag = tag
-            self.style = style
-        }
-    }
-
-    public var sequence: Sequence? {
-        get {
-            if case let .sequence(sequence) = self {
-                return sequence
-            }
-            return nil
-        }
-        set {
-            if let newValue = newValue {
-                self = .sequence(newValue)
-            }
-        }
-    }
-
 }
 
 extension Node {
@@ -156,20 +120,14 @@ extension Node {
 
     /// - Returns: Array of `Node`
     public func array() -> [Node] {
-        guard let nodes = sequence?.nodes else {
-            return []
-        }
-        return nodes
+        return sequence.map(Array.init) ?? []
     }
 
     /// Typed Array using cast: e.g. `array() as [String]`
     ///
     /// - Returns: Array of `Type`
     public func array<Type: ScalarConstructible>() -> [Type] {
-        guard let nodes = sequence?.nodes else {
-            return []
-        }
-        return nodes.flatMap(Type.construct)
+        return sequence?.flatMap(Type.construct) ?? []
     }
 
     /// Typed Array using type parameter: e.g. `array(of: String.self)`
@@ -177,10 +135,7 @@ extension Node {
     /// - Parameter type: Type conforms to ScalarConstructible
     /// - Returns: Array of `Type`
     public func array<Type: ScalarConstructible>(of type: Type.Type) -> [Type] {
-        guard let nodes = sequence?.nodes else {
-            return []
-        }
-        return nodes.flatMap(Type.construct)
+        return sequence?.flatMap(Type.construct) ?? []
     }
 
     public subscript(node: Node) -> Node? {
@@ -190,8 +145,8 @@ extension Node {
             case let .mapping(mapping):
                 return mapping[node]
             case let .sequence(sequence):
-                guard let index = node.int, 0 <= index, index < sequence.nodes.count else { return nil }
-                return sequence.nodes[index]
+                guard let index = node.int, sequence.indices ~= index else { return nil }
+                return sequence[index]
             }
         }
         set {
@@ -202,8 +157,8 @@ extension Node {
                 mapping[node] = newValue
                 self = .mapping(mapping)
             case .sequence(var sequence):
-                guard let index = node.int, 0 <= index, index < sequence.nodes.count else { return}
-                sequence.nodes[index] = newValue
+                guard let index = node.int, sequence.indices ~= index else { return}
+                sequence[index] = newValue
                 self = .sequence(sequence)
             }
         }
@@ -239,7 +194,7 @@ extension Node: Hashable {
         case let .mapping(mapping):
             return mapping.count
         case let .sequence(sequence):
-            return sequence.nodes.count
+            return sequence.count
         }
     }
 
@@ -265,7 +220,7 @@ extension Node: Comparable {
         case let (.mapping(lhs), .mapping(rhs)):
             return lhs < rhs
         case let (.sequence(lhs), .sequence(rhs)):
-            return lhs.nodes < rhs.nodes
+            return lhs < rhs
         default:
             return false
         }
@@ -329,93 +284,6 @@ extension Node: ExpressibleByStringLiteral {
 extension Node.Scalar: Equatable {
     public static func == (lhs: Node.Scalar, rhs: Node.Scalar) -> Bool {
         return lhs.string == rhs.string && lhs.tag.resolved(with: lhs) == rhs.tag.resolved(with: rhs)
-    }
-}
-
-// MARK: - Node.Sequence
-
-extension Node.Sequence: Equatable {
-    public static func == (lhs: Node.Sequence, rhs: Node.Sequence) -> Bool {
-        return lhs.nodes == rhs.nodes && lhs.tag.resolved(with: lhs) == rhs.tag.resolved(with: rhs)
-    }
-}
-
-extension Node.Sequence: ExpressibleByArrayLiteral {
-    public init(arrayLiteral elements: Node...) {
-        self.init(elements)
-    }
-}
-
-extension Node.Sequence: MutableCollection {
-    // Sequence
-    public func makeIterator() -> Array<Node>.Iterator {
-        return nodes.makeIterator()
-    }
-
-    // Collection
-    public typealias Index = Array<Node>.Index
-
-    public var startIndex: Index {
-        return nodes.startIndex
-    }
-
-    public var endIndex: Index {
-        return nodes.endIndex
-    }
-
-    public func index(after index: Index) -> Index {
-        return nodes.index(after: index)
-    }
-
-    public subscript(index: Index) -> Node {
-        get {
-            return nodes[index]
-        }
-        // MutableCollection
-        set {
-            nodes[index] = newValue
-        }
-    }
-
-    public subscript(bounds: Range<Index>) -> Array<Node>.SubSequence {
-        get {
-            return nodes[bounds]
-        }
-        // MutableCollection
-        set {
-            nodes[bounds] = newValue
-        }
-    }
-
-    public var indices: Array<Node>.Indices {
-        return nodes.indices
-    }
-}
-
-extension Node.Sequence: RandomAccessCollection {
-    // BidirectionalCollection
-    public func index(before index: Index) -> Index {
-        return nodes.index(before: index)
-    }
-
-    // RandomAccessCollection
-    public func index(_ index: Index, offsetBy num: Int) -> Index {
-        return nodes.index(index, offsetBy: num)
-    }
-
-    public func distance(from start: Index, to end: Int) -> Index {
-        return nodes.distance(from: start, to: end)
-    }
-}
-
-extension Node.Sequence: RangeReplaceableCollection {
-    public init() {
-        self.init([])
-    }
-
-    public mutating func replaceSubrange<C>(_ subrange: Range<Int>, with newElements: C)
-        where C : Collection, C.Iterator.Element == Node {
-            nodes.replaceSubrange(subrange, with: newElements)
     }
 }
 
