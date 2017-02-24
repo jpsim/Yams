@@ -360,7 +360,7 @@ extension Emitter {
     private func serializeMappingNode(_ node: Node) throws {
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
         let mapping = node.mapping!
-        var pairs = mapping.pairs, tag = node.tag.name.rawValue.utf8CString
+        var tag = node.tag.name.rawValue.utf8CString
         let implicit: Int32 = node.tag.name == Tag.Name.map ? 1 : 0
         let mapping_style = yaml_mapping_style_t(rawValue: mapping.style.rawValue)
         var event = yaml_event_t()
@@ -373,9 +373,9 @@ extension Emitter {
                 mapping_style)
         }
         try emit(&event)
-        try pairs.forEach { pair in
-            try self.serializeNode(pair.key)
-            try self.serializeNode(pair.value)
+        try mapping.forEach { (key, value) in
+            try self.serializeNode(key)
+            try self.serializeNode(value)
         }
         yaml_mapping_end_event_initialize(&event)
         try emit(&event)
