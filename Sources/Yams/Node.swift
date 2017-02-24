@@ -29,51 +29,6 @@ extension Node {
 }
 
 extension Node {
-    public struct Scalar {
-        public var string: String
-        public var tag: Tag
-        public var style: Style
-
-        public enum Style: UInt32 { // swiftlint:disable:this nesting
-            /// Let the emitter choose the style.
-            case any = 0
-            /// The plain scalar style.
-            case plain
-
-            /// The single-quoted scalar style.
-            case singleQuoted
-            /// The double-quoted scalar style.
-            case doubleQuoted
-
-            /// The literal scalar style.
-            case literal
-            /// The folded scalar style.
-            case folded
-        }
-
-        public init(_ string: String, _ tag: Tag = .implicit, _ style: Style = .any) {
-            self.string = string
-            self.tag = tag
-            self.style = style
-        }
-    }
-
-    public var scalar: Scalar? {
-        get {
-            if case let .scalar(scalar) = self {
-                return scalar
-            }
-            return nil
-        }
-        set {
-            if let newValue = newValue {
-                self = .scalar(newValue)
-            }
-        }
-    }
-}
-
-extension Node {
     /// Accessing this property causes the tag to be resolved by tag.resolver.
     public var tag: Tag {
         switch self {
@@ -216,7 +171,7 @@ extension Node: Comparable {
     public static func < (lhs: Node, rhs: Node) -> Bool {
         switch (lhs, rhs) {
         case let (.scalar(lhs), .scalar(rhs)):
-            return lhs.string < rhs.string
+            return lhs < rhs
         case let (.mapping(lhs), .mapping(rhs)):
             return lhs < rhs
         case let (.sequence(lhs), .sequence(rhs)):
@@ -276,14 +231,6 @@ extension Node: ExpressibleByStringLiteral {
 
     public init(unicodeScalarLiteral value: String) {
         self.init(value)
-    }
-}
-
-// MARK: - Node.Scalar
-
-extension Node.Scalar: Equatable {
-    public static func == (lhs: Node.Scalar, rhs: Node.Scalar) -> Bool {
-        return lhs.string == rhs.string && lhs.tag.resolved(with: lhs) == rhs.tag.resolved(with: rhs)
     }
 }
 
