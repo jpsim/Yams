@@ -10,7 +10,11 @@ import Foundation
 
 extension Node {
     public struct Scalar {
-        public var string: String
+        public var string: String {
+            didSet {
+                tag = .implicit
+            }
+        }
         public var tag: Tag
         public var style: Style
 
