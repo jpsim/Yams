@@ -32,14 +32,36 @@ public final class Tag {
     }
 
     func resolved(with node: Node) -> Tag {
+        switch node {
+        case let .scalar(scalar): return resolved(with: scalar)
+        case let .mapping(mapping): return resolved(with: mapping)
+        case let .sequence(sequence):  return resolved(with: sequence)
+        }
+    }
+
+    func resolved(with scalar: Node.Scalar) -> Tag {
         if name == .implicit {
-            name = resolver.resolveTag(of: node)
+            name = resolver.resolveTag(of: scalar)
         } else if name == .nonSpecific {
-            switch node {
-            case .scalar: name = .str
-            case .mapping: name = .map
-            case .sequence: name = .seq
-            }
+            name = .str
+        }
+        return self
+    }
+
+    func resolved(with mapping: Node.Mapping) -> Tag {
+        if name == .implicit {
+            name = resolver.resolveTag(of: mapping)
+        } else if name == .nonSpecific {
+            name = .map
+        }
+        return self
+    }
+
+    func resolved(with sequence: Node.Sequence) -> Tag {
+        if name == .implicit {
+            name = resolver.resolveTag(of: sequence)
+        } else if name == .nonSpecific {
+            name = .seq
         }
         return self
     }
