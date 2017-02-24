@@ -117,19 +117,21 @@ extension Node.Mapping {
         }
         set {
             if let newValue = newValue {
-                if let index = pairs.reversed().index(where: { $0.key == node }) {
-                    let actualIndex = pairs.index(before: index.base)
-                    pairs[actualIndex] = Pair(pairs[actualIndex].key, newValue)
+                if let index = index(forKey: node) {
+                    pairs[index] = Pair(pairs[index].key, newValue)
                 } else {
                     pairs.append(Pair(node, newValue))
                 }
             } else {
-                if let index = pairs.reversed().index(where: { $0.key == node }) {
-                    let actualIndex = pairs.index(before: index.base)
-                    pairs.remove(at: actualIndex)
+                if let index = index(forKey: node) {
+                    pairs.remove(at: index)
                 }
             }
         }
+    }
+
+    public func index(forKey key: Node) -> Int? {
+        return pairs.reversed().index(where: { $0.key == key }).map({ pairs.index(before: $0.base) })
     }
 }
 
