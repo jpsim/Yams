@@ -272,7 +272,7 @@ extension Dictionary {
                         merge.append(contentsOf: mapping)
                     }
                 case let .sequence(sequence):
-                    let submerge = sequence.nodes
+                    let submerge = sequence
                         .filter { $0.isMapping } // TODO: Should raise error on other than mapping
                         .flatMap { flatten_mapping($0).mapping }
                         .reversed()
@@ -307,13 +307,13 @@ extension Set {
 extension Array {
     public static func construct_seq(from node: Node) -> [Any] {
         // swiftlint:disable:next force_unwrapping
-        return node.sequence!.nodes.map(node.tag.constructor.any)
+        return node.sequence!.map(node.tag.constructor.any)
     }
 
     public static func construct_omap(from node: Node) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
-        return node.sequence!.nodes.flatMap { subnode -> (Any, Any)? in
+        return node.sequence!.flatMap { subnode -> (Any, Any)? in
             // TODO: Should raise error if subnode is not mapping or mapping.count != 1
             guard let (key, value) = subnode.mapping?.first else { return nil }
             return (node.tag.constructor.any(from: key), node.tag.constructor.any(from: value))
@@ -323,7 +323,7 @@ extension Array {
     public static func construct_pairs(from node: Node) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
-        return node.sequence!.nodes.flatMap { subnode -> (Any, Any)? in
+        return node.sequence!.flatMap { subnode -> (Any, Any)? in
             // TODO: Should raise error if subnode is not mapping or mapping.count != 1
             guard let (key, value) = subnode.mapping?.first else { return nil }
             return (node.tag.constructor.any(from: key), node.tag.constructor.any(from: value))

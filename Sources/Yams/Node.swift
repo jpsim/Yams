@@ -120,20 +120,14 @@ extension Node {
 
     /// - Returns: Array of `Node`
     public func array() -> [Node] {
-        guard let nodes = sequence?.nodes else {
-            return []
-        }
-        return nodes
+        return sequence.map(Array.init) ?? []
     }
 
     /// Typed Array using cast: e.g. `array() as [String]`
     ///
     /// - Returns: Array of `Type`
     public func array<Type: ScalarConstructible>() -> [Type] {
-        guard let nodes = sequence?.nodes else {
-            return []
-        }
-        return nodes.flatMap(Type.construct)
+        return sequence?.flatMap(Type.construct) ?? []
     }
 
     /// Typed Array using type parameter: e.g. `array(of: String.self)`
@@ -141,10 +135,7 @@ extension Node {
     /// - Parameter type: Type conforms to ScalarConstructible
     /// - Returns: Array of `Type`
     public func array<Type: ScalarConstructible>(of type: Type.Type) -> [Type] {
-        guard let nodes = sequence?.nodes else {
-            return []
-        }
-        return nodes.flatMap(Type.construct)
+        return sequence?.flatMap(Type.construct) ?? []
     }
 
     public subscript(node: Node) -> Node? {
@@ -154,8 +145,8 @@ extension Node {
             case let .mapping(mapping):
                 return mapping[node]
             case let .sequence(sequence):
-                guard let index = node.int, 0 <= index, index < sequence.nodes.count else { return nil }
-                return sequence.nodes[index]
+                guard let index = node.int, sequence.indices ~= index else { return nil }
+                return sequence[index]
             }
         }
         set {
@@ -166,8 +157,8 @@ extension Node {
                 mapping[node] = newValue
                 self = .mapping(mapping)
             case .sequence(var sequence):
-                guard let index = node.int, 0 <= index, index < sequence.nodes.count else { return}
-                sequence.nodes[index] = newValue
+                guard let index = node.int, sequence.indices ~= index else { return}
+                sequence[index] = newValue
                 self = .sequence(sequence)
             }
         }
@@ -203,7 +194,7 @@ extension Node: Hashable {
         case let .mapping(mapping):
             return mapping.count
         case let .sequence(sequence):
-            return sequence.nodes.count
+            return sequence.count
         }
     }
 
@@ -229,7 +220,7 @@ extension Node: Comparable {
         case let (.mapping(lhs), .mapping(rhs)):
             return lhs < rhs
         case let (.sequence(lhs), .sequence(rhs)):
-            return lhs.nodes < rhs.nodes
+            return lhs < rhs
         default:
             return false
         }

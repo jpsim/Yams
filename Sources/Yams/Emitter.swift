@@ -352,7 +352,7 @@ extension Emitter {
                 sequence_style)
         }
         try emit(&event)
-        try sequence.nodes.forEach(self.serializeNode)
+        try sequence.forEach(self.serializeNode)
         yaml_sequence_end_event_initialize(&event)
         try emit(&event)
     }

@@ -10,7 +10,7 @@ import Foundation
 
 extension Node {
     public struct Sequence {
-        internal var nodes: [Node]
+        fileprivate var nodes: [Node]
         public var tag: Tag
         public var style: Style
 
@@ -46,6 +46,12 @@ extension Node {
 }
 
 // MARK: - Node.Sequence
+
+extension Node.Sequence: Comparable {
+    public static func < (lhs: Node.Sequence, rhs: Node.Sequence) -> Bool {
+        return lhs.nodes < rhs.nodes
+    }
+}
 
 extension Node.Sequence: Equatable {
     public static func == (lhs: Node.Sequence, rhs: Node.Sequence) -> Bool {
