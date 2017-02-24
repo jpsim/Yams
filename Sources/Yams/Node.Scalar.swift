@@ -61,6 +61,13 @@ extension Node.Scalar: Comparable {
 
 extension Node.Scalar: Equatable {
     public static func == (lhs: Node.Scalar, rhs: Node.Scalar) -> Bool {
-        return lhs.string == rhs.string && lhs.tag.resolved(with: lhs) == rhs.tag.resolved(with: rhs)
+        return lhs.string == rhs.string && lhs.resolvedTag == rhs.resolvedTag
+    }
+}
+
+extension Node.Scalar: TagResolvable {
+    static let defaultTagName = Tag.Name.str
+    func resolveTag(using resolver: Resolver) -> Tag.Name {
+        return tag.name == .implicit ? resolver.resolveTag(from: string) : tag.name
     }
 }

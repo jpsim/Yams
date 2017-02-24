@@ -55,7 +55,7 @@ extension Node.Sequence: Comparable {
 
 extension Node.Sequence: Equatable {
     public static func == (lhs: Node.Sequence, rhs: Node.Sequence) -> Bool {
-        return lhs.nodes == rhs.nodes && lhs.tag.resolved(with: lhs) == rhs.tag.resolved(with: rhs)
+        return lhs.nodes == rhs.nodes && lhs.resolvedTag == rhs.resolvedTag
     }
 }
 
@@ -136,4 +136,8 @@ extension Node.Sequence: RangeReplaceableCollection {
         where C : Collection, C.Iterator.Element == Node {
             nodes.replaceSubrange(subrange, with: newElements)
     }
+}
+
+extension Node.Sequence: TagResolvable {
+    static let defaultTagName = Tag.Name.seq
 }

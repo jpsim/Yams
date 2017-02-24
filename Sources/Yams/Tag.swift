@@ -31,37 +31,11 @@ public final class Tag {
         self.name = name
     }
 
-    func resolved(with node: Node) -> Tag {
-        switch node {
-        case let .scalar(scalar): return resolved(with: scalar)
-        case let .mapping(mapping): return resolved(with: mapping)
-        case let .sequence(sequence):  return resolved(with: sequence)
-        }
-    }
-
-    func resolved(with scalar: Node.Scalar) -> Tag {
+    func resolved<T>(with value: T) -> Tag where T: TagResolvable {
         if name == .implicit {
-            name = resolver.resolveTag(of: scalar)
+            name = resolver.resolveTag(of: value)
         } else if name == .nonSpecific {
-            name = .str
-        }
-        return self
-    }
-
-    func resolved(with mapping: Node.Mapping) -> Tag {
-        if name == .implicit {
-            name = resolver.resolveTag(of: mapping)
-        } else if name == .nonSpecific {
-            name = .map
-        }
-        return self
-    }
-
-    func resolved(with sequence: Node.Sequence) -> Tag {
-        if name == .implicit {
-            name = resolver.resolveTag(of: sequence)
-        } else if name == .nonSpecific {
-            name = .seq
+            name = T.defaultTagName
         }
         return self
     }
@@ -149,4 +123,20 @@ extension Tag.Name {
     public static let value: Tag.Name  = "tag:yaml.org,2002:value"
     /// "tag:yaml.org,2002:yaml" <http://yaml.org/type/yaml.html> We don't support this.
     public static let yaml: Tag.Name  = "tag:yaml.org,2002:yaml"
+}
+
+protocol TagResolvable {
+    var tag: Tag { get }
+    static var defaultTagName: Tag.Name { get }
+    func resolveTag(using resolver: Resolver) -> Tag.Name
+}
+
+extension TagResolvable {
+    var resolvedTag: Tag {
+        return tag.resolved(with: self)
+    }
+
+    func resolveTag(using resolver: Resolver) -> Tag.Name {
+        return tag.name == .implicit ? Self.defaultTagName : tag.name
+    }
 }

@@ -53,7 +53,7 @@ extension Node.Mapping: Comparable {
 
 extension Node.Mapping: Equatable {
     public static func == (lhs: Node.Mapping, rhs: Node.Mapping) -> Bool {
-        return lhs.pairs == rhs.pairs && lhs.tag.resolved(with: lhs) == rhs.tag.resolved(with: rhs)
+        return lhs.pairs == rhs.pairs && lhs.resolvedTag == rhs.resolvedTag
     }
 }
 
@@ -96,6 +96,10 @@ extension Node.Mapping: MutableCollection {
             pairs[index] = Pair(newValue.key, newValue.value)
         }
     }
+}
+
+extension Node.Mapping: TagResolvable {
+    static let defaultTagName = Tag.Name.map
 }
 
 extension Node.Mapping {
