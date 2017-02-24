@@ -26,7 +26,7 @@ public final class Resolver {
     }
 
     // MARK: - internal
-    
+
     func resolveTag(of scalar: Node.Scalar) -> Tag.Name {
         return scalar.tag.name == .implicit ? resolveTag(from: scalar.string) : scalar.tag.name
     }

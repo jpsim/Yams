@@ -24,8 +24,8 @@ public final class Tag {
     var name: Name
 
     public init(_ name: Name,
-         _ resolver: Resolver = .default,
-         _ constructor: Constructor = .default) {
+                _ resolver: Resolver = .default,
+                _ constructor: Constructor = .default) {
         self.resolver = resolver
         self.constructor = constructor
         self.name = name
