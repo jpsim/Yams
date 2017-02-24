@@ -304,15 +304,12 @@ extension Node: Hashable {
 
     public static func == (lhs: Node, rhs: Node) -> Bool {
         switch (lhs, rhs) {
-        case let (.scalar(lhsValue), .scalar(rhsValue)):
-            return lhsValue.string == rhsValue.string &&
-                lhsValue.tag.resolved(with: lhs) == rhsValue.tag.resolved(with: rhs)
-        case let (.mapping(lhsValue), .mapping(rhsValue)):
-            return lhsValue.pairs == rhsValue.pairs &&
-                lhsValue.tag.resolved(with: lhs) == rhsValue.tag.resolved(with: rhs)
-        case let (.sequence(lhsValue), .sequence(rhsValue)):
-            return lhsValue.nodes == rhsValue.nodes &&
-                lhsValue.tag.resolved(with: lhs) == rhsValue.tag.resolved(with: rhs)
+        case let (.scalar(lhs), .scalar(rhs)):
+            return lhs == rhs
+        case let (.mapping(lhs), .mapping(rhs)):
+            return lhs == rhs
+        case let (.sequence(lhs), .sequence(rhs)):
+            return lhs == rhs
         default:
             return false
         }
@@ -386,11 +383,19 @@ extension Node: ExpressibleByStringLiteral {
     }
 }
 
+// MARK: - Node.Scalar
+
+extension Node.Scalar: Equatable {
+    public static func == (lhs: Node.Scalar, rhs: Node.Scalar) -> Bool {
+        return lhs.string == rhs.string && lhs.tag.resolved(with: lhs) == rhs.tag.resolved(with: rhs)
+    }
+}
+
 // MARK: - Node.Mapping
 
 extension Node.Mapping: Equatable {
     public static func == (lhs: Node.Mapping, rhs: Node.Mapping) -> Bool {
-        return lhs.pairs == rhs.pairs
+        return lhs.pairs == rhs.pairs && lhs.tag.resolved(with: lhs) == rhs.tag.resolved(with: rhs)
     }
 }
 
@@ -480,7 +485,7 @@ extension Node.Mapping {
 
 extension Node.Sequence: Equatable {
     public static func == (lhs: Node.Sequence, rhs: Node.Sequence) -> Bool {
-        return lhs.nodes == rhs.nodes
+        return lhs.nodes == rhs.nodes && lhs.tag.resolved(with: lhs) == rhs.tag.resolved(with: rhs)
     }
 }
 
