@@ -48,6 +48,12 @@ public final class Tag {
     fileprivate let resolver: Resolver
 }
 
+extension Tag: CustomStringConvertible {
+    public var description: String {
+        return name.rawValue
+    }
+}
+
 extension Tag: Hashable {
     public var hashValue: Int {
         return name.hashValue
