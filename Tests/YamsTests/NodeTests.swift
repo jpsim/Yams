@@ -186,6 +186,13 @@ class NodeTests: XCTestCase {
         // ExpressibleByArrayLiteral
         XCTAssertEqual(sequence, ["value1", "value2", "value3"])
     }
+
+    func testScalar() {
+        var node = Node("1")
+        XCTAssertEqual(node.tag, Tag(.int))
+        node.scalar?.string = "test"
+        XCTAssertEqual(node.tag, Tag(.str))
+    }
 }
 
 extension NodeTests {
@@ -201,7 +208,8 @@ extension NodeTests {
             ("testSubscriptMapping", testSubscriptMapping),
             ("testSubscriptSequence", testSubscriptSequence),
             ("testMappingBehavesLikeADictionary", testMappingBehavesLikeADictionary),
-            ("testSequenceBehavesLikeAnArray", testSequenceBehavesLikeAnArray)
+            ("testSequenceBehavesLikeAnArray", testSequenceBehavesLikeAnArray),
+            ("testScalar", testScalar)
         ]
     }
 }
