@@ -27,19 +27,11 @@ public final class Resolver {
 
     // MARK: - internal
 
-    func resolveTag(of scalar: Node.Scalar) -> Tag.Name {
-        return scalar.tag.name == .implicit ? resolveTag(from: scalar.string) : scalar.tag.name
+    func resolveTag<T>(of value: T) -> Tag.Name where T: TagResolvable {
+        return value.resolveTag(using: self)
     }
 
-    func resolveTag(of mapping: Node.Mapping) -> Tag.Name {
-        return mapping.tag.name == .implicit ? .map : mapping.tag.name
-    }
-
-    func resolveTag(of sequence: Node.Sequence) -> Tag.Name {
-        return sequence.tag.name == .implicit ? .seq : sequence.tag.name
-    }
-
-    private func resolveTag(from string: String) -> Tag.Name {
+    func resolveTag(from string: String) -> Tag.Name {
         for (tag, regexp) in tagNamePatternPairs where regexp.matches(in: string) {
             return tag
         }

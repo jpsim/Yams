@@ -32,9 +32,9 @@ extension Node {
     /// Accessing this property causes the tag to be resolved by tag.resolver.
     public var tag: Tag {
         switch self {
-        case let .scalar(scalar): return scalar.tag.resolved(with: self)
-        case let .mapping(mapping): return mapping.tag.resolved(with: self)
-        case let .sequence(sequence): return sequence.tag.resolved(with: self)
+        case let .scalar(scalar): return scalar.resolvedTag
+        case let .mapping(mapping): return mapping.resolvedTag
+        case let .sequence(sequence): return sequence.resolvedTag
         }
     }
 

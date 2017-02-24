@@ -10,7 +10,11 @@ import Foundation
 
 extension Node {
     public struct Scalar {
-        public var string: String
+        public var string: String {
+            didSet {
+                tag = .implicit
+            }
+        }
         public var tag: Tag
         public var style: Style
 
@@ -61,6 +65,13 @@ extension Node.Scalar: Comparable {
 
 extension Node.Scalar: Equatable {
     public static func == (lhs: Node.Scalar, rhs: Node.Scalar) -> Bool {
-        return lhs.string == rhs.string && lhs.tag.resolved(with: lhs) == rhs.tag.resolved(with: rhs)
+        return lhs.string == rhs.string && lhs.resolvedTag == rhs.resolvedTag
+    }
+}
+
+extension Node.Scalar: TagResolvable {
+    static let defaultTagName = Tag.Name.str
+    func resolveTag(using resolver: Resolver) -> Tag.Name {
+        return tag.name == .implicit ? resolver.resolveTag(from: string) : tag.name
     }
 }
