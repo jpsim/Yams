@@ -53,6 +53,12 @@ extension Node {
     }
 }
 
+extension Node.Scalar: Comparable {
+    public static func < (lhs: Node.Scalar, rhs: Node.Scalar) -> Bool {
+        return lhs.string < rhs.string
+    }
+}
+
 extension Node.Scalar: Equatable {
     public static func == (lhs: Node.Scalar, rhs: Node.Scalar) -> Bool {
         return lhs.string == rhs.string && lhs.tag.resolved(with: lhs) == rhs.tag.resolved(with: rhs)

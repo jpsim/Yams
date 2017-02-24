@@ -171,7 +171,7 @@ extension Node: Comparable {
     public static func < (lhs: Node, rhs: Node) -> Bool {
         switch (lhs, rhs) {
         case let (.scalar(lhs), .scalar(rhs)):
-            return lhs.string < rhs.string
+            return lhs < rhs
         case let (.mapping(lhs), .mapping(rhs)):
             return lhs < rhs
         case let (.sequence(lhs), .sequence(rhs)):
