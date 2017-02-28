@@ -27,6 +27,9 @@ public enum YamlError: Swift.Error {
     case writer(problem: String)
     /// YAML_EMITTER_ERROR. Cannot emit a YAML stream.
     case emitter(problem: String)
+
+    // Used in `NodeRepresentable`
+    case representer(problem: String)
 }
 
 extension YamlError {

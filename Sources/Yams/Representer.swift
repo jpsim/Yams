@@ -14,14 +14,10 @@ import Foundation
 public extension Node {
     /// initialize `Node` with instance of `NodeRepresentable`
     /// - Parameter representable: instance of `NodeRepresentable`
-    /// - Throws: `RepresenterError`
+    /// - Throws: `YamlError`
     public init<T: NodeRepresentable>(_ representable: T) throws {
         self = try representable.represented()
     }
-}
-
-public enum RepresenterError: Swift.Error {
-    case fail(String)
 }
 
 // MARK: - NodeRepresentable
@@ -142,7 +138,7 @@ private func represent(_ value: Any) throws -> Node {
     } else if let representable = value as? NodeRepresentable {
         return try representable.represented()
     }
-    throw RepresenterError.fail("Fail to represent \(value)")
+    throw YamlError.representer(problem: "Fail to represent \(value)")
 }
 
 extension Optional: NodeRepresentable {

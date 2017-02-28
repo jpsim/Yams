@@ -24,7 +24,7 @@ import Foundation
 ///   - explicitEnd: explicit document end `...`
 ///   - version: YAML version directive
 /// - Returns: YAML String
-/// - Throws: `RepresenterError` or `YamlError`
+/// - Throws: `YamlError`
 public func dump<Objects>(
     objects: Objects,
     canonical: Bool = false,
@@ -68,7 +68,7 @@ public func dump<Objects>(
 ///   - explicitEnd: explicit document end `...`
 ///   - version: YAML version directive
 /// - Returns: YAML String
-/// - Throws: `RepresenterError` or `YamlError`
+/// - Throws: `YamlError`
 public func dump(
     object: Any?,
     canonical: Bool = false,
@@ -104,7 +104,7 @@ public func dump(
 ///   - explicitEnd: explicit document end `...`
 ///   - version: YAML version directive
 /// - Returns: YAML String
-/// - Throws: `RepresenterError` or `YamlError`
+/// - Throws: `YamlError`
 public func serialize<Nodes>(
     nodes: Nodes,
     canonical: Bool = false,
@@ -148,7 +148,7 @@ public func serialize<Nodes>(
 ///   - explicitEnd: explicit document end `...`
 ///   - version: YAML version directive
 /// - Returns: YAML String
-/// - Throws: `RepresenterError` or `YamlError`
+/// - Throws: `YamlError`
 public func serialize(
     node: Node,
     canonical: Bool = false,
