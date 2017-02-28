@@ -22,7 +22,7 @@ class YamlErrorTests: XCTestCase {
                 "test: 'テスト\u{12}'",
                 "          ^ control characters are not allowed"
                 ].joined(separator: "\n")
-            XCTAssertEqual(error.describing(with: yaml), expected)
+            XCTAssertEqual(error.description, expected)
         } catch {
             XCTFail("should not happen")
         }
@@ -38,7 +38,7 @@ class YamlErrorTests: XCTestCase {
                 "test: 'テスト",
                 "          ^ found unexpected end of stream while scanning a quoted scalar"
                 ].joined(separator: "\n")
-            XCTAssertEqual(error.describing(with: yaml), expected)
+            XCTAssertEqual(error.description, expected)
         } catch {
             XCTFail("should not happen")
         }
@@ -54,7 +54,7 @@ class YamlErrorTests: XCTestCase {
                 "- [key1: value1, key2: ,",
                 "^ did not find expected node content while parsing a flow node"
                 ].joined(separator: "\n")
-            XCTAssertEqual(error.describing(with: yaml), expected)
+            XCTAssertEqual(error.description, expected)
         } catch {
             XCTFail("should not happen")
         }
@@ -69,7 +69,7 @@ class YamlErrorTests: XCTestCase {
         // second iteration throws error
         XCTAssertThrowsError(try parser.nextRoot()) {
             if let error = $0 as? YamlError {
-                XCTAssertEqual(error.describing(with: invalidYAML), "a\n^ did not find expected <document start> ")
+                XCTAssertEqual(error.description, "a\n^ did not find expected <document start> ")
             } else {
                 XCTFail()
             }
@@ -82,7 +82,7 @@ class YamlErrorTests: XCTestCase {
         let parser = try Parser(yaml: invalidYAML)
         XCTAssertThrowsError(try parser.singleRoot()) {
             if let error = $0 as? YamlError {
-                XCTAssertEqual(error.describing(with: invalidYAML), "a\n^ did not find expected <document start> ")
+                XCTAssertEqual(error.description, "a\n^ did not find expected <document start> ")
             } else {
                 XCTFail()
             }
@@ -94,7 +94,7 @@ class YamlErrorTests: XCTestCase {
         let parser = try Parser(yaml: multipleDocuments)
         XCTAssertThrowsError(try parser.singleRoot()) {
             if let error = $0 as? YamlError {
-                XCTAssertEqual(error.describing(with: multipleDocuments),
+                XCTAssertEqual(error.description,
                                "---\n^ but found another document expected a single document in the stream")
             } else {
                 XCTFail()
@@ -107,7 +107,7 @@ class YamlErrorTests: XCTestCase {
         let parser = try Parser(yaml: undefinedAlias)
         XCTAssertThrowsError(try parser.singleRoot()) {
             if let error = $0 as? YamlError {
-                XCTAssertEqual(error.describing(with: undefinedAlias),
+                XCTAssertEqual(error.description,
                                "*undefinedAlias\n^ found undefined alias ")
             } else {
                 XCTFail()

@@ -154,7 +154,8 @@ public final class Parser {
                 context: "expected a single document in the stream",
                 problem: "but found another document",
                 line: event.event.start_mark.line,
-                column: event.event.start_mark.column
+                column: event.event.start_mark.column,
+                yaml: yaml
             )
         }
         return node
@@ -201,7 +202,7 @@ extension Parser {
     fileprivate func parse() throws -> Event {
         let event = Event()
         guard yaml_parser_parse(&parser, &event.event) == 1 else {
-            throw YamlError(from: parser)
+            throw YamlError(from: parser, with: yaml)
         }
         return event
     }
@@ -214,7 +215,8 @@ extension Parser {
             throw YamlError.composer(
                 context: nil,
                 problem: "found undefined alias",
-                line: event.event.start_mark.line, column: event.event.start_mark.column)
+                line: event.event.start_mark.line, column: event.event.start_mark.column,
+                yaml: yaml)
         }
         return node
     }
