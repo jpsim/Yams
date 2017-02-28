@@ -101,6 +101,19 @@ class YamlErrorTests: XCTestCase {
             }
         }
     }
+
+    func testUndefinedAliasCausesError() throws {
+        let undefinedAlias = "*undefinedAlias\n"
+        let parser = try Parser(yaml: undefinedAlias)
+        XCTAssertThrowsError(try parser.singleRoot()) {
+            if let error = $0 as? YamlError {
+                XCTAssertEqual(error.describing(with: undefinedAlias),
+                               "*undefinedAlias\n^ found undefined alias ")
+            } else {
+                XCTFail()
+            }
+        }
+    }
 }
 
 extension YamlErrorTests {
@@ -112,7 +125,8 @@ extension YamlErrorTests {
                 ("testYamlErrorParser", testYamlErrorParser),
                 ("testNextRootThrowsOnInvalidYaml", testNextRootThrowsOnInvalidYaml),
                 ("testSingleRootThrowsOnInvalidYaml", testSingleRootThrowsOnInvalidYaml),
-                ("testSingleRootThrowsOnMultipleDocuments", testSingleRootThrowsOnMultipleDocuments)
+                ("testSingleRootThrowsOnMultipleDocuments", testSingleRootThrowsOnMultipleDocuments),
+                ("testUndefinedAliasCausesError", testUndefinedAliasCausesError)
             ]
         #else
             return [] // https://bugs.swift.org/browse/SR-3366

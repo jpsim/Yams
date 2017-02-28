@@ -19,7 +19,7 @@ import Foundation
 ///   - resolver: Resolver
 ///   - constructor: Constructor
 /// - Returns: YamlSequence<Any>
-/// - Throws: ParserError or YamlError
+/// - Throws: YamlError
 public func load_all(yaml: String,
                      _ resolver: Resolver = .default,
                      _ constructor: Constructor = .default) throws -> YamlSequence<Any> {
@@ -35,7 +35,7 @@ public func load_all(yaml: String,
 ///   - resolver: Resolver
 ///   - constructor: Constructor
 /// - Returns: Any?
-/// - Throws: ParserError or YamlError
+/// - Throws: YamlError
 public func load(yaml: String,
                  _ resolver: Resolver = .default,
                  _ constructor: Constructor = .default) throws -> Any? {
@@ -50,7 +50,7 @@ public func load(yaml: String,
 ///   - resolver: Resolver
 ///   - constructor: Constructor
 /// - Returns: YamlSequence<Node>
-/// - Throws: ParserError or YamlError
+/// - Throws: YamlError
 public func compose_all(yaml: String,
                         _ resolver: Resolver = .default,
                         _ constructor: Constructor = .default) throws -> YamlSequence<Node> {
@@ -66,7 +66,7 @@ public func compose_all(yaml: String,
 ///   - resolver: Resolver
 ///   - constructor: Constructor
 /// - Returns: Node?
-/// - Throws: ParserError or YamlError
+/// - Throws: YamlError
 public func compose(yaml: String,
                     _ resolver: Resolver = .default,
                     _ constructor: Constructor = .default) throws -> Node? {
@@ -93,11 +93,6 @@ public struct YamlSequence<T>: Sequence, IteratorProtocol {
     private let closure: () throws -> T?
 }
 
-public enum ParserError: Swift.Error {
-    case unexpectedEvent(UInt32)
-    case undefinedAlias(String)
-}
-
 public final class Parser {
     // MARK: public
     public let yaml: String
@@ -109,7 +104,7 @@ public final class Parser {
     /// - Parameter string: YAML
     /// - Parameter resolver: Resolver
     /// - Parameter constructor: Constructor
-    /// - Throws: ParserError or YamlError
+    /// - Throws: YamlError
     public init(yaml string: String,
                 resolver: Resolver = .default,
                 constructor: Constructor = .default) throws {
@@ -144,7 +139,7 @@ public final class Parser {
     /// Parse next document and return root Node.
     ///
     /// - Returns: next Node
-    /// - Throws: ParserError or YamlError
+    /// - Throws: YamlError
     public func nextRoot() throws -> Node? {
         guard !streamEndProduced, try parse().type != YAML_STREAM_END_EVENT else { return nil }
         return try loadDocument()
@@ -175,15 +170,6 @@ public final class Parser {
 #endif
 }
 
-extension ParserError: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case let .undefinedAlias(alias): return "Undefined Alias: \(alias)"
-        case let .unexpectedEvent(type): return "Unexpected event type: \(type)"
-        }
-    }
-}
-
 // MARK: implementation details
 extension Parser {
     fileprivate var streamEndProduced: Bool {
@@ -207,7 +193,7 @@ extension Parser {
         case YAML_MAPPING_START_EVENT:
             return try loadMapping(from: event)
         default:
-            throw ParserError.unexpectedEvent(event.type.rawValue)
+            fatalError("unreachable")
         }
     }
 
@@ -222,10 +208,13 @@ extension Parser {
 
     private func loadAlias(from event: Event) throws -> Node {
         guard let alias = event.aliasAnchor else {
-            throw ParserError.undefinedAlias("(empty)")
+            fatalError("unreachable")
         }
         guard let node = anchors[alias] else {
-            throw ParserError.undefinedAlias(alias)
+            throw YamlError.composer(
+                context: nil,
+                problem: "found undefined alias",
+                line: event.event.start_mark.line, column: event.event.start_mark.column)
         }
         return node
     }
