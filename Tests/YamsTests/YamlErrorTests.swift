@@ -88,6 +88,19 @@ class YamlErrorTests: XCTestCase {
             }
         }
     }
+
+    func testSingleRootThrowsOnMultipleDocuments() throws {
+        let multipleDocuments = "document 1\n---\ndocument 2\n"
+        let parser = try Parser(yaml: multipleDocuments)
+        XCTAssertThrowsError(try parser.singleRoot()) {
+            if let error = $0 as? YamlError {
+                XCTAssertEqual(error.describing(with: multipleDocuments),
+                               "---\n^ but found another document expected a single document in the stream")
+            } else {
+                XCTFail()
+            }
+        }
+    }
 }
 
 extension YamlErrorTests {
@@ -98,7 +111,8 @@ extension YamlErrorTests {
                 ("testYamlErrorScanner", testYamlErrorScanner),
                 ("testYamlErrorParser", testYamlErrorParser),
                 ("testNextRootThrowsOnInvalidYaml", testNextRootThrowsOnInvalidYaml),
-                ("testSingleRootThrowsOnInvalidYaml", testSingleRootThrowsOnInvalidYaml)
+                ("testSingleRootThrowsOnInvalidYaml", testSingleRootThrowsOnInvalidYaml),
+                ("testSingleRootThrowsOnMultipleDocuments", testSingleRootThrowsOnMultipleDocuments)
             ]
         #else
             return [] // https://bugs.swift.org/browse/SR-3366

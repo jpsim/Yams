@@ -134,7 +134,7 @@ public final class Parser {
                 yaml_parser_set_input_string(&parser, bytes, data.count)
             }
         #endif
-        try expectNextEvent(oneOf: [YAML_STREAM_START_EVENT])
+        try parse() // Drop YAML_STREAM_START_EVENT
     }
 
     deinit {
@@ -146,24 +146,21 @@ public final class Parser {
     /// - Returns: next Node
     /// - Throws: ParserError or YamlError
     public func nextRoot() throws -> Node? {
-        if streamEndProduced { return nil }
-        switch try expectNextEvent(oneOf: [YAML_DOCUMENT_START_EVENT, YAML_STREAM_END_EVENT]) {
-        case YAML_DOCUMENT_START_EVENT:
-            let node = try loadNode(from: parse())
-            try expectNextEvent(oneOf: [YAML_DOCUMENT_END_EVENT])
-            return node
-        default: // YAML_STREAM_END_EVENT
-            return nil
-        }
+        guard !streamEndProduced, try parse().type != YAML_STREAM_END_EVENT else { return nil }
+        return try loadDocument()
     }
 
     public func singleRoot() throws -> Node? {
-        if streamEndProduced { return nil }
-        var node: Node?
-        if try expectNextEvent(oneOf: [YAML_DOCUMENT_START_EVENT, YAML_STREAM_END_EVENT]) != YAML_STREAM_END_EVENT {
-            node = try loadNode(from: parse())
-            try expectNextEvent(oneOf: [YAML_DOCUMENT_END_EVENT])
-            try expectNextEvent(oneOf: [YAML_STREAM_END_EVENT])
+        guard !streamEndProduced, try parse().type != YAML_STREAM_END_EVENT else { return nil }
+        let node = try loadDocument()
+        let event = try parse()
+        if event.type != YAML_STREAM_END_EVENT {
+            throw YamlError.composer(
+                context: "expected a single document in the stream",
+                problem: "but found another document",
+                line: event.event.start_mark.line,
+                column: event.event.start_mark.column
+            )
         }
         return node
     }
@@ -193,16 +190,13 @@ extension Parser {
         return parser.stream_end_produced != 0
     }
 
-    @discardableResult
-    fileprivate func expectNextEvent(oneOf eventTypes: [yaml_event_type_t]) throws -> yaml_event_type_t {
-        let event = try parse()
-        guard eventTypes.contains(event.type) else {
-            throw ParserError.unexpectedEvent(event.type.rawValue)
-        }
-        return event.type
+    fileprivate func loadDocument() throws -> Node {
+        let node = try loadNode(from: parse())
+        try parse() // Drop YAML_DOCUMENT_END_EVENT
+        return node
     }
 
-    fileprivate func loadNode(from event: Event) throws -> Node {
+    private func loadNode(from event: Event) throws -> Node {
         switch event.type {
         case YAML_ALIAS_EVENT:
             return try loadAlias(from: event)
@@ -217,6 +211,7 @@ extension Parser {
         }
     }
 
+    @discardableResult
     fileprivate func parse() throws -> Event {
         let event = Event()
         guard yaml_parser_parse(&parser, &event.event) == 1 else {
