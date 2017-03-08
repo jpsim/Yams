@@ -128,10 +128,10 @@ public func serialize<Nodes>(
         try emitter.open()
         try nodes.forEach(emitter.serialize)
         try emitter.close()
-        #if USE_UTF16
-            return String(data: emitter.data, encoding: .utf16)!
-        #else
+        #if USE_UTF8
             return String(data: emitter.data, encoding: .utf8)!
+        #else
+            return String(data: emitter.data, encoding: .utf16)!
         #endif
 }
 
@@ -224,10 +224,10 @@ public final class Emitter {
         case .crln: yaml_emitter_set_break(&emitter, YAML_CRLN_BREAK)
         }
 
-        #if USE_UTF16
-            yaml_emitter_set_encoding(&emitter, YAML_UTF16BE_ENCODING)
-        #else
+        #if USE_UTF8
             yaml_emitter_set_encoding(&emitter, YAML_UTF8_ENCODING)
+        #else
+            yaml_emitter_set_encoding(&emitter, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
         #endif
     }
 
@@ -239,10 +239,11 @@ public final class Emitter {
         switch state {
         case .initialized:
             var event = yaml_event_t()
-            #if USE_UTF16
-                yaml_stream_start_event_initialize(&event, YAML_UTF16BE_ENCODING)
-            #else
+            #if USE_UTF8
                 yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING)
+            #else
+                let encoding = isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING
+                yaml_stream_start_event_initialize(&event, encoding)
             #endif
             try emit(&event)
             state = .opened
@@ -381,3 +382,5 @@ extension Emitter {
         try emit(&event)
     }
 }
+
+private let isLittleEndian = 1 == 1.littleEndian

@@ -118,20 +118,22 @@ public final class Parser {
         self.constructor = constructor
 
         yaml_parser_initialize(&parser)
-#if USE_UTF16
-        yaml_parser_set_encoding(&parser, YAML_UTF16BE_ENCODING)
-        data = yaml.data(using: .utf16BigEndian)!
-        data.withUnsafeBytes { bytes in
-            yaml_parser_set_input_string(&parser, bytes, data.count)
-        }
-#else
-        yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
-        utf8CString = string.utf8CString
-        utf8CString.withUnsafeBytes { bytes in
-            let input = bytes.baseAddress?.assumingMemoryBound(to: UInt8.self)
-            yaml_parser_set_input_string(&parser, input, bytes.count - 1)
-        }
-#endif
+        #if USE_UTF8
+            yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
+            utf8CString = string.utf8CString
+            utf8CString.withUnsafeBytes { bytes in
+                let input = bytes.baseAddress?.assumingMemoryBound(to: UInt8.self)
+                yaml_parser_set_input_string(&parser, input, bytes.count - 1)
+            }
+        #else
+            // use native endian
+            let isLittleEndian = 1 == 1.littleEndian
+            yaml_parser_set_encoding(&parser, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
+            data = yaml.data(using: isLittleEndian ? .utf16LittleEndian : .utf16BigEndian)!
+            data.withUnsafeBytes { bytes in
+                yaml_parser_set_input_string(&parser, bytes, data.count)
+            }
+        #endif
         try expectNextEvent(oneOf: [YAML_STREAM_START_EVENT])
     }
 
@@ -158,10 +160,10 @@ public final class Parser {
     // MARK: private
     fileprivate var anchors = [String: Node]()
     fileprivate var parser = yaml_parser_t()
-#if USE_UTF16
-    private let data: Data
-#else
+#if USE_UTF8
     private let utf8CString: ContiguousArray<CChar>
+#else
+    private let data: Data
 #endif
 }
 
