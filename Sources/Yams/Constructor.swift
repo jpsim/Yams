@@ -215,8 +215,8 @@ extension String: ScalarConstructible {
 
     fileprivate static func _construct(from node: Node) -> String {
         // This will happen while `Dictionary.flatten_mapping()` if `node.tag.name` was `.value`
-        if case let .mapping(pairs, _, _) = node {
-            for pair in pairs where pair.key.tag.name == .value {
+        if case let .mapping(mapping) = node {
+            for pair in mapping.pairs where pair.key.tag.name == .value {
                 return _construct(from: pair.value)
             }
         }
@@ -258,8 +258,8 @@ extension Dictionary {
     private static func flatten_mapping(_ node: Node) -> Node {
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
         let mapping = node.mapping!
-        var pairs = mapping.pairs
-        var merge = [Pair<Node>]()
+        var pairs = mapping.pairs.map(Pair.toTuple)
+        var merge = [(key: Node, value: Node)]()
         var index = pairs.startIndex
         while index < pairs.count {
             let pair = pairs[index]
@@ -268,13 +268,13 @@ extension Dictionary {
                 switch pair.value {
                 case .mapping:
                     let flattened_node = flatten_mapping(pair.value)
-                    if let pairs = flattened_node.mapping?.pairs {
+                    if let pairs = flattened_node.mapping?.pairs.map(Pair.toTuple) {
                         merge.append(contentsOf: pairs)
                     }
-                case let .sequence(array, _, _):
-                    let submerge = array
+                case let .sequence(sequence):
+                    let submerge = sequence.nodes
                         .filter { $0.isMapping } // TODO: Should raise error on other than mapping
-                        .flatMap { flatten_mapping($0).mapping?.pairs }
+                        .flatMap { flatten_mapping($0).mapping?.pairs.map(Pair.toTuple) }
                         .reversed()
                     submerge.forEach {
                         merge.append(contentsOf: $0)
@@ -289,7 +289,7 @@ extension Dictionary {
                 index += 1
             }
         }
-        return .mapping(merge + pairs, node.tag, mapping.style)
+        return Node(merge + pairs, node.tag, mapping.style)
     }
 }
 

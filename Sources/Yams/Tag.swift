@@ -23,7 +23,7 @@ public final class Tag {
     let constructor: Constructor
     var name: Name
 
-    init(_ name: Name,
+    public init(_ name: Name,
          _ resolver: Resolver = .default,
          _ constructor: Constructor = .default) {
         self.resolver = resolver

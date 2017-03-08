@@ -225,7 +225,7 @@ extension Parser {
     }
 
     private func loadScalar(from event: Event) throws -> Node {
-        let node = Node.scalar(event.scalarValue, tag(event.scalarTag), event.scalarStyle)
+        let node = Node(event.scalarValue, tag(event.scalarTag), event.scalarStyle)
         if let anchor = event.scalarAnchor {
             anchors[anchor] = node
         }
@@ -239,7 +239,7 @@ extension Parser {
             array.append(try loadNode(from: event))
             event = try parse()
         }
-        let node = Node.sequence(array, tag(firstEvent.sequenceTag), event.sequenceStyle)
+        let node = Node(array, tag(firstEvent.sequenceTag), event.sequenceStyle)
         if let anchor = firstEvent.sequenceAnchor {
             anchors[anchor] = node
         }
@@ -247,16 +247,16 @@ extension Parser {
     }
 
     private func loadMapping(from firstEvent: Event) throws -> Node {
-        var pairs = [Pair<Node>]()
+        var pairs = [(Node, Node)]()
         var event = try parse()
         while event.type != YAML_MAPPING_END_EVENT {
             let key = try loadNode(from: event)
             event = try parse()
             let value = try loadNode(from: event)
-            pairs.append(Pair(key, value))
+            pairs.append((key, value))
             event = try parse()
         }
-        let node = Node.mapping(pairs, tag(firstEvent.mappingTag), event.mappingStyle)
+        let node = Node(pairs, tag(firstEvent.mappingTag), event.mappingStyle)
         if let anchor = firstEvent.mappingAnchor {
             anchors[anchor] = node
         }

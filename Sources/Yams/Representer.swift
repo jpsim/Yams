@@ -37,19 +37,19 @@ extension Node: NodeRepresentable {
 
 extension Bool: NodeRepresentable {
     public func represented() throws -> Node {
-        return Node(self ? "true" : "false", .bool)
+        return Node(self ? "true" : "false", Tag(.bool))
     }
 }
 
 extension Data: NodeRepresentable {
     public func represented() throws -> Node {
-        return Node(base64EncodedString(), .binary)
+        return Node(base64EncodedString(), Tag(.binary))
     }
 }
 
 extension Date: NodeRepresentable {
     public func represented() throws -> Node {
-        return Node(iso8601string, .timestamp)
+        return Node(iso8601string, Tag(.timestamp))
     }
 
     private var iso8601string: String {
@@ -90,13 +90,13 @@ private let iso8601FormatterWithNanoseconds: DateFormatter = {
 
 extension Double: NodeRepresentable {
     public func represented() throws -> Node {
-        return Node(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), .float)
+        return Node(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
 }
 
 extension Float: NodeRepresentable {
     public func represented() throws -> Node {
-        return Node(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), .float)
+        return Node(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
 }
 
@@ -121,7 +121,7 @@ private let floatFormatter = numberFormatter(with: 7)
 
 extension Integer {
     public func represented() throws -> Node {
-        return Node(String(describing: self), .int)
+        return Node(String(describing: self), Tag(.int))
     }
 }
 
@@ -151,7 +151,7 @@ extension Optional: NodeRepresentable {
         case let .some(wrapped):
             return try represent(wrapped)
         case .none:
-            return Node("null", .null)
+            return Node("null", Tag(.null))
         }
     }
 }
@@ -159,13 +159,13 @@ extension Optional: NodeRepresentable {
 extension Array: NodeRepresentable {
     public func represented() throws -> Node {
         let nodes = try flatMap(represent)
-        return .sequence(nodes, Tag(.seq), .any)
+        return Node(nodes, Tag(.seq))
     }
 }
 
 extension Dictionary: NodeRepresentable {
     public func represented() throws -> Node {
-        let pairs = try map { Pair<Node>(try represent($0), try represent($1)) }
-        return .mapping(pairs.sorted(), Tag(.map), .any)
+        let pairs = try map { (key: try represent($0), value: try represent($1)) }
+        return Node(pairs.sorted { $0.key < $1.key }, Tag(.map))
     }
 }
