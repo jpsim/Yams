@@ -35,7 +35,7 @@ extension YamlError {
         case YAML_MEMORY_ERROR:
             self = .memory
         case YAML_READER_ERROR:
-            self = .reader(problem: String(cString:parser.problem),
+            self = .reader(problem: String(cString: parser.problem),
                            byteOffset: parser.problem_offset,
                            value: parser.problem_value)
         case YAML_SCANNER_ERROR:
