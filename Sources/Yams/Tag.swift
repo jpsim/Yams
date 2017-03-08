@@ -24,22 +24,18 @@ public final class Tag {
     var name: Name
 
     public init(_ name: Name,
-         _ resolver: Resolver = .default,
-         _ constructor: Constructor = .default) {
+                _ resolver: Resolver = .default,
+                _ constructor: Constructor = .default) {
         self.resolver = resolver
         self.constructor = constructor
         self.name = name
     }
 
-    func resolved(with node: Node) -> Tag {
+    func resolved<T>(with value: T) -> Tag where T: TagResolvable {
         if name == .implicit {
-            name = resolver.resolveTag(of: node)
+            name = resolver.resolveTag(of: value)
         } else if name == .nonSpecific {
-            switch node {
-            case .scalar: name = .str
-            case .mapping: name = .map
-            case .sequence: name = .seq
-            }
+            name = T.defaultTagName
         }
         return self
     }
@@ -50,6 +46,12 @@ public final class Tag {
 
     // fileprivate
     fileprivate let resolver: Resolver
+}
+
+extension Tag: CustomStringConvertible {
+    public var description: String {
+        return name.rawValue
+    }
 }
 
 extension Tag: Hashable {
@@ -127,4 +129,20 @@ extension Tag.Name {
     public static let value: Tag.Name  = "tag:yaml.org,2002:value"
     /// "tag:yaml.org,2002:yaml" <http://yaml.org/type/yaml.html> We don't support this.
     public static let yaml: Tag.Name  = "tag:yaml.org,2002:yaml"
+}
+
+protocol TagResolvable {
+    var tag: Tag { get }
+    static var defaultTagName: Tag.Name { get }
+    func resolveTag(using resolver: Resolver) -> Tag.Name
+}
+
+extension TagResolvable {
+    var resolvedTag: Tag {
+        return tag.resolved(with: self)
+    }
+
+    func resolveTag(using resolver: Resolver) -> Tag.Name {
+        return tag.name == .implicit ? Self.defaultTagName : tag.name
+    }
 }

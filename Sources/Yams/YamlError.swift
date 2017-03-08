@@ -35,22 +35,22 @@ extension YamlError {
         case YAML_MEMORY_ERROR:
             self = .memory
         case YAML_READER_ERROR:
-            self = .reader(problem: String(validatingUTF8: parser.problem)!,
+            self = .reader(problem: String(cString: parser.problem),
                            byteOffset: parser.problem_offset,
                            value: parser.problem_value)
         case YAML_SCANNER_ERROR:
-            self = .scanner(context: String(validatingUTF8: parser.context)!,
-                            problem: String(validatingUTF8: parser.problem)!,
+            self = .scanner(context: parser.context != nil ? String(cString: parser.context) : "",
+                            problem: String(cString: parser.problem),
                             line: parser.problem_mark.line,
                             column: parser.problem_mark.column)
         case YAML_PARSER_ERROR:
-            self = .parser(context: String(validatingUTF8: parser.context),
-                             problem: String(validatingUTF8: parser.problem)!,
+            self = .parser(context: parser.context != nil ? String(cString: parser.context) : nil,
+                             problem: String(cString: parser.problem),
                              line: parser.problem_mark.line,
                              column: parser.problem_mark.column)
         case YAML_COMPOSER_ERROR:
-            self = .composer(context: String(validatingUTF8: parser.context),
-                             problem: String(validatingUTF8: parser.problem)!,
+            self = .composer(context: parser.context != nil ? String(cString: parser.context) : nil,
+                             problem: String(cString: parser.problem),
                              line: parser.problem_mark.line,
                              column: parser.problem_mark.column)
         default:
@@ -63,7 +63,7 @@ extension YamlError {
         case YAML_MEMORY_ERROR:
             self = .memory
         case YAML_EMITTER_ERROR:
-            self = .emitter(problem: String(validatingUTF8: emitter.problem)!)
+            self = .emitter(problem: String(cString: emitter.problem))
         default:
             fatalError("Emitter has unknown error: \(emitter.error)!")
         }

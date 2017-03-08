@@ -216,8 +216,8 @@ extension String: ScalarConstructible {
     fileprivate static func _construct(from node: Node) -> String {
         // This will happen while `Dictionary.flatten_mapping()` if `node.tag.name` was `.value`
         if case let .mapping(mapping) = node {
-            for pair in mapping.pairs where pair.key.tag.name == .value {
-                return _construct(from: pair.value)
+            for (key, value) in mapping where key.tag.name == .value {
+                return _construct(from: value)
             }
         }
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
@@ -246,9 +246,9 @@ extension Dictionary {
 
     fileprivate static func _construct_mapping(from node: Node) -> [AnyHashable: Any] {
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
-        let pairs = flatten_mapping(node).mapping!.pairs
-        var dictionary = [AnyHashable: Any](minimumCapacity: pairs.count)
-        pairs.forEach {
+        let mapping = flatten_mapping(node).mapping!
+        var dictionary = [AnyHashable: Any](minimumCapacity: mapping.count)
+        mapping.forEach {
             // TODO: YAML supports keys other than str.
             dictionary[String._construct(from: $0.key)] = node.tag.constructor.any(from: $0.value)
         }
@@ -258,7 +258,7 @@ extension Dictionary {
     private static func flatten_mapping(_ node: Node) -> Node {
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
         let mapping = node.mapping!
-        var pairs = mapping.pairs.map(Pair.toTuple)
+        var pairs = Array(mapping)
         var merge = [(key: Node, value: Node)]()
         var index = pairs.startIndex
         while index < pairs.count {
@@ -268,13 +268,13 @@ extension Dictionary {
                 switch pair.value {
                 case .mapping:
                     let flattened_node = flatten_mapping(pair.value)
-                    if let pairs = flattened_node.mapping?.pairs.map(Pair.toTuple) {
-                        merge.append(contentsOf: pairs)
+                    if let mapping = flattened_node.mapping {
+                        merge.append(contentsOf: mapping)
                     }
                 case let .sequence(sequence):
-                    let submerge = sequence.nodes
+                    let submerge = sequence
                         .filter { $0.isMapping } // TODO: Should raise error on other than mapping
-                        .flatMap { flatten_mapping($0).mapping?.pairs.map(Pair.toTuple) }
+                        .flatMap { flatten_mapping($0).mapping }
                         .reversed()
                     submerge.forEach {
                         merge.append(contentsOf: $0)
@@ -297,7 +297,7 @@ extension Set {
     public static func construct_set(from node: Node) -> Set<AnyHashable>? {
         // TODO: YAML supports Hashable elements other than str.
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
-        return Set<AnyHashable>(node.mapping!.pairs.map({ String._construct(from: $0.key) as AnyHashable }))
+        return Set<AnyHashable>(node.mapping!.map({ String._construct(from: $0.key) as AnyHashable }))
         // Explicitly declaring the generic parameter as `<AnyHashable>` above is required,
         // because this is inside extension of `Set` and Swift 3.0.2 can't infer the type without that.
     }
@@ -307,26 +307,26 @@ extension Set {
 extension Array {
     public static func construct_seq(from node: Node) -> [Any] {
         // swiftlint:disable:next force_unwrapping
-        return node.sequence!.nodes.map(node.tag.constructor.any)
+        return node.sequence!.map(node.tag.constructor.any)
     }
 
     public static func construct_omap(from node: Node) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
-        return node.sequence!.nodes.flatMap { subnode -> (Any, Any)? in
-            // TODO: Should raise error if subnode is not mapping or pairs.count != 1
-            guard let pairs = subnode.mapping?.pairs, let pair = pairs.first else { return nil }
-            return (node.tag.constructor.any(from: pair.key), node.tag.constructor.any(from: pair.value))
+        return node.sequence!.flatMap { subnode -> (Any, Any)? in
+            // TODO: Should raise error if subnode is not mapping or mapping.count != 1
+            guard let (key, value) = subnode.mapping?.first else { return nil }
+            return (node.tag.constructor.any(from: key), node.tag.constructor.any(from: value))
         }
     }
 
     public static func construct_pairs(from node: Node) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
-        return node.sequence!.nodes.flatMap { subnode -> (Any, Any)? in
-            // TODO: Should raise error if subnode is not mapping or pairs.count != 1
-            guard let pairs = subnode.mapping?.pairs, let pair = pairs.first else { return nil }
-            return (node.tag.constructor.any(from: pair.key), node.tag.constructor.any(from: pair.value))
+        return node.sequence!.flatMap { subnode -> (Any, Any)? in
+            // TODO: Should raise error if subnode is not mapping or mapping.count != 1
+            guard let (key, value) = subnode.mapping?.first else { return nil }
+            return (node.tag.constructor.any(from: key), node.tag.constructor.any(from: value))
         }
     }
 }

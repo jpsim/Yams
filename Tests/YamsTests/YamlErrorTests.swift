@@ -59,6 +59,35 @@ class YamlErrorTests: XCTestCase {
             XCTFail("should not happen")
         }
     }
+
+    func testNextRootThrowsOnInvalidYaml() throws {
+        let invalidYAML = "|\na"
+
+        let parser = try Parser(yaml: invalidYAML)
+        // first iteration returns scalar
+        XCTAssertEqual(try parser.nextRoot(), Node("", Tag(.null), .literal))
+        // second iteration throws error
+        XCTAssertThrowsError(try parser.nextRoot()) {
+            if let error = $0 as? YamlError {
+                XCTAssertEqual(error.describing(with: invalidYAML), "a\n^ did not find expected <document start> ")
+            } else {
+                XCTFail()
+            }
+        }
+    }
+
+    func testSingleRootThrowsOnInvalidYaml() throws {
+        let invalidYAML = "|\na"
+
+        let parser = try Parser(yaml: invalidYAML)
+        XCTAssertThrowsError(try parser.singleRoot()) {
+            if let error = $0 as? YamlError {
+                XCTAssertEqual(error.describing(with: invalidYAML), "a\n^ did not find expected <document start> ")
+            } else {
+                XCTFail()
+            }
+        }
+    }
 }
 
 extension YamlErrorTests {
@@ -67,7 +96,9 @@ extension YamlErrorTests {
             return [
                 ("testYamlErrorReader", testYamlErrorReader),
                 ("testYamlErrorScanner", testYamlErrorScanner),
-                ("testYamlErrorParser", testYamlErrorParser)
+                ("testYamlErrorParser", testYamlErrorParser),
+                ("testNextRootThrowsOnInvalidYaml", testNextRootThrowsOnInvalidYaml),
+                ("testSingleRootThrowsOnInvalidYaml", testSingleRootThrowsOnInvalidYaml)
             ]
         #else
             return [] // https://bugs.swift.org/browse/SR-3366

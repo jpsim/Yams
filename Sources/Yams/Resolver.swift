@@ -17,15 +17,21 @@ public final class Resolver {
     public func resolveTag(of node: Node) -> Tag.Name {
         switch node {
         case let .scalar(scalar):
-            return scalar.tag.name == .implicit ? resolveTag(from: scalar.string) : scalar.tag.name
+            return resolveTag(of: scalar)
         case let .mapping(mapping):
-            return mapping.tag.name == .implicit ? .map : mapping.tag.name
+            return resolveTag(of: mapping)
         case let .sequence(sequence):
-            return sequence.tag.name == .implicit ? .seq : sequence.tag.name
+            return resolveTag(of: sequence)
         }
     }
 
-    private func resolveTag(from string: String) -> Tag.Name {
+    // MARK: - internal
+
+    func resolveTag<T>(of value: T) -> Tag.Name where T: TagResolvable {
+        return value.resolveTag(using: self)
+    }
+
+    func resolveTag(from string: String) -> Tag.Name {
         for (tag, regexp) in tagNamePatternPairs where regexp.matches(in: string) {
             return tag
         }

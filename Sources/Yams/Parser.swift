@@ -39,7 +39,7 @@ public func load_all(yaml: String,
 public func load(yaml: String,
                  _ resolver: Resolver = .default,
                  _ constructor: Constructor = .default) throws -> Any? {
-    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor).nextRoot()?.any
+    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor).singleRoot()?.any
 }
 
 /// Parse all YAML documents in a String
@@ -70,7 +70,7 @@ public func compose_all(yaml: String,
 public func compose(yaml: String,
                     _ resolver: Resolver = .default,
                     _ constructor: Constructor = .default) throws -> Node? {
-    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor).nextRoot()
+    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor).singleRoot()
 }
 
 /// Sequence that holds error
@@ -155,6 +155,17 @@ public final class Parser {
         default: // YAML_STREAM_END_EVENT
             return nil
         }
+    }
+
+    public func singleRoot() throws -> Node? {
+        if streamEndProduced { return nil }
+        var node: Node?
+        if try expectNextEvent(oneOf: [YAML_DOCUMENT_START_EVENT, YAML_STREAM_END_EVENT]) != YAML_STREAM_END_EVENT {
+            node = try loadNode(from: parse())
+            try expectNextEvent(oneOf: [YAML_DOCUMENT_END_EVENT])
+            try expectNextEvent(oneOf: [YAML_STREAM_END_EVENT])
+        }
+        return node
     }
 
     // MARK: private
