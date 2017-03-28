@@ -24,7 +24,7 @@ import Foundation
 ///   - explicitEnd: explicit document end `...`
 ///   - version: YAML version directive
 /// - Returns: YAML String
-/// - Throws: `EmitterError` or `YamlError`
+/// - Throws: `YamlError`
 public func dump<Objects>(
     objects: Objects,
     canonical: Bool = false,
@@ -40,7 +40,7 @@ public func dump<Objects>(
             if let representable = object as? NodeRepresentable {
                 return representable
             }
-            throw EmitterError.objectIsNotRepresentable("\(object) does not conform to NodeRepresentable!")
+            throw YamlError.emitter(problem: "\(object) does not conform to NodeRepresentable!")
         }
         let nodes = try objects.map(representable(from:)).map { try $0.represented() }
         return try serialize(
@@ -68,7 +68,7 @@ public func dump<Objects>(
 ///   - explicitEnd: explicit document end `...`
 ///   - version: YAML version directive
 /// - Returns: YAML String
-/// - Throws: `EmitterError` or `YamlError`
+/// - Throws: `YamlError`
 public func dump(
     object: Any?,
     canonical: Bool = false,
@@ -104,7 +104,7 @@ public func dump(
 ///   - explicitEnd: explicit document end `...`
 ///   - version: YAML version directive
 /// - Returns: YAML String
-/// - Throws: `EmitterError` or `YamlError`
+/// - Throws: `YamlError`
 public func serialize<Nodes>(
     nodes: Nodes,
     canonical: Bool = false,
@@ -148,7 +148,7 @@ public func serialize<Nodes>(
 ///   - explicitEnd: explicit document end `...`
 ///   - version: YAML version directive
 /// - Returns: YAML String
-/// - Throws: `EmitterError` or `YamlError`
+/// - Throws: `YamlError`
 public func serialize(
     node: Node,
     canonical: Bool = false,
@@ -169,11 +169,6 @@ public func serialize(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version)
-}
-
-public enum EmitterError: Swift.Error {
-    case invalidState(String)
-    case objectIsNotRepresentable(String)
 }
 
 public final class Emitter {
@@ -248,16 +243,16 @@ public final class Emitter {
             try emit(&event)
             state = .opened
         case .opened:
-            throw EmitterError.invalidState("serializer is already opened")
+            throw YamlError.emitter(problem: "serializer is already opened")
         case .closed:
-            throw EmitterError.invalidState("serializer is closed")
+            throw YamlError.emitter(problem: "serializer is closed")
         }
     }
 
     public func close() throws {
         switch state {
         case .initialized:
-            throw EmitterError.invalidState("serializer is not opened")
+            throw YamlError.emitter(problem: "serializer is not opened")
         case .opened:
             var event = yaml_event_t()
             yaml_stream_end_event_initialize(&event)
@@ -271,11 +266,11 @@ public final class Emitter {
     public func serialize(node: Node) throws {
         switch state {
         case .initialized:
-            throw EmitterError.invalidState("serializer is not opened")
+            throw YamlError.emitter(problem: "serializer is not opened")
         case .opened:
             break
         case .closed:
-            throw EmitterError.invalidState("serializer is closed")
+            throw YamlError.emitter(problem: "serializer is closed")
         }
         var event = yaml_event_t()
         var versionDirective: UnsafeMutablePointer<yaml_version_directive_t>?

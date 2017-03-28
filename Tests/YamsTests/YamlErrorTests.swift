@@ -11,52 +11,52 @@ import XCTest
 import Yams
 
 class YamlErrorTests: XCTestCase {
+    func testYamlErrorEmitter() throws {
+        XCTAssertThrowsError(try Yams.serialize(node: "test", version: (1, 2))) { error in
+            XCTAssertTrue(error is YamlError)
+            XCTAssertEqual("\(error)", "incompatible %YAML directive")
+        }
+    }
+
     func testYamlErrorReader() throws {
         // reader
         let yaml = "test: 'テスト\u{12}'"
-        do {
-            _ = try Parser(yaml: yaml).nextRoot()
-            XCTFail("should not happen")
-        } catch let error as YamlError {
-            let expected = [
+        XCTAssertThrowsError(_ = try Parser(yaml: yaml).nextRoot()) { error in
+            XCTAssertTrue(error is YamlError)
+            XCTAssertEqual("\(error)", [
+                "1:11: error: reader: control characters are not allowed:",
                 "test: 'テスト\u{12}'",
-                "          ^ control characters are not allowed"
+                "          ^"
                 ].joined(separator: "\n")
-            XCTAssertEqual(error.describing(with: yaml), expected)
-        } catch {
-            XCTFail("should not happen")
+            )
         }
     }
 
     func testYamlErrorScanner() throws {
         let yaml = "test: 'テスト"
-        do {
-            _ = try Parser(yaml: yaml).nextRoot()
-            XCTFail("should not happen")
-        } catch let error as YamlError {
-            let expected = [
+        XCTAssertThrowsError(_ = try Parser(yaml: yaml).nextRoot()) { error in
+            XCTAssertTrue(error is YamlError)
+            XCTAssertEqual("\(error)", [
+                "0:10: error: scanner: while scanning a quoted scalar in line 0, column 6",
+                "found unexpected end of stream:",
                 "test: 'テスト",
-                "          ^ found unexpected end of stream while scanning a quoted scalar"
+                "          ^"
                 ].joined(separator: "\n")
-            XCTAssertEqual(error.describing(with: yaml), expected)
-        } catch {
-            XCTFail("should not happen")
+            )
         }
     }
 
     func testYamlErrorParser() throws {
         let yaml = "- [キー1: 値1]\n- [key1: value1, key2: ,"
-        do {
-            _ = try Parser(yaml: yaml).nextRoot()
-            XCTFail("should not happen")
-        } catch let error as YamlError {
-            let expected = [
+        XCTAssertThrowsError(_ = try Parser(yaml: yaml).nextRoot()) { error in
+            XCTAssertTrue(error is YamlError)
+            XCTAssertEqual("\(error)", [
+                "2:0: error: parser: while parsing a flow node in line 2, column 0",
+                "did not find expected node content:",
                 "- [key1: value1, key2: ,",
-                "^ did not find expected node content while parsing a flow node"
+                "^"
                 ].joined(separator: "\n")
-            XCTAssertEqual(error.describing(with: yaml), expected)
-        } catch {
-            XCTFail("should not happen")
+            )
         }
     }
 
@@ -67,12 +67,14 @@ class YamlErrorTests: XCTestCase {
         // first iteration returns scalar
         XCTAssertEqual(try parser.nextRoot(), Node("", Tag(.null), .literal))
         // second iteration throws error
-        XCTAssertThrowsError(try parser.nextRoot()) {
-            if let error = $0 as? YamlError {
-                XCTAssertEqual(error.describing(with: invalidYAML), "a\n^ did not find expected <document start> ")
-            } else {
-                XCTFail()
-            }
+        XCTAssertThrowsError(try parser.nextRoot()) { error in
+            XCTAssertTrue(error is YamlError)
+            XCTAssertEqual("\(error)", [
+                "1:0: error: parser: did not find expected <document start>:",
+                "a",
+                "^"
+                ].joined(separator: "\n")
+            )
         }
     }
 
@@ -80,12 +82,43 @@ class YamlErrorTests: XCTestCase {
         let invalidYAML = "|\na"
 
         let parser = try Parser(yaml: invalidYAML)
-        XCTAssertThrowsError(try parser.singleRoot()) {
-            if let error = $0 as? YamlError {
-                XCTAssertEqual(error.describing(with: invalidYAML), "a\n^ did not find expected <document start> ")
-            } else {
-                XCTFail()
-            }
+        XCTAssertThrowsError(try parser.singleRoot()) { error in
+            XCTAssertTrue(error is YamlError)
+            XCTAssertEqual("\(error)", [
+                "1:0: error: parser: did not find expected <document start>:",
+                "a",
+                "^"
+                ].joined(separator: "\n")
+            )
+        }
+    }
+
+    func testSingleRootThrowsOnMultipleDocuments() throws {
+        let multipleDocuments = "document 1\n---\ndocument 2\n"
+        let parser = try Parser(yaml: multipleDocuments)
+        XCTAssertThrowsError(try parser.singleRoot()) { error in
+            XCTAssertTrue(error is YamlError)
+            XCTAssertEqual("\(error)", [
+                "1:0: error: composer: expected a single document in the stream in line 0, column 0",
+                "but found another document:",
+                "---",
+                "^"
+                ].joined(separator: "\n")
+            )
+        }
+    }
+
+    func testUndefinedAliasCausesError() throws {
+        let undefinedAlias = "*undefinedAlias\n"
+        let parser = try Parser(yaml: undefinedAlias)
+        XCTAssertThrowsError(try parser.singleRoot()) { error in
+            XCTAssertTrue(error is YamlError)
+            XCTAssertEqual("\(error)", [
+                "0:0: error: composer: found undefined alias:",
+                "*undefinedAlias",
+                "^"
+                ].joined(separator: "\n")
+            )
         }
     }
 }
@@ -98,7 +131,9 @@ extension YamlErrorTests {
                 ("testYamlErrorScanner", testYamlErrorScanner),
                 ("testYamlErrorParser", testYamlErrorParser),
                 ("testNextRootThrowsOnInvalidYaml", testNextRootThrowsOnInvalidYaml),
-                ("testSingleRootThrowsOnInvalidYaml", testSingleRootThrowsOnInvalidYaml)
+                ("testSingleRootThrowsOnInvalidYaml", testSingleRootThrowsOnInvalidYaml),
+                ("testSingleRootThrowsOnMultipleDocuments", testSingleRootThrowsOnMultipleDocuments),
+                ("testUndefinedAliasCausesError", testUndefinedAliasCausesError)
             ]
         #else
             return [] // https://bugs.swift.org/browse/SR-3366
