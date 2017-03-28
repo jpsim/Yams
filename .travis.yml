@@ -15,7 +15,7 @@ matrix:
         - xcrun simctl delete BE8E0914-5B5F-45C2-8C99-879894AF72B0
     - script:
         - swift test
-        - swift test -Xswiftc -DUSE_UTF16
+        - swift test -Xswiftc -DUSE_UTF8
         - swiftlint
       env: JOB=SPM
       os: osx
