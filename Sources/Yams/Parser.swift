@@ -151,10 +151,9 @@ public final class Parser {
         let event = try parse()
         if event.type != YAML_STREAM_END_EVENT {
             throw YamlError.composer(
-                context: "expected a single document in the stream",
-                problem: "but found another document",
-                line: event.event.start_mark.line,
-                column: event.event.start_mark.column,
+                context: YamlError.Context(text: "expected a single document in the stream",
+                                           mark: .init(line: 0, column: 0)),
+                problem: "but found another document", event.startMark,
                 yaml: yaml
             )
         }
@@ -212,11 +211,9 @@ extension Parser {
             fatalError("unreachable")
         }
         guard let node = anchors[alias] else {
-            throw YamlError.composer(
-                context: nil,
-                problem: "found undefined alias",
-                line: event.event.start_mark.line, column: event.event.start_mark.column,
-                yaml: yaml)
+            throw YamlError.composer(context: nil,
+                                     problem: "found undefined alias", event.startMark,
+                                     yaml: yaml)
         }
         return node
     }
@@ -327,6 +324,11 @@ fileprivate class Event {
     var mappingTag: String? {
         return event.data.mapping_start.implicit != 0
             ? nil : string(from: event.data.sequence_start.tag)
+    }
+
+    // start_mark
+    var startMark: YamlError.Mark {
+        return YamlError.Mark(line: event.start_mark.line, column: event.start_mark.column)
     }
 }
 

@@ -16,11 +16,11 @@ public enum YamlError: Swift.Error {
 
     // line and column start from 0, column is counted by unicodeScalars
     /// YAML_SCANNER_ERROR. Cannot scan the input stream.
-    case scanner(context: String, problem: String, line: Int, column: Int, yaml: String)
+    case scanner(context: Context, problem: String, Mark, yaml: String)
     /// YAML_PARSER_ERROR. Cannot parse the input stream.
-    case parser(context: String?, problem: String, line: Int, column: Int, yaml: String)
+    case parser(context: Context?, problem: String, Mark, yaml: String)
     /// YAML_COMPOSER_ERROR. Cannot compose a YAML document.
-    case composer(context: String?, problem: String, line: Int, column: Int, yaml: String)
+    case composer(context: Context?, problem: String, Mark, yaml: String)
 
     // Used in `yaml_emitter_t`
     /// YAML_WRITER_ERROR. Cannot write to the output stream.
@@ -30,10 +30,35 @@ public enum YamlError: Swift.Error {
 
     // Used in `NodeRepresentable`
     case representer(problem: String)
+
+    public struct Mark: CustomStringConvertible {
+        public let line: Int, column: Int
+        public var description: String { return "\(line):\(column)" }
+    }
+
+    public struct Context: CustomStringConvertible {
+        public let text: String
+        public let mark: Mark
+        public var description: String {
+            return text + " in line \(mark.line), column \(mark.column)\n"
+        }
+    }
 }
 
 extension YamlError {
     init(from parser: yaml_parser_t, with yaml: String) {
+        func context(from parser: yaml_parser_t) -> Context? {
+            guard let context = parser.context else { return nil }
+            return Context(
+                text: String(cString: context),
+                mark: Mark(line: parser.context_mark.line, column: parser.context_mark.column)
+            )
+        }
+
+        func problemMark(from parser: yaml_parser_t) -> Mark {
+            return Mark(line: parser.problem_mark.line, column: parser.problem_mark.column)
+        }
+
         switch parser.error {
         case YAML_MEMORY_ERROR:
             self = .memory
@@ -43,22 +68,16 @@ extension YamlError {
                            value: parser.problem_value,
                            yaml: yaml)
         case YAML_SCANNER_ERROR:
-            self = .scanner(context: parser.context != nil ? String(cString: parser.context) : "",
-                            problem: String(cString: parser.problem),
-                            line: parser.problem_mark.line,
-                            column: parser.problem_mark.column,
+            self = .scanner(context: context(from: parser)!,
+                            problem: String(cString: parser.problem), problemMark(from: parser),
                             yaml: yaml)
         case YAML_PARSER_ERROR:
-            self = .parser(context: parser.context != nil ? String(cString: parser.context) : nil,
-                             problem: String(cString: parser.problem),
-                             line: parser.problem_mark.line,
-                             column: parser.problem_mark.column,
-                             yaml: yaml)
+            self = .parser(context: context(from: parser),
+                           problem: String(cString: parser.problem), problemMark(from: parser),
+                           yaml: yaml)
         case YAML_COMPOSER_ERROR:
-            self = .composer(context: parser.context != nil ? String(cString: parser.context) : nil,
-                             problem: String(cString: parser.problem),
-                             line: parser.problem_mark.line,
-                             column: parser.problem_mark.column,
+            self = .composer(context: context(from: parser),
+                             problem: String(cString: parser.problem), problemMark(from: parser),
                              yaml: yaml)
         default:
             fatalError("Parser has unknown error: \(parser.error)!")
@@ -85,45 +104,44 @@ extension YamlError: CustomStringConvertible {
         case .memory:
             return "Memory error"
         case let .reader(problem, byteOffset, value, yaml):
-            #if USE_UTF8
-                guard let (_, column, contents) = yaml.utf8LineNumberColumnAndContents(at: byteOffset)
-                    else { return "\(problem) at byte offset: \(byteOffset), value: \(value)" }
-            #else
-                guard let (_, column, contents) = yaml.utf16LineNumberColumnAndContents(at: byteOffset / 2)
-                    else { return "\(problem) at byte offset: \(byteOffset), value: \(value)" }
-            #endif
-            return contents.endingWithNewLine
-                + String(repeating: " ", count: column - 1) + "^ " + problem
-        case let .scanner(context, problem, line, column, yaml):
-            return describing(with: yaml, context, problem, line, column)
-        case let .parser(context, problem, line, column, yaml):
-            return describing(with: yaml, context ?? "", problem, line, column)
-        case let .composer(context, problem, line, column, yaml):
-            return describing(with: yaml, context ?? "", problem, line, column)
-        case let .emitter(problem):
+            guard let (mark, contents) = markAndSnippet(from: yaml, byteOffset)
+                else { return "\(problem) at byte offset: \(byteOffset), value: \(value)" }
+            return "\(mark): error: reader: \(problem):\n" + contents.endingWithNewLine
+                + String(repeating: " ", count: mark.column - 1) + "^"
+        case let .scanner(context, problem, mark, yaml):
+            return "\(mark): error: scanner: \(context)\(problem):\n" + snippet(from: yaml, mark)
+        case let .parser(context, problem, mark, yaml):
+            return "\(mark): error: parser: \(context?.description ?? "")\(problem):\n" + snippet(from: yaml, mark)
+        case let .composer(context, problem, mark, yaml):
+            return "\(mark): error: composer: \(context?.description ?? "")\(problem):\n" + snippet(from: yaml, mark)
+        case let .writer(problem), let .emitter(problem), let .representer(problem):
             return problem
-        default:
-            fatalError("unreachable")
         }
     }
 }
 
 extension YamlError {
-    fileprivate func describing(
-        with yaml: String,
-        _ context: String,
-        _ problem: String,
-        _ line: Int,
-        _ column: Int // libYAML counts column by unicodeScalars.
-        ) -> String {
-        let contents = yaml.substring(at: line)
+    fileprivate func snippet(from yaml: String, _ mark: Mark) -> String {
+        let contents = yaml.substring(at: mark.line)
+         // libYAML counts column by unicodeScalars.
         let columnIndex = contents.unicodeScalars
             .index(contents.unicodeScalars.startIndex,
-                   offsetBy: column,
+                   offsetBy: mark.column,
                    limitedBy: contents.unicodeScalars.endIndex)?
             .samePosition(in: contents) ?? contents.endIndex
         let column = contents.distance(from: contents.startIndex, to: columnIndex)
         return contents.endingWithNewLine +
-            String(repeating: " ", count: column) + "^ " + problem + " " + context
+            String(repeating: " ", count: column) + "^"
+    }
+
+    fileprivate func markAndSnippet(from yaml: String, _ byteOffset: Int) -> (Mark, String)? {
+        #if USE_UTF8
+            guard let (line, column, contents) = yaml.utf8LineNumberColumnAndContents(at: byteOffset)
+                else { return nil }
+        #else
+            guard let (line, column, contents) = yaml.utf16LineNumberColumnAndContents(at: byteOffset / 2)
+                else { return nil }
+        #endif
+        return (Mark(line: line, column: column), contents)
     }
 }
