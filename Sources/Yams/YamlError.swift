@@ -100,6 +100,8 @@ extension YamlError: CustomStringConvertible {
             return describing(with: yaml, context ?? "", problem, line, column)
         case let .composer(context, problem, line, column, yaml):
             return describing(with: yaml, context ?? "", problem, line, column)
+        case let .emitter(problem):
+            return problem
         default:
             fatalError("unreachable")
         }
