@@ -23,12 +23,12 @@ matrix:
     - script:
         - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.0.2 swift test
         - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.0.2 swift test -Xswiftc -DUSE_UTF8
-      env: JOB=Linux
+      env: JOB=Linux-Swift3.0.2
       sudo: required
       services: docker
     - script:
-        - docker run -v `pwd`:`pwd` -w `pwd` --rm norionomura/swift:3120170222a swift test
-        - docker run -v `pwd`:`pwd` -w `pwd` --rm norionomura/swift:3120170222a swift test -Xswiftc -DUSE_UTF8
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.1 swift test
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.1 swift test -Xswiftc -DUSE_UTF8
       env: JOB=Linux-Swift3.1
       sudo: required
       services: docker
