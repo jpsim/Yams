@@ -8,27 +8,44 @@ matrix:
         - xcodebuild -scheme Yams build-for-testing test-without-building -sdk appletvsimulator -destination "name=Apple TV 1080p"
         - xcodebuild -scheme Yams build -sdk watchsimulator -destination "name=Apple Watch - 38mm"
         - pod lib lint
-      env: JOB=Xcode
+      env: JOB=Xcode8.2
       os: osx
       osx_image: xcode8.2
       before_install:
         - xcrun simctl delete BE8E0914-5B5F-45C2-8C99-879894AF72B0
     - script:
+        - xcodebuild -scheme Yams build-for-testing test-without-building # -sdk macosx -destination arch=x86_64
+        - xcodebuild -scheme Yams build-for-testing test-without-building OTHER_SWIFT_FLAGS=-DUSE_UTF8
+        - xcodebuild -scheme Yams build-for-testing test-without-building -sdk iphonesimulator -destination "name=iPhone 6s"
+        - xcodebuild -scheme Yams build-for-testing test-without-building -sdk appletvsimulator -destination "name=Apple TV 1080p"
+        - xcodebuild -scheme Yams build -sdk watchsimulator -destination "name=Apple Watch - 38mm"
+        - pod lib lint
+      env: JOB=Xcode8.3
+      os: osx
+      osx_image: xcode8.3
+    - script:
         - swift test
-        - swift test -Xswiftc -DUSE_UTF16
+        - swift test -Xswiftc -DUSE_UTF8
         - swiftlint
-      env: JOB=SPM
+      env: JOB=SPM-Swift3.0.2
       os: osx
       osx_image: xcode8.2
     - script:
+        - swift test
+        - swift test -Xswiftc -DUSE_UTF8
+        - swiftlint
+      env: JOB=SPM-Swift3.1
+      os: osx
+      osx_image: xcode8.3
+    - script:
         - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.0.2 swift test
         - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.0.2 swift test -Xswiftc -DUSE_UTF8
-      env: JOB=Linux
+      env: JOB=Linux-Swift3.0.2
       sudo: required
       services: docker
     - script:
-        - docker run -v `pwd`:`pwd` -w `pwd` --rm norionomura/swift:3120170222a swift test
-        - docker run -v `pwd`:`pwd` -w `pwd` --rm norionomura/swift:3120170222a swift test -Xswiftc -DUSE_UTF8
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.1 swift test
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.1 swift test -Xswiftc -DUSE_UTF8
       env: JOB=Linux-Swift3.1
       sudo: required
       services: docker
