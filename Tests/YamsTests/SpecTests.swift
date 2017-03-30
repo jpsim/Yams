@@ -12,6 +12,10 @@ import Yams
 
 class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
 
+    func testEmptyString() throws {
+        XCTAssertNil(try Yams.load(yaml: ""))
+    }
+
     func testMultibyteCharacters() throws {
         let example = [
             "Bulbasaur: フシギダネ",
@@ -914,6 +918,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
 extension SpecTests {
     static var allTests: [(String, (SpecTests) -> () throws -> Void)] {
         return [
+            ("testEmptyString", testEmptyString),
             ("testMultibyteCharacters", testMultibyteCharacters),
             ("testSpecExample2_1_SequenceOfScalars", testSpecExample2_1_SequenceOfScalars),
             ("testSpecExample2_2_MappingScalarsToScalars", testSpecExample2_2_MappingScalarsToScalars),
