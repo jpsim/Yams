@@ -33,14 +33,14 @@ public enum YamlError: Swift.Error {
 
     public struct Mark: CustomStringConvertible {
         public let line: Int, column: Int
-        public var description: String { return "\(line):\(column)" }
+        public var description: String { return "\(line + 1):\(column + 1)" }
     }
 
     public struct Context: CustomStringConvertible {
         public let text: String
         public let mark: Mark
         public var description: String {
-            return text + " in line \(mark.line), column \(mark.column)\n"
+            return text + " in line \(mark.line + 1), column \(mark.column + 1)\n"
         }
     }
 }
