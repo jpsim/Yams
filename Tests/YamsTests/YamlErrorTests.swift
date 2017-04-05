@@ -37,7 +37,7 @@ class YamlErrorTests: XCTestCase {
         XCTAssertThrowsError(_ = try Parser(yaml: yaml).nextRoot()) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", [
-                "0:10: error: scanner: while scanning a quoted scalar in line 0, column 6",
+                "1:11: error: scanner: while scanning a quoted scalar in line 1, column 7",
                 "found unexpected end of stream:",
                 "test: 'テスト",
                 "          ^"
@@ -51,7 +51,7 @@ class YamlErrorTests: XCTestCase {
         XCTAssertThrowsError(_ = try Parser(yaml: yaml).nextRoot()) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", [
-                "2:0: error: parser: while parsing a flow node in line 2, column 0",
+                "3:1: error: parser: while parsing a flow node in line 3, column 1",
                 "did not find expected node content:",
                 "- [key1: value1, key2: ,",
                 "^"
@@ -70,7 +70,7 @@ class YamlErrorTests: XCTestCase {
         XCTAssertThrowsError(try parser.nextRoot()) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", [
-                "1:0: error: parser: did not find expected <document start>:",
+                "2:1: error: parser: did not find expected <document start>:",
                 "a",
                 "^"
                 ].joined(separator: "\n")
@@ -85,7 +85,7 @@ class YamlErrorTests: XCTestCase {
         XCTAssertThrowsError(try parser.singleRoot()) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", [
-                "1:0: error: parser: did not find expected <document start>:",
+                "2:1: error: parser: did not find expected <document start>:",
                 "a",
                 "^"
                 ].joined(separator: "\n")
@@ -99,7 +99,7 @@ class YamlErrorTests: XCTestCase {
         XCTAssertThrowsError(try parser.singleRoot()) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", [
-                "1:0: error: composer: expected a single document in the stream in line 0, column 0",
+                "2:1: error: composer: expected a single document in the stream in line 1, column 1",
                 "but found another document:",
                 "---",
                 "^"
@@ -114,7 +114,7 @@ class YamlErrorTests: XCTestCase {
         XCTAssertThrowsError(try parser.singleRoot()) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", [
-                "0:0: error: composer: found undefined alias:",
+                "1:1: error: composer: found undefined alias:",
                 "*undefinedAlias",
                 "^"
                 ].joined(separator: "\n")
