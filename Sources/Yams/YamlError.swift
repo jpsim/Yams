@@ -107,7 +107,7 @@ extension YamlError: CustomStringConvertible {
             guard let (mark, contents) = markAndSnippet(from: yaml, byteOffset)
                 else { return "\(problem) at byte offset: \(byteOffset), value: \(value)" }
             return "\(mark): error: reader: \(problem):\n" + contents.endingWithNewLine
-                + String(repeating: " ", count: mark.column - 1) + "^"
+                + String(repeating: " ", count: mark.column) + "^"
         case let .scanner(context, problem, mark, yaml):
             return "\(mark): error: scanner: \(context)\(problem):\n" + snippet(from: yaml, mark)
         case let .parser(context, problem, mark, yaml):

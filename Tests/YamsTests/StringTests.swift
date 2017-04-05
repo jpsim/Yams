@@ -31,20 +31,20 @@ class StringTests: XCTestCase {
         // line 3     L I N E 3 _ 8 9 0 1 \n
         do {
             let (number, column, content) = string.utf8LineNumberColumnAndContents(at: 0)!
-            XCTAssertEqual(number, 1)
-            XCTAssertEqual(column, 1)
+            XCTAssertEqual(number, 0)
+            XCTAssertEqual(column, 0)
             XCTAssertEqual(content, "LINE1_67あ\n")
         }
         do {
             let (number, column, content) = string.utf8LineNumberColumnAndContents(at: 11)!
-            XCTAssertEqual(number, 1)
-            XCTAssertEqual(column, 10)
+            XCTAssertEqual(number, 0)
+            XCTAssertEqual(column, 9)
             XCTAssertEqual(content, "LINE1_67あ\n")
         }
         do {
             let (number, column, content) = string.utf8LineNumberColumnAndContents(at: 12)!
-            XCTAssertEqual(number, 2)
-            XCTAssertEqual(column, 1)
+            XCTAssertEqual(number, 1)
+            XCTAssertEqual(column, 0)
             XCTAssertEqual(content, "LINE2_7890\n")
         }
     }
@@ -57,20 +57,20 @@ class StringTests: XCTestCase {
         // line 3     L I N E 3 _ 8 9 0 1 \n
         do {
             let (number, column, content) = string.utf16LineNumberColumnAndContents(at: 0)!
-            XCTAssertEqual(number, 1)
-            XCTAssertEqual(column, 1)
+            XCTAssertEqual(number, 0)
+            XCTAssertEqual(column, 0)
             XCTAssertEqual(content, "LINE1_67あ\n")
         }
         do {
             let (number, column, content) = string.utf16LineNumberColumnAndContents(at: 9)!
-            XCTAssertEqual(number, 1)
-            XCTAssertEqual(column, 10)
+            XCTAssertEqual(number, 0)
+            XCTAssertEqual(column, 9)
             XCTAssertEqual(content, "LINE1_67あ\n")
         }
         do {
             let (number, column, content) = string.utf16LineNumberColumnAndContents(at: 10)!
-            XCTAssertEqual(number, 2)
-            XCTAssertEqual(column, 1)
+            XCTAssertEqual(number, 1)
+            XCTAssertEqual(column, 0)
             XCTAssertEqual(content, "LINE2_7890\n")
         }
     }
