@@ -21,6 +21,8 @@ matrix:
       env: JOB=Xcode8.3
       os: osx
       osx_image: xcode8.3
+      before_install:
+        - xcrun simctl delete 38C891AB-EC79-43E4-9311-6FDEB12DCF11 || true
     - script:
         - swift test
         - swift test -Xswiftc -DUSE_UTF8
