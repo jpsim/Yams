@@ -11,8 +11,6 @@ matrix:
       env: JOB=Xcode8.2
       os: osx
       osx_image: xcode8.2
-      before_install:
-        - xcrun simctl delete BE8E0914-5B5F-45C2-8C99-879894AF72B0
     - script:
         - xcodebuild -scheme Yams build-for-testing test-without-building # -sdk macosx -destination arch=x86_64
         - xcodebuild -scheme Yams build-for-testing test-without-building OTHER_SWIFT_FLAGS=-DUSE_UTF8
