@@ -39,12 +39,6 @@ public enum YamlError: Swift.Error {
     // Used in `NodeRepresentable`
     case representer(problem: String)
 
-    public struct Mark: CustomStringConvertible {
-        /// line and column start from 1
-        public let line: Int, column: Int
-        public var description: String { return "\(line):\(column)" }
-    }
-
     public struct Context: CustomStringConvertible {
         public let text: String
         public let mark: Mark
@@ -118,11 +112,11 @@ extension YamlError: CustomStringConvertible {
             return "\(mark): error: reader: \(problem):\n" + contents.endingWithNewLine
                 + String(repeating: " ", count: mark.column - 1) + "^"
         case let .scanner(context, problem, mark, yaml):
-            return "\(mark): error: scanner: \(context)\(problem):\n" + snippet(from: yaml, mark)
+            return "\(mark): error: scanner: \(context)\(problem):\n" + mark.snippet(from: yaml)
         case let .parser(context, problem, mark, yaml):
-            return "\(mark): error: parser: \(context?.description ?? "")\(problem):\n" + snippet(from: yaml, mark)
+            return "\(mark): error: parser: \(context?.description ?? "")\(problem):\n" + mark.snippet(from: yaml)
         case let .composer(context, problem, mark, yaml):
-            return "\(mark): error: composer: \(context?.description ?? "")\(problem):\n" + snippet(from: yaml, mark)
+            return "\(mark): error: composer: \(context?.description ?? "")\(problem):\n" + mark.snippet(from: yaml)
         case let .writer(problem), let .emitter(problem), let .representer(problem):
             return problem
         }
@@ -130,19 +124,6 @@ extension YamlError: CustomStringConvertible {
 }
 
 extension YamlError {
-    fileprivate func snippet(from yaml: String, _ mark: Mark) -> String {
-        let contents = yaml.substring(at: mark.line - 1)
-         // libYAML counts column by unicodeScalars.
-        let columnIndex = contents.unicodeScalars
-            .index(contents.unicodeScalars.startIndex,
-                   offsetBy: mark.column - 1,
-                   limitedBy: contents.unicodeScalars.endIndex)?
-            .samePosition(in: contents) ?? contents.endIndex
-        let column = contents.distance(from: contents.startIndex, to: columnIndex)
-        return contents.endingWithNewLine +
-            String(repeating: " ", count: column) + "^"
-    }
-
     fileprivate func markAndSnippet(from yaml: String, _ byteOffset: Int) -> (Mark, String)? {
         #if USE_UTF8
             guard let (line, column, contents) = yaml.utf8LineNumberColumnAndContents(at: byteOffset)
