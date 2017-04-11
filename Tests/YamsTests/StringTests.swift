@@ -89,7 +89,7 @@ extension StringTests {
                 ("testConfirmBehaviorOfStandardLibraryAPI", testConfirmBehaviorOfStandardLibraryAPI),
                 ("testUTF8LineNumberColumnAndContentsAtOffset", testUTF8LineNumberColumnAndContentsAtOffset),
                 ("testUTF16LineNumberColumnAndContentsAtOffset", testUTF16LineNumberColumnAndContentsAtOffset),
-                ("testSubstringAtLine", testSubstringAtLine),
+                ("testSubstringAtLine", testSubstringAtLine)
             ]
         #else
             return [] // https://bugs.swift.org/browse/SR-3366

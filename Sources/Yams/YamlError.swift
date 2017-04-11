@@ -14,7 +14,7 @@ import Foundation
 public enum YamlError: Swift.Error {
     // Used in `yaml_emitter_t` and `yaml_parser_t`
     /// YAML_NO_ERROR. No error is produced.
-    case no
+    case no // swiftlint:disable:this identifier_name
     /// YAML_MEMORY_ERROR. Cannot allocate or reallocate a block of memory.
     case memory
 
