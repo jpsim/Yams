@@ -14,7 +14,7 @@ public enum YamlError: Swift.Error {
     /// YAML_READER_ERROR. Cannot read or decode the input stream.
     case reader(problem: String, byteOffset: Int, value: Int32, yaml: String)
 
-    // line and column start from 0, column is counted by unicodeScalars
+    // line and column start from 1, column is counted by unicodeScalars
     /// YAML_SCANNER_ERROR. Cannot scan the input stream.
     case scanner(context: Context, problem: String, Mark, yaml: String)
     /// YAML_PARSER_ERROR. Cannot parse the input stream.
@@ -32,15 +32,16 @@ public enum YamlError: Swift.Error {
     case representer(problem: String)
 
     public struct Mark: CustomStringConvertible {
+        /// line and column start from 1
         public let line: Int, column: Int
-        public var description: String { return "\(line + 1):\(column + 1)" }
+        public var description: String { return "\(line):\(column)" }
     }
 
     public struct Context: CustomStringConvertible {
         public let text: String
         public let mark: Mark
         public var description: String {
-            return text + " in line \(mark.line + 1), column \(mark.column + 1)\n"
+            return text + " in line \(mark.line), column \(mark.column)\n"
         }
     }
 }
@@ -51,12 +52,12 @@ extension YamlError {
             guard let context = parser.context else { return nil }
             return Context(
                 text: String(cString: context),
-                mark: Mark(line: parser.context_mark.line, column: parser.context_mark.column)
+                mark: Mark(line: parser.context_mark.line + 1, column: parser.context_mark.column + 1)
             )
         }
 
         func problemMark(from parser: yaml_parser_t) -> Mark {
-            return Mark(line: parser.problem_mark.line, column: parser.problem_mark.column)
+            return Mark(line: parser.problem_mark.line + 1, column: parser.problem_mark.column + 1)
         }
 
         switch parser.error {
@@ -107,7 +108,7 @@ extension YamlError: CustomStringConvertible {
             guard let (mark, contents) = markAndSnippet(from: yaml, byteOffset)
                 else { return "\(problem) at byte offset: \(byteOffset), value: \(value)" }
             return "\(mark): error: reader: \(problem):\n" + contents.endingWithNewLine
-                + String(repeating: " ", count: mark.column) + "^"
+                + String(repeating: " ", count: mark.column - 1) + "^"
         case let .scanner(context, problem, mark, yaml):
             return "\(mark): error: scanner: \(context)\(problem):\n" + snippet(from: yaml, mark)
         case let .parser(context, problem, mark, yaml):
@@ -122,11 +123,11 @@ extension YamlError: CustomStringConvertible {
 
 extension YamlError {
     fileprivate func snippet(from yaml: String, _ mark: Mark) -> String {
-        let contents = yaml.substring(at: mark.line)
+        let contents = yaml.substring(at: mark.line - 1)
          // libYAML counts column by unicodeScalars.
         let columnIndex = contents.unicodeScalars
             .index(contents.unicodeScalars.startIndex,
-                   offsetBy: mark.column,
+                   offsetBy: mark.column - 1,
                    limitedBy: contents.unicodeScalars.endIndex)?
             .samePosition(in: contents) ?? contents.endIndex
         let column = contents.distance(from: contents.startIndex, to: columnIndex)
@@ -142,6 +143,6 @@ extension YamlError {
             guard let (line, column, contents) = yaml.utf16LineNumberColumnAndContents(at: byteOffset / 2)
                 else { return nil }
         #endif
-        return (Mark(line: line, column: column), contents)
+        return (Mark(line: line + 1, column: column + 1), contents)
     }
 }

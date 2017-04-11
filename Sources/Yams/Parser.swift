@@ -166,7 +166,7 @@ public final class Parser {
         if event.type != YAML_STREAM_END_EVENT {
             throw YamlError.composer(
                 context: YamlError.Context(text: "expected a single document in the stream",
-                                           mark: .init(line: 0, column: 0)),
+                                           mark: YamlError.Mark(line: 1, column: 1)),
                 problem: "but found another document", event.startMark,
                 yaml: yaml
             )
@@ -342,7 +342,7 @@ fileprivate class Event {
 
     // start_mark
     var startMark: YamlError.Mark {
-        return YamlError.Mark(line: event.start_mark.line, column: event.start_mark.column)
+        return YamlError.Mark(line: event.start_mark.line + 1, column: event.start_mark.column + 1)
     }
 }
 
