@@ -1,3 +1,11 @@
+//
+//  YamlError.swift
+//  Yams
+//
+//  Created by JP Simard on 2016-11-19.
+//  Copyright (c) 2016 Yams. All rights reserved.
+//
+
 #if SWIFT_PACKAGE
 import CYaml
 #endif
