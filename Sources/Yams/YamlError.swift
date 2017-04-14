@@ -24,7 +24,7 @@ public enum YamlError: Swift.Error {
 
     // line and column start from 1, column is counted by unicodeScalars
     /// YAML_SCANNER_ERROR. Cannot scan the input stream.
-    case scanner(context: Context, problem: String, Mark, yaml: String)
+    case scanner(context: Context?, problem: String, Mark, yaml: String)
     /// YAML_PARSER_ERROR. Cannot parse the input stream.
     case parser(context: Context?, problem: String, Mark, yaml: String)
     /// YAML_COMPOSER_ERROR. Cannot compose a YAML document.
@@ -71,7 +71,7 @@ extension YamlError {
                            value: parser.problem_value,
                            yaml: yaml)
         case YAML_SCANNER_ERROR:
-            self = .scanner(context: context(from: parser)!,
+            self = .scanner(context: context(from: parser),
                             problem: String(cString: parser.problem), problemMark(from: parser),
                             yaml: yaml)
         case YAML_PARSER_ERROR:
@@ -112,7 +112,7 @@ extension YamlError: CustomStringConvertible {
             return "\(mark): error: reader: \(problem):\n" + contents.endingWithNewLine
                 + String(repeating: " ", count: mark.column - 1) + "^"
         case let .scanner(context, problem, mark, yaml):
-            return "\(mark): error: scanner: \(context)\(problem):\n" + mark.snippet(from: yaml)
+            return "\(mark): error: scanner: \(context?.description ?? "")\(problem):\n" + mark.snippet(from: yaml)
         case let .parser(context, problem, mark, yaml):
             return "\(mark): error: parser: \(context?.description ?? "")\(problem):\n" + mark.snippet(from: yaml)
         case let .composer(context, problem, mark, yaml):

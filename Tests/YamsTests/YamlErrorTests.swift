@@ -121,6 +121,21 @@ class YamlErrorTests: XCTestCase {
             )
         }
     }
+
+    func testScannerErrorMayHaveNullContext() throws {
+        // https://github.com/realm/SwiftLint/issues/1436
+        let swiftlint1436 = "large_tuple: warning: 3"
+        let parser = try Parser(yaml: swiftlint1436)
+        XCTAssertThrowsError(try parser.singleRoot()) { error in
+            XCTAssertTrue(error is YamlError)
+            XCTAssertEqual("\(error)", [
+                "1:21: error: scanner: mapping values are not allowed in this context:",
+                "large_tuple: warning: 3",
+                "                    ^"
+                ].joined(separator: "\n")
+            )
+        }
+    }
 }
 
 extension YamlErrorTests {
@@ -133,7 +148,8 @@ extension YamlErrorTests {
                 ("testNextRootThrowsOnInvalidYaml", testNextRootThrowsOnInvalidYaml),
                 ("testSingleRootThrowsOnInvalidYaml", testSingleRootThrowsOnInvalidYaml),
                 ("testSingleRootThrowsOnMultipleDocuments", testSingleRootThrowsOnMultipleDocuments),
-                ("testUndefinedAliasCausesError", testUndefinedAliasCausesError)
+                ("testUndefinedAliasCausesError", testUndefinedAliasCausesError),
+                ("testScannerErrorMayHaveNullContext", testScannerErrorMayHaveNullContext)
             ]
         #else
             return [] // https://bugs.swift.org/browse/SR-3366
