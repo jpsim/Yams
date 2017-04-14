@@ -5,6 +5,7 @@ import XCTest
 XCTMain([
     testCase(ConstructorTests.allTests),
     testCase(EmitterTests.allTests),
+    testCase(MarkTests.allTests),
     testCase(NodeTests.allTests),
     testCase(PerformanceTests.allTests),
     testCase(RepresenterTests.allTests),
