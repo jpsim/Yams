@@ -154,7 +154,7 @@ extension Optional: NodeRepresentable {
 
 extension Array: NodeRepresentable {
     public func represented() throws -> Node {
-        let nodes = try flatMap(represent)
+        let nodes = try map(represent)
         return Node(nodes, Tag(.seq))
     }
 }
