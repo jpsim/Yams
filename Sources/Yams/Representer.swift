@@ -161,7 +161,7 @@ extension Array: NodeRepresentable {
 
 extension Dictionary: NodeRepresentable {
     public func represented() throws -> Node {
-        let pairs = try map { (key: try represent($0), value: try represent($1)) }
+        let pairs = try map { (key: try represent($0.0), value: try represent($0.1)) }
         return Node(pairs.sorted { $0.key < $1.key }, Tag(.map))
     }
 }

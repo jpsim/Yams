@@ -11,7 +11,7 @@ import Yams
 
 class MarkTests: XCTestCase {
     func testLocatableDeprecationMessageForSwiftLint() throws {
-        let deprecatedRulesIdentifiers = [("variable_name", "identifier_name")].map { (Node($0), $1) }
+        let deprecatedRulesIdentifiers = [("variable_name", "identifier_name")].map { (Node($0.0), $0.1) }
         func deprecatedMessage(from rule: Node) -> String? {
             guard let index = deprecatedRulesIdentifiers.index(where: { $0.0 == rule }) else {
                 return nil
