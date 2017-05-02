@@ -115,11 +115,19 @@ private let floatFormatter = numberFormatter(with: 7)
 // TODO: Support `Float80`
 //extension Float80: NodeRepresentable {}
 
+#if swift(>=4.0)
+extension BinaryInteger {
+    public func represented() throws -> Node {
+        return Node(String(describing: self), Tag(.int))
+    }
+}
+#else
 extension Integer {
     public func represented() throws -> Node {
         return Node(String(describing: self), Tag(.int))
     }
 }
+#endif
 
 extension Int: NodeRepresentable {}
 extension Int16: NodeRepresentable {}

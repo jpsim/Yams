@@ -71,30 +71,30 @@ class RepresenterTests: XCTestCase {
         #else
             XCTFail("Unknown architecture")
         #endif
-        XCTAssertEqual(try Node(Int.allZeros), "0")
-        XCTAssertEqual(try Node(UInt.allZeros), "0")
+        XCTAssertEqual(try Node(Int(0)), "0")
+        XCTAssertEqual(try Node(UInt(0)), "0")
 
         XCTAssertEqual(try Node(Int16.max), "32767")
-        XCTAssertEqual(try Node(Int16.allZeros), "0")
+        XCTAssertEqual(try Node(Int16(0)), "0")
         XCTAssertEqual(try Node(Int16.min), "-32768")
         XCTAssertEqual(try Node(Int32.max), "2147483647")
-        XCTAssertEqual(try Node(Int32.allZeros), "0")
+        XCTAssertEqual(try Node(Int32(0)), "0")
         XCTAssertEqual(try Node(Int32.min), "-2147483648")
         XCTAssertEqual(try Node(Int64.max), "9223372036854775807")
-        XCTAssertEqual(try Node(Int64.allZeros), "0")
+        XCTAssertEqual(try Node(Int64(0)), "0")
         XCTAssertEqual(try Node(Int64.min), "-9223372036854775808")
         XCTAssertEqual(try Node(Int8.max), "127")
-        XCTAssertEqual(try Node(Int8.allZeros), "0")
+        XCTAssertEqual(try Node(Int8(0)), "0")
         XCTAssertEqual(try Node(Int8.min), "-128")
 
         XCTAssertEqual(try Node(UInt16.max), "65535")
-        XCTAssertEqual(try Node(UInt16.allZeros), "0")
+        XCTAssertEqual(try Node(UInt16(0)), "0")
         XCTAssertEqual(try Node(UInt32.max), "4294967295")
-        XCTAssertEqual(try Node(UInt32.allZeros), "0")
+        XCTAssertEqual(try Node(UInt32(0)), "0")
         XCTAssertEqual(try Node(UInt64.max), "18446744073709551615")
-        XCTAssertEqual(try Node(UInt64.allZeros), "0")
+        XCTAssertEqual(try Node(UInt64(0)), "0")
         XCTAssertEqual(try Node(UInt8.max), "255")
-        XCTAssertEqual(try Node(UInt8.allZeros), "0")
+        XCTAssertEqual(try Node(UInt8(0)), "0")
     }
 
     func testString() throws {
