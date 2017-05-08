@@ -73,10 +73,10 @@ extension Data: ScalarRepresentable {
 
 extension Date: ScalarRepresentable {
     public func represented() throws -> Node {
-        return Node(iso8601string, Tag(.timestamp))
+        return Node(iso8601String, Tag(.timestamp))
     }
 
-    private var iso8601string: String {
+    private var iso8601String: String {
         let calendar = Calendar(identifier: .gregorian)
         let nanosecond = calendar.component(.nanosecond, from: self)
         #if os(Linux)
@@ -85,12 +85,27 @@ extension Date: ScalarRepresentable {
             return iso8601Formatter.string(from: self)
         #else
             if nanosecond != 0 {
-                return iso8601FormatterWithNanoseconds.string(from: self)
+                return iso8601WithFractionalSecondFormatter.string(from: self)
                     .trimmingCharacters(in: characterSetZero) + "Z"
             } else {
                 return iso8601Formatter.string(from: self)
             }
         #endif
+    }
+
+    public func representedForCodable() -> Node {
+        return Node(iso8601StringWithFullNanosecond, Tag(.timestamp))
+    }
+
+    private var iso8601StringWithFullNanosecond: String {
+        let calendar = Calendar(identifier: .gregorian)
+        let nanosecond = calendar.component(.nanosecond, from: self)
+        if nanosecond != 0 {
+            return iso8601WithoutZFormatter.string(from: self) +
+                String(format: ".%09d", nanosecond).trimmingCharacters(in: characterSetZero) + "Z"
+        } else {
+            return iso8601Formatter.string(from: self)
+        }
     }
 }
 
@@ -104,10 +119,19 @@ private let iso8601Formatter: DateFormatter = {
     return formatter
 }()
 
-private let iso8601FormatterWithNanoseconds: DateFormatter = {
+private let iso8601WithoutZFormatter: DateFormatter = {
     var formatter = DateFormatter()
     formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSSSSSSSS"
+    formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss"
+    formatter.timeZone = TimeZone(secondsFromGMT: 0)
+    return formatter
+}()
+
+// DateFormatter truncates Fractional Second to 10^-4
+private let iso8601WithFractionalSecondFormatter: DateFormatter = {
+    var formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSSS"
     formatter.timeZone = TimeZone(secondsFromGMT: 0)
     return formatter
 }()

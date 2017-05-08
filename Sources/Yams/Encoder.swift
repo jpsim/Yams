@@ -152,7 +152,7 @@
                     if let data = value as? Data {
                         encoder.node.sequence?.append(try data.represented())
                     } else if let date = value as? Date {
-                        encoder.node.sequence?.append(try date.represented())
+                        encoder.node.sequence?.append(date.representedForCodable())
                     } else {
                         try value.encode(to: referencingEncoder(for: key.stringValue))
                     }
@@ -229,7 +229,7 @@
                     if let data = value as? Data {
                         encoder.node.sequence?.append(try data.represented())
                     } else if let date = value as? Date {
-                        encoder.node.sequence?.append(try date.represented())
+                        encoder.node.sequence?.append(date.representedForCodable())
                     } else {
                         try value.encode(to: referencingEncoder())
                     }
