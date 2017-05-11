@@ -59,33 +59,41 @@ import Yams
 
         // MARK: - Date Strategy Tests
         func testEncodingDate() {
-            // We can't encode a top-level Date, so it'll be wrapped in an array.
+        #if os(Linux)
+            print("'Date' does not conform to 'Codable' on Linux yet.")
+        #else
             _testRoundTrip(of: TopLevelWrapper(Date()))
+        #endif
         }
 
         func testEncodingDateMillisecondsSince1970() {
-            // Cannot encode an arbitrary number of seconds since we've lost precision since 1970.
+        #if os(Linux)
+            print("'Date' does not conform to 'Codable' on Linux yet.")
+        #else
             let seconds = 1000.0
             let expectedYAML = "- 1970-01-01T00:16:40Z\n"
 
-            // We can't encode a top-level Date, so it'll be wrapped in an array.
             _testRoundTrip(of: TopLevelWrapper(Date(timeIntervalSince1970: seconds)),
                            expectedYAML: expectedYAML)
+        #endif
         }
 
         // MARK: - Data Tests
         func testEncodingBase64Data() {
+        #if os(Linux)
+            print("'Data' does not conform to 'Codable' on Linux yet.")
+        #else
             let data = Data(bytes: [0xDE, 0xAD, 0xBE, 0xEF])
 
             // We can't encode a top-level Data, so it'll be wrapped in an array.
             let expectedYAML = "- 3q2+7w==\n"
             _testRoundTrip(of: TopLevelWrapper(data), expectedYAML: expectedYAML)
+        #endif
         }
 
         // MARK: - Helper Functions
         private func _testRoundTrip<T>(of value: T,
                                        expectedYAML yamlString: String? = nil) where T : Codable, T : Equatable {
-            let yaml = yamlString?.data(using: .utf8)! // swiftlint:disable:this force_unwrapping
             var payload: Data! = nil
             do {
                 let encoder = YAMLEncoder()
@@ -94,8 +102,9 @@ import Yams
                 XCTFail("Failed to encode \(T.self) to YAML.")
             }
 
-            if let expectedYAML = yaml {
-                XCTAssertEqual(expectedYAML, payload, "Produced YAML not identical to expected YAML.")
+            if let expectedYAML = yamlString {
+                let producedYAML = String(data: payload, encoding: .utf8)! // swiftlint:disable:this force_unwrapping
+                XCTAssertEqual(producedYAML, expectedYAML, "Produced YAML not identical to expected YAML.")
             }
 
             do {
@@ -283,6 +292,24 @@ import Yams
 
         static func == (_ lhs: TopLevelWrapper<T>, _ rhs: TopLevelWrapper<T>) -> Bool {
             return lhs.value == rhs.value
+        }
+    }
+
+    extension EncoderTests {
+        static var allTests: [(String, (EncoderTests) -> () throws -> Void)] {
+            return [
+                ("testEncodingTopLevelEmptyStruct", testEncodingTopLevelEmptyStruct),
+                ("testEncodingTopLevelEmptyClass", testEncodingTopLevelEmptyClass),
+                ("testEncodingTopLevelSingleValueEnum", testEncodingTopLevelSingleValueEnum),
+                ("testEncodingTopLevelSingleValueStruct", testEncodingTopLevelSingleValueStruct),
+                ("testEncodingTopLevelSingleValueClass", testEncodingTopLevelSingleValueClass),
+                ("testEncodingTopLevelStructuredStruct", testEncodingTopLevelStructuredStruct),
+                ("testEncodingTopLevelStructuredClass", testEncodingTopLevelStructuredClass),
+                ("testEncodingTopLevelDeepStructuredType", testEncodingTopLevelDeepStructuredType),
+                ("testEncodingDate", testEncodingDate),
+                ("testEncodingDateMillisecondsSince1970", testEncodingDateMillisecondsSince1970),
+                ("testEncodingBase64Data", testEncodingBase64Data)
+            ]
         }
     }
 
