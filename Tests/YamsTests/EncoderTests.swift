@@ -35,26 +35,44 @@ import Yams
         }
 
         func testEncodingTopLevelSingleValueClass() {
-            _testRoundTrip(of: Counter())
+            _testRoundTrip(of: Counter(), expectedYAML: "0\n...\n")
         }
 
         // MARK: - Encoding Top-Level Structured Types
         func testEncodingTopLevelStructuredStruct() {
             // Address is a struct type with multiple fields.
             let address = Address.testValue
-            _testRoundTrip(of: address)
+            _testRoundTrip(of: address, expectedYAML: """
+                street: 1 Infinite Loop
+                city: Cupertino
+                state: CA
+                zipCode: 95014
+                country: United States
+
+                """)
         }
 
         func testEncodingTopLevelStructuredClass() {
             // Person is a class with multiple fields.
             let person = Person.testValue
-            _testRoundTrip(of: person)
+            _testRoundTrip(of: person, expectedYAML: "name: Johnny Appleseed\nemail: appleseed@apple.com\n")
         }
 
         func testEncodingTopLevelDeepStructuredType() {
             // Company is a type with fields which are Codable themselves.
             let company = Company.testValue
-            _testRoundTrip(of: company)
+            _testRoundTrip(of: company, expectedYAML: """
+                address:
+                  street: 1 Infinite Loop
+                  city: Cupertino
+                  state: CA
+                  zipCode: 95014
+                  country: United States
+                employees:
+                - name: Johnny Appleseed
+                  email: appleseed@apple.com
+
+                """)
         }
 
         // MARK: - Date Strategy Tests
