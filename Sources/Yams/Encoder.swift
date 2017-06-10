@@ -14,7 +14,10 @@
         public init() {}
         public func encode<T: Swift.Encodable>(_ value: T) throws -> Data {
             let encoder = _YAMLEncoder()
-            try value.encode(to: encoder)
+            do {
+                var container = encoder.singleValueContainer()
+                try container.encode(value)
+            }
             return try serialize(node: encoder.node).data(using: .utf8, allowLossyConversion: false) ?? Data()
         }
     }
@@ -131,33 +134,29 @@
         }
 
         // assumes following methods never throws
-        func encode(_ value: Bool?, forKey key: Key)   throws { try represent(value, for: key) }
-        func encode(_ value: Int?, forKey key: Key)    throws { try represent(value, for: key) }
-        func encode(_ value: Int8?, forKey key: Key)   throws { try represent(value, for: key) }
-        func encode(_ value: Int16?, forKey key: Key)  throws { try represent(value, for: key) }
-        func encode(_ value: Int32?, forKey key: Key)  throws { try represent(value, for: key) }
-        func encode(_ value: Int64?, forKey key: Key)  throws { try represent(value, for: key) }
-        func encode(_ value: UInt?, forKey key: Key)   throws { try represent(value, for: key) }
-        func encode(_ value: UInt8?, forKey key: Key)  throws { try represent(value, for: key) }
-        func encode(_ value: UInt16?, forKey key: Key) throws { try represent(value, for: key) }
-        func encode(_ value: UInt32?, forKey key: Key) throws { try represent(value, for: key) }
-        func encode(_ value: UInt64?, forKey key: Key) throws { try represent(value, for: key) }
-        func encode(_ value: Float?, forKey key: Key)  throws { try represent(value, for: key) }
-        func encode(_ value: Double?, forKey key: Key) throws { try represent(value, for: key) }
-        func encode(_ value: String?, forKey key: Key) throws { try represent(value, for: key) }
+        func encode(_ value: Bool, forKey key: Key)   throws { try represent(value, for: key) }
+        func encode(_ value: Int, forKey key: Key)    throws { try represent(value, for: key) }
+        func encode(_ value: Int8, forKey key: Key)   throws { try represent(value, for: key) }
+        func encode(_ value: Int16, forKey key: Key)  throws { try represent(value, for: key) }
+        func encode(_ value: Int32, forKey key: Key)  throws { try represent(value, for: key) }
+        func encode(_ value: Int64, forKey key: Key)  throws { try represent(value, for: key) }
+        func encode(_ value: UInt, forKey key: Key)   throws { try represent(value, for: key) }
+        func encode(_ value: UInt8, forKey key: Key)  throws { try represent(value, for: key) }
+        func encode(_ value: UInt16, forKey key: Key) throws { try represent(value, for: key) }
+        func encode(_ value: UInt32, forKey key: Key) throws { try represent(value, for: key) }
+        func encode(_ value: UInt64, forKey key: Key) throws { try represent(value, for: key) }
+        func encode(_ value: Float, forKey key: Key)  throws { try represent(value, for: key) }
+        func encode(_ value: Double, forKey key: Key) throws { try represent(value, for: key) }
+        func encode(_ value: String, forKey key: Key) throws { encoder.node.mapping?[key.stringValue] = Node(value) }
 
-        func encode<T>(_ value: T?, forKey key: Key) throws where T : Encodable {
+        func encode<T>(_ value: T, forKey key: Key) throws where T : Encodable {
             try encoder.with(pushedKey: key) {
-                if let value = value {
-                    if let data = value as? Data {
-                        encoder.node.sequence?.append(try data.represented())
-                    } else if let date = value as? Date {
-                        encoder.node.sequence?.append(date.representedForCodable())
-                    } else {
-                        try value.encode(to: referencingEncoder(for: key.stringValue))
-                    }
+                if let data = value as? Data {
+                    encoder.node.sequence?.append(try data.represented())
+                } else if let date = value as? Date {
+                    encoder.node.sequence?.append(date.representedForCodable())
                 } else {
-                    encoder.node.sequence?.append(Node("null", Tag(.null)))
+                    try value.encode(to: referencingEncoder(for: key.stringValue))
                 }
             }
         }
@@ -207,34 +206,30 @@
             return encoder.codingPath
         }
 
-        func encode(_ value: Bool?)   throws { try represent(value) }
-        func encode(_ value: Int?)    throws { try represent(value) }
-        func encode(_ value: Int8?)   throws { try represent(value) }
-        func encode(_ value: Int16?)  throws { try represent(value) }
-        func encode(_ value: Int32?)  throws { try represent(value) }
-        func encode(_ value: Int64?)  throws { try represent(value) }
-        func encode(_ value: UInt?)   throws { try represent(value) }
-        func encode(_ value: UInt8?)  throws { try represent(value) }
-        func encode(_ value: UInt16?) throws { try represent(value) }
-        func encode(_ value: UInt32?) throws { try represent(value) }
-        func encode(_ value: UInt64?) throws { try represent(value) }
-        func encode(_ value: Float?)  throws { try represent(value) }
-        func encode(_ value: Double?) throws { try represent(value) }
-        func encode(_ value: String?) throws { try represent(value) }
+        func encode(_ value: Bool)   throws { try represent(value) }
+        func encode(_ value: Int)    throws { try represent(value) }
+        func encode(_ value: Int8)   throws { try represent(value) }
+        func encode(_ value: Int16)  throws { try represent(value) }
+        func encode(_ value: Int32)  throws { try represent(value) }
+        func encode(_ value: Int64)  throws { try represent(value) }
+        func encode(_ value: UInt)   throws { try represent(value) }
+        func encode(_ value: UInt8)  throws { try represent(value) }
+        func encode(_ value: UInt16) throws { try represent(value) }
+        func encode(_ value: UInt32) throws { try represent(value) }
+        func encode(_ value: UInt64) throws { try represent(value) }
+        func encode(_ value: Float)  throws { try represent(value) }
+        func encode(_ value: Double) throws { try represent(value) }
+        func encode(_ value: String) throws { encoder.node.sequence?.append(Node(value)) }
 
-        func encode<T>(_ value: T?) throws where T : Encodable {
+        func encode<T>(_ value: T) throws where T : Encodable {
             // Since generic types may throw, the coding path needs to contain this key.
             try encoder.with(pushedKey: nil) {
-                if let value = value {
-                    if let data = value as? Data {
-                        encoder.node.sequence?.append(try data.represented())
-                    } else if let date = value as? Date {
-                        encoder.node.sequence?.append(date.representedForCodable())
-                    } else {
-                        try value.encode(to: referencingEncoder())
-                    }
+                if let data = value as? Data {
+                    encoder.node.sequence?.append(try data.represented())
+                } else if let date = value as? Date {
+                    encoder.node.sequence?.append(date.representedForCodable())
                 } else {
-                    encoder.node.sequence?.append(Node("null", Tag(.null)))
+                    try value.encode(to: referencingEncoder())
                 }
             }
         }
@@ -271,6 +266,11 @@
 
         // MARK: - SingleValueEncodingContainer Methods
 
+        func encodeNil() throws {
+            assertCanEncodeSingleValue()
+            node = Node("null", Tag(.null))
+        }
+
         func encode(_ value: Bool)   throws { try represent(value) }
         func encode(_ value: Int)    throws { try represent(value) }
         func encode(_ value: Int8)   throws { try represent(value) }
@@ -288,6 +288,16 @@
         func encode(_ value: String) throws {
             assertCanEncodeSingleValue()
             node = Node(value)
+        }
+
+        func encode<T>(_ value: T) throws where T : Encodable {
+            if let data = value as? Data {
+                node = try data.represented()
+            } else if let date = value as? Date {
+                node = date.representedForCodable()
+            } else {
+                try value.encode(to: self)
+            }
         }
 
         // MARK: Utility

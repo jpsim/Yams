@@ -17,7 +17,8 @@
             let yaml = String(data: data, encoding: .utf8)! // swiftlint:disable:this force_unwrapping
             let node = try Yams.compose(yaml: yaml) ?? ""
             let decoder = _YAMLDecoder(referencing: node)
-            return try T(from: decoder)
+            let container = try decoder.singleValueContainer()
+            return try container.decode(T.self)
         }
     }
 
@@ -68,16 +69,6 @@
         }
 
         func singleValueContainer() throws -> SingleValueDecodingContainer {
-            guard node.isScalar else {
-                // FIXME: Should throw type mismatch error
-                throw DecodingError.valueNotFound(
-                    UnkeyedDecodingContainer.self,
-                    DecodingError.Context(
-                        codingPath: self.codingPath,
-                        debugDescription: "Cannot get unkeyed decoding container -- found null value instead."
-                    )
-                )
-            }
             return self
         }
 
@@ -394,6 +385,7 @@
 
         // MARK: SingleValueDecodingContainer Methods
 
+        func decodeNil() -> Bool { return node.null == NSNull() }
         func decode(_ type: Bool.Type)   throws -> Bool { return try construct() }
         func decode(_ type: Int.Type)    throws -> Int { return try construct() }
         func decode(_ type: Int8.Type)   throws -> Int8 { return try construct() }
@@ -409,6 +401,17 @@
         func decode(_ type: Double.Type) throws -> Double { return try construct() }
         func decode(_ type: String.Type) throws -> String { return try construct() }
         func decode(_ type: Data.Type)   throws -> Data { return try construct() }
+
+        func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+            if T.self == Data.self {
+                return Data.construct(from: node) as! T // swiftlint:disable:this force_cast
+            } else if T.self == Date.self {
+                return Date.construct(from: node) as! T // swiftlint:disable:this force_cast
+            }
+
+            let decoder = _YAMLDecoder(referencing: node)
+            return try T(from: decoder)
+        }
 
         // MARK: Utility
 
