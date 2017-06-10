@@ -151,10 +151,10 @@
 
         func encode<T>(_ value: T, forKey key: Key) throws where T : Encodable {
             try encoder.with(pushedKey: key) {
-                if let data = value as? Data {
-                    encoder.node.sequence?.append(try data.represented())
-                } else if let date = value as? Date {
-                    encoder.node.sequence?.append(date.representedForCodable())
+                if let date = value as? Date {
+                    encoder.node.mapping?[key.stringValue] = date.representedForCodable()
+                } else if let representable = value as? ScalarRepresentable {
+                    encoder.node.mapping?[key.stringValue] = try representable.represented()
                 } else {
                     try value.encode(to: referencingEncoder(for: key.stringValue))
                 }
@@ -181,8 +181,8 @@
 
         // MARK: Utility
 
-        /// Encode NodeRepresentable
-        private func represent<T: NodeRepresentable>(_ value: T, for key: Key) throws {
+        /// Encode ScalarRepresentable
+        private func represent<T: ScalarRepresentable>(_ value: T, for key: Key) throws {
             // assumes this function is used for types that never throws.
             encoder.node.mapping?[key.stringValue] = try Node(value)
         }
@@ -224,10 +224,10 @@
         func encode<T>(_ value: T) throws where T : Encodable {
             // Since generic types may throw, the coding path needs to contain this key.
             try encoder.with(pushedKey: nil) {
-                if let data = value as? Data {
-                    encoder.node.sequence?.append(try data.represented())
-                } else if let date = value as? Date {
+                if let date = value as? Date {
                     encoder.node.sequence?.append(date.representedForCodable())
+                } else if let representable = value as? ScalarRepresentable {
+                    encoder.node.sequence?.append(try representable.represented())
                 } else {
                     try value.encode(to: referencingEncoder())
                 }
@@ -249,8 +249,8 @@
 
         // MARK: Utility
 
-        /// Encode NodeRepresentable
-        private func represent<T: NodeRepresentable>(_ value: T) throws {
+        /// Encode ScalarRepresentable
+        private func represent<T: ScalarRepresentable>(_ value: T) throws {
             // assumes this function is used for types that never throws.
             encoder.node.sequence?.append(try Node(value))
         }
@@ -291,10 +291,10 @@
         }
 
         func encode<T>(_ value: T) throws where T : Encodable {
-            if let data = value as? Data {
-                node = try data.represented()
-            } else if let date = value as? Date {
+            if let date = value as? Date {
                 node = date.representedForCodable()
+            } else if let representable = value as? ScalarRepresentable {
+                node = try representable.represented()
             } else {
                 try value.encode(to: self)
             }
@@ -324,8 +324,8 @@
             }
         }
 
-        /// Encode NodeRepresentable
-        func represent<T: NodeRepresentable>(_ value: T) throws {
+        /// Encode ScalarRepresentable
+        func represent<T: ScalarRepresentable>(_ value: T) throws {
             assertCanEncodeSingleValue()
             node = try Node(value)
         }

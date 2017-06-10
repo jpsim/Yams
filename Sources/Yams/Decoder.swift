@@ -133,10 +133,8 @@
         func decodeIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T : Decodable {
             return try decoder.with(pushedKey: key) {
                 guard let node = mapping[key.stringValue] else { return nil }
-                if T.self == Data.self {
-                    return Data.construct(from: node) as? T
-                } else if T.self == Date.self {
-                    return Date.construct(from: node) as? T
+                if let constructibleType = type.self as? ScalarConstructible.Type {
+                    return constructibleType.construct(from: node) as? T
                 }
 
                 let decoder = _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
@@ -279,10 +277,8 @@
 
             let decoded: T? = try decoder.with(pushedKey: nil) {
                 let node = sequence[currentIndex]
-                if T.self == Data.self {
-                    return Data.construct(from: node) as? T
-                } else if T.self == Date.self {
-                    return Date.construct(from: node) as? T
+                if let scalarConstructibleType = type.self as? ScalarConstructible.Type {
+                    return scalarConstructibleType.construct(from: node) as? T
                 }
 
                 let decoder = _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
@@ -403,10 +399,8 @@
         func decode(_ type: Data.Type)   throws -> Data { return try construct() }
 
         func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
-            if T.self == Data.self {
-                return Data.construct(from: node) as! T // swiftlint:disable:this force_cast
-            } else if T.self == Date.self {
-                return Date.construct(from: node) as! T // swiftlint:disable:this force_cast
+            if let scalarConstructibleType = type.self as? ScalarConstructible.Type {
+                return scalarConstructibleType.construct(from: node) as! T // swiftlint:disable:this force_cast
             }
 
             let decoder = _YAMLDecoder(referencing: node)
