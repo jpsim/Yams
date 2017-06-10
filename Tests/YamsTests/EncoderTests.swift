@@ -62,7 +62,7 @@ import Yams
         #if os(Linux)
             print("'Date' does not conform to 'Codable' on Linux yet.")
         #else
-            _testRoundTrip(of: TopLevelWrapper(Date()))
+            _testRoundTrip(of: Date())
         #endif
         }
 
@@ -70,11 +70,7 @@ import Yams
         #if os(Linux)
             print("'Date' does not conform to 'Codable' on Linux yet.")
         #else
-            let seconds = 1000.0
-            let expectedYAML = "- 1970-01-01T00:16:40Z\n"
-
-            _testRoundTrip(of: TopLevelWrapper(Date(timeIntervalSince1970: seconds)),
-                           expectedYAML: expectedYAML)
+            _testRoundTrip(of: Date(timeIntervalSince1970: 1000.0), expectedYAML: "1970-01-01T00:16:40Z\n...\n")
         #endif
         }
 
@@ -83,11 +79,7 @@ import Yams
         #if os(Linux)
             print("'Data' does not conform to 'Codable' on Linux yet.")
         #else
-            let data = Data(bytes: [0xDE, 0xAD, 0xBE, 0xEF])
-
-            // We can't encode a top-level Data, so it'll be wrapped in an array.
-            let expectedYAML = "- 3q2+7w==\n"
-            _testRoundTrip(of: TopLevelWrapper(data), expectedYAML: expectedYAML)
+            _testRoundTrip(of: Data(bytes: [0xDE, 0xAD, 0xBE, 0xEF]), expectedYAML: "3q2+7w==\n...\n")
         #endif
         }
 
@@ -266,32 +258,6 @@ import Yams
 
         static var testValue: Company {
             return Company(address: Address.testValue, employees: [Person.testValue])
-        }
-    }
-
-    // MARK: - Helper Types
-
-    /// Wraps a type T so that it can be encoded at the top level of a payload.
-    fileprivate struct TopLevelWrapper<T> : Codable, Equatable where T : Codable, T : Equatable {
-        let value: T
-
-        init(_ value: T) {
-            self.value = value
-        }
-
-        func encode(to encoder: Encoder) throws {
-            var container = encoder.unkeyedContainer()
-            try container.encode(value)
-        }
-
-        init(from decoder: Decoder) throws {
-            var container = try decoder.unkeyedContainer()
-            value = try container.decode(T.self)
-            assert(container.isAtEnd)
-        }
-
-        static func == (_ lhs: TopLevelWrapper<T>, _ rhs: TopLevelWrapper<T>) -> Bool {
-            return lhs.value == rhs.value
         }
     }
 
