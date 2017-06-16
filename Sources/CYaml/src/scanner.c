@@ -1191,6 +1191,7 @@ yaml_parser_decrease_flow_level(yaml_parser_t *parser)
     if (parser->flow_level) {
         parser->flow_level --;
         dummy_key = POP(parser, parser->simple_keys);
+        (void)dummy_key;
     }
 
     return 1;
