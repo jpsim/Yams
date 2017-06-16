@@ -242,8 +242,8 @@ extension String: ScalarConstructible {
 // MARK: - Types that can't conform to ScalarConstructible
 extension NSNull/*: ScalarConstructible*/ {
     public static func construct(from node: Node) -> NSNull? {
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        switch node.scalar!.string {
+        guard let string = node.scalar?.string else { return nil }
+        switch string {
         case "", "~", "null", "Null", "NULL":
             return NSNull()
         default:
