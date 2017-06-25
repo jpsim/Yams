@@ -96,7 +96,7 @@ extension Date: ScalarConstructible {
             result.range.location != NSNotFound else {
                 return nil
         }
-        #if os(Linux)
+        #if os(Linux) || swift(>=4.0)
             let components = (1..<result.numberOfRanges).map {
                 scalar.substring(with: result.range(at: $0))
             }
