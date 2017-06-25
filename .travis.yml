@@ -38,15 +38,27 @@ matrix:
       os: osx
       osx_image: xcode8.3
     - script:
-        - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.0.2 swift test
-        - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.0.2 swift test -Xswiftc -DUSE_UTF8
-      env: JOB=Linux-Swift3.0.2
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm $DOCKER_IMAGE swift test
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm $DOCKER_IMAGE swift test -Xswiftc -DUSE_UTF8
+      env:
+        - JOB=Docker
+        - DOCKER_IMAGE=swift:3.0.2
       sudo: required
       services: docker
     - script:
-        - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.1 swift test
-        - docker run -v `pwd`:`pwd` -w `pwd` --rm swift:3.1 swift test -Xswiftc -DUSE_UTF8
-      env: JOB=Linux-Swift3.1
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm $DOCKER_IMAGE swift test
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm $DOCKER_IMAGE swift test -Xswiftc -DUSE_UTF8
+      env:
+        - JOB=Docker
+        - DOCKER_IMAGE=swift:3.1
+      sudo: required
+      services: docker
+    - script:
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm $DOCKER_IMAGE swift test
+        - docker run -v `pwd`:`pwd` -w `pwd` --rm $DOCKER_IMAGE swift test -Xswiftc -DUSE_UTF8
+      env:
+        - JOB=Docker
+        - DOCKER_IMAGE=norionomura/swift:4020170623a
       sudo: required
       services: docker
 notifications:
