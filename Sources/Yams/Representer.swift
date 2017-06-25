@@ -21,6 +21,7 @@ public extension Node {
 }
 
 // MARK: - NodeRepresentable
+/// Type is representabe as `Node`
 public protocol NodeRepresentable {
     func represented() throws -> Node
 }
@@ -31,19 +32,46 @@ extension Node: NodeRepresentable {
     }
 }
 
-extension Bool: NodeRepresentable {
+extension Array: NodeRepresentable {
+    public func represented() throws -> Node {
+        let nodes = try map(represent)
+        return Node(nodes, Tag(.seq))
+    }
+}
+
+extension Dictionary: NodeRepresentable {
+    public func represented() throws -> Node {
+        let pairs = try map { (key: try represent($0.0), value: try represent($0.1)) }
+        return Node(pairs.sorted { $0.key < $1.key }, Tag(.map))
+    }
+}
+
+private func represent(_ value: Any) throws -> Node {
+    if let string = value as? String {
+        return Node(string)
+    } else if let representable = value as? NodeRepresentable {
+        return try representable.represented()
+    }
+    throw YamlError.representer(problem: "Fail to represent \(value)")
+}
+
+// MARK: - ScalarRepresentable
+/// Type is representabe as `Node.scalar`
+public protocol ScalarRepresentable: NodeRepresentable {}
+
+extension Bool: ScalarRepresentable {
     public func represented() throws -> Node {
         return Node(self ? "true" : "false", Tag(.bool))
     }
 }
 
-extension Data: NodeRepresentable {
+extension Data: ScalarRepresentable {
     public func represented() throws -> Node {
         return Node(base64EncodedString(), Tag(.binary))
     }
 }
 
-extension Date: NodeRepresentable {
+extension Date: ScalarRepresentable {
     public func represented() throws -> Node {
         return Node(iso8601string, Tag(.timestamp))
     }
@@ -84,13 +112,13 @@ private let iso8601FormatterWithNanoseconds: DateFormatter = {
     return formatter
 }()
 
-extension Double: NodeRepresentable {
+extension Double: ScalarRepresentable {
     public func represented() throws -> Node {
         return Node(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
 }
 
-extension Float: NodeRepresentable {
+extension Float: ScalarRepresentable {
     public func represented() throws -> Node {
         return Node(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
@@ -113,7 +141,7 @@ private let doubleFormatter = numberFormatter(with: 15)
 private let floatFormatter = numberFormatter(with: 7)
 
 // TODO: Support `Float80`
-//extension Float80: NodeRepresentable {}
+//extension Float80: ScalarRepresentable {}
 
 #if swift(>=4.0)
 extension BinaryInteger {
@@ -129,25 +157,16 @@ extension Integer {
 }
 #endif
 
-extension Int: NodeRepresentable {}
-extension Int16: NodeRepresentable {}
-extension Int32: NodeRepresentable {}
-extension Int64: NodeRepresentable {}
-extension Int8: NodeRepresentable {}
-extension UInt: NodeRepresentable {}
-extension UInt16: NodeRepresentable {}
-extension UInt32: NodeRepresentable {}
-extension UInt64: NodeRepresentable {}
-extension UInt8: NodeRepresentable {}
-
-private func represent(_ value: Any) throws -> Node {
-    if let string = value as? String {
-        return Node(string)
-    } else if let representable = value as? NodeRepresentable {
-        return try representable.represented()
-    }
-    throw YamlError.representer(problem: "Fail to represent \(value)")
-}
+extension Int: ScalarRepresentable {}
+extension Int16: ScalarRepresentable {}
+extension Int32: ScalarRepresentable {}
+extension Int64: ScalarRepresentable {}
+extension Int8: ScalarRepresentable {}
+extension UInt: ScalarRepresentable {}
+extension UInt16: ScalarRepresentable {}
+extension UInt32: ScalarRepresentable {}
+extension UInt64: ScalarRepresentable {}
+extension UInt8: ScalarRepresentable {}
 
 extension Optional: NodeRepresentable {
     public func represented() throws -> Node {
@@ -157,19 +176,5 @@ extension Optional: NodeRepresentable {
         case .none:
             return Node("null", Tag(.null))
         }
-    }
-}
-
-extension Array: NodeRepresentable {
-    public func represented() throws -> Node {
-        let nodes = try map(represent)
-        return Node(nodes, Tag(.seq))
-    }
-}
-
-extension Dictionary: NodeRepresentable {
-    public func represented() throws -> Node {
-        let pairs = try map { (key: try represent($0.0), value: try represent($0.1)) }
-        return Node(pairs.sorted { $0.key < $1.key }, Tag(.map))
     }
 }
