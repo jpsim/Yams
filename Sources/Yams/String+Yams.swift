@@ -51,7 +51,7 @@ extension String {
                      for: startIndex..<startIndex)
         while outEndIndex <= index && outEndIndex < endIndex {
             number += 1
-            let range = outEndIndex..<outEndIndex
+            let range: Range = outEndIndex..<outEndIndex
             getLineStart(&outStartIndex, end: &outEndIndex, contentsEnd: &outContentsEndIndex,
                          for: range)
         }
@@ -80,7 +80,7 @@ extension String {
                      for: startIndex..<startIndex)
         while number < line && outEndIndex < endIndex {
             number += 1
-            let range = outEndIndex..<outEndIndex
+            let range: Range = outEndIndex..<outEndIndex
             getLineStart(&outStartIndex, end: &outEndIndex, contentsEnd: &outContentsEndIndex,
                          for: range)
         }
