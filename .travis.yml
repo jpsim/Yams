@@ -34,6 +34,18 @@ matrix:
       os: osx
       osx_image: xcode9
     - script:
+        - xcodebuild -scheme Yams build-for-testing test-without-building # -sdk macosx -destination arch=x86_64
+        - xcodebuild -scheme Yams build-for-testing test-without-building OTHER_SWIFT_FLAGS=-DUSE_UTF8
+        - xcodebuild -scheme Yams build-for-testing test-without-building -sdk iphonesimulator -destination "name=iPhone 6s"
+        - xcodebuild -scheme Yams build-for-testing test-without-building -sdk appletvsimulator -destination "name=Apple TV 1080p"
+        - xcodebuild -scheme Yams build -sdk watchsimulator -destination "name=Apple Watch - 38mm"
+        - pod lib lint
+      env:
+        - JOB=Xcode9
+        - SWIFT_VERSION=4.0
+      os: osx
+      osx_image: xcode9
+    - script:
         - swift test
         - swift test -Xswiftc -DUSE_UTF8
         - swiftlint
@@ -75,7 +87,7 @@ matrix:
         - docker run -v `pwd`:`pwd` -w `pwd` --rm $DOCKER_IMAGE swift test -Xswiftc -DUSE_UTF8
       env:
         - JOB=Docker
-        - DOCKER_IMAGE=norionomura/swift:4020170623a
+        - DOCKER_IMAGE=norionomura/swift:4020170725a
       sudo: required
       services: docker
 notifications:

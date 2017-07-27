@@ -51,12 +51,17 @@ extension String {
                      for: startIndex..<startIndex)
         while outEndIndex <= index && outEndIndex < endIndex {
             number += 1
-            let range = outEndIndex..<outEndIndex
+            let range: Range = outEndIndex..<outEndIndex
             getLineStart(&outStartIndex, end: &outEndIndex, contentsEnd: &outContentsEndIndex,
                          for: range)
         }
+#if swift(>=4.0)
+        let utf16StartIndex = outStartIndex.samePosition(in: utf16)!
+        let utf16Index = index.samePosition(in: utf16)!
+#else
         let utf16StartIndex = outStartIndex.samePosition(in: utf16)
         let utf16Index = index.samePosition(in: utf16)
+#endif
         return (
             number,
             utf16.distance(from: utf16StartIndex, to: utf16Index),
@@ -75,7 +80,7 @@ extension String {
                      for: startIndex..<startIndex)
         while number < line && outEndIndex < endIndex {
             number += 1
-            let range = outEndIndex..<outEndIndex
+            let range: Range = outEndIndex..<outEndIndex
             getLineStart(&outStartIndex, end: &outEndIndex, contentsEnd: &outContentsEndIndex,
                          for: range)
         }
