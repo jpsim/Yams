@@ -26,7 +26,7 @@
 
         let node: Node
 
-        init(referencing node: Node, codingPath: [CodingKey?] = []) {
+        init(referencing node: Node, codingPath: [CodingKey] = []) {
             self.node = node
             self.codingPath = codingPath
         }
@@ -34,21 +34,14 @@
         // MARK: - Swift.Decoder Methods
 
         /// The path to the current point in encoding.
-        var codingPath: [CodingKey?]
+        var codingPath: [CodingKey]
 
         /// Contextual user-provided information for use during encoding.
         var userInfo: [CodingUserInfoKey : Any] = [:]
 
         func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> {
             guard let mapping = node.mapping else {
-                // FIXME: Should throw type mismatch error
-                throw DecodingError.valueNotFound(
-                    KeyedDecodingContainer<Key>.self,
-                    DecodingError.Context(
-                        codingPath: self.codingPath,
-                        debugDescription: "Cannot get keyed decoding container -- found null value instead."
-                    )
-                )
+                throw _typeMismatch(at: codingPath, expectation: Node.Mapping.self, reality: node)
             }
             let wrapper = _YAMLKeyedDecodingContainer<Key>(decoder: self, wrapping: mapping)
             return KeyedDecodingContainer(wrapper)
@@ -56,33 +49,13 @@
 
         func unkeyedContainer() throws -> UnkeyedDecodingContainer {
             guard let sequence = node.sequence else {
-                // FIXME: Should throw type mismatch error
-                throw DecodingError.valueNotFound(
-                    UnkeyedDecodingContainer.self,
-                    DecodingError.Context(
-                        codingPath: self.codingPath,
-                        debugDescription: "Cannot get unkeyed decoding container -- found null value instead."
-                    )
-                )
+                throw _typeMismatch(at: codingPath, expectation: Node.Sequence.self, reality: node)
             }
             return _YAMLUnkeyedDecodingContainer(decoder: self, wrapping: sequence)
         }
 
         func singleValueContainer() throws -> SingleValueDecodingContainer {
             return self
-        }
-
-        // MARK: Utility
-
-        /// Performs the given closure with the given key pushed onto the end of the current coding path.
-        ///
-        /// - parameter key: The key to push. May be nil for unkeyed containers.
-        /// - parameter work: The work to perform with the key in the path.
-        func with<T>(pushedKey key: CodingKey?, _ work: () throws -> T) rethrows -> T {
-            self.codingPath.append(key)
-            let ret: T = try work()
-            self.codingPath.removeLast()
-            return ret
         }
     }
 
@@ -100,7 +73,7 @@
 
         // MARK: - KeyedDecodingContainerProtocol
 
-        var codingPath: [CodingKey?] {
+        var codingPath: [CodingKey] {
             return decoder.codingPath
         }
 
@@ -115,90 +88,93 @@
             return false
         }
 
-        func decodeIfPresent(_ type: Bool.Type, forKey key: Key) throws -> Bool? { return try construct(for: key) }
-        func decodeIfPresent(_ type: Int.Type, forKey key: Key) throws -> Int? { return try construct(for: key) }
-        func decodeIfPresent(_ type: Int8.Type, forKey key: Key) throws -> Int8? { return try construct(for: key) }
-        func decodeIfPresent(_ type: Int16.Type, forKey key: Key) throws -> Int16? { return try construct(for: key) }
-        func decodeIfPresent(_ type: Int32.Type, forKey key: Key) throws -> Int32? { return try construct(for: key) }
-        func decodeIfPresent(_ type: Int64.Type, forKey key: Key) throws -> Int64? { return try construct(for: key) }
-        func decodeIfPresent(_ type: UInt.Type, forKey key: Key) throws -> UInt? { return try construct(for: key) }
-        func decodeIfPresent(_ type: UInt8.Type, forKey key: Key) throws -> UInt8? { return try construct(for: key) }
-        func decodeIfPresent(_ type: UInt16.Type, forKey key: Key) throws -> UInt16? { return try construct(for: key) }
-        func decodeIfPresent(_ type: UInt32.Type, forKey key: Key) throws -> UInt32? { return try construct(for: key) }
-        func decodeIfPresent(_ type: UInt64.Type, forKey key: Key) throws -> UInt64? { return try construct(for: key) }
-        func decodeIfPresent(_ type: Float.Type, forKey key: Key) throws -> Float? { return try construct(for: key) }
-        func decodeIfPresent(_ type: Double.Type, forKey key: Key) throws -> Double? { return try construct(for: key) }
-        func decodeIfPresent(_ type: String.Type, forKey key: Key) throws -> String? { return try construct(for: key) }
-
-        func decodeIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T : Decodable {
-            return try decoder.with(pushedKey: key) {
-                guard let node = mapping[key.stringValue] else { return nil }
-                if let constructibleType = type.self as? ScalarConstructible.Type {
-                    return constructibleType.construct(from: node) as? T
-                }
-
-                let decoder = _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
-                return try T(from: decoder)
+        func decodeNil(forKey key: Key) throws -> Bool {
+            guard let node = mapping[key.stringValue] else {
+                throw _keyNotFound(at: codingPath, key, "No value associated with key \(key) (\"\(key.stringValue)\").")
             }
+            return node == Node("null", Tag(.null))
+        }
+
+        func decode(_ type: Bool.Type, forKey key: Key) throws -> Bool { return try construct(for: key) }
+        func decode(_ type: Int.Type, forKey key: Key) throws -> Int { return try construct(for: key) }
+        func decode(_ type: Int8.Type, forKey key: Key) throws -> Int8 { return try construct(for: key) }
+        func decode(_ type: Int16.Type, forKey key: Key) throws -> Int16 { return try construct(for: key) }
+        func decode(_ type: Int32.Type, forKey key: Key) throws -> Int32 { return try construct(for: key) }
+        func decode(_ type: Int64.Type, forKey key: Key) throws -> Int64 { return try construct(for: key) }
+        func decode(_ type: UInt.Type, forKey key: Key) throws -> UInt { return try construct(for: key) }
+        func decode(_ type: UInt8.Type, forKey key: Key) throws -> UInt8 { return try construct(for: key) }
+        func decode(_ type: UInt16.Type, forKey key: Key) throws -> UInt16 { return try construct(for: key) }
+        func decode(_ type: UInt32.Type, forKey key: Key) throws -> UInt32 { return try construct(for: key) }
+        func decode(_ type: UInt64.Type, forKey key: Key) throws -> UInt64 { return try construct(for: key) }
+        func decode(_ type: Float.Type, forKey key: Key) throws -> Float { return try construct(for: key) }
+        func decode(_ type: Double.Type, forKey key: Key) throws -> Double { return try construct(for: key) }
+        func decode(_ type: String.Type, forKey key: Key) throws -> String { return try construct(for: key) }
+
+        func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
+            guard let node = mapping[key.stringValue] else {
+                throw _keyNotFound(at: codingPath, key, "No value associated with key \(key) (\"\(key.stringValue)\").")
+            }
+
+            decoder.codingPath.append(key)
+            defer { decoder.codingPath.removeLast() }
+
+            if let constructibleType = type.self as? ScalarConstructible.Type {
+                guard let value = constructibleType.construct(from: node) else {
+                    throw _valueNotFound(at: codingPath, T.self, "Expected \(T.self) value but found null instead.")
+                }
+                return value as! T // swiftlint:disable:this force_cast
+            }
+
+            return try T(from: _YAMLDecoder(referencing: node, codingPath: codingPath))
         }
 
         func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type,
                                         forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> {
-            return try decoder.with(pushedKey: key) {
-                guard let node = mapping[key.stringValue] else {
-                    // FIXME: Should throw type mismatch error
-                    throw DecodingError.keyNotFound(
-                        key,
-                        DecodingError.Context(
-                            codingPath: self.codingPath,
-                            debugDescription: "Cannot get \(KeyedDecodingContainer<NestedKey>.self) -- no value found for key \"\(key.stringValue)\""
-                        )
-                    )
-                }
-                guard let mapping = node.mapping else {
-                    fatalError("should throw type mismatch error")
-                }
-                let decoder = _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
-                let wrapping =  _YAMLKeyedDecodingContainer<NestedKey>(decoder: decoder, wrapping: mapping)
-                return KeyedDecodingContainer(wrapping)
+            guard let node = mapping[key.stringValue] else {
+                let description =
+                "Cannot get \(KeyedDecodingContainer<NestedKey>.self) -- no value found for key \"\(key.stringValue)\""
+                throw _keyNotFound(at: codingPath, key, description)
             }
+
+            decoder.codingPath.append(key)
+            defer { decoder.codingPath.removeLast() }
+
+            guard let mapping = node.mapping else {
+                throw _typeMismatch(at: codingPath, expectation: Node.Mapping.self, reality: node)
+            }
+
+            let nestedDecoder = _YAMLDecoder(referencing: node, codingPath: codingPath)
+            let wrapping =  _YAMLKeyedDecodingContainer<NestedKey>(decoder: nestedDecoder, wrapping: mapping)
+            return KeyedDecodingContainer(wrapping)
         }
 
         func nestedUnkeyedContainer(forKey key: Key) throws -> UnkeyedDecodingContainer {
-            return try decoder.with(pushedKey: key) {
-                guard let node = mapping[key.stringValue], let sequence = node.sequence else {
-                    // FIXME: Should throw type mismatch error
-                    throw DecodingError.keyNotFound(
-                        key,
-                        DecodingError.Context(
-                            codingPath: self.codingPath,
-                            debugDescription: "Cannot get UnkeyedDecodingContainer -- no value found for key \"\(key.stringValue)\""
-                        )
-                    )
-                }
-                let decoder = _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
-                return _YAMLUnkeyedDecodingContainer(decoder: decoder, wrapping: sequence)
+            guard let node = mapping[key.stringValue] else {
+                let description = "Cannot get UnkeyedDecodingContainer -- no value found for key \"\(key.stringValue)\""
+                throw _keyNotFound(at: codingPath, key, description)
             }
+
+            decoder.codingPath.append(key)
+            defer { decoder.codingPath.removeLast() }
+
+            guard let sequence = node.sequence else {
+                throw _typeMismatch(at: codingPath, expectation: Node.Sequence.self, reality: node)
+            }
+
+            let nestedDecoder = _YAMLDecoder(referencing: node, codingPath: codingPath)
+            return _YAMLUnkeyedDecodingContainer(decoder: nestedDecoder, wrapping: sequence)
         }
 
         private func _superDecoder(forKey key: CodingKey) throws -> Decoder {
-            return try self.decoder.with(pushedKey: key) {
-                guard let node = mapping[key.stringValue] else {
-                    throw DecodingError.keyNotFound(
-                        key,
-                        DecodingError.Context(
-                            codingPath: self.codingPath,
-                            debugDescription: "Cannot get superDecoder() -- no value found for key \"\(key.stringValue)\""
-                        )
-                    )
-                }
+            decoder.codingPath.append(key)
+            defer { decoder.codingPath.removeLast() }
 
-                return _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
-            }
+            let node = mapping[key.stringValue]  ?? ""
+            return _YAMLDecoder(referencing: node, codingPath: codingPath)
         }
 
         func superDecoder() throws -> Decoder {
-            return try _superDecoder(forKey: _YAMLDecodingSuperKey())
+            return try _superDecoder(forKey: _YAMLDecodingKey.super)
         }
 
         func superDecoder(forKey key: Key) throws -> Decoder {
@@ -207,27 +183,42 @@
 
         // MARK: Utility
 
-        /// Encode ScalarConstructible
-        func construct<T: ScalarConstructible>(for key: Key) throws -> T? {
-            return decoder.with(pushedKey: key) {
-                guard let node = mapping[key.stringValue] else { return nil }
-                return T.construct(from: node)
+        /// Decode ScalarConstructible
+        private func construct<T: ScalarConstructible>(for key: Key) throws -> T {
+            guard let node = mapping[key.stringValue] else {
+                throw _keyNotFound(at: codingPath, key, "No value associated with key \(key) (\"\(key.stringValue)\").")
             }
+
+            decoder.codingPath.append(key)
+            defer { decoder.codingPath.removeLast() }
+
+            guard let value = T.construct(from: node) else {
+                throw _valueNotFound(at: codingPath, T.self, "Expected \(T.self) value but found null instead.")
+            }
+            return value
         }
     }
 
-    fileprivate struct _YAMLDecodingSuperKey: CodingKey {
-        init() {}
+    fileprivate struct _YAMLDecodingKey: CodingKey {
+        public var stringValue: String
+        public var intValue: Int?
 
-        var stringValue: String { return "super" }
-        init?(stringValue: String) {
-            guard stringValue == "super" else { return nil }
+        public init?(stringValue: String) {
+            self.stringValue = stringValue
+            self.intValue = nil
         }
 
-        var intValue: Int? { return nil }
-        init?(intValue: Int) {
-            return nil
+        public init?(intValue: Int) {
+            self.stringValue = "\(intValue)"
+            self.intValue = intValue
         }
+
+        fileprivate init(index: Int) {
+            self.stringValue = "Index \(index)"
+            self.intValue = index
+        }
+
+        fileprivate static let `super` = _YAMLDecodingKey(stringValue: "super")!
     }
 
     fileprivate struct _YAMLUnkeyedDecodingContainer: UnkeyedDecodingContainer {
@@ -245,7 +236,7 @@
         }
 
         // MARK: - UnkeyedDecodingContainer
-        var codingPath: [CodingKey?] {
+        var codingPath: [CodingKey] {
             return decoder.codingPath
         }
 
@@ -254,126 +245,131 @@
         }
 
         var isAtEnd: Bool {
-            return self.currentIndex >= sequence.count
+            return currentIndex >= sequence.count
         }
 
-        mutating func decodeIfPresent(_ type: Bool.Type) throws -> Bool? { return try construct() }
-        mutating func decodeIfPresent(_ type: Int.Type) throws -> Int? { return try construct() }
-        mutating func decodeIfPresent(_ type: Int8.Type) throws -> Int8? { return try construct() }
-        mutating func decodeIfPresent(_ type: Int16.Type) throws -> Int16? { return try construct() }
-        mutating func decodeIfPresent(_ type: Int32.Type) throws -> Int32? { return try construct() }
-        mutating func decodeIfPresent(_ type: Int64.Type) throws -> Int64? { return try construct() }
-        mutating func decodeIfPresent(_ type: UInt.Type) throws -> UInt? { return try construct() }
-        mutating func decodeIfPresent(_ type: UInt8.Type) throws -> UInt8? { return try construct() }
-        mutating func decodeIfPresent(_ type: UInt16.Type) throws -> UInt16? { return try construct() }
-        mutating func decodeIfPresent(_ type: UInt32.Type) throws -> UInt32? { return try construct() }
-        mutating func decodeIfPresent(_ type: UInt64.Type) throws -> UInt64? { return try construct() }
-        mutating func decodeIfPresent(_ type: Float.Type) throws -> Float? { return try construct() }
-        mutating func decodeIfPresent(_ type: Double.Type) throws -> Double? { return try construct() }
-        mutating func decodeIfPresent(_ type: String.Type) throws -> String? { return try construct() }
+        mutating func decodeNil() throws -> Bool {
+            decoder.codingPath.append(_YAMLDecodingKey(index: currentIndex))
+            defer { decoder.codingPath.removeLast() }
 
-        mutating func decodeIfPresent<T>(_ type: T.Type) throws -> T? where T : Decodable {
-            guard !self.isAtEnd else { return nil }
-
-            let decoded: T? = try decoder.with(pushedKey: nil) {
-                let node = sequence[currentIndex]
-                if let scalarConstructibleType = type.self as? ScalarConstructible.Type {
-                    return scalarConstructibleType.construct(from: node) as? T
-                }
-
-                let decoder = _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
-                return try T(from: decoder)
+            guard !self.isAtEnd else {
+                throw _valueNotFound(at: codingPath, Any?.self, "Unkeyed container is at end.")
             }
+
+            if sequence[currentIndex] == Node("null", Tag(.null)) {
+                currentIndex += 1
+                return true
+            } else {
+                return false
+            }
+        }
+
+        mutating func decode(_ type: Bool.Type) throws -> Bool { return try construct() }
+        mutating func decode(_ type: Int.Type) throws -> Int { return try construct() }
+        mutating func decode(_ type: Int8.Type) throws -> Int8 { return try construct() }
+        mutating func decode(_ type: Int16.Type) throws -> Int16 { return try construct() }
+        mutating func decode(_ type: Int32.Type) throws -> Int32 { return try construct() }
+        mutating func decode(_ type: Int64.Type) throws -> Int64 { return try construct() }
+        mutating func decode(_ type: UInt.Type) throws -> UInt { return try construct() }
+        mutating func decode(_ type: UInt8.Type) throws -> UInt8 { return try construct() }
+        mutating func decode(_ type: UInt16.Type) throws -> UInt16 { return try construct() }
+        mutating func decode(_ type: UInt32.Type) throws -> UInt32 { return try construct() }
+        mutating func decode(_ type: UInt64.Type) throws -> UInt64 { return try construct() }
+        mutating func decode(_ type: Float.Type) throws -> Float { return try construct() }
+        mutating func decode(_ type: Double.Type) throws -> Double { return try construct() }
+        mutating func decode(_ type: String.Type) throws -> String { return try construct() }
+
+        mutating func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+            decoder.codingPath.append(_YAMLDecodingKey(index: currentIndex))
+            defer { decoder.codingPath.removeLast() }
+
+            guard !self.isAtEnd else {
+                throw _valueNotFound(at: codingPath, T.self, "Unkeyed container is at end.")
+            }
+
+            let node = sequence[currentIndex]
+            if let constructibleType = type.self as? ScalarConstructible.Type {
+                guard let value = constructibleType.construct(from: node) else {
+                    throw _valueNotFound(at: codingPath, T.self, "Expected \(T.self) value but found null instead.")
+                }
+                currentIndex += 1
+                return value as! T // swiftlint:disable:this force_cast
+            }
+
+            let value = try T(from: _YAMLDecoder(referencing: node, codingPath: codingPath))
             currentIndex += 1
-            return decoded
+            return value
         }
 
         mutating func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> {
-            return try decoder.with(pushedKey: nil) {
-                guard !self.isAtEnd else {
-                    throw DecodingError.valueNotFound(
-                        KeyedDecodingContainer<NestedKey>.self,
-                        DecodingError.Context(
-                            codingPath: self.codingPath,
-                            debugDescription: "Cannot get nested keyed container -- unkeyed container is at end."
-                        )
-                    )
-                }
-                let node = sequence[currentIndex]
-                guard let mapping = node.mapping else {
-                    // FIXME: Should throw type mismatch error
-                    throw DecodingError.valueNotFound(
-                        KeyedDecodingContainer<NestedKey>.self,
-                        DecodingError.Context(
-                            codingPath: self.codingPath,
-                            debugDescription: "Cannot get \(KeyedDecodingContainer<NestedKey>.self) -- no value found at index \"\(currentIndex)\""
-                        )
-                    )
-                }
+            decoder.codingPath.append(_YAMLDecodingKey(index: currentIndex))
+            defer { decoder.codingPath.removeLast() }
 
-                currentIndex += 1
-                let decoder = _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
-                let wrapping =  _YAMLKeyedDecodingContainer<NestedKey>(decoder: decoder, wrapping: mapping)
-                return KeyedDecodingContainer(wrapping)
+            guard !self.isAtEnd else {
+                throw _valueNotFound(at: codingPath, KeyedDecodingContainer<NestedKey>.self,
+                                     "Cannot get nested keyed container -- unkeyed container is at end.")
             }
+
+            let node = sequence[currentIndex]
+            guard let mapping = node.mapping else {
+                throw _typeMismatch(at: codingPath, expectation: Node.Mapping.self, reality: node)
+            }
+
+            currentIndex += 1
+            let nestedDecoder = _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
+            let wrapping =  _YAMLKeyedDecodingContainer<NestedKey>(decoder: nestedDecoder, wrapping: mapping)
+            return KeyedDecodingContainer(wrapping)
         }
 
         mutating func nestedUnkeyedContainer() throws -> UnkeyedDecodingContainer {
-            return try decoder.with(pushedKey: nil) {
-                guard !self.isAtEnd else {
-                    throw DecodingError.valueNotFound(
-                        UnkeyedDecodingContainer.self,
-                        DecodingError.Context(
-                            codingPath: self.codingPath,
-                            debugDescription: "Cannot get UnkeyedDecodingContainer -- unkeyed container is at end."
-                        )
-                    )
-                }
-                let node = sequence[currentIndex]
-                guard let sequence = node.sequence else {
-                    // FIXME: Should throw type mismatch error
-                    throw DecodingError.typeMismatch(
-                        type(of: node),
-                        DecodingError.Context(
-                            codingPath: codingPath,
-                            debugDescription: "Cannot get UnkeyedDecodingContainer -- no value found at index \"\(currentIndex)\""
-                        )
-                    )
-                }
-                let decoder = _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
-                return _YAMLUnkeyedDecodingContainer(decoder: decoder, wrapping: sequence)
+            decoder.codingPath.append(_YAMLDecodingKey(index: currentIndex))
+            defer { decoder.codingPath.removeLast() }
+
+            guard !self.isAtEnd else {
+                throw _valueNotFound(at: codingPath, UnkeyedDecodingContainer.self,
+                                     "Cannot get UnkeyedDecodingContainer -- unkeyed container is at end.")
             }
+
+            let node = sequence[currentIndex]
+            guard let sequence = node.sequence else {
+                throw _typeMismatch(at: codingPath, expectation: Node.Sequence.self, reality: node)
+            }
+
+            let nestedDecoder = _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
+            return _YAMLUnkeyedDecodingContainer(decoder: nestedDecoder, wrapping: sequence)
         }
 
         mutating func superDecoder() throws -> Decoder {
-            return try decoder.with(pushedKey: nil) {
-                guard !self.isAtEnd else {
-                    throw DecodingError.valueNotFound(
-                        Decoder.self,
-                        DecodingError.Context(
-                            codingPath: self.codingPath,
-                            debugDescription: "Cannot get superDecoder() -- unkeyed container is at end."
-                        )
-                    )
-                }
+            decoder.codingPath.append(_YAMLDecodingKey(index: currentIndex))
+            defer { decoder.codingPath.removeLast() }
 
-                let node = sequence[currentIndex]
-                self.currentIndex += 1
-                return _YAMLDecoder(referencing: node, codingPath: self.decoder.codingPath)
+            guard !self.isAtEnd else {
+                throw _valueNotFound(at: codingPath, Decoder.self,
+                                     "Cannot get superDecoder() -- unkeyed container is at end.")
             }
+
+            let node = sequence[currentIndex]
+            self.currentIndex += 1
+            return _YAMLDecoder(referencing: node, codingPath: codingPath)
         }
 
         // MARK: Utility
 
-        /// Encode ScalarConstructible
-        mutating func construct<T: ScalarConstructible>() throws -> T? {
-            guard !self.isAtEnd else { return nil }
+        /// Decode ScalarConstructible
+        mutating func construct<T: ScalarConstructible>() throws -> T {
+            decoder.codingPath.append(_YAMLDecodingKey(index: currentIndex))
+            defer { decoder.codingPath.removeLast() }
 
-            return decoder.with(pushedKey: nil) {
-                let node = sequence[currentIndex]
-                currentIndex += 1
-                return T.construct(from: node)
+            guard !self.isAtEnd else {
+                throw _valueNotFound(at: codingPath, T.self, "Unkeyed container is at end.")
             }
+
+            guard let decoded = T.construct(from: sequence[currentIndex]) else {
+                throw _valueNotFound(at: codingPath, T.self, "Expected \(T.self) but found null instead.")
+            }
+
+            currentIndex += 1
+            return decoded
         }
     }
 
@@ -399,8 +395,13 @@
         func decode(_ type: Data.Type)   throws -> Data { return try construct() }
 
         func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+            try expectNonNull(T.self)
+
             if let scalarConstructibleType = type.self as? ScalarConstructible.Type {
-                return scalarConstructibleType.construct(from: node) as! T // swiftlint:disable:this force_cast
+                guard let value = scalarConstructibleType.construct(from: node) else {
+                    throw _valueNotFound(at: codingPath, T.self, "Expected \(T.self) value but found null instead.")
+                }
+                return value as! T // swiftlint:disable:this force_cast
             }
 
             let decoder = _YAMLDecoder(referencing: node)
@@ -409,21 +410,37 @@
 
         // MARK: Utility
 
-        /// Encode ScalarConstructible
-        func construct<T: ScalarConstructible>() throws -> T {
-            return try with(pushedKey: nil) {
-                guard let decoded = T.construct(from: node) else {
-                    // FIXME: Should throw type mismatch error
-                    throw DecodingError.typeMismatch(
-                        T.self,
-                        DecodingError.Context(
-                            codingPath: codingPath, debugDescription: ""
-                        )
-                    )
-                }
-                return decoded
+        /// Decode ScalarConstructible
+        private func construct<T: ScalarConstructible>() throws -> T {
+            try expectNonNull(T.self)
+            guard let decoded = T.construct(from: node) else {
+                throw _typeMismatch(at: codingPath, expectation: T.self, reality: node)
+            }
+            return decoded
+        }
+
+        private func expectNonNull<T>(_ type: T.Type) throws {
+            guard !self.decodeNil() else {
+                throw _valueNotFound(at: codingPath, type, "Expected \(type) but found null value instead.")
             }
         }
+
+    }
+
+    private func _keyNotFound(at codingPath: [CodingKey], _ key: CodingKey, _ description: String) -> DecodingError {
+        let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
+        return.keyNotFound(key, context)
+    }
+
+    private func _valueNotFound(at codingPath: [CodingKey], _ type: Any.Type, _ description: String) -> DecodingError {
+        let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
+        return .valueNotFound(type, context)
+    }
+
+    private func _typeMismatch(at codingPath: [CodingKey], expectation: Any.Type, reality: Any) -> DecodingError {
+        let description = "Expected to decode \(expectation) but found \(type(of: reality)) instead."
+        let context = DecodingError.Context(codingPath: codingPath, debugDescription: description)
+        return .typeMismatch(expectation, context)
     }
 
     extension BinaryInteger {

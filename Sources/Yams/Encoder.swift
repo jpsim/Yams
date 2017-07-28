@@ -26,14 +26,14 @@
 
         var node: Node = ""
 
-        init(codingPath: [CodingKey?] = []) {
+        init(codingPath: [CodingKey] = []) {
             self.codingPath = codingPath
         }
 
         // MARK: - Swift.Encoder Methods
 
         /// The path to the current point in encoding.
-        var codingPath: [CodingKey?]
+        var codingPath: [CodingKey]
 
         /// Contextual user-provided information for use during encoding.
         var userInfo: [CodingUserInfoKey : Any] = [:]
@@ -62,7 +62,7 @@
         ///
         /// - parameter key: The key to push. May be nil for unkeyed containers.
         /// - parameter work: The work to perform with the key in the path.
-        func with(pushedKey key: CodingKey?, _ work: () throws -> Void) rethrows {
+        func with(pushedKey key: CodingKey, _ work: () throws -> Void) rethrows {
             self.codingPath.append(key)
             try work()
             self.codingPath.removeLast()
@@ -129,11 +129,15 @@
 
         // MARK: - KeyedEncodingContainerProtocol
 
-        var codingPath: [CodingKey?] {
+        var codingPath: [CodingKey] {
             return encoder.codingPath
         }
 
         // assumes following methods never throws
+        func encodeNil(forKey key: K) throws {
+            encoder.node.mapping?[key.stringValue] = Node("null", Tag(.null))
+        }
+
         func encode(_ value: Bool, forKey key: Key)   throws { try represent(value, for: key) }
         func encode(_ value: Int, forKey key: Key)    throws { try represent(value, for: key) }
         func encode(_ value: Int8, forKey key: Key)   throws { try represent(value, for: key) }
@@ -192,6 +196,28 @@
         }
     }
 
+    fileprivate struct _YAMLEncodingKey: CodingKey {
+        public var stringValue: String
+        public var intValue: Int?
+
+        public init?(stringValue: String) {
+            self.stringValue = stringValue
+            self.intValue = nil
+        }
+
+        public init?(intValue: Int) {
+            self.stringValue = "\(intValue)"
+            self.intValue = intValue
+        }
+
+        fileprivate init(index: Int) {
+            self.stringValue = "Index \(index)"
+            self.intValue = index
+        }
+
+        fileprivate static let `super` = _YAMLEncodingKey(stringValue: "super")!
+    }
+
     fileprivate struct _UnkeyedEncodingContainer: UnkeyedEncodingContainer {
 
         let encoder: _YAMLEncoder
@@ -202,8 +228,16 @@
 
         // MARK: - UnkeyedEncodingContainer
 
-        var codingPath: [CodingKey?] {
+        var codingPath: [CodingKey] {
             return encoder.codingPath
+        }
+
+        var count: Int {
+            return encoder.node.sequence?.count ?? 0
+        }
+
+        func encodeNil() throws {
+            encoder.node.sequence?.append(Node("null", Tag(.null)))
         }
 
         func encode(_ value: Bool)   throws { try represent(value) }
@@ -222,28 +256,37 @@
         func encode(_ value: String) throws { encoder.node.sequence?.append(Node(value)) }
 
         func encode<T>(_ value: T) throws where T : Encodable {
-            // Since generic types may throw, the coding path needs to contain this key.
-            try encoder.with(pushedKey: nil) {
-                if let date = value as? Date {
-                    encoder.node.sequence?.append(date.representedForCodable())
-                } else if let representable = value as? ScalarRepresentable {
-                    encoder.node.sequence?.append(try representable.represented())
-                } else {
-                    try value.encode(to: referencingEncoder())
-                }
+            encoder.codingPath.append(_YAMLEncodingKey(index: count))
+            defer { encoder.codingPath.removeLast() }
+
+            if let date = value as? Date {
+                encoder.node.sequence?.append(date.representedForCodable())
+            } else if let representable = value as? ScalarRepresentable {
+                encoder.node.sequence?.append(try representable.represented())
+            } else {
+                try value.encode(to: referencingEncoder())
             }
         }
 
         func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> {
+            encoder.codingPath.append(_YAMLEncodingKey(index: count))
+            defer { encoder.codingPath.removeLast() }
+
             let wrapper = _KeyedEncodingContainer<NestedKey>(referencing: referencingEncoder())
             return KeyedEncodingContainer(wrapper)
         }
 
         func nestedUnkeyedContainer() -> UnkeyedEncodingContainer {
+            encoder.codingPath.append(_YAMLEncodingKey(index: count))
+            defer { encoder.codingPath.removeLast() }
+
             return _UnkeyedEncodingContainer(referencing: referencingEncoder())
         }
 
         func superEncoder() -> Encoder {
+            encoder.codingPath.append(_YAMLEncodingKey(index: count))
+            defer { encoder.codingPath.removeLast() }
+
             return referencingEncoder()
         }
 
@@ -251,6 +294,9 @@
 
         /// Encode ScalarRepresentable
         private func represent<T: ScalarRepresentable>(_ value: T) throws {
+            encoder.codingPath.append(_YAMLEncodingKey(index: count))
+            defer { encoder.codingPath.removeLast() }
+
             // assumes this function is used for types that never throws.
             encoder.node.sequence?.append(try Node(value))
         }
