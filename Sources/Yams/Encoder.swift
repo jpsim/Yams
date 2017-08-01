@@ -58,16 +58,6 @@
 
         // MARK: Utility
 
-        /// Performs the given closure with the given key pushed onto the end of the current coding path.
-        ///
-        /// - parameter key: The key to push. May be nil for unkeyed containers.
-        /// - parameter work: The work to perform with the key in the path.
-        func with(pushedKey key: CodingKey, _ work: () throws -> Void) rethrows {
-            self.codingPath.append(key)
-            try work()
-            self.codingPath.removeLast()
-        }
-
         /// Asserts that a new container can be requested at this coding path.
         /// `preconditionFailure()`s if one cannot be requested.
         func assertCanRequestNewContainer() {
@@ -100,12 +90,14 @@
             self.encoder = encoder
             reference = .sequence(index)
             super.init(codingPath: encoder.codingPath)
+            codingPath.append(_YAMLEncodingKey(index: index))
         }
 
-        init(referencing encoder: _YAMLEncoder, key: String) {
+        init(referencing encoder: _YAMLEncoder, key: CodingKey) {
             self.encoder = encoder
-            reference = .mapping(key)
+            reference = .mapping(key.stringValue)
             super.init(codingPath: encoder.codingPath)
+            codingPath.append(key)
         }
 
         deinit {
@@ -154,33 +146,31 @@
         func encode(_ value: String, forKey key: Key) throws { encoder.node.mapping?[key.stringValue] = Node(value) }
 
         func encode<T>(_ value: T, forKey key: Key) throws where T : Encodable {
-            try encoder.with(pushedKey: key) {
-                if let date = value as? Date {
-                    encoder.node.mapping?[key.stringValue] = date.representedForCodable()
-                } else if let representable = value as? ScalarRepresentable {
-                    encoder.node.mapping?[key.stringValue] = try representable.represented()
-                } else {
-                    try value.encode(to: referencingEncoder(for: key.stringValue))
-                }
+            if let date = value as? Date {
+                encoder.node.mapping?[key.stringValue] = date.representedForCodable()
+            } else if let representable = value as? ScalarRepresentable {
+                encoder.node.mapping?[key.stringValue] = try representable.represented()
+            } else {
+                try value.encode(to: referencingEncoder(for: key))
             }
         }
 
         func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type,
                                         forKey key: Key) -> KeyedEncodingContainer<NestedKey> {
-            let wrapper = _KeyedEncodingContainer<NestedKey>(referencing: referencingEncoder(for: key.stringValue))
+            let wrapper = _KeyedEncodingContainer<NestedKey>(referencing: referencingEncoder(for: key))
             return KeyedEncodingContainer(wrapper)
         }
 
         func nestedUnkeyedContainer(forKey key: Key) -> UnkeyedEncodingContainer {
-            return _UnkeyedEncodingContainer(referencing: referencingEncoder(for: key.stringValue))
+            return _UnkeyedEncodingContainer(referencing: referencingEncoder(for: key))
         }
 
         func superEncoder() -> Encoder {
-            return referencingEncoder(for: "super")
+            return referencingEncoder(for: _YAMLEncodingKey.super)
         }
 
         func superEncoder(forKey key: Key) -> Encoder {
-            return referencingEncoder(for: key.stringValue)
+            return referencingEncoder(for: key)
         }
 
         // MARK: Utility
@@ -191,7 +181,7 @@
             encoder.node.mapping?[key.stringValue] = try Node(value)
         }
 
-        private func referencingEncoder(for key: String) -> _YAMLReferencingEncoder {
+        private func referencingEncoder(for key: CodingKey) -> _YAMLReferencingEncoder {
             return _YAMLReferencingEncoder(referencing: self.encoder, key: key)
         }
     }
