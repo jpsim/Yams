@@ -395,8 +395,6 @@
         func decode(_ type: Data.Type)   throws -> Data { return try construct() }
 
         func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
-            try expectNonNull(T.self)
-
             if let scalarConstructibleType = type.self as? ScalarConstructible.Type {
                 guard let value = scalarConstructibleType.construct(from: node) else {
                     throw _valueNotFound(at: codingPath, T.self, "Expected \(T.self) value but found null instead.")
@@ -412,19 +410,11 @@
 
         /// Decode ScalarConstructible
         private func construct<T: ScalarConstructible>() throws -> T {
-            try expectNonNull(T.self)
             guard let decoded = T.construct(from: node) else {
                 throw _typeMismatch(at: codingPath, expectation: T.self, reality: node)
             }
             return decoded
         }
-
-        private func expectNonNull<T>(_ type: T.Type) throws {
-            guard !self.decodeNil() else {
-                throw _valueNotFound(at: codingPath, type, "Expected \(type) but found null value instead.")
-            }
-        }
-
     }
 
     private func _keyNotFound(at codingPath: [CodingKey], _ key: CodingKey, _ description: String) -> DecodingError {
