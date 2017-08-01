@@ -103,26 +103,30 @@ import Yams
 
         // MARK: - Helper Functions
         private func _testRoundTrip<T>(of value: T,
-                                       expectedYAML yamlString: String? = nil) where T : Codable, T : Equatable {
+                                       expectedYAML yamlString: String? = nil,
+                                       file: StaticString = #file,
+                                       line: UInt = #line) where T : Codable, T : Equatable {
             var payload: Data! = nil
             do {
                 let encoder = YAMLEncoder()
                 payload = try encoder.encode(value)
             } catch {
-                XCTFail("Failed to encode \(T.self) to YAML.")
+                XCTFail("Failed to encode \(T.self) to YAML.", file: file, line: line)
             }
 
             if let expectedYAML = yamlString {
                 let producedYAML = String(data: payload, encoding: .utf8)! // swiftlint:disable:this force_unwrapping
-                XCTAssertEqual(producedYAML, expectedYAML, "Produced YAML not identical to expected YAML.")
+                XCTAssertEqual(producedYAML, expectedYAML, "Produced YAML not identical to expected YAML.",
+                               file: file, line: line)
             }
 
             do {
                 let decoder = YAMLDecoder()
                 let decoded = try decoder.decode(T.self, from: payload)
-                XCTAssertEqual(decoded, value, "\(T.self) did not round-trip to an equal value.")
+                XCTAssertEqual(decoded, value, "\(T.self) did not round-trip to an equal value.",
+                    file: file, line: line)
             } catch {
-                XCTFail("Failed to decode \(T.self) from YAML by error: \(error)")
+                XCTFail("Failed to decode \(T.self) from YAML by error: \(error)", file: file, line: line)
             }
         }
     }
