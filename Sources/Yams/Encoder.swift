@@ -22,9 +22,21 @@
         }
     }
 
+    fileprivate extension Node {
+        static let unused = Node("", .unused)
+    }
+
+    fileprivate extension Tag {
+        static let unused = Tag(.unused)
+    }
+
+    fileprivate extension Tag.Name {
+        static let unused: Tag.Name = "tag:yams.encoder:unused"
+    }
+
     fileprivate class _YAMLEncoder: Swift.Encoder {
 
-        var node: Node = ""
+        var node: Node = .unused
 
         init(codingPath: [CodingKey] = []) {
             self.codingPath = codingPath
@@ -39,42 +51,38 @@
         var userInfo: [CodingUserInfoKey : Any] = [:]
 
         func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> {
-            assertCanRequestNewContainer()
-            node = [:]
+            if canEncodeNewValue {
+                node = [:]
+            } else {
+                precondition(
+                    node.isMapping,
+                    "Attempt to push new keyed encoding container when already previously encoded at this path."
+                )
+            }
             let wrapper = _KeyedEncodingContainer<Key>(referencing: self)
             return KeyedEncodingContainer(wrapper)
         }
 
         func unkeyedContainer() -> UnkeyedEncodingContainer {
-            assertCanRequestNewContainer()
-            node = []
+            if canEncodeNewValue {
+                node = []
+            } else {
+                precondition(
+                    node.isSequence,
+                    "Attempt to push new keyed encoding container when already previously encoded at this path."
+                )
+            }
             return _UnkeyedEncodingContainer(referencing: self)
         }
 
         func singleValueContainer() -> SingleValueEncodingContainer {
-            assertCanRequestNewContainer()
             return self
         }
 
         // MARK: Utility
 
-        /// Asserts that a new container can be requested at this coding path.
-        /// `preconditionFailure()`s if one cannot be requested.
-        func assertCanRequestNewContainer() {
-            guard node == "" else {
-                let previousContainerType: String
-                switch node {
-                case .mapping:
-                    previousContainerType = "keyed"
-                case .sequence:
-                    previousContainerType = "unkeyed"
-                case .scalar:
-                    previousContainerType = "single value"
-                }
-                preconditionFailure(
-                    "Attempt to encode with new container when already encoded with \(previousContainerType) container."
-                )
-            }
+        fileprivate var canEncodeNewValue: Bool {
+            return node == .unused
         }
     }
 
@@ -303,7 +311,7 @@
         // MARK: - SingleValueEncodingContainer Methods
 
         func encodeNil() throws {
-            assertCanEncodeSingleValue()
+            assertCanEncodeNewValue()
             node = Node("null", Tag(.null))
         }
 
@@ -322,11 +330,12 @@
         func encode(_ value: Double) throws { try represent(value) }
 
         func encode(_ value: String) throws {
-            assertCanEncodeSingleValue()
+            assertCanEncodeNewValue()
             node = Node(value)
         }
 
         func encode<T>(_ value: T) throws where T : Encodable {
+            assertCanEncodeNewValue()
             if let date = value as? Date {
                 node = date.representedForCodable()
             } else if let representable = value as? ScalarRepresentable {
@@ -343,26 +352,16 @@
         /// `preconditionFailure()`s if one cannot be encoded.
         ///
         /// This is similar to assertCanRequestNewContainer above.
-        func assertCanEncodeSingleValue() {
-            guard node == "" else {
-                let previousContainerType: String
-                switch node {
-                case .mapping:
-                    previousContainerType = "keyed"
-                case .sequence:
-                    previousContainerType = "unkeyed"
-                case .scalar:
-                    preconditionFailure("Attempt to encode multiple values in a single value container.")
-                }
-                preconditionFailure(
-                    "Attempt to encode with new container when already encoded with \(previousContainerType) container."
-                )
-            }
+        fileprivate func assertCanEncodeNewValue() {
+            precondition(
+                canEncodeNewValue,
+                "Attempt to encode value through single value container when previously value already encoded."
+            )
         }
 
         /// Encode ScalarRepresentable
         func represent<T: ScalarRepresentable>(_ value: T) throws {
-            assertCanEncodeSingleValue()
+            assertCanEncodeNewValue()
             node = try Node(value)
         }
     }
