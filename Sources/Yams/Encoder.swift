@@ -84,6 +84,24 @@
         fileprivate var canEncodeNewValue: Bool {
             return node == .unused
         }
+
+        fileprivate var mapping: Node.Mapping {
+            get {
+                return node.mapping ?? [:]
+            }
+            set {
+                node.mapping = newValue
+            }
+        }
+
+        fileprivate var sequence: Node.Sequence {
+            get {
+                return node.sequence ?? []
+            }
+            set {
+                node.sequence = newValue
+            }
+        }
     }
 
     fileprivate class _YAMLReferencingEncoder: _YAMLEncoder {
@@ -98,14 +116,12 @@
             self.encoder = encoder
             reference = .sequence(index)
             super.init(codingPath: encoder.codingPath)
-            codingPath.append(_YAMLEncodingKey(index: index))
         }
 
         init(referencing encoder: _YAMLEncoder, key: CodingKey) {
             self.encoder = encoder
             reference = .mapping(key.stringValue)
             super.init(codingPath: encoder.codingPath)
-            codingPath.append(key)
         }
 
         deinit {
@@ -135,7 +151,7 @@
 
         // assumes following methods never throws
         func encodeNil(forKey key: K) throws {
-            encoder.node.mapping?[key.stringValue] = Node("null", Tag(.null))
+            encoder.mapping[key.stringValue] = Node("null", Tag(.null))
         }
 
         func encode(_ value: Bool, forKey key: Key)   throws { try represent(value, for: key) }
@@ -151,13 +167,13 @@
         func encode(_ value: UInt64, forKey key: Key) throws { try represent(value, for: key) }
         func encode(_ value: Float, forKey key: Key)  throws { try represent(value, for: key) }
         func encode(_ value: Double, forKey key: Key) throws { try represent(value, for: key) }
-        func encode(_ value: String, forKey key: Key) throws { encoder.node.mapping?[key.stringValue] = Node(value) }
+        func encode(_ value: String, forKey key: Key) throws { encoder.mapping[key.stringValue] = Node(value) }
 
         func encode<T>(_ value: T, forKey key: Key) throws where T : Encodable {
             if let date = value as? Date {
-                encoder.node.mapping?[key.stringValue] = date.representedForCodable()
+                encoder.mapping[key.stringValue] = date.representedForCodable()
             } else if let representable = value as? ScalarRepresentable {
-                encoder.node.mapping?[key.stringValue] = try representable.represented()
+                encoder.mapping[key.stringValue] = try representable.represented()
             } else {
                 try value.encode(to: referencingEncoder(for: key))
             }
@@ -186,10 +202,13 @@
         /// Encode ScalarRepresentable
         private func represent<T: ScalarRepresentable>(_ value: T, for key: Key) throws {
             // assumes this function is used for types that never throws.
-            encoder.node.mapping?[key.stringValue] = try Node(value)
+            encoder.mapping[key.stringValue] = try Node(value)
         }
 
         private func referencingEncoder(for key: CodingKey) -> _YAMLReferencingEncoder {
+            encoder.codingPath.append(key)
+            defer { encoder.codingPath.removeLast() }
+
             return _YAMLReferencingEncoder(referencing: self.encoder, key: key)
         }
     }
@@ -231,11 +250,11 @@
         }
 
         var count: Int {
-            return encoder.node.sequence?.count ?? 0
+            return encoder.sequence.count
         }
 
         func encodeNil() throws {
-            encoder.node.sequence?.append(Node("null", Tag(.null)))
+            encoder.sequence.append(Node("null", Tag(.null)))
         }
 
         func encode(_ value: Bool)   throws { try represent(value) }
@@ -251,40 +270,28 @@
         func encode(_ value: UInt64) throws { try represent(value) }
         func encode(_ value: Float)  throws { try represent(value) }
         func encode(_ value: Double) throws { try represent(value) }
-        func encode(_ value: String) throws { encoder.node.sequence?.append(Node(value)) }
+        func encode(_ value: String) throws { encoder.sequence.append(Node(value)) }
 
         func encode<T>(_ value: T) throws where T : Encodable {
-            encoder.codingPath.append(_YAMLEncodingKey(index: count))
-            defer { encoder.codingPath.removeLast() }
-
             if let date = value as? Date {
-                encoder.node.sequence?.append(date.representedForCodable())
+                encoder.sequence.append(date.representedForCodable())
             } else if let representable = value as? ScalarRepresentable {
-                encoder.node.sequence?.append(try representable.represented())
+                encoder.sequence.append(try representable.represented())
             } else {
                 try value.encode(to: referencingEncoder())
             }
         }
 
         func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> {
-            encoder.codingPath.append(_YAMLEncodingKey(index: count))
-            defer { encoder.codingPath.removeLast() }
-
             let wrapper = _KeyedEncodingContainer<NestedKey>(referencing: referencingEncoder())
             return KeyedEncodingContainer(wrapper)
         }
 
         func nestedUnkeyedContainer() -> UnkeyedEncodingContainer {
-            encoder.codingPath.append(_YAMLEncodingKey(index: count))
-            defer { encoder.codingPath.removeLast() }
-
             return _UnkeyedEncodingContainer(referencing: referencingEncoder())
         }
 
         func superEncoder() -> Encoder {
-            encoder.codingPath.append(_YAMLEncodingKey(index: count))
-            defer { encoder.codingPath.removeLast() }
-
             return referencingEncoder()
         }
 
@@ -296,12 +303,16 @@
             defer { encoder.codingPath.removeLast() }
 
             // assumes this function is used for types that never throws.
-            encoder.node.sequence?.append(try Node(value))
+            encoder.sequence.append(try Node(value))
         }
 
         private func referencingEncoder() -> _YAMLReferencingEncoder {
-            let index: Int = encoder.node.sequence?.count ?? 0
-            encoder.node.sequence?.append("")
+            let index = count
+
+            encoder.codingPath.append(_YAMLEncodingKey(index: index))
+            defer { encoder.codingPath.removeLast() }
+
+            encoder.sequence.append("")
             return _YAMLReferencingEncoder(referencing: self.encoder, at: index)
         }
     }
