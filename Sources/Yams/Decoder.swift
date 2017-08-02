@@ -455,4 +455,18 @@
         }
     }
 
+    extension Decimal: ScalarConstructible {
+        public static func construct(from node: Node) -> Decimal? {
+            assert(node.isScalar) // swiftlint:disable:next force_unwrapping
+            return Decimal(string: node.scalar!.string)
+        }
+    }
+
+    extension URL: ScalarConstructible {
+        public static func construct(from node: Node) -> URL? {
+            assert(node.isScalar) // swiftlint:disable:next force_unwrapping
+            return URL(string: node.scalar!.string)
+        }
+    }
+
 #endif // swiftlint:disable:this file_length

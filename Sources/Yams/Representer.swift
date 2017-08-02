@@ -202,3 +202,15 @@ extension Optional: NodeRepresentable {
         }
     }
 }
+
+extension Decimal: ScalarRepresentable {
+    public func represented() throws -> Node {
+        return Node(description)
+    }
+}
+
+extension URL: ScalarRepresentable {
+    public func represented() throws -> Node {
+        return Node(absoluteString)
+    }
+}
