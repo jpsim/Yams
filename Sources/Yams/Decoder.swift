@@ -451,7 +451,7 @@
 
     extension Float: ScalarConstructible {
         public static func construct(from node: Node) -> Float? {
-            return Double.construct(from: node) as? Float
+            return Double.construct(from: node).flatMap(Float.init(exactly:))
         }
     }
 
