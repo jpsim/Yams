@@ -323,7 +323,7 @@ import Yams
     }
 
     /// A simple referential counter type that encodes as a single Int value.
-    fileprivate final class Counter: Codable, Equatable {
+    private final class Counter: Codable, Equatable {
         var count: Int = 0
 
         init() {}
@@ -537,7 +537,7 @@ import Yams
     }
 
     /// A type which encodes as a dictionary directly through a single value container.
-    fileprivate final class Mapping: Codable, Equatable {
+    private final class Mapping: Codable, Equatable {
         let values: [String : URL]
 
         init(values: [String : URL]) {

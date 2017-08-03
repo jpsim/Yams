@@ -28,19 +28,19 @@
         }
     }
 
-    fileprivate extension Node {
+    private extension Node {
         static let unused = Node("", .unused)
     }
 
-    fileprivate extension Tag {
+    private extension Tag {
         static let unused = Tag(.unused)
     }
 
-    fileprivate extension Tag.Name {
+    private extension Tag.Name {
         static let unused: Tag.Name = "tag:yams.encoder:unused"
     }
 
-    fileprivate class _YAMLEncoder: Swift.Encoder {
+    private class _YAMLEncoder: Swift.Encoder {
 
         var node: Node = .unused
 
@@ -121,7 +121,7 @@
         }
     }
 
-    fileprivate class _YAMLReferencingEncoder: _YAMLEncoder {
+    private class _YAMLReferencingEncoder: _YAMLEncoder {
         enum Reference {
             case sequence(Int)
             case mapping(String)
@@ -151,7 +151,7 @@
         }
     }
 
-    fileprivate struct _KeyedEncodingContainer<K: CodingKey> : KeyedEncodingContainerProtocol {
+    private struct _KeyedEncodingContainer<K: CodingKey> : KeyedEncodingContainerProtocol {
         typealias Key = K
 
         let encoder: _YAMLEncoder
@@ -230,7 +230,7 @@
         }
     }
 
-    fileprivate struct _YAMLEncodingKey: CodingKey {
+    private struct _YAMLEncodingKey: CodingKey {
         public var stringValue: String
         public var intValue: Int?
 
@@ -252,7 +252,7 @@
         fileprivate static let `super` = _YAMLEncodingKey(stringValue: "super")!
     }
 
-    fileprivate struct _UnkeyedEncodingContainer: UnkeyedEncodingContainer {
+    private struct _UnkeyedEncodingContainer: UnkeyedEncodingContainer {
 
         let encoder: _YAMLEncoder
 

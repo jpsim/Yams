@@ -29,7 +29,7 @@
         }
     }
 
-    fileprivate class _YAMLDecoder: Decoder {
+    private class _YAMLDecoder: Decoder {
 
         let node: Node
 
@@ -66,7 +66,7 @@
         }
     }
 
-    fileprivate struct _YAMLKeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
+    private struct _YAMLKeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
 
         typealias Key = K
 
@@ -206,7 +206,7 @@
         }
     }
 
-    fileprivate struct _YAMLDecodingKey: CodingKey {
+    private struct _YAMLDecodingKey: CodingKey {
         public var stringValue: String
         public var intValue: Int?
 
@@ -228,7 +228,7 @@
         fileprivate static let `super` = _YAMLDecodingKey(stringValue: "super")!
     }
 
-    fileprivate struct _YAMLUnkeyedDecodingContainer: UnkeyedDecodingContainer {
+    private struct _YAMLUnkeyedDecodingContainer: UnkeyedDecodingContainer {
 
         let decoder: _YAMLDecoder
         let sequence: Node.Sequence
