@@ -14,11 +14,17 @@
         public init() {}
         public func encode<T: Swift.Encodable>(_ value: T) throws -> Data {
             let encoder = _YAMLEncoder()
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
             do {
-                var container = encoder.singleValueContainer()
-                try container.encode(value)
+                return try serialize(node: encoder.node).data(using: .utf8, allowLossyConversion: false) ?? Data()
+            } catch {
+                let description = "Unable to encode the given top-level value to YAML."
+                let context = EncodingError.Context(codingPath: [],
+                                                    debugDescription: description,
+                                                    underlyingError: error)
+                throw EncodingError.invalidValue(value, context)
             }
-            return try serialize(node: encoder.node).data(using: .utf8, allowLossyConversion: false) ?? Data()
         }
     }
 
@@ -102,6 +108,17 @@
                 node.sequence = newValue
             }
         }
+
+        fileprivate final func box(_ representable: ScalarRepresentable) throws -> Node {
+            do {
+                return try representable.represented()
+            } catch {
+                let context = EncodingError.Context(codingPath: codingPath,
+                                                    debugDescription: "Unable to encode the given value to YAML.",
+                                                    underlyingError: error)
+                throw EncodingError.invalidValue(representable, context)
+            }
+        }
     }
 
     fileprivate class _YAMLReferencingEncoder: _YAMLEncoder {
@@ -173,7 +190,7 @@
             if let date = value as? Date {
                 encoder.mapping[key.stringValue] = date.representedForCodable()
             } else if let representable = value as? ScalarRepresentable {
-                encoder.mapping[key.stringValue] = try representable.represented()
+                encoder.mapping[key.stringValue] = try encoder.box(representable)
             } else {
                 try value.encode(to: referencingEncoder(for: key))
             }
@@ -202,7 +219,7 @@
         /// Encode ScalarRepresentable
         private func represent<T: ScalarRepresentable>(_ value: T, for key: Key) throws {
             // assumes this function is used for types that never throws.
-            encoder.mapping[key.stringValue] = try Node(value)
+            encoder.mapping[key.stringValue] = try encoder.box(value)
         }
 
         private func referencingEncoder(for key: CodingKey) -> _YAMLReferencingEncoder {
@@ -276,7 +293,7 @@
             if let date = value as? Date {
                 encoder.sequence.append(date.representedForCodable())
             } else if let representable = value as? ScalarRepresentable {
-                encoder.sequence.append(try representable.represented())
+                encoder.sequence.append(try encoder.box(representable))
             } else {
                 try value.encode(to: referencingEncoder())
             }
@@ -303,7 +320,7 @@
             defer { encoder.codingPath.removeLast() }
 
             // assumes this function is used for types that never throws.
-            encoder.sequence.append(try Node(value))
+            encoder.sequence.append(try encoder.box(value))
         }
 
         private func referencingEncoder() -> _YAMLReferencingEncoder {
@@ -350,7 +367,7 @@
             if let date = value as? Date {
                 node = date.representedForCodable()
             } else if let representable = value as? ScalarRepresentable {
-                node = try representable.represented()
+                node = try box(representable)
             } else {
                 try value.encode(to: self)
             }
@@ -373,7 +390,7 @@
         /// Encode ScalarRepresentable
         func represent<T: ScalarRepresentable>(_ value: T) throws {
             assertCanEncodeNewValue()
-            node = try Node(value)
+            node = try box(value)
         }
     }
 

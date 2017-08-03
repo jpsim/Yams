@@ -15,7 +15,14 @@
         public func decode<T: Swift.Decodable>(_ type: T.Type, from data: Data) throws -> T {
             // TODO: Detect string encoding
             let yaml = String(data: data, encoding: .utf8)! // swiftlint:disable:this force_unwrapping
-            let node = try Yams.compose(yaml: yaml) ?? ""
+            let node: Node
+            do {
+                node = try Yams.compose(yaml: yaml) ?? ""
+            } catch {
+                throw DecodingError.dataCorrupted(.init(codingPath: [],
+                                                        debugDescription: "The given data was not valid YAML.",
+                                                        underlyingError: error))
+            }
             let decoder = _YAMLDecoder(referencing: node)
             let container = try decoder.singleValueContainer()
             return try container.decode(T.self)
