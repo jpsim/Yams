@@ -19,7 +19,7 @@ class StringTests: XCTestCase {
     // Confirm behavior of Standard Library API
     func testConfirmBehaviorOfStandardLibraryAPI() {
         let rangeOfFirstLine = string.lineRange(for: string.startIndex..<string.startIndex)
-        let firstLine = string.substring(with: rangeOfFirstLine)
+        let firstLine = string[rangeOfFirstLine]
         XCTAssertEqual(firstLine, "LINE1_67あ\n")
     }
 
