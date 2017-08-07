@@ -87,7 +87,7 @@ matrix:
         - docker run -v `pwd`:`pwd` -w `pwd` --rm $DOCKER_IMAGE swift test -Xswiftc -DUSE_UTF8
       env:
         - JOB=Docker
-        - DOCKER_IMAGE=norionomura/swift:4020170725a
+        - DOCKER_IMAGE=norionomura/swift:4020170804a
       sudo: required
       services: docker
 notifications:
