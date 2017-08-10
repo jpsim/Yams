@@ -116,7 +116,11 @@ private func dumped<T>(_ value: T) -> String {
     if count == 1 {
         // remove `- ` prefix if
         let index = firstLine.index(firstLine.startIndex, offsetBy: 2)
+#if swift(>=4.0)
+        return String(firstLine[index...])
+#else
         return firstLine.substring(from: index)
+#endif
     } else {
         return "[\n" + output + "]"
     }

@@ -65,7 +65,7 @@ extension String {
         return (
             number,
             utf16.distance(from: utf16StartIndex, to: utf16Index),
-            substring(with: outStartIndex..<outEndIndex)
+            String(self[outStartIndex..<outEndIndex])
         )
     }
 
@@ -84,7 +84,7 @@ extension String {
             getLineStart(&outStartIndex, end: &outEndIndex, contentsEnd: &outContentsEndIndex,
                          for: range)
         }
-        return substring(with: outStartIndex..<outEndIndex)
+        return String(self[outStartIndex..<outEndIndex])
     }
 
     /// String appending newline if is not ending with newline.
