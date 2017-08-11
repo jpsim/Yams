@@ -351,6 +351,23 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         YamsAssertEqual(objects, expected)
     }
 
+    func testTimestampWithNanosecond() throws {
+        #if os(Linux)
+            // FIXME: swift-corelibs-foundation can't format date with nanosecond.
+            // https://bugs.swift.org/browse/SR-3158
+        #else
+            let example = [
+                "nanosecond: 2001-12-15T02:59:43.123456789Z",
+                ""
+                ].joined(separator: "\n")
+            let objects = try Yams.load(yaml: example)
+            let expected: [String:Any] = [
+                "nanosecond": timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.123456789)
+            ]
+            YamsAssertEqual(objects, expected)
+        #endif
+    }
+
     func testValue() throws {
         let example = [
             "---     # Old schema",
