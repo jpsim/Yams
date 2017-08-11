@@ -413,6 +413,7 @@ extension ConstructorTests {
             ("testSet", testSet),
             ("testSeq", testSeq),
             ("testTimestamp", testTimestamp),
+            ("testTimestampWithNanosecond", testTimestampWithNanosecond),
             ("testValue", testValue)
         ]
     }
