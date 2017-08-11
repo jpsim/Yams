@@ -356,10 +356,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             // FIXME: swift-corelibs-foundation can't format date with nanosecond.
             // https://bugs.swift.org/browse/SR-3158
         #else
-            let example = [
-                "nanosecond: 2001-12-15T02:59:43.123456789Z",
-                ""
-                ].joined(separator: "\n")
+            let example = "nanosecond: 2001-12-15T02:59:43.123456789Z\n"
             let objects = try Yams.load(yaml: example)
             let expected: [String:Any] = [
                 "nanosecond": timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.123456789)
