@@ -121,7 +121,7 @@ extension Date: ScalarConstructible {
                 nanosecond = Int($0 + String(repeating: "0", count: 9 - length))
             } else {
 #if swift(>=4.0)
-                nanosecond = Int($0[...$0.index($0.startIndex, offsetBy: 9)])
+                nanosecond = Int($0[..<$0.index($0.startIndex, offsetBy: 9)])
 #else
                 nanosecond = Int($0.substring(to: $0.index($0.startIndex, offsetBy: 9)))
 #endif
