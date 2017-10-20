@@ -129,11 +129,7 @@ import Yams
 
         // MARK: - Data Tests
         func testEncodingBase64Data() {
-        #if os(Linux)
-            print("'Data' does not conform to 'Codable' on Linux yet.")
-        #else
             _testRoundTrip(of: Data(bytes: [0xDE, 0xAD, 0xBE, 0xEF]), expectedYAML: "3q2+7w==\n...\n")
-        #endif
         }
 
         // MARK: - Encoder Features
