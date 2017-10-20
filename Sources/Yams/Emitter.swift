@@ -195,7 +195,7 @@ public final class Emitter {
         /// Set the preferred line break.
         public var lineBreak: LineBreak = .ln
 
-        // internal since we don't know these should be exposed.
+        // internal since we don't know if these should be exposed.
         var explicitStart: Bool = false
         var explicitEnd: Bool = false
 
