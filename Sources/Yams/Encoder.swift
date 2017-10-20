@@ -12,12 +12,14 @@
 
     public class YAMLEncoder {
         public init() {}
-        public func encode<T: Swift.Encodable>(_ value: T) throws -> Data {
-            let encoder = _YAMLEncoder()
-            var container = encoder.singleValueContainer()
-            try container.encode(value)
+        public func encode<T: Swift.Encodable>(_ value: T) throws -> String {
             do {
-                return try serialize(node: encoder.node).data(using: .utf8, allowLossyConversion: false) ?? Data()
+                let encoder = _YAMLEncoder()
+                var container = encoder.singleValueContainer()
+                try container.encode(value)
+                return try serialize(node: encoder.node)
+            } catch let error as EncodingError {
+                throw error
             } catch {
                 let description = "Unable to encode the given top-level value to YAML."
                 let context = EncodingError.Context(codingPath: [],
