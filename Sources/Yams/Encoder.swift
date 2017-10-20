@@ -11,13 +11,15 @@
     import Foundation
 
     public class YAMLEncoder {
+        public typealias Options = Emitter.Options
+        public var options = Options()
         public init() {}
         public func encode<T: Swift.Encodable>(_ value: T) throws -> String {
             do {
                 let encoder = _YAMLEncoder()
                 var container = encoder.singleValueContainer()
                 try container.encode(value)
-                return try serialize(node: encoder.node)
+                return try serialize(node: encoder.node, options: options)
             } catch let error as EncodingError {
                 throw error
             } catch {
@@ -394,6 +396,19 @@
             assertCanEncodeNewValue()
             node = try box(value)
         }
+    }
+
+    private func serialize(node: Node, options: Emitter.Options) throws -> String {
+        return try serialize(
+            nodes: [node],
+            canonical: options.canonical,
+            indent: options.indent,
+            width: options.width,
+            allowUnicode: options.allowUnicode,
+            lineBreak: options.lineBreak,
+            explicitStart: options.explicitStart,
+            explicitEnd: options.explicitEnd,
+            version: options.version)
     }
 
 #endif
