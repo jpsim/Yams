@@ -9,7 +9,7 @@ let package = Package(
     targets: [
         .target(name: "CYaml"),
         .target(name: "Yams", dependencies: ["CYaml"]),
-        .testTarget(name: "YamsTests",dependencies: ["Yams"])
+        .testTarget(name: "YamsTests", dependencies: ["Yams"])
     ],
     swiftLanguageVersions: [3, 4]
 )

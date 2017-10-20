@@ -65,8 +65,8 @@ class PerformanceTests: XCTestCase {
         let spmName = "SourceKittenFramework"
         self.measure {
             do {
-                guard let yaml = try Yams.load(yaml: yamlString) as? [String:Any],
-                    let commands = (yaml["commands"] as? [String:[String:Any]])?.values,
+                guard let yaml = try Yams.load(yaml: yamlString) as? [String: Any],
+                    let commands = (yaml["commands"] as? [String: [String: Any]])?.values,
                     let moduleCommand = commands.first(where: { ($0["module-name"] as? String ?? "") == spmName }),
                     let imports = moduleCommand["import-paths"] as? [String],
                     let otherArguments = moduleCommand["other-args"] as? [String],

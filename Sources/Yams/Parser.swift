@@ -278,7 +278,7 @@ extension Parser {
 }
 
 /// Representation of `yaml_event_t`
-fileprivate class Event {
+private class Event {
     var event = yaml_event_t()
     deinit { yaml_event_delete(&event) }
 
@@ -346,6 +346,6 @@ fileprivate class Event {
     }
 }
 
-fileprivate func string(from pointer: UnsafePointer<UInt8>!) -> String? {
+private func string(from pointer: UnsafePointer<UInt8>!) -> String? {
     return String.decodeCString(pointer, as: UTF8.self, repairingInvalidCodeUnits: true)?.result
 }

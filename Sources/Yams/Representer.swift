@@ -70,7 +70,7 @@ private let characterSetZero = CharacterSet(charactersIn: "0")
 
 private let iso8601Formatter: DateFormatter = {
     var formatter = DateFormatter()
-    formatter.locale = Locale(identifier :"en_US_POSIX")
+    formatter.locale = Locale(identifier: "en_US_POSIX")
     formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
     formatter.timeZone = TimeZone(secondsFromGMT: 0)
     return formatter
@@ -78,7 +78,7 @@ private let iso8601Formatter: DateFormatter = {
 
 private let iso8601FormatterWithNanoseconds: DateFormatter = {
     var formatter = DateFormatter()
-    formatter.locale = Locale(identifier :"en_US_POSIX")
+    formatter.locale = Locale(identifier: "en_US_POSIX")
     formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSSSSSSSS"
     formatter.timeZone = TimeZone(secondsFromGMT: 0)
     return formatter
