@@ -12,7 +12,7 @@ import Yams
 
 #if swift(>=4.0)
 
-    // swiftlint:disable identifier_name, line_length
+    // swiftlint:disable identifier_name line_length
 
     /// Tests are copied from https://github.com/apple/swift/blob/master/test/stdlib/TestJSONEncoder.swift
     class EncoderTests: XCTestCase {
@@ -190,7 +190,7 @@ import Yams
         private func _testRoundTrip<T>(of value: T,
                                        expectedYAML yamlString: String? = nil,
                                        file: StaticString = #file,
-                                       line: UInt = #line) where T : Codable, T : Equatable {
+                                       line: UInt = #line) where T: Codable, T: Equatable {
             var payload: Data! = nil
             do {
                 let encoder = YAMLEncoder()
@@ -255,8 +255,6 @@ import Yams
                     expectUnreachable("\(prefix) CodingKey.intValue mismatch: \(type(of: key1))(\(i1)) != \(type(of: key2))(\(i2))", file: file, line: line)
                     return
                 }
-
-                break
             }
 
             expectEqual(key1.stringValue, key2.stringValue, "\(prefix) CodingKey.stringValue mismatch: \(type(of: key1))('\(key1.stringValue)') != \(type(of: key2))('\(key2.stringValue)')", file: file, line: line)
@@ -538,9 +536,9 @@ import Yams
 
     /// A type which encodes as a dictionary directly through a single value container.
     private final class Mapping: Codable, Equatable {
-        let values: [String : URL]
+        let values: [String: URL]
 
-        init(values: [String : URL]) {
+        init(values: [String: URL]) {
             self.values = values
         }
 
@@ -679,7 +677,7 @@ import Yams
     }
 
     /// Wraps a type T so that it can be encoded at the top level of a payload.
-    private struct TopLevelWrapper<T> : Codable, Equatable where T : Codable, T : Equatable {
+    private struct TopLevelWrapper<T> : Codable, Equatable where T: Codable, T: Equatable {
         let value: T
 
         init(_ value: T) {
@@ -692,7 +690,7 @@ import Yams
     }
 
     /// Wraps a type T (as T?) so that it can be encoded at the top level of a payload.
-    private struct OptionalTopLevelWrapper<T> : Codable, Equatable where T : Codable, T : Equatable {
+    private struct OptionalTopLevelWrapper<T> : Codable, Equatable where T: Codable, T: Equatable {
         let value: T?
 
         init(_ value: T) {

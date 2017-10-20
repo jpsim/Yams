@@ -54,7 +54,7 @@
         var codingPath: [CodingKey]
 
         /// Contextual user-provided information for use during encoding.
-        var userInfo: [CodingUserInfoKey : Any] = [:]
+        var userInfo: [CodingUserInfoKey: Any] = [:]
 
         func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> {
             if canEncodeNewValue {
@@ -186,7 +186,7 @@
         func encode(_ value: Double, forKey key: Key) throws { try represent(value, for: key) }
         func encode(_ value: String, forKey key: Key) throws { encoder.mapping[key.stringValue] = Node(value) }
 
-        func encode<T>(_ value: T, forKey key: Key) throws where T : Encodable {
+        func encode<T>(_ value: T, forKey key: Key) throws where T: Encodable {
             if let date = value as? Date {
                 encoder.mapping[key.stringValue] = date.representedForCodable()
             } else if let representable = value as? ScalarRepresentable {
@@ -289,7 +289,7 @@
         func encode(_ value: Double) throws { try represent(value) }
         func encode(_ value: String) throws { encoder.sequence.append(Node(value)) }
 
-        func encode<T>(_ value: T) throws where T : Encodable {
+        func encode<T>(_ value: T) throws where T: Encodable {
             if let date = value as? Date {
                 encoder.sequence.append(date.representedForCodable())
             } else if let representable = value as? ScalarRepresentable {
@@ -362,7 +362,7 @@
             node = Node(value)
         }
 
-        func encode<T>(_ value: T) throws where T : Encodable {
+        func encode<T>(_ value: T) throws where T: Encodable {
             assertCanEncodeNewValue()
             if let date = value as? Date {
                 node = date.representedForCodable()

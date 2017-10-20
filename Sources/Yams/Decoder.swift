@@ -44,7 +44,7 @@
         var codingPath: [CodingKey]
 
         /// Contextual user-provided information for use during encoding.
-        var userInfo: [CodingUserInfoKey : Any] = [:]
+        var userInfo: [CodingUserInfoKey: Any] = [:]
 
         func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> {
             guard let mapping = node.mapping else {
@@ -117,7 +117,7 @@
         func decode(_ type: Double.Type, forKey key: Key) throws -> Double { return try construct(for: key) }
         func decode(_ type: String.Type, forKey key: Key) throws -> String { return try construct(for: key) }
 
-        func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
+        func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable {
             guard let node = mapping[key.stringValue] else {
                 throw _keyNotFound(at: codingPath, key, "No value associated with key \(key) (\"\(key.stringValue)\").")
             }
@@ -286,7 +286,7 @@
         mutating func decode(_ type: Double.Type) throws -> Double { return try construct() }
         mutating func decode(_ type: String.Type) throws -> String { return try construct() }
 
-        mutating func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+        mutating func decode<T>(_ type: T.Type) throws -> T where T: Decodable {
             decoder.codingPath.append(_YAMLDecodingKey(index: currentIndex))
             defer { decoder.codingPath.removeLast() }
 
@@ -308,7 +308,7 @@
             return value
         }
 
-        mutating func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> {
+        mutating func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> { // swiftlint:disable:this line_length
             decoder.codingPath.append(_YAMLDecodingKey(index: currentIndex))
             defer { decoder.codingPath.removeLast() }
 
@@ -380,7 +380,7 @@
         }
     }
 
-    extension _YAMLDecoder : SingleValueDecodingContainer {
+    extension _YAMLDecoder: SingleValueDecodingContainer {
 
         // MARK: SingleValueDecodingContainer Methods
 
@@ -401,7 +401,7 @@
         func decode(_ type: String.Type) throws -> String { return try construct() }
         func decode(_ type: Data.Type)   throws -> Data { return try construct() }
 
-        func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+        func decode<T>(_ type: T.Type) throws -> T where T: Decodable {
             if let scalarConstructibleType = type.self as? ScalarConstructible.Type {
                 guard let value = scalarConstructibleType.construct(from: node) else {
                     throw _valueNotFound(at: codingPath, T.self, "Expected \(T.self) value but found null instead.")
