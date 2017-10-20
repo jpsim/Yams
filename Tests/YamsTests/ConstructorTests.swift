@@ -36,7 +36,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             " +f/++f/++f/++f/++f/++SH+Dk1hZGUgd2l0aCBHSU1QACwAAAAADAAMAAAFLC",
             " AgjoEwnuNAFOhpEMTRiggcz4BNJHrv/zCFcLiwMWYNG84BwwEeECcgggoBADs="
             ].joined(), options: .ignoreUnknownCharacters)!
-        let expected: [String:Any] = [
+        let expected: [String: Any] = [
             "canonical": data,
             "generic": data,
             "description": "The binary value above is a tiny arrow encoded as a gif image."
@@ -58,7 +58,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let expected: [String: Any] = [
             "canonical": true,
             "answer": false,
             "logical": true,
@@ -82,7 +82,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let expected: [String: Any] = [
             "canonical": 685230.15,
             "exponential": 685230.15,
             "fixed": 685230.15,
@@ -104,7 +104,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let expected: [String: Any] = [
             "canonical": 685230,
             "decimal": 685230,
             "octal": 685230,
@@ -126,7 +126,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let expected: [String: Any] = [
             "Block style": [
                 "Clark": "Evans",
                 "Brian": "Ingerson",
@@ -169,7 +169,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
-        let expected: [[String:Any]] = [
+        let expected: [[String: Any]] = [
             [ "x": 1, "y": 2 ],
             [ "x": 0, "y": 2 ],
             [ "r": 10 ],
@@ -238,7 +238,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let expected: [String: Any] = [
             "Bestiary": [
                 ("aardvark", "African pig-like ant eater. Ugly."),
                 ("anteater", "South-American ant eater. Two species."),
@@ -261,7 +261,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let expected: [String: Any] = [
             "Block tasks": [
                 ("meeting", "with team."),
                 ("meeting", "with boss."),
@@ -285,7 +285,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let expected: [String: Any] = [
             "baseball players": ["Mark McGwire", "Sammy Sosa", "Ken Griffey"] as Set<AnyHashable>,
             "baseball teams": ["Boston Red Sox", "Detroit Tigers", "New York Yankees"] as Set<AnyHashable>
         ]
@@ -312,7 +312,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let expected: [String: Any] = [
             "Block style": [
                 "Mercury",
                 "Venus",
@@ -341,7 +341,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
-        let expected: [String:Any] = [
+        let expected: [String: Any] = [
             "canonical": timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.1),
             "valid iso8601": timestamp(-5, 2001, 12, 14, 21, 59, 43, 0.1),
             "space separated": timestamp(-5, 2001, 12, 14, 21, 59, 43, 0.1),
@@ -358,7 +358,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         #else
             let example = "nanosecond: 2001-12-15T02:59:43.123456789Z\n"
             let objects = try Yams.load(yaml: example)
-            let expected: [String:Any] = [
+            let expected: [String: Any] = [
                 "nanosecond": timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.123456789)
             ]
             YamsAssertEqual(objects, expected)

@@ -87,7 +87,7 @@ extension Data: ScalarConstructible {
 }
 
 extension Date: ScalarConstructible {
-    public static func construct(from node: Node) -> Date? {
+    public static func construct(from node: Node) -> Date? { // swiftlint:disable:this function_body_length
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
         let scalar = node.scalar!.string
 
@@ -369,7 +369,7 @@ fileprivate extension String {
 }
 
 // MARK: - SexagesimalConvertible
-fileprivate protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
+private protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
     init?(_ value: String)
     static func * (lhs: Self, rhs: Self) -> Self
     static func *= (lhs: inout Self, rhs: Self)
@@ -418,4 +418,4 @@ fileprivate extension String {
         }
         return sign * value
     }
-}
+} // swiftlint:disable:this file_length

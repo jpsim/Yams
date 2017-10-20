@@ -62,7 +62,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             "rbi: 147   # Runs Batted In"
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let expectedObject: [String:Any] = [
+        let expectedObject: [String: Any] = [
             "hr": 65,
             "avg": 0.278,
             "rbi": 147
@@ -91,7 +91,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  - Atlanta Braves"
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let expectedObject: [String:Any] = [
+        let expectedObject: [String: Any] = [
             "american": [
                 "Boston Red Sox",
                 "Detroit Tigers",
@@ -198,7 +198,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  }"
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let expectedObject: [String:[String:Any]] = [
+        let expectedObject: [String: [String: Any]] = [
             "Mark McGwire": ["hr": 65, "avg": 0.278],
             "Sammy Sosa": [
                 "hr": 63,
@@ -273,7 +273,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             "..."
             ].joined(separator: "\n")
         let objects = Array(try Yams.load_all(yaml: example))
-        let expectedObjects: [[String:Any]] = [
+        let expectedObjects: [[String: Any]] = [
             [
                 "time": 72200,
                 "player": "Sammy Sosa",
@@ -312,7 +312,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  - Ken Griffey"
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let expectedObject: [String:Any] = [
+        let expectedObject: [String: Any] = [
             "hr": [
                 "Mark McGwire",
                 "Sammy Sosa"
@@ -349,7 +349,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  - Ken Griffey"
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let expectedObject: [String:Any] = [
+        let expectedObject: [String: Any] = [
             "hr": [
                 "Mark McGwire",
                 "Sammy Sosa"
@@ -526,7 +526,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             "  0.278 Batting Average"
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let expectedObject: [String:Any] = [
+        let expectedObject: [String: Any] = [
             "name": "Mark McGwire",
             "accomplishment": "Mark set a major league home run record in 1998.\n",
             "stats":
@@ -560,7 +560,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             "tie-fighter: '|\\-*-/|'"
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let expectedObject: [String:Any] = [
+        let expectedObject: [String: Any] = [
             "unicode": "Sosa did fine.\u{263A}",
             "control": "\u{8}1998\t1999\t2000\n",
             "hex esc": "\u{0d}\u{0a} is \r\n",
@@ -594,7 +594,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let expectedObject: [String:Any] = [
+        let expectedObject: [String: Any] = [
             "plain": "This unquoted scalar spans many lines.",
             "quoted": "So does this quoted scalar. "
             ]
@@ -617,7 +617,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             "hexadecimal: 0xC"
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let expectedObject: [String:Any] = [
+        let expectedObject: [String: Any] = [
             "canonical": 12345,
             "decimal": 12345,
             "octal": 0o14,
@@ -645,7 +645,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             "not a number: .NaN"
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let expectedObject: [String:Any] = [
+        let expectedObject: [String: Any] = [
             "canonical": 1.23015e+3,
             "exponential": 12.3015e+02,
             "fixed": 1230.15,
@@ -684,7 +684,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             ""
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let expectedObject: [String:Any] = [
+        let expectedObject: [String: Any] = [
             "not-date": "2002-04-28",
             "picture": Data(base64Encoded: [
                 "R0lGODlhDAAMAIQAAP//9/X",
@@ -745,7 +745,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             "    Billsmer @ 338-4338."
             ].joined(separator: "\n")
         let object = try Yams.load(yaml: example)
-        let billTo: [String:Any] = [
+        let billTo: [String: Any] = [
             "given": "Chris",
             "family": "Dumars",
             "address": [
@@ -755,7 +755,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
                 "postal": 48046
             ]
         ]
-        let expectedObject: [String:Any] = [
+        let expectedObject: [String: Any] = [
             "invoice": 34843,
             "date": timestamp(0, 2001, 1, 23),
             "bill-to": billTo,

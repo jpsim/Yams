@@ -62,7 +62,7 @@ func timestamp(_ timeZoneHour: Int = 0,
                     return false
             }
             return true
-        case let (lhs as [String:Any], rhs as [String:Any]):
+        case let (lhs as [String: Any], rhs as [String: Any]):
             let message1 = { "comparing count of \(dumped(lhs)) to \(dumped(rhs))" }
             equal(lhs.count, rhs.count, joined(message1(), context()))
             let keys = Set(lhs.keys).union(rhs.keys)
