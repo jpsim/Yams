@@ -12,7 +12,7 @@
 
     public class YAMLDecoder {
         public init() {}
-        public func decode<T>(_ type: T.Type,
+        public func decode<T>(_ type: T.Type = T.self,
                               from yaml: String,
                               userInfo: [CodingUserInfoKey: Any] = [:]) throws -> T where T: Swift.Decodable {
             do {
