@@ -30,7 +30,7 @@
         }
     }
 
-    private struct _YAMLDecoder: Decoder {
+    struct _YAMLDecoder: Decoder { // swiftlint:disable:this type_name
 
         private let node: Node
 
@@ -64,7 +64,7 @@
         // MARK: -
 
         /// constuct `T` from `node`
-        func construct<T: ScalarConstructible>() throws -> T {
+        fileprivate func construct<T: ScalarConstructible>() throws -> T {
             guard let constructed = T.construct(from: node) else {
                 throw _typeMismatch(at: codingPath, expectation: T.self, reality: node)
             }
@@ -72,19 +72,20 @@
         }
 
         /// create a new `_YAMLDecoder` instance referencing `node` as `key` inheriting `userInfo`
-        func decoder(referencing node: Node, `as` key: CodingKey) -> _YAMLDecoder {
+        fileprivate func decoder(referencing node: Node, `as` key: CodingKey) -> _YAMLDecoder {
             return .init(referencing: node, userInfo: userInfo, codingPath: codingPath + [key])
         }
     }
 
-    private struct _YAMLKeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
+    struct _YAMLKeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
+        // swiftlint:disable:previous type_name
 
         typealias Key = K
 
-        let decoder: _YAMLDecoder
-        let mapping: Node.Mapping
+        private let decoder: _YAMLDecoder
+        private let mapping: Node.Mapping
 
-        init(decoder: _YAMLDecoder, wrapping mapping: Node.Mapping) {
+        fileprivate init(decoder: _YAMLDecoder, wrapping mapping: Node.Mapping) {
             self.decoder = decoder
             self.mapping = mapping
         }
@@ -148,12 +149,12 @@
         }
     }
 
-    private struct _YAMLUnkeyedDecodingContainer: UnkeyedDecodingContainer {
+    struct _YAMLUnkeyedDecodingContainer: UnkeyedDecodingContainer { // swiftlint:disable:this type_name
 
-        let decoder: _YAMLDecoder
-        let sequence: Node.Sequence
+        private let decoder: _YAMLDecoder
+        private let sequence: Node.Sequence
 
-        init(decoder: _YAMLDecoder, wrapping sequence: Node.Sequence) {
+        fileprivate init(decoder: _YAMLDecoder, wrapping sequence: Node.Sequence) {
             self.decoder = decoder
             self.sequence = sequence
             self.currentIndex = 0
@@ -274,26 +275,26 @@
 
     // MARK: - CodingKey for `_YAMLUnkeyedDecodingContainer` and `superDecoders`
 
-    private struct _YAMLDecodingKey: CodingKey {
-        public var stringValue: String
-        public var intValue: Int?
+    struct _YAMLDecodingKey: CodingKey { // swiftlint:disable:this type_name
+        var stringValue: String
+        var intValue: Int?
 
-        public init?(stringValue: String) {
+        init?(stringValue: String) {
             self.stringValue = stringValue
             self.intValue = nil
         }
 
-        public init?(intValue: Int) {
+        init?(intValue: Int) {
             self.stringValue = "\(intValue)"
             self.intValue = intValue
         }
 
-        fileprivate init(index: Int) {
+        init(index: Int) {
             self.stringValue = "Index \(index)"
             self.intValue = index
         }
 
-        fileprivate static let `super` = _YAMLDecodingKey(stringValue: "super")!
+        static let `super` = _YAMLDecodingKey(stringValue: "super")!
     }
 
     // MARK: - DecodingError helpers

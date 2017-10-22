@@ -32,11 +32,10 @@
         }
     }
 
-    private class _YAMLEncoder: Swift.Encoder {
-
+    class _YAMLEncoder: Swift.Encoder { // swiftlint:disable:this type_name
         var node: Node = .unused
 
-        init(userInfo: [CodingUserInfoKey: Any], codingPath: [CodingKey] = []) {
+        init(userInfo: [CodingUserInfoKey: Any] = [:], codingPath: [CodingKey] = []) {
             self.userInfo = userInfo
             self.codingPath = codingPath
         }
@@ -74,16 +73,30 @@
 
         // MARK: -
 
-        var canEncodeNewValue: Bool { return node == .unused }
-
-        var mapping: Node.Mapping {
+        fileprivate var mapping: Node.Mapping {
             get { return node.mapping ?? [:] }
             set { node.mapping = newValue }
         }
 
-        var sequence: Node.Sequence {
+        fileprivate var sequence: Node.Sequence {
             get { return node.sequence ?? [] }
             set { node.sequence = newValue }
+        }
+
+        /// Encode `ScalarRepresentable` to `node`
+        fileprivate func represent<T: ScalarRepresentable>(_ value: T) throws {
+            assertCanEncodeNewValue()
+            node = try box(value)
+        }
+
+        /// create a new `_YAMLReferencingEncoder` instance as `key` inheriting `userInfo`
+        fileprivate func encoder(for key: CodingKey) -> _YAMLReferencingEncoder {
+            return .init(referencing: self, key: key)
+        }
+
+        /// create a new `_YAMLReferencingEncoder` instance at `index` inheriting `userInfo`
+        fileprivate func encoder(at index: Int) -> _YAMLReferencingEncoder {
+            return .init(referencing: self, at: index)
         }
 
         /// Create `Node` from `ScalarRepresentable`.
@@ -99,36 +112,22 @@
             }
         }
 
-        /// Encode `ScalarRepresentable` to `node`
-        func represent<T: ScalarRepresentable>(_ value: T) throws {
-            assertCanEncodeNewValue()
-            node = try box(value)
-        }
-
-        /// create a new `_YAMLReferencingEncoder` instance as `key` inheriting `userInfo`
-        func encoder(for key: CodingKey) -> _YAMLReferencingEncoder {
-            return .init(referencing: self, key: key)
-        }
-
-        /// create a new `_YAMLReferencingEncoder` instance at `index` inheriting `userInfo`
-        func encoder(at index: Int) -> _YAMLReferencingEncoder {
-            return .init(referencing: self, at: index)
-        }
+        private var canEncodeNewValue: Bool { return node == .unused }
     }
 
-    private class _YAMLReferencingEncoder: _YAMLEncoder {
+    class _YAMLReferencingEncoder: _YAMLEncoder { // swiftlint:disable:this type_name
         private enum Reference { case mapping(String), sequence(Int) }
 
         private let encoder: _YAMLEncoder
         private let reference: Reference
 
-        init(referencing encoder: _YAMLEncoder, key: CodingKey) {
+        fileprivate init(referencing encoder: _YAMLEncoder, key: CodingKey) {
             self.encoder = encoder
             reference = .mapping(key.stringValue)
             super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [key])
         }
 
-        init(referencing encoder: _YAMLEncoder, at index: Int) {
+        fileprivate init(referencing encoder: _YAMLEncoder, at index: Int) {
             self.encoder = encoder
             reference = .sequence(index)
             super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [_YAMLEncodingKey(index: index)])
@@ -144,12 +143,12 @@
         }
     }
 
-    private struct _KeyedEncodingContainer<K: CodingKey> : KeyedEncodingContainerProtocol {
+    struct _KeyedEncodingContainer<K: CodingKey> : KeyedEncodingContainerProtocol { // swiftlint:disable:this type_name
         typealias Key = K
 
-        let encoder: _YAMLEncoder
+        private let encoder: _YAMLEncoder
 
-        init(referencing encoder: _YAMLEncoder) {
+        fileprivate init(referencing encoder: _YAMLEncoder) {
             self.encoder = encoder
         }
 
@@ -194,11 +193,10 @@
         }
     }
 
-    private struct _UnkeyedEncodingContainer: UnkeyedEncodingContainer {
+    struct _UnkeyedEncodingContainer: UnkeyedEncodingContainer { // swiftlint:disable:this type_name
+        private let encoder: _YAMLEncoder
 
-        let encoder: _YAMLEncoder
-
-        init(referencing encoder: _YAMLEncoder) {
+        fileprivate init(referencing encoder: _YAMLEncoder) {
             self.encoder = encoder
         }
 
@@ -296,26 +294,26 @@
 
     // MARK: - CodingKey for `_UnkeyedEncodingContainer` and `superEncoders`
 
-    private struct _YAMLEncodingKey: CodingKey {
-        public var stringValue: String
-        public var intValue: Int?
+    struct _YAMLEncodingKey: CodingKey { // swiftlint:disable:this type_name
+        var stringValue: String
+        var intValue: Int?
 
-        public init?(stringValue: String) {
+        init?(stringValue: String) {
             self.stringValue = stringValue
             self.intValue = nil
         }
 
-        public init?(intValue: Int) {
+        init?(intValue: Int) {
             self.stringValue = "\(intValue)"
             self.intValue = intValue
         }
 
-        fileprivate init(index: Int) {
+        init(index: Int) {
             self.stringValue = "Index \(index)"
             self.intValue = index
         }
 
-        fileprivate static let `super` = _YAMLEncodingKey(stringValue: "super")!
+        static let `super` = _YAMLEncodingKey(stringValue: "super")!
     }
 
     // MARK: -
