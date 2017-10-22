@@ -14,9 +14,9 @@
         public typealias Options = Emitter.Options
         public var options = Options()
         public init() {}
-        public func encode<T: Swift.Encodable>(_ value: T) throws -> String {
+        public func encode<T: Swift.Encodable>(_ value: T, userInfo: [CodingUserInfoKey: Any] = [:]) throws -> String {
             do {
-                let encoder = _YAMLEncoder()
+                let encoder = _YAMLEncoder(userInfo: userInfo)
                 var container = encoder.singleValueContainer()
                 try container.encode(value)
                 return try serialize(node: encoder.node, options: options)
@@ -32,33 +32,19 @@
         }
     }
 
-    private extension Node {
-        static let unused = Node("", .unused)
-    }
-
-    private extension Tag {
-        static let unused = Tag(.unused)
-    }
-
-    private extension Tag.Name {
-        static let unused: Tag.Name = "tag:yams.encoder:unused"
-    }
-
     private class _YAMLEncoder: Swift.Encoder {
 
         var node: Node = .unused
 
-        init(codingPath: [CodingKey] = []) {
+        init(userInfo: [CodingUserInfoKey: Any], codingPath: [CodingKey] = []) {
+            self.userInfo = userInfo
             self.codingPath = codingPath
         }
 
         // MARK: - Swift.Encoder Methods
 
-        /// The path to the current point in encoding.
-        var codingPath: [CodingKey]
-
-        /// Contextual user-provided information for use during encoding.
-        var userInfo: [CodingUserInfoKey: Any] = [:]
+        let codingPath: [CodingKey]
+        let userInfo: [CodingUserInfoKey: Any]
 
         func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> {
             if canEncodeNewValue {
@@ -69,8 +55,7 @@
                     "Attempt to push new keyed encoding container when already previously encoded at this path."
                 )
             }
-            let wrapper = _KeyedEncodingContainer<Key>(referencing: self)
-            return KeyedEncodingContainer(wrapper)
+            return .init(_KeyedEncodingContainer<Key>(referencing: self))
         }
 
         func unkeyedContainer() -> UnkeyedEncodingContainer {
@@ -85,35 +70,25 @@
             return _UnkeyedEncodingContainer(referencing: self)
         }
 
-        func singleValueContainer() -> SingleValueEncodingContainer {
-            return self
+        func singleValueContainer() -> SingleValueEncodingContainer { return self }
+
+        // MARK: -
+
+        var canEncodeNewValue: Bool { return node == .unused }
+
+        var mapping: Node.Mapping {
+            get { return node.mapping ?? [:] }
+            set { node.mapping = newValue }
         }
 
-        // MARK: Utility
-
-        fileprivate var canEncodeNewValue: Bool {
-            return node == .unused
+        var sequence: Node.Sequence {
+            get { return node.sequence ?? [] }
+            set { node.sequence = newValue }
         }
 
-        fileprivate var mapping: Node.Mapping {
-            get {
-                return node.mapping ?? [:]
-            }
-            set {
-                node.mapping = newValue
-            }
-        }
-
-        fileprivate var sequence: Node.Sequence {
-            get {
-                return node.sequence ?? []
-            }
-            set {
-                node.sequence = newValue
-            }
-        }
-
-        fileprivate final func box(_ representable: ScalarRepresentable) throws -> Node {
+        /// Create `Node` from `ScalarRepresentable`.
+        /// Errors throwed by `ScalarRepresentable` will be boxed into `EncodingError`
+        private func box(_ representable: ScalarRepresentable) throws -> Node {
             do {
                 return try representable.represented()
             } catch {
@@ -123,34 +98,48 @@
                 throw EncodingError.invalidValue(representable, context)
             }
         }
+
+        /// Encode `ScalarRepresentable` to `node`
+        func represent<T: ScalarRepresentable>(_ value: T) throws {
+            assertCanEncodeNewValue()
+            node = try box(value)
+        }
+
+        /// create a new `_YAMLReferencingEncoder` instance as `key` inheriting `userInfo`
+        func encoder(for key: CodingKey) -> _YAMLReferencingEncoder {
+            return .init(referencing: self, key: key)
+        }
+
+        /// create a new `_YAMLReferencingEncoder` instance at `index` inheriting `userInfo`
+        func encoder(at index: Int) -> _YAMLReferencingEncoder {
+            return .init(referencing: self, at: index)
+        }
     }
 
     private class _YAMLReferencingEncoder: _YAMLEncoder {
-        enum Reference {
-            case sequence(Int)
-            case mapping(String)
-        }
-        let encoder: _YAMLEncoder
-        let reference: Reference
+        private enum Reference { case mapping(String), sequence(Int) }
 
-        init(referencing encoder: _YAMLEncoder, at index: Int) {
-            self.encoder = encoder
-            reference = .sequence(index)
-            super.init(codingPath: encoder.codingPath)
-        }
+        private let encoder: _YAMLEncoder
+        private let reference: Reference
 
         init(referencing encoder: _YAMLEncoder, key: CodingKey) {
             self.encoder = encoder
             reference = .mapping(key.stringValue)
-            super.init(codingPath: encoder.codingPath)
+            super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [key])
+        }
+
+        init(referencing encoder: _YAMLEncoder, at index: Int) {
+            self.encoder = encoder
+            reference = .sequence(index)
+            super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [_YAMLEncodingKey(index: index)])
         }
 
         deinit {
             switch reference {
-            case .sequence(let index):
-                encoder.node[index] = node
             case .mapping(let key):
                 encoder.node[key] = node
+            case .sequence(let index):
+                encoder.node[index] = node
             }
         }
     }
@@ -164,17 +153,10 @@
             self.encoder = encoder
         }
 
-        // MARK: - KeyedEncodingContainerProtocol
+        // MARK: - Swift.KeyedEncodingContainerProtocol Methods
 
-        var codingPath: [CodingKey] {
-            return encoder.codingPath
-        }
-
-        // assumes following methods never throws
-        func encodeNil(forKey key: K) throws {
-            encoder.mapping[key.stringValue] = Node("null", Tag(.null))
-        }
-
+        var codingPath: [CodingKey] { return encoder.codingPath }
+        func encodeNil(forKey key: Key)               throws { encoder.mapping[key.stringValue] = .null }
         func encode(_ value: Bool, forKey key: Key)   throws { try represent(value, for: key) }
         func encode(_ value: Int, forKey key: Key)    throws { try represent(value, for: key) }
         func encode(_ value: Int8, forKey key: Key)   throws { try represent(value, for: key) }
@@ -189,71 +171,27 @@
         func encode(_ value: Float, forKey key: Key)  throws { try represent(value, for: key) }
         func encode(_ value: Double, forKey key: Key) throws { try represent(value, for: key) }
         func encode(_ value: String, forKey key: Key) throws { encoder.mapping[key.stringValue] = Node(value) }
+        func encode<T>(_ value: T, forKey key: Key)   throws where T: Encodable { try encoder(for: key).encode(value) }
 
-        func encode<T>(_ value: T, forKey key: Key) throws where T: Encodable {
-            if let date = value as? Date {
-                encoder.mapping[key.stringValue] = date.representedForCodable()
-            } else if let representable = value as? ScalarRepresentable {
-                encoder.mapping[key.stringValue] = try encoder.box(representable)
-            } else {
-                try value.encode(to: referencingEncoder(for: key))
-            }
-        }
-
-        func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type,
+        func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type,
                                         forKey key: Key) -> KeyedEncodingContainer<NestedKey> {
-            let wrapper = _KeyedEncodingContainer<NestedKey>(referencing: referencingEncoder(for: key))
-            return KeyedEncodingContainer(wrapper)
+            return encoder(for: key).container(keyedBy: type)
         }
 
         func nestedUnkeyedContainer(forKey key: Key) -> UnkeyedEncodingContainer {
-            return _UnkeyedEncodingContainer(referencing: referencingEncoder(for: key))
+            return encoder(for: key).unkeyedContainer()
         }
 
-        func superEncoder() -> Encoder {
-            return referencingEncoder(for: _YAMLEncodingKey.super)
-        }
+        func superEncoder() -> Encoder { return encoder(for: _YAMLEncodingKey.super) }
+        func superEncoder(forKey key: Key) -> Encoder { return encoder(for: key) }
 
-        func superEncoder(forKey key: Key) -> Encoder {
-            return referencingEncoder(for: key)
-        }
+        // MARK: -
 
-        // MARK: Utility
+        private func encoder(for key: CodingKey) -> _YAMLReferencingEncoder { return encoder.encoder(for: key) }
 
-        /// Encode ScalarRepresentable
         private func represent<T: ScalarRepresentable>(_ value: T, for key: Key) throws {
-            // assumes this function is used for types that never throws.
-            encoder.mapping[key.stringValue] = try encoder.box(value)
+             try encoder(for: key).represent(value)
         }
-
-        private func referencingEncoder(for key: CodingKey) -> _YAMLReferencingEncoder {
-            encoder.codingPath.append(key)
-            defer { encoder.codingPath.removeLast() }
-
-            return _YAMLReferencingEncoder(referencing: self.encoder, key: key)
-        }
-    }
-
-    private struct _YAMLEncodingKey: CodingKey {
-        public var stringValue: String
-        public var intValue: Int?
-
-        public init?(stringValue: String) {
-            self.stringValue = stringValue
-            self.intValue = nil
-        }
-
-        public init?(intValue: Int) {
-            self.stringValue = "\(intValue)"
-            self.intValue = intValue
-        }
-
-        fileprivate init(index: Int) {
-            self.stringValue = "Index \(index)"
-            self.intValue = index
-        }
-
-        fileprivate static let `super` = _YAMLEncodingKey(stringValue: "super")!
     }
 
     private struct _UnkeyedEncodingContainer: UnkeyedEncodingContainer {
@@ -264,20 +202,11 @@
             self.encoder = encoder
         }
 
-        // MARK: - UnkeyedEncodingContainer
+        // MARK: - Swift.UnkeyedEncodingContainer Methods
 
-        var codingPath: [CodingKey] {
-            return encoder.codingPath
-        }
-
-        var count: Int {
-            return encoder.sequence.count
-        }
-
-        func encodeNil() throws {
-            encoder.sequence.append(Node("null", Tag(.null)))
-        }
-
+        var codingPath: [CodingKey] { return encoder.codingPath }
+        var count: Int { return encoder.sequence.count }
+        func encodeNil()             throws { encoder.sequence.append(.null) }
         func encode(_ value: Bool)   throws { try represent(value) }
         func encode(_ value: Int)    throws { try represent(value) }
         func encode(_ value: Int8)   throws { try represent(value) }
@@ -292,59 +221,34 @@
         func encode(_ value: Float)  throws { try represent(value) }
         func encode(_ value: Double) throws { try represent(value) }
         func encode(_ value: String) throws { encoder.sequence.append(Node(value)) }
+        func encode<T>(_ value: T)   throws where T: Encodable { try currentEncoder.encode(value) }
 
-        func encode<T>(_ value: T) throws where T: Encodable {
-            if let date = value as? Date {
-                encoder.sequence.append(date.representedForCodable())
-            } else if let representable = value as? ScalarRepresentable {
-                encoder.sequence.append(try encoder.box(representable))
-            } else {
-                try value.encode(to: referencingEncoder())
-            }
+        func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> {
+            return currentEncoder.container(keyedBy: type)
         }
 
-        func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> {
-            let wrapper = _KeyedEncodingContainer<NestedKey>(referencing: referencingEncoder())
-            return KeyedEncodingContainer(wrapper)
+        func nestedUnkeyedContainer() -> UnkeyedEncodingContainer { return currentEncoder.unkeyedContainer() }
+        func superEncoder() -> Encoder { return currentEncoder }
+
+        // MARK: -
+
+        private var currentEncoder: _YAMLReferencingEncoder {
+            defer { encoder.sequence.append("") }
+            return encoder.encoder(at: count)
         }
 
-        func nestedUnkeyedContainer() -> UnkeyedEncodingContainer {
-            return _UnkeyedEncodingContainer(referencing: referencingEncoder())
-        }
-
-        func superEncoder() -> Encoder {
-            return referencingEncoder()
-        }
-
-        // MARK: Utility
-
-        /// Encode ScalarRepresentable
         private func represent<T: ScalarRepresentable>(_ value: T) throws {
-            encoder.codingPath.append(_YAMLEncodingKey(index: count))
-            defer { encoder.codingPath.removeLast() }
-
-            // assumes this function is used for types that never throws.
-            encoder.sequence.append(try encoder.box(value))
-        }
-
-        private func referencingEncoder() -> _YAMLReferencingEncoder {
-            let index = count
-
-            encoder.codingPath.append(_YAMLEncodingKey(index: index))
-            defer { encoder.codingPath.removeLast() }
-
-            encoder.sequence.append("")
-            return _YAMLReferencingEncoder(referencing: self.encoder, at: index)
+            try currentEncoder.represent(value)
         }
     }
 
     extension _YAMLEncoder: SingleValueEncodingContainer {
 
-        // MARK: - SingleValueEncodingContainer Methods
+        // MARK: - Swift.SingleValueEncodingContainer Methods
 
         func encodeNil() throws {
             assertCanEncodeNewValue()
-            node = Node("null", Tag(.null))
+            node = .null
         }
 
         func encode(_ value: Bool)   throws { try represent(value) }
@@ -377,25 +281,56 @@
             }
         }
 
-        // MARK: Utility
+        // MARK: -
 
         /// Asserts that a single value can be encoded at the current coding path
         /// (i.e. that one has not already been encoded through this container).
         /// `preconditionFailure()`s if one cannot be encoded.
-        ///
-        /// This is similar to assertCanRequestNewContainer above.
-        fileprivate func assertCanEncodeNewValue() {
+        private func assertCanEncodeNewValue() {
             precondition(
                 canEncodeNewValue,
                 "Attempt to encode value through single value container when previously value already encoded."
             )
         }
+    }
 
-        /// Encode ScalarRepresentable
-        func represent<T: ScalarRepresentable>(_ value: T) throws {
-            assertCanEncodeNewValue()
-            node = try box(value)
+    // MARK: - CodingKey for `_UnkeyedEncodingContainer` and `superEncoders`
+
+    private struct _YAMLEncodingKey: CodingKey {
+        public var stringValue: String
+        public var intValue: Int?
+
+        public init?(stringValue: String) {
+            self.stringValue = stringValue
+            self.intValue = nil
         }
+
+        public init?(intValue: Int) {
+            self.stringValue = "\(intValue)"
+            self.intValue = intValue
+        }
+
+        fileprivate init(index: Int) {
+            self.stringValue = "Index \(index)"
+            self.intValue = index
+        }
+
+        fileprivate static let `super` = _YAMLEncodingKey(stringValue: "super")!
+    }
+
+    // MARK: -
+
+    private extension Node {
+        static let null = Node("null", Tag(.null))
+        static let unused = Node("", .unused)
+    }
+
+    private extension Tag {
+        static let unused = Tag(.unused)
+    }
+
+    private extension Tag.Name {
+        static let unused: Tag.Name = "tag:yams.encoder:unused"
     }
 
     private func serialize(node: Node, options: Emitter.Options) throws -> String {
