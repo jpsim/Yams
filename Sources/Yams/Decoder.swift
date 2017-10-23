@@ -257,7 +257,6 @@
         func decode(_ type: Float.Type)  throws -> Float { return try construct() }
         func decode(_ type: Double.Type) throws -> Double { return try construct() }
         func decode(_ type: String.Type) throws -> String { return try construct() }
-        func decode(_ type: Data.Type)   throws -> Data { return try construct() }
         func decode<T>(_ type: T.Type)   throws -> T where T: Decodable { return try decode() ?? T(from: self) }
 
         // MARK: -
