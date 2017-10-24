@@ -156,19 +156,19 @@
 
         var codingPath: [CodingKey] { return encoder.codingPath }
         func encodeNil(forKey key: Key)               throws { encoder.mapping[key.stringValue] = .null }
-        func encode(_ value: Bool, forKey key: Key)   throws { try represent(value, for: key) }
-        func encode(_ value: Int, forKey key: Key)    throws { try represent(value, for: key) }
-        func encode(_ value: Int8, forKey key: Key)   throws { try represent(value, for: key) }
-        func encode(_ value: Int16, forKey key: Key)  throws { try represent(value, for: key) }
-        func encode(_ value: Int32, forKey key: Key)  throws { try represent(value, for: key) }
-        func encode(_ value: Int64, forKey key: Key)  throws { try represent(value, for: key) }
-        func encode(_ value: UInt, forKey key: Key)   throws { try represent(value, for: key) }
-        func encode(_ value: UInt8, forKey key: Key)  throws { try represent(value, for: key) }
-        func encode(_ value: UInt16, forKey key: Key) throws { try represent(value, for: key) }
-        func encode(_ value: UInt32, forKey key: Key) throws { try represent(value, for: key) }
-        func encode(_ value: UInt64, forKey key: Key) throws { try represent(value, for: key) }
-        func encode(_ value: Float, forKey key: Key)  throws { try represent(value, for: key) }
-        func encode(_ value: Double, forKey key: Key) throws { try represent(value, for: key) }
+        func encode(_ value: Bool, forKey key: Key)   throws { try encoder(for: key).represent(value) }
+        func encode(_ value: Int, forKey key: Key)    throws { try encoder(for: key).represent(value) }
+        func encode(_ value: Int8, forKey key: Key)   throws { try encoder(for: key).represent(value) }
+        func encode(_ value: Int16, forKey key: Key)  throws { try encoder(for: key).represent(value) }
+        func encode(_ value: Int32, forKey key: Key)  throws { try encoder(for: key).represent(value) }
+        func encode(_ value: Int64, forKey key: Key)  throws { try encoder(for: key).represent(value) }
+        func encode(_ value: UInt, forKey key: Key)   throws { try encoder(for: key).represent(value) }
+        func encode(_ value: UInt8, forKey key: Key)  throws { try encoder(for: key).represent(value) }
+        func encode(_ value: UInt16, forKey key: Key) throws { try encoder(for: key).represent(value) }
+        func encode(_ value: UInt32, forKey key: Key) throws { try encoder(for: key).represent(value) }
+        func encode(_ value: UInt64, forKey key: Key) throws { try encoder(for: key).represent(value) }
+        func encode(_ value: Float, forKey key: Key)  throws { try encoder(for: key).represent(value) }
+        func encode(_ value: Double, forKey key: Key) throws { try encoder(for: key).represent(value) }
         func encode(_ value: String, forKey key: Key) throws { encoder.mapping[key.stringValue] = Node(value) }
         func encode<T>(_ value: T, forKey key: Key)   throws where T: Encodable { try encoder(for: key).encode(value) }
 
@@ -187,10 +187,6 @@
         // MARK: -
 
         private func encoder(for key: CodingKey) -> _YAMLReferencingEncoder { return encoder.encoder(for: key) }
-
-        private func represent<T: ScalarRepresentable>(_ value: T, for key: Key) throws {
-             try encoder(for: key).represent(value)
-        }
     }
 
     struct _UnkeyedEncodingContainer: UnkeyedEncodingContainer { // swiftlint:disable:this type_name
@@ -205,19 +201,19 @@
         var codingPath: [CodingKey] { return encoder.codingPath }
         var count: Int { return encoder.sequence.count }
         func encodeNil()             throws { encoder.sequence.append(.null) }
-        func encode(_ value: Bool)   throws { try represent(value) }
-        func encode(_ value: Int)    throws { try represent(value) }
-        func encode(_ value: Int8)   throws { try represent(value) }
-        func encode(_ value: Int16)  throws { try represent(value) }
-        func encode(_ value: Int32)  throws { try represent(value) }
-        func encode(_ value: Int64)  throws { try represent(value) }
-        func encode(_ value: UInt)   throws { try represent(value) }
-        func encode(_ value: UInt8)  throws { try represent(value) }
-        func encode(_ value: UInt16) throws { try represent(value) }
-        func encode(_ value: UInt32) throws { try represent(value) }
-        func encode(_ value: UInt64) throws { try represent(value) }
-        func encode(_ value: Float)  throws { try represent(value) }
-        func encode(_ value: Double) throws { try represent(value) }
+        func encode(_ value: Bool)   throws { try currentEncoder.represent(value) }
+        func encode(_ value: Int)    throws { try currentEncoder.represent(value) }
+        func encode(_ value: Int8)   throws { try currentEncoder.represent(value) }
+        func encode(_ value: Int16)  throws { try currentEncoder.represent(value) }
+        func encode(_ value: Int32)  throws { try currentEncoder.represent(value) }
+        func encode(_ value: Int64)  throws { try currentEncoder.represent(value) }
+        func encode(_ value: UInt)   throws { try currentEncoder.represent(value) }
+        func encode(_ value: UInt8)  throws { try currentEncoder.represent(value) }
+        func encode(_ value: UInt16) throws { try currentEncoder.represent(value) }
+        func encode(_ value: UInt32) throws { try currentEncoder.represent(value) }
+        func encode(_ value: UInt64) throws { try currentEncoder.represent(value) }
+        func encode(_ value: Float)  throws { try currentEncoder.represent(value) }
+        func encode(_ value: Double) throws { try currentEncoder.represent(value) }
         func encode(_ value: String) throws { encoder.sequence.append(Node(value)) }
         func encode<T>(_ value: T)   throws where T: Encodable { try currentEncoder.encode(value) }
 
@@ -233,10 +229,6 @@
         private var currentEncoder: _YAMLReferencingEncoder {
             defer { encoder.sequence.append("") }
             return encoder.encoder(at: count)
-        }
-
-        private func represent<T: ScalarRepresentable>(_ value: T) throws {
-            try currentEncoder.represent(value)
         }
     }
 
