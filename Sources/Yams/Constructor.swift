@@ -115,7 +115,11 @@ extension Date: ScalarConstructible {
         datecomponents.minute = components[4].flatMap { Int($0) }
         datecomponents.second = components[5].flatMap { Int($0) }
         datecomponents.nanosecond = components[6].flatMap {
+#if swift(>=3.2)
+            let length = $0.count
+#else
             let length = $0.characters.count
+#endif
             let nanosecond: Int?
             if length < 9 {
                 nanosecond = Int($0 + String(repeating: "0", count: 9 - length))
