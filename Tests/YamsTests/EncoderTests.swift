@@ -165,6 +165,61 @@ import Yams
 //            _testRoundTrip(of: OptionalTopLevelWrapper(url), expectedYAML: expectedYAML)
         }
 
+        func testValuesInSingleValueContainer() throws {
+            _testRoundTrip(of: true)
+            _testRoundTrip(of: false)
+
+            _testFixedWidthInteger(type: Int.self)
+            _testFixedWidthInteger(type: Int8.self)
+            _testFixedWidthInteger(type: Int16.self)
+            _testFixedWidthInteger(type: Int32.self)
+            _testFixedWidthInteger(type: Int64.self)
+            _testFixedWidthInteger(type: UInt.self)
+            _testFixedWidthInteger(type: UInt8.self)
+            _testFixedWidthInteger(type: UInt16.self)
+            _testFixedWidthInteger(type: UInt32.self)
+            _testFixedWidthInteger(type: UInt64.self)
+
+            _testFloatingPoint(type: Float.self)
+            _testFloatingPoint(type: Double.self)
+
+            _testRoundTrip(of: "")
+            _testRoundTrip(of: URL(string: "https://apple.com")!)
+        }
+
+        private func _testFixedWidthInteger<T>(type: T.Type,
+                                               file: StaticString = #file,
+                                               line: UInt = #line) where T: FixedWidthInteger & Codable {
+            _testRoundTrip(of: type.min, file: file, line: line)
+            _testRoundTrip(of: type.max, file: file, line: line)
+        }
+
+        private func _testFloatingPoint<T>(type: T.Type,
+                                           file: StaticString = #file,
+                                           line: UInt = #line) where T: FloatingPoint & Codable {
+            _testRoundTrip(of: type.leastNormalMagnitude, file: file, line: line)
+            _testRoundTrip(of: type.greatestFiniteMagnitude, file: file, line: line)
+            _testRoundTrip(of: type.infinity, file: file, line: line)
+        }
+
+        func testValuesInKeyedContainer() throws {
+            _testRoundTrip(of: KeyedSynthesized(
+                bool: true, int: .max, int8: .max, int16: .max, int32: .max, int64: .max,
+                uint: .max, uint8: .max, uint16: .max, uint32: .max, uint64: .max,
+                float: .greatestFiniteMagnitude, double: .greatestFiniteMagnitude, string: "", optionalString: nil,
+                url: URL(string: "https://apple.com")!
+            ))
+        }
+
+        func testValuesInUnkeyedContainer() throws {
+            _testRoundTrip(of: Unkeyed(
+                bool: true, int: .max, int8: .max, int16: .max, int32: .max, int64: .max,
+                uint: .max, uint8: .max, uint16: .max, uint32: .max, uint64: .max,
+                float: .greatestFiniteMagnitude, double: .greatestFiniteMagnitude, string: "", optionalString: nil,
+                url: URL(string: "https://apple.com")!
+            ))
+        }
+
         // MARK: - Helper Functions
         private func _testEncodeFailure<T: Encodable>(of value: T) {
             do {
@@ -782,6 +837,130 @@ import Yams
         }
     }
 
+    /// Coder supported types in KeyedContainer
+    struct KeyedSynthesized: Codable, Equatable {
+        static func == (lhs: KeyedSynthesized, rhs: KeyedSynthesized) -> Bool {
+            return lhs.bool == rhs.bool &&
+                lhs.int == rhs.int && lhs.int8 == rhs.int8 &&  lhs.int16 == rhs.int16 &&
+                lhs.int32 == rhs.int32 && lhs.int64 == rhs.int64 &&
+                lhs.uint == rhs.uint && lhs.uint8 == rhs.uint8 &&  lhs.uint16 == rhs.uint16 &&
+                lhs.uint32 == rhs.uint32 && lhs.uint64 == rhs.uint64 &&
+                lhs.float == rhs.float && lhs.double == rhs.double &&
+                lhs.string == rhs.string && lhs.optionalString == rhs.optionalString &&
+                lhs.url == rhs.url
+        }
+
+        var bool: Bool = true
+        let int: Int
+        let int8: Int8
+        let int16: Int16
+        let int32: Int32
+        let int64: Int64
+        let uint: UInt
+        let uint8: UInt8
+        let uint16: UInt16
+        let uint32: UInt32
+        let uint64: UInt64
+        let float: Float
+        let double: Double
+        let string: String
+        let optionalString: String?
+        let url: URL
+    }
+
+    /// Coder supported types in UnkeyedContainer
+    struct Unkeyed: Codable, Equatable {
+        static func == (lhs: Unkeyed, rhs: Unkeyed) -> Bool {
+            return lhs.bool == rhs.bool &&
+                lhs.int == rhs.int && lhs.int8 == rhs.int8 &&  lhs.int16 == rhs.int16 &&
+                lhs.int32 == rhs.int32 && lhs.int64 == rhs.int64 &&
+                lhs.uint == rhs.uint && lhs.uint8 == rhs.uint8 &&  lhs.uint16 == rhs.uint16 &&
+                lhs.uint32 == rhs.uint32 && lhs.uint64 == rhs.uint64 &&
+                lhs.float == rhs.float && lhs.double == rhs.double &&
+                lhs.string == rhs.string && lhs.optionalString == rhs.optionalString &&
+                lhs.url == rhs.url
+        }
+
+        let bool: Bool
+        let int: Int
+        let int8: Int8
+        let int16: Int16
+        let int32: Int32
+        let int64: Int64
+        let uint: UInt
+        let uint8: UInt8
+        let uint16: UInt16
+        let uint32: UInt32
+        let uint64: UInt64
+        let float: Float
+        let double: Double
+        let string: String
+        let optionalString: String?
+        let url: URL
+
+        init(
+            bool: Bool, int: Int, int8: Int8, int16: Int16, int32: Int32, int64: Int64,
+            uint: UInt, uint8: UInt8, uint16: UInt16, uint32: UInt32, uint64: UInt64,
+            float: Float, double: Double, string: String, optionalString: String?, url: URL) {
+            self.bool = bool
+            self.int = int
+            self.int8 = int8
+            self.int16 = int16
+            self.int32 = int32
+            self.int64 = int64
+            self.uint = uint
+            self.uint8 = uint8
+            self.uint16 = uint16
+            self.uint32 = uint32
+            self.uint64 = uint64
+            self.float = float
+            self.double = double
+            self.string = string
+            self.optionalString = optionalString
+            self.url = url
+        }
+
+        init(from decoder: Decoder) throws {
+            var container = try decoder.unkeyedContainer()
+            bool = try container.decode(Bool.self)
+            int = try container.decode(Int.self)
+            int8 = try container.decode(Int8.self)
+            int16 = try container.decode(Int16.self)
+            int32 = try container.decode(Int32.self)
+            int64 = try container.decode(Int64.self)
+            uint = try container.decode(UInt.self)
+            uint8 = try container.decode(UInt8.self)
+            uint16 = try container.decode(UInt16.self)
+            uint32 = try container.decode(UInt32.self)
+            uint64 = try container.decode(UInt64.self)
+            float = try container.decode(Float.self)
+            double = try container.decode(Double.self)
+            string = try container.decode(String.self)
+            optionalString = try container.decode(String?.self)
+            url = try container.decode(URL.self)
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.unkeyedContainer()
+            try container.encode(bool)
+            try container.encode(int)
+            try container.encode(int8)
+            try container.encode(int16)
+            try container.encode(int32)
+            try container.encode(int64)
+            try container.encode(uint)
+            try container.encode(uint8)
+            try container.encode(uint16)
+            try container.encode(uint32)
+            try container.encode(uint64)
+            try container.encode(float)
+            try container.encode(double)
+            try container.encode(string)
+            try container.encode(optionalString)
+            try container.encode(url)
+        }
+    }
+
     extension EncoderTests {
         static var allTests: [(String, (EncoderTests) -> () throws -> Void)] {
             return [
@@ -803,7 +982,10 @@ import Yams
                 ("testNestedContainerCodingPaths", testNestedContainerCodingPaths),
                 ("testSuperEncoderCodingPaths", testSuperEncoderCodingPaths),
                 ("testInterceptDecimal", testInterceptDecimal),
-                ("testInterceptURL", testInterceptURL)
+                ("testInterceptURL", testInterceptURL),
+                ("testValuesInSingleValueContainer", testValuesInSingleValueContainer),
+                ("testValuesInKeyedContainer", testValuesInKeyedContainer),
+                ("testValuesInUnkeyedContainer", testValuesInUnkeyedContainer)
             ]
         }
     }
