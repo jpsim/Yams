@@ -180,12 +180,8 @@ import Yams
             _testFixedWidthInteger(type: UInt32.self)
             _testFixedWidthInteger(type: UInt64.self)
 
-        #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             _testFloatingPoint(type: Float.self)
             _testFloatingPoint(type: Double.self)
-        #else
-            print("Encoding/Decoding `Double` and `Float` with full precision are supported only on Apple platforms")
-        #endif
 
             // Can't YAML encode empty string as valid YAML Document?
 //            _testRoundTrip(of: "")
@@ -208,29 +204,21 @@ import Yams
         }
 
         func testValuesInKeyedContainer() throws {
-        #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             _testRoundTrip(of: KeyedSynthesized(
                 bool: true, int: .max, int8: .max, int16: .max, int32: .max, int64: .max,
                 uint: .max, uint8: .max, uint16: .max, uint32: .max, uint64: .max,
                 float: .greatestFiniteMagnitude, double: .greatestFiniteMagnitude, string: "", optionalString: nil,
                 url: URL(string: "https://apple.com")!
             ))
-        #else
-            print("Encoding/Decoding `Double` and `Float` with full precision are supported only on Apple platforms")
-        #endif
         }
 
         func testValuesInUnkeyedContainer() throws {
-        #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
             _testRoundTrip(of: Unkeyed(
                 bool: true, int: .max, int8: .max, int16: .max, int32: .max, int64: .max,
                 uint: .max, uint8: .max, uint16: .max, uint32: .max, uint64: .max,
                 float: .greatestFiniteMagnitude, double: .greatestFiniteMagnitude, string: "", optionalString: nil,
                 url: URL(string: "https://apple.com")!
             ))
-        #else
-            print("Encoding/Decoding `Double` and `Float` with full precision are supported only on Apple platforms")
-        #endif
         }
 
         // MARK: - Helper Functions

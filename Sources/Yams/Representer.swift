@@ -230,18 +230,14 @@ extension Float: ScalarRepresentableCustomizedForCodable {}
 
 extension FloatingPoint where Self: CVarArg {
     public func representedForCodable() -> Node {
-#if os(Linux)
-        return Node(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
-#else
         return Node(formattedStringForCodable, Tag(.float))
-#endif
     }
 
     private var formattedStringForCodable: String {
         // Since `NumberFormatter` creates a string with insufficient precision for Decode,
         // it uses with `String(format:...)`
 #if os(Linux)
-        let DBL_DECIMAL_DIG = 9
+        let DBL_DECIMAL_DIG = 17
 #endif
         let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
         // "%*.g" does not use scientific notation if the exponent is less than –4.
