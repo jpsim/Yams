@@ -6,6 +6,8 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 
 public final class Constructor {
@@ -188,47 +190,35 @@ extension Double: ScalarConstructible {
 extension Int: ScalarConstructible {
     public static func construct(from node: Node) -> Int? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        var scalar = node.scalar!.string
-        scalar = scalar.replacingOccurrences(of: "_", with: "")
-        if scalar == "0" {
+        var scalarWithSign = node.scalar!.string
+        scalarWithSign = scalarWithSign.replacingOccurrences(of: "_", with: "")
+        if scalarWithSign == "0" {
             return 0
         }
+        let negative = scalarWithSign.hasPrefix("-")
+
+        let scalar = negative || scalarWithSign.hasPrefix("+") ?
+            scalarWithSign.substring(from: 1) : scalarWithSign.substring(from: 0)
         if scalar.hasPrefix("0x") {
-#if swift(>=4.0)
-            let hexadecimal = scalar[scalar.index(scalar.startIndex, offsetBy: 2)...]
-#else
-            let hexadecimal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
-#endif
+            let hexadecimal = negative ? "-" + scalar.substring(from: 2) : scalar.substring(from: 2)
             return Int(hexadecimal, radix: 16)
         }
         if scalar.hasPrefix("0b") {
-#if swift(>=4.0)
-            let octal = scalar[scalar.index(scalar.startIndex, offsetBy: 2)...]
-#else
-            let octal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
-#endif
+            let octal = negative ? "-" + scalar.substring(from: 2) : scalar.substring(from: 2)
             return Int(octal, radix: 2)
         }
         if scalar.hasPrefix("0o") {
-#if swift(>=4.0)
-            let octal = scalar[scalar.index(scalar.startIndex, offsetBy: 2)...]
-#else
-            let octal = scalar.substring(from: scalar.index(scalar.startIndex, offsetBy: 2))
-#endif
+            let octal = negative ? "-" + scalar.substring(from: 2) : scalar.substring(from: 2)
             return Int(octal, radix: 8)
         }
         if scalar.hasPrefix("0") {
-#if swift(>=4.0)
-            let octal = scalar[scalar.index(after: scalar.startIndex)...]
-#else
-            let octal = scalar.substring(from: scalar.index(after: scalar.startIndex))
-#endif
+            let octal = negative ? "-" + scalar.substring(from: 1) : scalar.substring(from: 1)
             return Int(octal, radix: 8)
         }
         if scalar.contains(":") {
-            return Int(sexagesimal: scalar)
+            return Int(sexagesimal: scalarWithSign)
         }
-        return Int(scalar)
+        return Int(scalarWithSign)
     }
 }
 
@@ -356,6 +346,18 @@ extension Array {
 }
 
 fileprivate extension String {
+#if swift(>=4.0)
+    func substring(with range: NSRange) -> Substring? {
+        guard range.location != NSNotFound else { return nil }
+        let utf16lowerBound = utf16.index(utf16.startIndex, offsetBy: range.location)
+        let utf16upperBound = utf16.index(utf16lowerBound, offsetBy: range.length)
+        guard let lowerBound = utf16lowerBound.samePosition(in: self),
+            let upperBound = utf16upperBound.samePosition(in: self) else {
+                fatalError("unreachable")
+        }
+        return self[lowerBound..<upperBound]
+    }
+#else
     func substring(with range: NSRange) -> String? {
         guard range.location != NSNotFound else { return nil }
         let utf16lowerBound = utf16.index(utf16.startIndex, offsetBy: range.location)
@@ -364,17 +366,31 @@ fileprivate extension String {
             let upperBound = utf16upperBound.samePosition(in: self) else {
                 fatalError("unreachable")
         }
-#if swift(>=4.0)
-        return String(self[lowerBound..<upperBound])
-#else
         return substring(with: lowerBound..<upperBound)
-#endif
     }
+#endif
+}
+
+fileprivate extension String {
+#if swift(>=4.0)
+    func substring(from offset: Int) -> Substring {
+        let index = self.index(startIndex, offsetBy: offset)
+        return self[index...]
+    }
+#else
+    func substring(from offset: Int) -> String {
+        if offset == 0 { return self }
+        return substring(from: index(startIndex, offsetBy: offset))
+    }
+#endif
 }
 
 // MARK: - SexagesimalConvertible
 private protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
     init?(_ value: String)
+#if swift(>=4.0)
+    init?(_ value: Substring)
+#endif
     static func * (lhs: Self, rhs: Self) -> Self
     static func *= (lhs: inout Self, rhs: Self)
     static func += (lhs: inout Self, rhs: Self)
@@ -384,13 +400,24 @@ extension SexagesimalConvertible {
     fileprivate init(sexagesimal value: String) {
         self = value.sexagesimal()
     }
+#if swift(>=4.0)
+    fileprivate init(sexagesimal value: Substring) {
+        self = value.sexagesimal()
+    }
+#endif
 }
 
 extension Double: SexagesimalConvertible {}
 extension Int: SexagesimalConvertible {
+#if swift(>=4.0)
+    fileprivate init?(_ value: Substring) {
+        self.init(value, radix: 10)
+    }
+#else
     fileprivate init?(_ value: String) {
         self.init(value, radix: 10)
     }
+#endif
 }
 
 fileprivate extension String {
@@ -401,17 +428,9 @@ fileprivate extension String {
         var sign: T = 1
         if scalar.hasPrefix("-") {
             sign = -1
-#if swift(>=4.0)
-            scalar = String(scalar[scalar.index(after: scalar.startIndex)...])
-#else
-            scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
-#endif
+            scalar = String(scalar.substring(from: 1))
         } else if scalar.hasPrefix("+") {
-#if swift(>=4.0)
-            scalar = String(scalar[scalar.index(after: scalar.startIndex)...])
-#else
-            scalar = scalar.substring(from: scalar.index(after: scalar.startIndex))
-#endif
+            scalar = String(scalar.substring(from: 1))
         }
         let digits = scalar.components(separatedBy: ":").flatMap({ T($0) }).reversed()
         var base: T = 1
@@ -422,4 +441,45 @@ fileprivate extension String {
         }
         return sign * value
     }
-} // swiftlint:disable:this file_length
+}
+
+#if swift(>=4.0)
+    fileprivate extension Substring {
+    #if os(Linux)
+        func hasPrefix(_ prefix: String) -> Bool {
+            return String(self).hasPrefix(prefix)
+        }
+
+        func components(separatedBy separator: String) -> [String] {
+            return String(self).components(separatedBy: separator)
+        }
+    #endif
+
+        func sexagesimal<T>() -> T where T: SexagesimalConvertible {
+            assert(contains(":"))
+            var scalar = self
+
+            var sign: T = 1
+            if scalar.hasPrefix("-") {
+                sign = -1
+                scalar = scalar.substring(from: 1)
+            } else if scalar.hasPrefix("+") {
+                scalar = scalar.substring(from: 1)
+            }
+            let digits = scalar.components(separatedBy: ":").flatMap({ T($0) }).reversed()
+            var base: T = 1
+            var value: T = 0
+            digits.forEach {
+                value += $0 * base
+                base *= 60
+            }
+            return sign * value
+        }
+
+        func substring(from offset: Int) -> Substring {
+            if offset == 0 { return self }
+            let index = self.index(startIndex, offsetBy: offset)
+            return self[index...]
+        }
+    }
+#endif
