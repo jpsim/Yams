@@ -107,6 +107,8 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             "negativeHexadecimal: -0x_0A_74_AE",
             "negativeBinary: -0b1010_0111_0100_1010_1110",
             "negativeSexagesimal: -190:20:30",
+            "canonicalMin: -9223372036854775808",
+            "canonicalMax: 9223372036854775807",
             ""
             ].joined(separator: "\n")
         let objects = try Yams.load(yaml: example)
@@ -122,7 +124,9 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             "negativeOctal": -685230,
             "negativeHexadecimal": -685230,
             "negativeBinary": -685230,
-            "negativeSexagesimal": -685230
+            "negativeSexagesimal": -685230,
+            "canonicalMin": -9223372036854775808,
+            "canonicalMax": 9223372036854775807
         ]
         YamsAssertEqual(objects, expected)
     }

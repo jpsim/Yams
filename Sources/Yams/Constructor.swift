@@ -195,30 +195,30 @@ extension Int: ScalarConstructible {
         if scalarWithSign == "0" {
             return 0
         }
-        let sign = scalarWithSign.hasPrefix("-") ? -1 : 1
+        let negative = scalarWithSign.hasPrefix("-")
 
-        let scalar = sign == -1 || scalarWithSign.hasPrefix("+") ?
+        let scalar = negative || scalarWithSign.hasPrefix("+") ?
             scalarWithSign.substring(from: 1) : scalarWithSign.substring(from: 0)
         if scalar.hasPrefix("0x") {
-            let hexadecimal = scalar.substring(from: 2)
-            return Int(hexadecimal, radix: 16).map { $0 * sign }
+            let hexadecimal = negative ? "-" + scalar.substring(from: 2) : scalar.substring(from: 2)
+            return Int(hexadecimal, radix: 16)
         }
         if scalar.hasPrefix("0b") {
-            let octal = scalar.substring(from: 2)
-            return Int(octal, radix: 2).map { $0 * sign }
+            let octal = negative ? "-" + scalar.substring(from: 2) : scalar.substring(from: 2)
+            return Int(octal, radix: 2)
         }
         if scalar.hasPrefix("0o") {
-            let octal = scalar.substring(from: 2)
-            return Int(octal, radix: 8).map { $0 * sign }
+            let octal = negative ? "-" + scalar.substring(from: 2) : scalar.substring(from: 2)
+            return Int(octal, radix: 8)
         }
         if scalar.hasPrefix("0") {
-            let octal = scalar.substring(from: 1)
-            return Int(octal, radix: 8).map { $0 * sign }
+            let octal = negative ? "-" + scalar.substring(from: 1) : scalar.substring(from: 1)
+            return Int(octal, radix: 8)
         }
         if scalar.contains(":") {
-            return Int(sexagesimal: scalar) * sign
+            return Int(sexagesimal: scalarWithSign)
         }
-        return Int(scalar).map { $0 * sign }
+        return Int(scalarWithSign)
     }
 }
 
