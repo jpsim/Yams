@@ -211,6 +211,8 @@ extension URL: ScalarRepresentable {
     }
 }
 
+#if swift(>=4.0)
+
 /// MARK: - ScalarRepresentableCustomizedForCodable
 
 public protocol ScalarRepresentableCustomizedForCodable: ScalarRepresentable {
@@ -274,3 +276,5 @@ extension Float: ScalarRepresentableCustomizedForCodable {
         return string
     }
 }
+
+#endif
