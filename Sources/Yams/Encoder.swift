@@ -89,6 +89,11 @@
             node = try box(value)
         }
 
+        fileprivate func represent<T: ScalarRepresentableCustomizedForCodable>(_ value: T) throws {
+            assertCanEncodeNewValue()
+            node = value.representedForCodable()
+        }
+
         /// create a new `_YAMLReferencingEncoder` instance as `key` inheriting `userInfo`
         fileprivate func encoder(for key: CodingKey) -> _YAMLReferencingEncoder {
             return .init(referencing: self, key: key)
@@ -262,8 +267,8 @@
 
         func encode<T>(_ value: T) throws where T: Encodable {
             assertCanEncodeNewValue()
-            if let date = value as? Date {
-                node = date.representedForCodable()
+            if let customized = value as? ScalarRepresentableCustomizedForCodable {
+                node = customized.representedForCodable()
             } else if let representable = value as? ScalarRepresentable {
                 node = try box(representable)
             } else {

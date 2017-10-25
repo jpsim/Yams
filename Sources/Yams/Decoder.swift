@@ -333,12 +333,6 @@
     extension UInt64: ScalarConstructible {}
     extension UInt8: ScalarConstructible {}
 
-    extension Float: ScalarConstructible {
-        public static func construct(from node: Node) -> Float? {
-            return Double.construct(from: node).flatMap(Float.init(exactly:))
-        }
-    }
-
     extension Decimal: ScalarConstructible {
         public static func construct(from node: Node) -> Decimal? {
             assert(node.isScalar) // swiftlint:disable:next force_unwrapping

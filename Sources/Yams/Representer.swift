@@ -93,10 +93,6 @@ extension Date: ScalarRepresentable {
         #endif
     }
 
-    public func representedForCodable() -> Node {
-        return Node(iso8601StringWithFullNanosecond, Tag(.timestamp))
-    }
-
     private var iso8601StringWithFullNanosecond: String {
         let calendar = Calendar(identifier: .gregorian)
         let nanosecond = calendar.component(.nanosecond, from: self)
@@ -212,5 +208,53 @@ extension Decimal: ScalarRepresentable {
 extension URL: ScalarRepresentable {
     public func represented() throws -> Node {
         return Node(absoluteString)
+    }
+}
+
+/// MARK: - ScalarRepresentableCustomizedForCodable
+
+public protocol ScalarRepresentableCustomizedForCodable: ScalarRepresentable {
+    func representedForCodable() -> Node
+}
+
+extension Date: ScalarRepresentableCustomizedForCodable {
+    public func representedForCodable() -> Node {
+        return Node(iso8601StringWithFullNanosecond, Tag(.timestamp))
+    }
+}
+
+extension Double: ScalarRepresentableCustomizedForCodable {
+    public func representedForCodable() -> Node {
+        return Node(formattedStringForCodable, Tag(.float))
+    }
+
+    private var formattedStringForCodable: String {
+        // Since `NumberFormatter` creates a string with insufficient precision for Decode,
+        // it uses with `String(format:...)`
+        let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
+        // "%*.g" does not use scientific notation if the exponent is less than –4.
+        // So fallback to using `NumberFormatter` if string does not uses scientific notation.
+        guard string.lazy.suffix(5).contains("e") else {
+            return doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
+        }
+        return string
+    }
+}
+
+extension Float: ScalarRepresentableCustomizedForCodable {
+    public func representedForCodable() -> Node {
+        return Node(formattedStringForCodable, Tag(.float))
+    }
+
+    private var formattedStringForCodable: String {
+        // Since `NumberFormatter` creates a string with insufficient precision for Decode,
+        // it uses with `String(format:...)`
+        let string = String(format: "%.*g", FLT_DECIMAL_DIG, self)
+        // "%*.g" does not use scientific notation if the exponent is less than –4.
+        // So fallback to using `NumberFormatter` if string does not uses scientific notation.
+        guard string.lazy.suffix(6).contains("e") else {
+            return floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
+        }
+        return string
     }
 }

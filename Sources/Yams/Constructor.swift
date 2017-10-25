@@ -187,6 +187,27 @@ extension Double: ScalarConstructible {
     }
 }
 
+extension Float: ScalarConstructible {
+    public static func construct(from node: Node) -> Float? {
+        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
+        var scalar = node.scalar!.string
+        switch scalar {
+        case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
+            return Float.infinity
+        case "-.inf", "-.Inf", "-.INF":
+            return -Float.infinity
+        case ".nan", ".NaN", ".NAN":
+            return Float.nan
+        default:
+            scalar = scalar.replacingOccurrences(of: "_", with: "")
+            if scalar.contains(":") {
+                return Float(sexagesimal: scalar)
+            }
+            return Float(scalar)
+        }
+    }
+}
+
 extension Int: ScalarConstructible {
     public static func construct(from node: Node) -> Int? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
@@ -443,6 +464,7 @@ extension SexagesimalConvertible {
 }
 
 extension Double: SexagesimalConvertible {}
+extension Float: SexagesimalConvertible {}
 extension Int: SexagesimalConvertible {
 #if swift(>=4.0)
     fileprivate init?(_ value: Substring) {
