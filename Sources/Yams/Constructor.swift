@@ -222,6 +222,41 @@ extension Int: ScalarConstructible {
     }
 }
 
+extension UInt: ScalarConstructible {
+    public static func construct(from node: Node) -> UInt? {
+        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
+        var scalarWithSign = node.scalar!.string
+        scalarWithSign = scalarWithSign.replacingOccurrences(of: "_", with: "")
+        if scalarWithSign == "0" {
+            return 0
+        }
+        guard !scalarWithSign.hasPrefix("-") else { return nil }
+
+        let scalar = scalarWithSign.hasPrefix("+") ?
+            scalarWithSign.substring(from: 1) : scalarWithSign.substring(from: 0)
+        if scalar.hasPrefix("0x") {
+            let hexadecimal = scalar.substring(from: 2)
+            return UInt(hexadecimal, radix: 16)
+        }
+        if scalar.hasPrefix("0b") {
+            let octal = scalar.substring(from: 2)
+            return UInt(octal, radix: 2)
+        }
+        if scalar.hasPrefix("0o") {
+            let octal = scalar.substring(from: 2)
+            return UInt(octal, radix: 8)
+        }
+        if scalar.hasPrefix("0") {
+            let octal = scalar.substring(from: 1)
+            return UInt(octal, radix: 8)
+        }
+        if scalar.contains(":") {
+            return UInt(sexagesimal: scalarWithSign)
+        }
+        return UInt(scalarWithSign)
+    }
+}
+
 extension String: ScalarConstructible {
     public static func construct(from node: Node) -> String? {
         return _construct(from: node)
@@ -416,6 +451,18 @@ extension Int: SexagesimalConvertible {
 #else
     fileprivate init?(_ value: String) {
         self.init(value, radix: 10)
+    }
+#endif
+}
+
+extension UInt: SexagesimalConvertible {
+#if swift(>=4.0)
+    fileprivate init?(_ value: Substring) {
+        self.init(value, radix: 10)
+    }
+#else
+    fileprivate init?(_ value: String) {
+    self.init(value, radix: 10)
     }
 #endif
 }

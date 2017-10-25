@@ -310,9 +310,17 @@
         return .typeMismatch(expectation, context)
     }
 
-    extension BinaryInteger {
+    extension FixedWidthInteger where Self: SignedInteger {
         public static func construct(from node: Node) -> Self? {
-            return Int.construct(from: node) as? Self
+            guard let int = Int.construct(from: node) else { return nil }
+            return Self.init(exactly: int)
+        }
+    }
+
+    extension FixedWidthInteger where Self: UnsignedInteger {
+        public static func construct(from node: Node) -> Self? {
+            guard let int = UInt.construct(from: node) else { return nil }
+            return Self.init(exactly: int)
         }
     }
 
@@ -320,7 +328,6 @@
     extension Int32: ScalarConstructible {}
     extension Int64: ScalarConstructible {}
     extension Int8: ScalarConstructible {}
-    extension UInt: ScalarConstructible {}
     extension UInt16: ScalarConstructible {}
     extension UInt32: ScalarConstructible {}
     extension UInt64: ScalarConstructible {}
