@@ -225,13 +225,21 @@ extension Date: ScalarRepresentableCustomizedForCodable {
 
 extension Double: ScalarRepresentableCustomizedForCodable {
     public func representedForCodable() -> Node {
+    #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
         return Node(formattedStringForCodable, Tag(.float))
+    #else
+        return Node(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+    #endif
     }
 
     private var formattedStringForCodable: String {
         // Since `NumberFormatter` creates a string with insufficient precision for Decode,
         // it uses with `String(format:...)`
+    #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
         let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
+    #else
+        let string = String(format: "%.*g", 9, self)
+    #endif
         // "%*.g" does not use scientific notation if the exponent is less than –4.
         // So fallback to using `NumberFormatter` if string does not uses scientific notation.
         guard string.lazy.suffix(5).contains("e") else {
@@ -243,13 +251,21 @@ extension Double: ScalarRepresentableCustomizedForCodable {
 
 extension Float: ScalarRepresentableCustomizedForCodable {
     public func representedForCodable() -> Node {
+    #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
         return Node(formattedStringForCodable, Tag(.float))
+    #else
+        return Node(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+    #endif
     }
 
     private var formattedStringForCodable: String {
         // Since `NumberFormatter` creates a string with insufficient precision for Decode,
         // it uses with `String(format:...)`
+    #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
         let string = String(format: "%.*g", FLT_DECIMAL_DIG, self)
+    #else
+        let string = String(format: "%.*g", 9, self)
+    #endif
         // "%*.g" does not use scientific notation if the exponent is less than –4.
         // So fallback to using `NumberFormatter` if string does not uses scientific notation.
         guard string.lazy.suffix(6).contains("e") else {
