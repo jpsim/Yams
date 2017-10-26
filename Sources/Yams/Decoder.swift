@@ -17,7 +17,7 @@
                               userInfo: [CodingUserInfoKey: Any] = [:]) throws -> T where T: Swift.Decodable {
             do {
                 let node = try Yams.compose(yaml: yaml) ?? ""
-                let decoder = _YAMLDecoder(referencing: node, userInfo: userInfo)
+                let decoder = _Decoder(referencing: node, userInfo: userInfo)
                 let container = try decoder.singleValueContainer()
                 return try container.decode(T.self)
             } catch let error as DecodingError {
@@ -30,7 +30,7 @@
         }
     }
 
-    struct _YAMLDecoder: Decoder { // swiftlint:disable:this type_name
+    struct _Decoder: Decoder { // swiftlint:disable:this type_name
 
         private let node: Node
 
@@ -49,14 +49,14 @@
             guard let mapping = node.mapping else {
                 throw _typeMismatch(at: codingPath, expectation: Node.Mapping.self, reality: node)
             }
-            return .init(_YAMLKeyedDecodingContainer<Key>(decoder: self, wrapping: mapping))
+            return .init(_KeyedDecodingContainer<Key>(decoder: self, wrapping: mapping))
         }
 
         func unkeyedContainer() throws -> UnkeyedDecodingContainer {
             guard let sequence = node.sequence else {
                 throw _typeMismatch(at: codingPath, expectation: Node.Sequence.self, reality: node)
             }
-            return _YAMLUnkeyedDecodingContainer(decoder: self, wrapping: sequence)
+            return _UnkeyedDecodingContainer(decoder: self, wrapping: sequence)
         }
 
         func singleValueContainer() throws -> SingleValueDecodingContainer { return self }
@@ -71,21 +71,21 @@
             return constructed
         }
 
-        /// create a new `_YAMLDecoder` instance referencing `node` as `key` inheriting `userInfo`
-        fileprivate func decoder(referencing node: Node, `as` key: CodingKey) -> _YAMLDecoder {
+        /// create a new `_Decoder` instance referencing `node` as `key` inheriting `userInfo`
+        fileprivate func decoder(referencing node: Node, `as` key: CodingKey) -> _Decoder {
             return .init(referencing: node, userInfo: userInfo, codingPath: codingPath + [key])
         }
     }
 
-    struct _YAMLKeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
+    struct _KeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
         // swiftlint:disable:previous type_name
 
         typealias Key = K
 
-        private let decoder: _YAMLDecoder
+        private let decoder: _Decoder
         private let mapping: Node.Mapping
 
-        fileprivate init(decoder: _YAMLDecoder, wrapping mapping: Node.Mapping) {
+        fileprivate init(decoder: _Decoder, wrapping mapping: Node.Mapping) {
             self.decoder = decoder
             self.mapping = mapping
         }
@@ -140,17 +140,17 @@
             return node
         }
 
-        private func decoder(for key: CodingKey) throws -> _YAMLDecoder {
+        private func decoder(for key: CodingKey) throws -> _Decoder {
             return decoder.decoder(referencing: try node(for: key), as: key)
         }
     }
 
-    struct _YAMLUnkeyedDecodingContainer: UnkeyedDecodingContainer { // swiftlint:disable:this type_name
+    struct _UnkeyedDecodingContainer: UnkeyedDecodingContainer { // swiftlint:disable:this type_name
 
-        private let decoder: _YAMLDecoder
+        private let decoder: _Decoder
         private let sequence: Node.Sequence
 
-        fileprivate init(decoder: _YAMLDecoder, wrapping sequence: Node.Sequence) {
+        fileprivate init(decoder: _Decoder, wrapping sequence: Node.Sequence) {
             self.decoder = decoder
             self.sequence = sequence
             self.currentIndex = 0
@@ -220,7 +220,7 @@
 
         private var currentKey: CodingKey { return _YAMLCodingKey(index: currentIndex) }
         private var currentNode: Node { return sequence[currentIndex] }
-        private var currentDecoder: _YAMLDecoder { return decoder.decoder(referencing: currentNode, as: currentKey) }
+        private var currentDecoder: _Decoder { return decoder.decoder(referencing: currentNode, as: currentKey) }
 
         private func throwErrorIfAtEnd<T>(_ type: T.Type) throws {
             if isAtEnd { throw _valueNotFound(at: codingPath + [currentKey], type, "Unkeyed container is at end.") }
@@ -234,7 +234,7 @@
         }
     }
 
-    extension _YAMLDecoder: SingleValueDecodingContainer {
+    extension _Decoder: SingleValueDecodingContainer {
 
         // MARK: - Swift.SingleValueDecodingContainer Methods
 

@@ -16,7 +16,7 @@
         public init() {}
         public func encode<T: Swift.Encodable>(_ value: T, userInfo: [CodingUserInfoKey: Any] = [:]) throws -> String {
             do {
-                let encoder = _YAMLEncoder(userInfo: userInfo)
+                let encoder = _Encoder(userInfo: userInfo)
                 var container = encoder.singleValueContainer()
                 try container.encode(value)
                 return try serialize(node: encoder.node, options: options)
@@ -32,7 +32,7 @@
         }
     }
 
-    class _YAMLEncoder: Swift.Encoder { // swiftlint:disable:this type_name
+    class _Encoder: Swift.Encoder { // swiftlint:disable:this type_name
         var node: Node = .unused
 
         init(userInfo: [CodingUserInfoKey: Any] = [:], codingPath: [CodingKey] = []) {
@@ -94,13 +94,13 @@
             node = value.representedForCodable()
         }
 
-        /// create a new `_YAMLReferencingEncoder` instance as `key` inheriting `userInfo`
-        fileprivate func encoder(for key: CodingKey) -> _YAMLReferencingEncoder {
+        /// create a new `_ReferencingEncoder` instance as `key` inheriting `userInfo`
+        fileprivate func encoder(for key: CodingKey) -> _ReferencingEncoder {
             return .init(referencing: self, key: key)
         }
 
-        /// create a new `_YAMLReferencingEncoder` instance at `index` inheriting `userInfo`
-        fileprivate func encoder(at index: Int) -> _YAMLReferencingEncoder {
+        /// create a new `_ReferencingEncoder` instance at `index` inheriting `userInfo`
+        fileprivate func encoder(at index: Int) -> _ReferencingEncoder {
             return .init(referencing: self, at: index)
         }
 
@@ -120,19 +120,19 @@
         private var canEncodeNewValue: Bool { return node == .unused }
     }
 
-    class _YAMLReferencingEncoder: _YAMLEncoder { // swiftlint:disable:this type_name
+    class _ReferencingEncoder: _Encoder { // swiftlint:disable:this type_name
         private enum Reference { case mapping(String), sequence(Int) }
 
-        private let encoder: _YAMLEncoder
+        private let encoder: _Encoder
         private let reference: Reference
 
-        fileprivate init(referencing encoder: _YAMLEncoder, key: CodingKey) {
+        fileprivate init(referencing encoder: _Encoder, key: CodingKey) {
             self.encoder = encoder
             reference = .mapping(key.stringValue)
             super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [key])
         }
 
-        fileprivate init(referencing encoder: _YAMLEncoder, at index: Int) {
+        fileprivate init(referencing encoder: _Encoder, at index: Int) {
             self.encoder = encoder
             reference = .sequence(index)
             super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [_YAMLCodingKey(index: index)])
@@ -151,9 +151,9 @@
     struct _KeyedEncodingContainer<K: CodingKey> : KeyedEncodingContainerProtocol { // swiftlint:disable:this type_name
         typealias Key = K
 
-        private let encoder: _YAMLEncoder
+        private let encoder: _Encoder
 
-        fileprivate init(referencing encoder: _YAMLEncoder) {
+        fileprivate init(referencing encoder: _Encoder) {
             self.encoder = encoder
         }
 
@@ -191,13 +191,13 @@
 
         // MARK: -
 
-        private func encoder(for key: CodingKey) -> _YAMLReferencingEncoder { return encoder.encoder(for: key) }
+        private func encoder(for key: CodingKey) -> _ReferencingEncoder { return encoder.encoder(for: key) }
     }
 
     struct _UnkeyedEncodingContainer: UnkeyedEncodingContainer { // swiftlint:disable:this type_name
-        private let encoder: _YAMLEncoder
+        private let encoder: _Encoder
 
-        fileprivate init(referencing encoder: _YAMLEncoder) {
+        fileprivate init(referencing encoder: _Encoder) {
             self.encoder = encoder
         }
 
@@ -231,13 +231,13 @@
 
         // MARK: -
 
-        private var currentEncoder: _YAMLReferencingEncoder {
+        private var currentEncoder: _ReferencingEncoder {
             defer { encoder.sequence.append("") }
             return encoder.encoder(at: count)
         }
     }
 
-    extension _YAMLEncoder: SingleValueEncodingContainer {
+    extension _Encoder: SingleValueEncodingContainer {
 
         // MARK: - Swift.SingleValueEncodingContainer Methods
 
@@ -289,7 +289,7 @@
         }
     }
 
-    // MARK: - CodingKey for `_UnkeyedEncodingContainer` and `superEncoders`
+    // MARK: - CodingKey for `_UnkeyedEncodingContainer`, `_UnkeyedDecodingContainer`, `superEncoder` and `superDecoder`
 
     struct _YAMLCodingKey: CodingKey { // swiftlint:disable:this type_name
         var stringValue: String
