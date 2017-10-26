@@ -113,7 +113,7 @@ import Yams
         // MARK: - Date Strategy Tests
         func testEncodingDate() {
         #if os(Linux)
-            print("'Date' does not conform to 'Codable' on Linux yet.")
+            print("Decoding 'Date' has issue on Linux with nanoseconds. https://bugs.swift.org/browse/SR-6223")
         #else
             _testRoundTrip(of: Date())
         #endif
@@ -121,7 +121,7 @@ import Yams
 
         func testEncodingDateMillisecondsSince1970() {
         #if os(Linux)
-            print("'Date' does not conform to 'Codable' on Linux yet.")
+            print("Decoding 'Date' has issue on Linux with nanoseconds. https://bugs.swift.org/browse/SR-6223")
         #else
             _testRoundTrip(of: Date(timeIntervalSince1970: 1000.0), expectedYAML: "1970-01-01T00:16:40Z\n...\n")
         #endif
