@@ -128,7 +128,7 @@
             return try decoder(for: key).unkeyedContainer()
         }
 
-        func superDecoder() throws -> Decoder { return try decoder(for: _YAMLDecodingKey.super) }
+        func superDecoder() throws -> Decoder { return try decoder(for: _YAMLCodingKey.super) }
         func superDecoder(forKey key: Key) throws -> Decoder { return try decoder(for: key) }
 
         // MARK: -
@@ -218,7 +218,7 @@
 
         // MARK: -
 
-        private var currentKey: CodingKey { return _YAMLDecodingKey(index: currentIndex) }
+        private var currentKey: CodingKey { return _YAMLCodingKey(index: currentIndex) }
         private var currentNode: Node { return sequence[currentIndex] }
         private var currentDecoder: _YAMLDecoder { return decoder.decoder(referencing: currentNode, as: currentKey) }
 
@@ -266,30 +266,6 @@
             }
             return value as? T
         }
-    }
-
-    // MARK: - CodingKey for `_YAMLUnkeyedDecodingContainer` and `superDecoders`
-
-    struct _YAMLDecodingKey: CodingKey { // swiftlint:disable:this type_name
-        var stringValue: String
-        var intValue: Int?
-
-        init?(stringValue: String) {
-            self.stringValue = stringValue
-            self.intValue = nil
-        }
-
-        init?(intValue: Int) {
-            self.stringValue = "\(intValue)"
-            self.intValue = intValue
-        }
-
-        init(index: Int) {
-            self.stringValue = "Index \(index)"
-            self.intValue = index
-        }
-
-        static let `super` = _YAMLDecodingKey(stringValue: "super")!
     }
 
     // MARK: - DecodingError helpers

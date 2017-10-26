@@ -135,7 +135,7 @@
         fileprivate init(referencing encoder: _YAMLEncoder, at index: Int) {
             self.encoder = encoder
             reference = .sequence(index)
-            super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [_YAMLEncodingKey(index: index)])
+            super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [_YAMLCodingKey(index: index)])
         }
 
         deinit {
@@ -186,7 +186,7 @@
             return encoder(for: key).unkeyedContainer()
         }
 
-        func superEncoder() -> Encoder { return encoder(for: _YAMLEncodingKey.super) }
+        func superEncoder() -> Encoder { return encoder(for: _YAMLCodingKey.super) }
         func superEncoder(forKey key: Key) -> Encoder { return encoder(for: key) }
 
         // MARK: -
@@ -291,7 +291,7 @@
 
     // MARK: - CodingKey for `_UnkeyedEncodingContainer` and `superEncoders`
 
-    struct _YAMLEncodingKey: CodingKey { // swiftlint:disable:this type_name
+    struct _YAMLCodingKey: CodingKey { // swiftlint:disable:this type_name
         var stringValue: String
         var intValue: Int?
 
@@ -310,7 +310,7 @@
             self.intValue = index
         }
 
-        static let `super` = _YAMLEncodingKey(stringValue: "super")!
+        static let `super` = _YAMLCodingKey(stringValue: "super")!
     }
 
     // MARK: -
