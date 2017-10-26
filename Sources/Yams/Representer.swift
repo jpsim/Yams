@@ -52,7 +52,7 @@ private func represent(_ value: Any) throws -> Node {
     } else if let representable = value as? NodeRepresentable {
         return try representable.represented()
     }
-    throw YamlError.representer(problem: "Fail to represent \(value)")
+    throw YamlError.representer(problem: "Failed to represent \(value)")
 }
 
 // MARK: - ScalarRepresentable
