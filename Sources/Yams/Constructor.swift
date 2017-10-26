@@ -211,7 +211,11 @@ extension Int: ScalarConstructible {
 
         let scalar = scalarWithSign.substring(from: hasSign ? 1 : 0)
         for (prefix, radix) in prefixToRadix where scalar.hasPrefix(prefix) {
+#if swift(>=3.2)
             return Int(signPrefix + scalar.substring(from: prefix.count), radix: radix)
+#else
+            return Int(signPrefix + scalar.substring(from: prefix.characters.count), radix: radix)
+#endif
         }
         if scalar.contains(":") {
             return Int(sexagesimal: scalarWithSign)
@@ -238,7 +242,11 @@ extension UInt: ScalarConstructible {
 
         let scalar = scalarWithSign.substring(from: scalarWithSign.hasPrefix("+") ? 1 : 0)
         for (prefix, radix) in prefixToRadix where scalar.hasPrefix(prefix) {
+#if swift(>=3.2)
             return UInt(scalar.substring(from: prefix.count), radix: radix)
+#else
+            return UInt(scalar.substring(from: prefix.characters.count), radix: radix)
+#endif
         }
         if scalar.contains(":") {
             return UInt(sexagesimal: scalarWithSign)
