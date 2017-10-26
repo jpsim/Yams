@@ -166,44 +166,26 @@ extension Date: ScalarConstructible {
     )
 }
 
-extension Double: ScalarConstructible {
-    public static func construct(from node: Node) -> Double? {
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        var scalar = node.scalar!.string
-        switch scalar {
-        case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
-            return Double.infinity
-        case "-.inf", "-.Inf", "-.INF":
-            return -Double.infinity
-        case ".nan", ".NaN", ".NAN":
-            return Double.nan
-        default:
-            scalar = scalar.replacingOccurrences(of: "_", with: "")
-            if scalar.contains(":") {
-                return Double(sexagesimal: scalar)
-            }
-            return Double(scalar)
-        }
-    }
-}
+extension Double: ScalarConstructible {}
+extension Float: ScalarConstructible {}
 
-extension Float: ScalarConstructible {
-    public static func construct(from node: Node) -> Float? {
+extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible {
+    public static func construct(from node: Node) -> Self? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
         var scalar = node.scalar!.string
         switch scalar {
         case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
-            return Float.infinity
+            return .infinity
         case "-.inf", "-.Inf", "-.INF":
-            return -Float.infinity
+            return -Self.infinity
         case ".nan", ".NaN", ".NAN":
-            return Float.nan
+            return .nan
         default:
             scalar = scalar.replacingOccurrences(of: "_", with: "")
             if scalar.contains(":") {
-                return Float(sexagesimal: scalar)
+                return Self.init(sexagesimal: scalar)
             }
-            return Float(scalar)
+            return .create(from: scalar)
         }
     }
 }
@@ -442,10 +424,10 @@ fileprivate extension String {
 }
 
 // MARK: - SexagesimalConvertible
-private protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
-    init?(_ value: String)
+public protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
+    static func create(from string: String) -> Self?
 #if swift(>=4.0)
-    init?(_ value: Substring)
+    static func create(from substring: Substring) -> Self?
 #endif
     static func * (lhs: Self, rhs: Self) -> Self
     static func *= (lhs: inout Self, rhs: Self)
@@ -456,38 +438,53 @@ extension SexagesimalConvertible {
     fileprivate init(sexagesimal value: String) {
         self = value.sexagesimal()
     }
-#if swift(>=4.0)
+    #if swift(>=4.0)
     fileprivate init(sexagesimal value: Substring) {
-        self = value.sexagesimal()
+    self = value.sexagesimal()
+    }
+    #endif
+}
+
+extension SexagesimalConvertible where Self: LosslessStringConvertible {
+    public static func create(from string: String) -> Self? {
+        return Self.init(string)
+    }
+#if swift(>=4.0)
+    public static func create(from substring: Substring) -> Self? {
+        return Self.init(String(substring))
     }
 #endif
 }
+
+#if swift(>=3.2)
+    extension SexagesimalConvertible where Self: FixedWidthInteger {
+        public static func create(from string: String) -> Self? {
+            return Self.init(string, radix: 10)
+        }
+        public static func create(from substring: Substring) -> Self? {
+            return Self.init(String(substring), radix: 10)
+        }
+    }
+#else
+    public protocol SexagesimalConvertibleHasInitWithRadix {
+        init?(_ text: String, radix: Int)
+    }
+
+    extension SexagesimalConvertible where Self: SexagesimalConvertibleHasInitWithRadix {
+        public static func create(from string: String) -> Self? {
+            return Self.init(string, radix: 10)
+        }
+    }
+
+    extension Int: SexagesimalConvertibleHasInitWithRadix {}
+    extension UInt: SexagesimalConvertibleHasInitWithRadix {}
+
+#endif
 
 extension Double: SexagesimalConvertible {}
 extension Float: SexagesimalConvertible {}
-extension Int: SexagesimalConvertible {
-#if swift(>=4.0)
-    fileprivate init?(_ value: Substring) {
-        self.init(value, radix: 10)
-    }
-#else
-    fileprivate init?(_ value: String) {
-        self.init(value, radix: 10)
-    }
-#endif
-}
-
-extension UInt: SexagesimalConvertible {
-#if swift(>=4.0)
-    fileprivate init?(_ value: Substring) {
-        self.init(value, radix: 10)
-    }
-#else
-    fileprivate init?(_ value: String) {
-    self.init(value, radix: 10)
-    }
-#endif
-}
+extension Int: SexagesimalConvertible {}
+extension UInt: SexagesimalConvertible {}
 
 fileprivate extension String {
     func sexagesimal<T>() -> T where T: SexagesimalConvertible {
@@ -501,7 +498,7 @@ fileprivate extension String {
         } else if scalar.hasPrefix("+") {
             scalar = String(scalar.substring(from: 1))
         }
-        let digits = scalar.components(separatedBy: ":").flatMap({ T($0) }).reversed()
+        let digits = scalar.components(separatedBy: ":").flatMap({ T.create(from: $0) }).reversed()
         var base: T = 1
         var value: T = 0
         digits.forEach {
@@ -535,7 +532,7 @@ fileprivate extension String {
             } else if scalar.hasPrefix("+") {
                 scalar = scalar.substring(from: 1)
             }
-            let digits = scalar.components(separatedBy: ":").flatMap({ T($0) }).reversed()
+            let digits = scalar.components(separatedBy: ":").flatMap({ T.create(from: $0) }).reversed()
             var base: T = 1
             var value: T = 0
             digits.forEach {
