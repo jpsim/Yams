@@ -193,30 +193,25 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
 extension Int: ScalarConstructible {
     public static func construct(from node: Node) -> Int? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        var scalarWithSign = node.scalar!.string
-        scalarWithSign = scalarWithSign.replacingOccurrences(of: "_", with: "")
+        let scalarWithSign = node.scalar!.string.replacingOccurrences(of: "_", with: "")
         if scalarWithSign == "0" {
             return 0
         }
-        let negative = scalarWithSign.hasPrefix("-")
 
-        let scalar = negative || scalarWithSign.hasPrefix("+") ?
-            scalarWithSign.substring(from: 1) : scalarWithSign.substring(from: 0)
-        if scalar.hasPrefix("0x") {
-            let hexadecimal = negative ? "-" + scalar.substring(from: 2) : scalar.substring(from: 2)
-            return Int(hexadecimal, radix: 16)
-        }
-        if scalar.hasPrefix("0b") {
-            let octal = negative ? "-" + scalar.substring(from: 2) : scalar.substring(from: 2)
-            return Int(octal, radix: 2)
-        }
-        if scalar.hasPrefix("0o") {
-            let octal = negative ? "-" + scalar.substring(from: 2) : scalar.substring(from: 2)
-            return Int(octal, radix: 8)
-        }
-        if scalar.hasPrefix("0") {
-            let octal = negative ? "-" + scalar.substring(from: 1) : scalar.substring(from: 1)
-            return Int(octal, radix: 8)
+        let negative = scalarWithSign.hasPrefix("-")
+        let signPrefix = negative ? "-" : ""
+        let hasSign = negative || scalarWithSign.hasPrefix("+")
+
+        let prefixToRadix: [(String, Int)] = [
+            ("0x", 16),
+            ("0b", 2),
+            ("0o", 8),
+            ("0", 8)
+        ]
+
+        let scalar = scalarWithSign.substring(from: hasSign ? 1 : 0)
+        for (prefix, radix) in prefixToRadix where scalar.hasPrefix(prefix) {
+            return Int(signPrefix + scalar.substring(from: prefix.count), radix: radix)
         }
         if scalar.contains(":") {
             return Int(sexagesimal: scalarWithSign)
@@ -228,30 +223,22 @@ extension Int: ScalarConstructible {
 extension UInt: ScalarConstructible {
     public static func construct(from node: Node) -> UInt? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        var scalarWithSign = node.scalar!.string
-        scalarWithSign = scalarWithSign.replacingOccurrences(of: "_", with: "")
+        let scalarWithSign = node.scalar!.string.replacingOccurrences(of: "_", with: "")
         if scalarWithSign == "0" {
             return 0
         }
         guard !scalarWithSign.hasPrefix("-") else { return nil }
 
-        let scalar = scalarWithSign.hasPrefix("+") ?
-            scalarWithSign.substring(from: 1) : scalarWithSign.substring(from: 0)
-        if scalar.hasPrefix("0x") {
-            let hexadecimal = scalar.substring(from: 2)
-            return UInt(hexadecimal, radix: 16)
-        }
-        if scalar.hasPrefix("0b") {
-            let octal = scalar.substring(from: 2)
-            return UInt(octal, radix: 2)
-        }
-        if scalar.hasPrefix("0o") {
-            let octal = scalar.substring(from: 2)
-            return UInt(octal, radix: 8)
-        }
-        if scalar.hasPrefix("0") {
-            let octal = scalar.substring(from: 1)
-            return UInt(octal, radix: 8)
+        let prefixToRadix: [(String, Int)] = [
+            ("0x", 16),
+            ("0b", 2),
+            ("0o", 8),
+            ("0", 8)
+        ]
+
+        let scalar = scalarWithSign.substring(from: scalarWithSign.hasPrefix("+") ? 1 : 0)
+        for (prefix, radix) in prefixToRadix where scalar.hasPrefix(prefix) {
+            return UInt(scalar.substring(from: prefix.count), radix: radix)
         }
         if scalar.contains(":") {
             return UInt(sexagesimal: scalarWithSign)
