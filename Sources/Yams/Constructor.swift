@@ -426,9 +426,6 @@ fileprivate extension String {
 // MARK: - SexagesimalConvertible
 public protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
     static func create(from string: String) -> Self?
-#if swift(>=4.0)
-    static func create(from substring: Substring) -> Self?
-#endif
     static func * (lhs: Self, rhs: Self) -> Self
     static func *= (lhs: inout Self, rhs: Self)
     static func += (lhs: inout Self, rhs: Self)
@@ -438,31 +435,18 @@ extension SexagesimalConvertible {
     fileprivate init(sexagesimal value: String) {
         self = value.sexagesimal()
     }
-    #if swift(>=4.0)
-    fileprivate init(sexagesimal value: Substring) {
-    self = value.sexagesimal()
-    }
-    #endif
 }
 
 extension SexagesimalConvertible where Self: LosslessStringConvertible {
     public static func create(from string: String) -> Self? {
         return Self.init(string)
     }
-#if swift(>=4.0)
-    public static func create(from substring: Substring) -> Self? {
-        return Self.init(String(substring))
-    }
-#endif
 }
 
 #if swift(>=3.2)
     extension SexagesimalConvertible where Self: FixedWidthInteger {
         public static func create(from string: String) -> Self? {
             return Self.init(string, radix: 10)
-        }
-        public static func create(from substring: Substring) -> Self? {
-            return Self.init(String(substring), radix: 10)
         }
     }
 #else
@@ -520,28 +504,6 @@ fileprivate extension String {
             return String(self).components(separatedBy: separator)
         }
     #endif
-
-        func sexagesimal<T>() -> T where T: SexagesimalConvertible {
-            assert(contains(":"))
-            var scalar = self
-
-            var sign: T = 1
-            if scalar.hasPrefix("-") {
-                sign = -1
-                scalar = scalar.substring(from: 1)
-            } else if scalar.hasPrefix("+") {
-                scalar = scalar.substring(from: 1)
-            }
-            let digits = scalar.components(separatedBy: ":").flatMap({ T.create(from: $0) }).reversed()
-            var base: T = 1
-            var value: T = 0
-            digits.forEach {
-                value += $0 * base
-                base *= 60
-            }
-            return sign * value
-        }
-
         func substring(from offset: Int) -> Substring {
             if offset == 0 { return self }
             let index = self.index(startIndex, offsetBy: offset)
