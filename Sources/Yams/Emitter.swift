@@ -35,7 +35,7 @@ public func dump<Objects>(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortedKeys: Bool = false) throws -> String
+    sortKeys: Bool = false) throws -> String
     where Objects: Sequence {
         func representable(from object: Any) throws -> NodeRepresentable {
             if let representable = object as? NodeRepresentable {
@@ -54,7 +54,7 @@ public func dump<Objects>(
             explicitStart: explicitStart,
             explicitEnd: explicitEnd,
             version: version,
-            sortedKeys: sortedKeys)
+            sortKeys: sortKeys)
 }
 
 /// Produce YAML String from object
@@ -81,7 +81,7 @@ public func dump(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortedKeys: Bool = false) throws -> String {
+    sortKeys: Bool = false) throws -> String {
     return try serialize(
         node: object.represented(),
         canonical: canonical,
@@ -92,7 +92,7 @@ public func dump(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortedKeys: sortedKeys)
+        sortKeys: sortKeys)
 }
 
 /// Produce YAML String from `Node`
@@ -119,7 +119,7 @@ public func serialize<Nodes>(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortedKeys: Bool = false) throws -> String
+    sortKeys: Bool = false) throws -> String
     where Nodes: Sequence, Nodes.Iterator.Element == Node {
         let emitter = Emitter(
             canonical: canonical,
@@ -130,7 +130,7 @@ public func serialize<Nodes>(
             explicitStart: explicitStart,
             explicitEnd: explicitEnd,
             version: version,
-            sortedKeys: sortedKeys)
+            sortKeys: sortKeys)
         try emitter.open()
         try nodes.forEach(emitter.serialize)
         try emitter.close()
@@ -165,7 +165,7 @@ public func serialize(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortedKeys: Bool = false) throws -> String {
+    sortKeys: Bool = false) throws -> String {
     return try serialize(
         nodes: [node],
         canonical: canonical,
@@ -176,7 +176,7 @@ public func serialize(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortedKeys: sortedKeys)
+        sortKeys: sortKeys)
 }
 
 public final class Emitter {
@@ -211,7 +211,7 @@ public final class Emitter {
         public var version: (major: Int, minor: Int)?
 
         /// Set if emitter should sort keys in lexicographic order.
-        public var sortedKeys: Bool = false
+        public var sortKeys: Bool = false
     }
 
     public var options: Options {
@@ -228,7 +228,7 @@ public final class Emitter {
                 explicitStart: Bool = false,
                 explicitEnd: Bool = false,
                 version: (major: Int, minor: Int)? = nil,
-                sortedKeys: Bool = false) {
+                sortKeys: Bool = false) {
         options = Options(canonical: canonical,
                           indent: indent,
                           width: width,
@@ -237,7 +237,7 @@ public final class Emitter {
                           explicitStart: explicitStart,
                           explicitEnd: explicitEnd,
                           version: version,
-                          sortedKeys: sortedKeys)
+                          sortKeys: sortKeys)
         // configure emitter
         yaml_emitter_initialize(&emitter)
         yaml_emitter_set_output(&self.emitter, { pointer, buffer, size in
@@ -411,7 +411,7 @@ extension Emitter {
                 mapping_style)
         }
         try emit(&event)
-        if options.sortedKeys {
+        if options.sortKeys {
             try mapping.keys.sorted().forEach {
                 try self.serializeNode($0)
                 try self.serializeNode(mapping[$0]!) // swiftlint:disable:this force_unwrapping
