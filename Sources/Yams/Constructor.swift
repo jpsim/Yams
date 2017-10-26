@@ -6,8 +6,6 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
-// swiftlint:disable file_length
-
 import Foundation
 
 public final class Constructor {
@@ -505,4 +503,4 @@ fileprivate extension String {
             return self[index...]
         }
     }
-#endif
+#endif // swiftlint:disable:this file_length
