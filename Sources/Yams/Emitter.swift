@@ -337,6 +337,20 @@ public final class Emitter {
     }
 }
 
+extension Emitter.Options {
+    // initializer without exposing internal properties
+    public init(canonical: Bool = false, indent: Int = 0, width: Int = 0, allowUnicode: Bool = false,
+                lineBreak: Emitter.LineBreak = .ln, version: (major: Int, minor: Int)? = nil, sortKeys: Bool = false) {
+        self.canonical = canonical
+        self.indent = indent
+        self.width = width
+        self.allowUnicode = allowUnicode
+        self.lineBreak = lineBreak
+        self.version = version
+        self.sortKeys = sortKeys
+    }
+}
+
 // MARK: implementation details
 extension Emitter {
     fileprivate func emit(_ event: UnsafeMutablePointer<yaml_event_t>) throws {

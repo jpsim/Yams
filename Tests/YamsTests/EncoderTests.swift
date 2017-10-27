@@ -70,7 +70,7 @@ import Yams
         func testEncodingTopLevelStructuredSingleClass() {
             // Mapping is a class which encodes as a dictionary through a single value container.
             let mapping = Mapping.testValue
-            _testRoundTrip(of: mapping, expectedYAML: """
+            _testRoundTrip(of: mapping, with: YAMLEncoder.Options(sortKeys: true), expectedYAML: """
                 Apple:
                   relative: http://apple.com
                 localhost:
@@ -230,11 +230,13 @@ import Yams
         }
 
         private func _testRoundTrip<T>(of value: T,
+                                       with options: YAMLEncoder.Options = .init(),
                                        expectedYAML yamlString: String? = nil,
                                        file: StaticString = #file,
                                        line: UInt = #line) where T: Codable, T: Equatable {
             do {
                 let encoder = YAMLEncoder()
+                encoder.options = options
                 let producedYAML = try encoder.encode(value)
 
                 if let expectedYAML = yamlString {

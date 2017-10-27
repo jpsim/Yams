@@ -338,7 +338,8 @@
             lineBreak: options.lineBreak,
             explicitStart: options.explicitStart,
             explicitEnd: options.explicitEnd,
-            version: options.version)
+            version: options.version,
+            sortKeys: options.sortKeys)
     }
 
 #endif
