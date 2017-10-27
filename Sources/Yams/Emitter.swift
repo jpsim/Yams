@@ -34,7 +34,8 @@ public func dump<Objects>(
     lineBreak: Emitter.LineBreak = .ln,
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
-    version: (major: Int, minor: Int)? = nil) throws -> String
+    version: (major: Int, minor: Int)? = nil,
+    sortKeys: Bool = false) throws -> String
     where Objects: Sequence {
         func representable(from object: Any) throws -> NodeRepresentable {
             if let representable = object as? NodeRepresentable {
@@ -52,7 +53,8 @@ public func dump<Objects>(
             lineBreak: lineBreak,
             explicitStart: explicitStart,
             explicitEnd: explicitEnd,
-            version: version)
+            version: version,
+            sortKeys: sortKeys)
 }
 
 /// Produce YAML String from object
@@ -78,7 +80,8 @@ public func dump(
     lineBreak: Emitter.LineBreak = .ln,
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
-    version: (major: Int, minor: Int)? = nil) throws -> String {
+    version: (major: Int, minor: Int)? = nil,
+    sortKeys: Bool = false) throws -> String {
     return try serialize(
         node: object.represented(),
         canonical: canonical,
@@ -88,7 +91,8 @@ public func dump(
         lineBreak: lineBreak,
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
-        version: version)
+        version: version,
+        sortKeys: sortKeys)
 }
 
 /// Produce YAML String from `Node`
@@ -114,7 +118,8 @@ public func serialize<Nodes>(
     lineBreak: Emitter.LineBreak = .ln,
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
-    version: (major: Int, minor: Int)? = nil) throws -> String
+    version: (major: Int, minor: Int)? = nil,
+    sortKeys: Bool = false) throws -> String
     where Nodes: Sequence, Nodes.Iterator.Element == Node {
         let emitter = Emitter(
             canonical: canonical,
@@ -124,7 +129,8 @@ public func serialize<Nodes>(
             lineBreak: lineBreak,
             explicitStart: explicitStart,
             explicitEnd: explicitEnd,
-            version: version)
+            version: version,
+            sortKeys: sortKeys)
         try emitter.open()
         try nodes.forEach(emitter.serialize)
         try emitter.close()
@@ -158,7 +164,8 @@ public func serialize(
     lineBreak: Emitter.LineBreak = .ln,
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
-    version: (major: Int, minor: Int)? = nil) throws -> String {
+    version: (major: Int, minor: Int)? = nil,
+    sortKeys: Bool = false) throws -> String {
     return try serialize(
         nodes: [node],
         canonical: canonical,
@@ -168,7 +175,8 @@ public func serialize(
         lineBreak: lineBreak,
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
-        version: version)
+        version: version,
+        sortKeys: sortKeys)
 }
 
 public final class Emitter {
@@ -201,6 +209,9 @@ public final class Emitter {
 
         /// The %YAML directive value or nil
         public var version: (major: Int, minor: Int)?
+
+        /// Set if emitter should sort keys in lexicographic order.
+        public var sortKeys: Bool = false
     }
 
     public var options: Options {
@@ -216,7 +227,8 @@ public final class Emitter {
                 lineBreak: LineBreak = .ln,
                 explicitStart: Bool = false,
                 explicitEnd: Bool = false,
-                version: (major: Int, minor: Int)? = nil) {
+                version: (major: Int, minor: Int)? = nil,
+                sortKeys: Bool = false) {
         options = Options(canonical: canonical,
                           indent: indent,
                           width: width,
@@ -224,7 +236,8 @@ public final class Emitter {
                           lineBreak: lineBreak,
                           explicitStart: explicitStart,
                           explicitEnd: explicitEnd,
-                          version: version)
+                          version: version,
+                          sortKeys: sortKeys)
         // configure emitter
         yaml_emitter_initialize(&emitter)
         yaml_emitter_set_output(&self.emitter, { pointer, buffer, size in
@@ -398,9 +411,16 @@ extension Emitter {
                 mapping_style)
         }
         try emit(&event)
-        try mapping.forEach {
-            try self.serializeNode($0.key)
-            try self.serializeNode($0.value)
+        if options.sortKeys {
+            try mapping.keys.sorted().forEach {
+                try self.serializeNode($0)
+                try self.serializeNode(mapping[$0]!) // swiftlint:disable:this force_unwrapping
+            }
+        } else {
+            try mapping.forEach {
+                try self.serializeNode($0.key)
+                try self.serializeNode($0.value)
+            }
         }
         yaml_mapping_end_event_initialize(&event)
         try emit(&event)
