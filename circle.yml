@@ -1,0 +1,71 @@
+version: 2
+jobs:
+
+  xcode_9:
+    macos:
+      xcode: "9.0"
+    steps:
+      - checkout
+      - run:
+          command: |
+            ( xcodebuild -scheme Yams test # -sdk macosx -destination arch=x86_64
+              xcodebuild -scheme Yams test OTHER_SWIFT_FLAGS=-DUSE_UTF8
+              xcodebuild -scheme Yams test -sdk iphonesimulator -destination "name=iPhone 8"
+              xcodebuild -scheme Yams test -sdk appletvsimulator -destination "name=Apple TV 4K"
+              xcodebuild -scheme Yams build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
+            ) | xcpretty -r junit
+      - store_test_results:
+          path: build/reports/
+      - run: brew install swiftlint && swiftlint lint --reporter junit > build/reports/junit.xml
+      - store_test_results:
+          path: build/reports/
+
+  xcode_9_swift_4:
+    macos:
+      xcode: "9.0"
+    steps:
+      - checkout
+      - run:
+          command: |
+            ( xcodebuild -scheme Yams test SWIFT_VERSION=4.0 # -sdk macosx -destination arch=x86_64
+              xcodebuild -scheme Yams test SWIFT_VERSION=4.0 OTHER_SWIFT_FLAGS=-DUSE_UTF8
+              xcodebuild -scheme Yams test SWIFT_VERSION=4.0 -sdk iphonesimulator -destination "name=iPhone 8"
+              xcodebuild -scheme Yams test SWIFT_VERSION=4.0 -sdk appletvsimulator -destination "name=Apple TV 4K"
+              xcodebuild -scheme Yams build SWIFT_VERSION=4.0 -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
+            ) | xcpretty -r junit
+      - store_test_results:
+          path: build/reports/
+
+  linux_swift_3.0.2:
+    docker:
+      - image: swift:3.0.2
+    steps:
+      - checkout
+      - run: swift test
+      - run: swift test -Xswiftc -DUSE_UTF8
+
+  linux_swift_3.1:
+    docker:
+      - image: swift:3.1
+    steps:
+      - checkout
+      - run: swift test
+      - run: swift test -Xswiftc -DUSE_UTF8
+
+  linux_swift_4.0:
+    docker:
+      - image: norionomura/swift:40
+    steps:
+      - checkout
+      - run: swift test
+      - run: swift test -Xswiftc -DUSE_UTF8
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - xcode_9
+      - xcode_9_swift_4
+      - linux_swift_3.0.2
+      - linux_swift_3.1
+      - linux_swift_4.0
