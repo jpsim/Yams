@@ -16,9 +16,6 @@ jobs:
             ) | xcpretty -r junit
       - store_test_results:
           path: build/reports/
-      - run: brew install swiftlint && swiftlint lint --reporter junit > build/reports/junit.xml
-      - store_test_results:
-          path: build/reports/
 
   xcode_9_swift_4:
     macos:
@@ -46,19 +43,27 @@ jobs:
 
   linux_swift_3.1:
     docker:
-      - image: swift:3.1
+      - image: norionomura/swiftlint:swift-3.1
     steps:
       - checkout
       - run: swift test
       - run: swift test -Xswiftc -DUSE_UTF8
+      - run: mkdir -p build/reports/
+      - run: swiftlint lint --reporter junit > build/reports/junit.xml
+      - store_test_results:
+          path: build/reports/
 
   linux_swift_4.0:
     docker:
-      - image: norionomura/swift:40
+      - image: norionomura/swiftlint:swift-4.0
     steps:
       - checkout
       - run: swift test
       - run: swift test -Xswiftc -DUSE_UTF8
+      - run: mkdir -p build/reports/
+      - run: swiftlint lint --reporter junit > build/reports/junit.xml
+      - store_test_results:
+          path: build/reports/
 
 workflows:
   version: 2
