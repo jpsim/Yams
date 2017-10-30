@@ -2,7 +2,7 @@ import XCTest
 
 @testable import YamsTests
 
-XCTMain([
+var testCases = [
     testCase(ConstructorTests.allTests),
     testCase(EmitterTests.allTests),
     testCase(MarkTests.allTests),
@@ -13,4 +13,10 @@ XCTMain([
     testCase(SpecTests.allTests),
     testCase(StringTests.allTests),
     testCase(YamlErrorTests.allTests)
-])
+]
+
+#if swift(>=4.0)
+    testCases.append(testCase(EncoderTests.allTests))
+#endif
+
+XCTMain(testCases)
