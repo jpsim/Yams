@@ -28,11 +28,6 @@ Add `pod 'Yams'` to your `Podfile`.
 
 Add `github "jpsim/Yams"` to your `Cartfile`.
 
-## Credit
-
-This library was initially based on
-[Chris Eidhof's gist](https://gist.github.com/chriseidhof/4c5a49d4b81a0c2a37a1).
-
 ## License
 
 Both Yams and libYAML are MIT licensed.
