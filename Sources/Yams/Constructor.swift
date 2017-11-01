@@ -420,8 +420,7 @@ fileprivate extension String {
 public protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
     static func create(from string: String) -> Self?
     static func * (lhs: Self, rhs: Self) -> Self
-    static func *= (lhs: inout Self, rhs: Self)
-    static func += (lhs: inout Self, rhs: Self)
+    static func + (lhs: Self, rhs: Self) -> Self
 }
 
 extension SexagesimalConvertible {
@@ -468,19 +467,21 @@ fileprivate extension String {
         assert(contains(":"))
         var scalar = self
 
-        var sign: T = 1
+        let sign: T
         if scalar.hasPrefix("-") {
             sign = -1
             scalar = String(scalar.substring(from: 1))
         } else if scalar.hasPrefix("+") {
             scalar = String(scalar.substring(from: 1))
+            sign = 1
+        } else {
+            sign = 1
         }
-        let digits = scalar.components(separatedBy: ":").flatMap({ T.create(from: $0) }).reversed()
-        var base: T = 1
-        var value: T = 0
-        digits.forEach {
-            value += $0 * base
-            base *= 60
+        let digits = scalar.components(separatedBy: ":").flatMap(T.create).reversed()
+        let (_, value) = digits.reduce((1, 0) as (T, T)) { baseAndValue, digit in
+            let value = baseAndValue.1 + (digit * baseAndValue.0)
+            let base = baseAndValue.0 * 60
+            return (base, value)
         }
         return sign * value
     }
