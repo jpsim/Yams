@@ -35,6 +35,31 @@ public final class Resolver {
         }
     }
 
+    /// Returns a Resolver constructed by appending rule.
+    public func appending(_ rule: Rule) -> Resolver {
+        return .init(rules + [rule])
+    }
+
+    /// Returns a Resolver constructed by appending pattern for tag.
+    public func appending(_ tag: Tag.Name, _ pattern: String) throws -> Resolver {
+        return appending(try Rule(tag, pattern))
+    }
+
+    /// Returns a Resolver constructed by replacing rule.
+    public func replacing(_ rule: Rule) -> Resolver {
+        return .init(rules.map { $0.tag == rule.tag ? rule : $0 })
+    }
+
+    /// Returns a Resolver constructed by replacing pattern for tag.
+    public func replacing(_ tag: Tag.Name, with pattern: String) throws -> Resolver {
+        return .init(try rules.map { $0.tag == tag ? try Rule($0.tag, pattern) : $0 })
+    }
+
+    /// Returns a Resolver constructed by removing pattern for tag.
+    public func removing(_ tag: Tag.Name) -> Resolver {
+        return .init(rules.filter({ $0.tag != tag }))
+    }
+
     // MARK: - internal
 
     func resolveTag<T>(of value: T) -> Tag.Name where T: TagResolvable {

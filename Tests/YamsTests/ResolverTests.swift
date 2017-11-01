@@ -91,13 +91,50 @@ class ResolverTests: XCTestCase {
         XCTAssertEqual(resolver.resolveTag(of: ".NaN"), .float)
         XCTAssertEqual(resolver.resolveTag(of: ".NAN"), .float)
     }
+
+    func testCustomize() throws {
+        // appending rule
+        XCTAssertEqual(Resolver.basic.rules.count, 0)
+        let basicAppendingBool = Resolver.basic.appending(.bool)
+        XCTAssertEqual(basicAppendingBool.rules.count, 1)
+        XCTAssertEqual(basicAppendingBool.resolveTag(of: "true"), .bool)
+
+        // replacing rule with pattern string
+        XCTAssertEqual(Resolver.default.resolveTag(of: "はい"), .str)
+        let resolverRecognizingJapaneseYesNo = try Resolver.default.replacing(.bool, with: "(はい|いいえ)")
+        XCTAssertEqual(resolverRecognizingJapaneseYesNo.resolveTag(of: "はい"), .bool)
+
+        // replacing rule with Rule
+        let ruleForOuiNon = try Resolver.Rule(.bool, "(Oui|Non)")
+        XCTAssertEqual(resolverRecognizingJapaneseYesNo.replacing(ruleForOuiNon).resolveTag(of: "Oui"), .bool)
+
+        // removing
+        XCTAssertEqual(Resolver.default.rules.count, 7)
+        let defaultRemovingBool = Resolver.default.removing(.bool)
+        XCTAssertEqual(defaultRemovingBool.rules.count, 6)
+        XCTAssertEqual(defaultRemovingBool.resolveTag(of: "true"), .str)
+
+        // custom tag and rule
+        let xml: Tag.Name = "XML"
+        let defaultAppendingXML = try Resolver.default.appending(xml, "<[^>]*>")
+        XCTAssertEqual(defaultAppendingXML.resolveTag(of: "<XML>"), xml)
+
+        // Use customized Resolver on Yams.load()
+        let bool = try Yams.load(yaml: "true")
+        XCTAssertTrue(bool is Bool)
+        XCTAssertFalse(bool is String)
+        let string = try Yams.load(yaml: "true", Resolver.default.removing(.bool))
+        XCTAssertFalse(string is Bool)
+        XCTAssertTrue(string is String)
+    }
 }
 
 extension ResolverTests {
     static var allTests: [(String, (ResolverTests) -> () throws -> Void)] {
         return [
             ("testBasic", testBasic),
-            ("testDefault", testDefault)
+            ("testDefault", testDefault),
+            ("testCustomize", testCustomize)
         ]
     }
 }
