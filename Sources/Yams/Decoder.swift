@@ -16,7 +16,7 @@
                               from yaml: String,
                               userInfo: [CodingUserInfoKey: Any] = [:]) throws -> T where T: Swift.Decodable {
             do {
-                let node = try Yams.compose(yaml: yaml) ?? ""
+                let node = try Yams.compose(yaml: yaml, .basic) ?? ""
                 let decoder = _Decoder(referencing: node, userInfo: userInfo)
                 let container = try decoder.singleValueContainer()
                 return try container.decode(T.self)
