@@ -140,19 +140,15 @@ class YamlErrorTests: XCTestCase {
 
 extension YamlErrorTests {
     static var allTests: [(String, (YamlErrorTests) -> () throws -> Void)] {
-        #if swift(>=3.1)
-            return [
-                ("testYamlErrorReader", testYamlErrorReader),
-                ("testYamlErrorScanner", testYamlErrorScanner),
-                ("testYamlErrorParser", testYamlErrorParser),
-                ("testNextRootThrowsOnInvalidYaml", testNextRootThrowsOnInvalidYaml),
-                ("testSingleRootThrowsOnInvalidYaml", testSingleRootThrowsOnInvalidYaml),
-                ("testSingleRootThrowsOnMultipleDocuments", testSingleRootThrowsOnMultipleDocuments),
-                ("testUndefinedAliasCausesError", testUndefinedAliasCausesError),
-                ("testScannerErrorMayHaveNullContext", testScannerErrorMayHaveNullContext)
-            ]
-        #else
-            return [] // https://bugs.swift.org/browse/SR-3366
-        #endif
+        return [
+            ("testYamlErrorReader", testYamlErrorReader),
+            ("testYamlErrorScanner", testYamlErrorScanner),
+            ("testYamlErrorParser", testYamlErrorParser),
+            ("testNextRootThrowsOnInvalidYaml", testNextRootThrowsOnInvalidYaml),
+            ("testSingleRootThrowsOnInvalidYaml", testSingleRootThrowsOnInvalidYaml),
+            ("testSingleRootThrowsOnMultipleDocuments", testSingleRootThrowsOnMultipleDocuments),
+            ("testUndefinedAliasCausesError", testUndefinedAliasCausesError),
+            ("testScannerErrorMayHaveNullContext", testScannerErrorMayHaveNullContext)
+        ]
     }
 }

@@ -84,15 +84,11 @@ class StringTests: XCTestCase {
 
 extension StringTests {
     static var allTests: [(String, (StringTests) -> () throws -> Void)] {
-        #if swift(>=3.1)
-            return [
-                ("testConfirmBehaviorOfStandardLibraryAPI", testConfirmBehaviorOfStandardLibraryAPI),
-                ("testUTF8LineNumberColumnAndContentsAtOffset", testUTF8LineNumberColumnAndContentsAtOffset),
-                ("testUTF16LineNumberColumnAndContentsAtOffset", testUTF16LineNumberColumnAndContentsAtOffset),
-                ("testSubstringAtLine", testSubstringAtLine)
-            ]
-        #else
-            return [] // https://bugs.swift.org/browse/SR-3366
-        #endif
+        return [
+            ("testConfirmBehaviorOfStandardLibraryAPI", testConfirmBehaviorOfStandardLibraryAPI),
+            ("testUTF8LineNumberColumnAndContentsAtOffset", testUTF8LineNumberColumnAndContentsAtOffset),
+            ("testUTF16LineNumberColumnAndContentsAtOffset", testUTF16LineNumberColumnAndContentsAtOffset),
+            ("testSubstringAtLine", testSubstringAtLine)
+        ]
     }
 }
