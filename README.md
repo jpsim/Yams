@@ -9,11 +9,11 @@ A sweet and swifty [Yaml](http://yaml.org/) parser built on
 
 ## Installation
 
-Building Yams on macOS requires Xcode 8.x or a Swift 3.x toolchain with the
-Swift Package Manager.
+Building Yams on macOS requires Xcode 8.x/9.x or a Swift 3.x/4.x toolchain with
+the Swift Package Manager.
 
-Building Yams on Linux requires a Swift 3.x compiler and Swift Package Manager
-to be installed.
+Building Yams on Linux requires a Swift 3.x/4.x compiler and Swift Package
+Manager to be installed.
 
 ### Swift Package Manager
 
