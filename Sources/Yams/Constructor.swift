@@ -173,15 +173,15 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
         default:
             scalar = scalar.replacingOccurrences(of: "_", with: "")
             if scalar.contains(":") {
-                return Self.init(sexagesimal: scalar)
+                return Self(sexagesimal: scalar)
             }
             return .create(from: scalar)
         }
     }
 }
 
-extension Int: ScalarConstructible {
-    public static func construct(from node: Node) -> Int? {
+extension FixedWidthInteger where Self: SexagesimalConvertible {
+    fileprivate static func _construct(from node: Node) -> Self? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
         let scalarWithSign = node.scalar!.string.replacingOccurrences(of: "_", with: "")
         if scalarWithSign == "0" {
@@ -189,6 +189,9 @@ extension Int: ScalarConstructible {
         }
 
         let negative = scalarWithSign.hasPrefix("-")
+
+        guard isSigned || !negative else { return nil }
+
         let signPrefix = negative ? "-" : ""
         let hasSign = negative || scalarWithSign.hasPrefix("+")
 
@@ -201,39 +204,24 @@ extension Int: ScalarConstructible {
 
         let scalar = scalarWithSign.substring(from: hasSign ? 1 : 0)
         for (prefix, radix) in prefixToRadix where scalar.hasPrefix(prefix) {
-            return Int(signPrefix + scalar.substring(from: prefix.count), radix: radix)
+            return Self(signPrefix + scalar.substring(from: prefix.count), radix: radix)
         }
         if scalar.contains(":") {
-            return Int(sexagesimal: scalarWithSign)
+            return Self(sexagesimal: scalarWithSign)
         }
-        return Int(scalarWithSign)
+        return Self(scalarWithSign)
+    }
+}
+
+extension Int: ScalarConstructible {
+    public static func construct(from node: Node) -> Int? {
+        return _construct(from: node)
     }
 }
 
 extension UInt: ScalarConstructible {
     public static func construct(from node: Node) -> UInt? {
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        let scalarWithSign = node.scalar!.string.replacingOccurrences(of: "_", with: "")
-        if scalarWithSign == "0" {
-            return 0
-        }
-        guard !scalarWithSign.hasPrefix("-") else { return nil }
-
-        let prefixToRadix: [(String, Int)] = [
-            ("0x", 16),
-            ("0b", 2),
-            ("0o", 8),
-            ("0", 8)
-        ]
-
-        let scalar = scalarWithSign.substring(from: scalarWithSign.hasPrefix("+") ? 1 : 0)
-        for (prefix, radix) in prefixToRadix where scalar.hasPrefix(prefix) {
-            return UInt(scalar.substring(from: prefix.count), radix: radix)
-        }
-        if scalar.contains(":") {
-            return UInt(sexagesimal: scalarWithSign)
-        }
-        return UInt(scalarWithSign)
+        return _construct(from: node)
     }
 }
 
@@ -395,13 +383,13 @@ extension SexagesimalConvertible {
 
 extension SexagesimalConvertible where Self: LosslessStringConvertible {
     public static func create(from string: String) -> Self? {
-        return Self.init(string)
+        return Self(string)
     }
 }
 
 extension SexagesimalConvertible where Self: FixedWidthInteger {
     public static func create(from string: String) -> Self? {
-        return Self.init(string, radix: 10)
+        return Self(string, radix: 10)
     }
 }
 
