@@ -69,6 +69,14 @@ class EncoderTests: XCTestCase {
     func testEncodingTopLevelStructuredSingleClass() {
         // Mapping is a class which encodes as a dictionary through a single value container.
         let mapping = Mapping.testValue
+    #if swift(>=4.0.3)
+        // fixing https://bugs.swift.org/browse/SR-5206 changes result.
+        _testRoundTrip(of: mapping, with: YAMLEncoder.Options(sortKeys: true), expectedYAML: """
+            Apple: http://apple.com
+            localhost: http://127.0.0.1
+
+            """)
+    #else
         _testRoundTrip(of: mapping, with: YAMLEncoder.Options(sortKeys: true), expectedYAML: """
             Apple:
               relative: http://apple.com
@@ -76,6 +84,7 @@ class EncoderTests: XCTestCase {
               relative: http://127.0.0.1
 
             """)
+    #endif
     }
 
     func testEncodingTopLevelDeepStructuredType() {
@@ -149,8 +158,10 @@ class EncoderTests: XCTestCase {
         _testRoundTrip(of: TopLevelWrapper(decimal), expectedYAML: expectedYAML)
 
         // Optional Decimals should encode the same way.
-        // FIXME: following test is blocked by https://bugs.swift.org/browse/SR-5206
-//            _testRoundTrip(of: OptionalTopLevelWrapper(decimal), expectedYAML: expectedYAML)
+    #if swift(>=4.0.3)
+        // following test requires that https://bugs.swift.org/browse/SR-5206 is fixed.
+        _testRoundTrip(of: OptionalTopLevelWrapper(decimal), expectedYAML: expectedYAML)
+    #endif
     }
 
     func testInterceptURL() {
@@ -160,8 +171,10 @@ class EncoderTests: XCTestCase {
         _testRoundTrip(of: TopLevelWrapper(url), expectedYAML: expectedYAML)
 
         // Optional URLs should encode the same way.
-        // FIXME: following test is blocked by https://bugs.swift.org/browse/SR-5206
-//            _testRoundTrip(of: OptionalTopLevelWrapper(url), expectedYAML: expectedYAML)
+    #if swift(>=4.0.3)
+        // following test requires that https://bugs.swift.org/browse/SR-5206 is fixed.
+        _testRoundTrip(of: OptionalTopLevelWrapper(url), expectedYAML: expectedYAML)
+    #endif
     }
 
     func testValuesInSingleValueContainer() throws {
