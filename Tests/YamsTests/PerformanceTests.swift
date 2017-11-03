@@ -108,13 +108,57 @@ class PerformanceTests: XCTestCase {
             }
         }
     }
+
+    func testSourceKittenIssue289UsingSwiftDecodable() {
+        guard let yamlString = try? String(contentsOfFile: filename, encoding: .utf8) else {
+            XCTFail("Can't load \(filename)")
+            return
+        }
+        let spmName = "SourceKittenFramework"
+        self.measure {
+            do {
+                guard let manifest: Manifest = try YAMLDecoder().decode(from: yamlString),
+                    let command = manifest.commands.values.first(where: { $0.moduleName == spmName }),
+                    let imports = command.importPaths,
+                    let otherArguments = command.otherArguments,
+                    let sources = command.sources else {
+                        XCTFail("Invalid result form Yams.load()")
+                        return
+                }
+                XCTAssertEqual(imports, self.expectedImports)
+                XCTAssertEqual(otherArguments, self.expectedOtherArguments)
+                XCTAssertEqual(sources, self.expectedSources)
+            } catch {
+                XCTFail("\(error)")
+            }
+        }
+    }
 }
 
 extension PerformanceTests {
     static var allTests: [(String, (PerformanceTests) -> () throws -> Void)] {
         return [
             ("testSourceKittenIssue289Load", testSourceKittenIssue289UsingLoad),
-            ("testSourceKittenIssue289Compose", testSourceKittenIssue289UsingCompose)
+            ("testSourceKittenIssue289Compose", testSourceKittenIssue289UsingCompose),
+            ("testSourceKittenIssue289UsingSwiftDecodable", testSourceKittenIssue289UsingSwiftDecodable)
         ]
+    }
+}
+
+// Models for parsing Build File of llbuild
+struct Manifest: Decodable {
+    let commands: [String: Command]
+}
+
+struct Command: Decodable {
+    let moduleName: String?
+    let importPaths: [String]?
+    let otherArguments: [String]?
+    let sources: [String]?
+    enum CodingKeys: String, CodingKey {
+        case moduleName = "module-name"
+        case importPaths = "import-paths"
+        case otherArguments = "other-args"
+        case sources
     }
 }
