@@ -87,7 +87,7 @@ extension Data: ScalarConstructible {
 }
 
 extension Date: ScalarConstructible {
-    public static func construct(from node: Node) -> Date? { // swiftlint:disable:this function_body_length
+    public static func construct(from node: Node) -> Date? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
         let scalar = node.scalar!.string
 
@@ -115,20 +115,12 @@ extension Date: ScalarConstructible {
         datecomponents.minute = components[4].flatMap { Int($0) }
         datecomponents.second = components[5].flatMap { Int($0) }
         datecomponents.nanosecond = components[6].flatMap {
-#if swift(>=3.2)
             let length = $0.count
-#else
-            let length = $0.characters.count
-#endif
             let nanosecond: Int?
             if length < 9 {
                 nanosecond = Int($0 + String(repeating: "0", count: 9 - length))
             } else {
-#if swift(>=4.0)
                 nanosecond = Int($0[..<$0.index($0.startIndex, offsetBy: 9)])
-#else
-                nanosecond = Int($0.substring(to: $0.index($0.startIndex, offsetBy: 9)))
-#endif
             }
             return nanosecond
         }
@@ -181,15 +173,15 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
         default:
             scalar = scalar.replacingOccurrences(of: "_", with: "")
             if scalar.contains(":") {
-                return Self.init(sexagesimal: scalar)
+                return Self(sexagesimal: scalar)
             }
             return .create(from: scalar)
         }
     }
 }
 
-extension Int: ScalarConstructible {
-    public static func construct(from node: Node) -> Int? {
+extension FixedWidthInteger where Self: SexagesimalConvertible {
+    fileprivate static func _construct(from node: Node) -> Self? {
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
         let scalarWithSign = node.scalar!.string.replacingOccurrences(of: "_", with: "")
         if scalarWithSign == "0" {
@@ -197,6 +189,9 @@ extension Int: ScalarConstructible {
         }
 
         let negative = scalarWithSign.hasPrefix("-")
+
+        guard isSigned || !negative else { return nil }
+
         let signPrefix = negative ? "-" : ""
         let hasSign = negative || scalarWithSign.hasPrefix("+")
 
@@ -209,47 +204,24 @@ extension Int: ScalarConstructible {
 
         let scalar = scalarWithSign.substring(from: hasSign ? 1 : 0)
         for (prefix, radix) in prefixToRadix where scalar.hasPrefix(prefix) {
-#if swift(>=3.2)
-            return Int(signPrefix + scalar.substring(from: prefix.count), radix: radix)
-#else
-            return Int(signPrefix + scalar.substring(from: prefix.characters.count), radix: radix)
-#endif
+            return Self(signPrefix + scalar.substring(from: prefix.count), radix: radix)
         }
         if scalar.contains(":") {
-            return Int(sexagesimal: scalarWithSign)
+            return Self(sexagesimal: scalarWithSign)
         }
-        return Int(scalarWithSign)
+        return Self(scalarWithSign)
+    }
+}
+
+extension Int: ScalarConstructible {
+    public static func construct(from node: Node) -> Int? {
+        return _construct(from: node)
     }
 }
 
 extension UInt: ScalarConstructible {
     public static func construct(from node: Node) -> UInt? {
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        let scalarWithSign = node.scalar!.string.replacingOccurrences(of: "_", with: "")
-        if scalarWithSign == "0" {
-            return 0
-        }
-        guard !scalarWithSign.hasPrefix("-") else { return nil }
-
-        let prefixToRadix: [(String, Int)] = [
-            ("0x", 16),
-            ("0b", 2),
-            ("0o", 8),
-            ("0", 8)
-        ]
-
-        let scalar = scalarWithSign.substring(from: scalarWithSign.hasPrefix("+") ? 1 : 0)
-        for (prefix, radix) in prefixToRadix where scalar.hasPrefix(prefix) {
-#if swift(>=3.2)
-            return UInt(scalar.substring(from: prefix.count), radix: radix)
-#else
-            return UInt(scalar.substring(from: prefix.characters.count), radix: radix)
-#endif
-        }
-        if scalar.contains(":") {
-            return UInt(sexagesimal: scalarWithSign)
-        }
-        return UInt(scalarWithSign)
+        return _construct(from: node)
     }
 }
 
@@ -377,7 +349,6 @@ extension Array {
 }
 
 fileprivate extension String {
-#if swift(>=4.0)
     func substring(with range: NSRange) -> Substring? {
         guard range.location != NSNotFound else { return nil }
         let utf16lowerBound = utf16.index(utf16.startIndex, offsetBy: range.location)
@@ -388,32 +359,13 @@ fileprivate extension String {
         }
         return self[lowerBound..<upperBound]
     }
-#else
-    func substring(with range: NSRange) -> String? {
-        guard range.location != NSNotFound else { return nil }
-        let utf16lowerBound = utf16.index(utf16.startIndex, offsetBy: range.location)
-        let utf16upperBound = utf16.index(utf16lowerBound, offsetBy: range.length)
-        guard let lowerBound = utf16lowerBound.samePosition(in: self),
-            let upperBound = utf16upperBound.samePosition(in: self) else {
-                fatalError("unreachable")
-        }
-        return substring(with: lowerBound..<upperBound)
-    }
-#endif
 }
 
 fileprivate extension String {
-#if swift(>=4.0)
     func substring(from offset: Int) -> Substring {
         let index = self.index(startIndex, offsetBy: offset)
         return self[index...]
     }
-#else
-    func substring(from offset: Int) -> String {
-        if offset == 0 { return self }
-        return substring(from: index(startIndex, offsetBy: offset))
-    }
-#endif
 }
 
 // MARK: - SexagesimalConvertible
@@ -431,31 +383,15 @@ extension SexagesimalConvertible {
 
 extension SexagesimalConvertible where Self: LosslessStringConvertible {
     public static func create(from string: String) -> Self? {
-        return Self.init(string)
+        return Self(string)
     }
 }
 
-#if swift(>=3.2)
-    extension SexagesimalConvertible where Self: FixedWidthInteger {
-        public static func create(from string: String) -> Self? {
-            return Self.init(string, radix: 10)
-        }
+extension SexagesimalConvertible where Self: FixedWidthInteger {
+    public static func create(from string: String) -> Self? {
+        return Self(string, radix: 10)
     }
-#else
-    public protocol SexagesimalConvertibleHasInitWithRadix {
-        init?(_ text: String, radix: Int)
-    }
-
-    extension SexagesimalConvertible where Self: SexagesimalConvertibleHasInitWithRadix {
-        public static func create(from string: String) -> Self? {
-            return Self.init(string, radix: 10)
-        }
-    }
-
-    extension Int: SexagesimalConvertibleHasInitWithRadix {}
-    extension UInt: SexagesimalConvertibleHasInitWithRadix {}
-
-#endif
+}
 
 extension Double: SexagesimalConvertible {}
 extension Float: SexagesimalConvertible {}
@@ -487,21 +423,22 @@ fileprivate extension String {
     }
 }
 
-#if swift(>=4.0)
-    fileprivate extension Substring {
-    #if os(Linux)
-        func hasPrefix(_ prefix: String) -> Bool {
-            return String(self).hasPrefix(prefix)
-        }
-
-        func components(separatedBy separator: String) -> [String] {
-            return String(self).components(separatedBy: separator)
-        }
-    #endif
-        func substring(from offset: Int) -> Substring {
-            if offset == 0 { return self }
-            let index = self.index(startIndex, offsetBy: offset)
-            return self[index...]
-        }
+fileprivate extension Substring {
+#if os(Linux)
+    func hasPrefix(_ prefix: String) -> Bool {
+        return String(self).hasPrefix(prefix)
     }
-#endif // swiftlint:disable:this file_length
+
+    func components(separatedBy separator: String) -> [String] {
+        return String(self).components(separatedBy: separator)
+    }
+#endif
+
+    func substring(from offset: Int) -> Substring {
+        if offset == 0 { return self }
+        let index = self.index(startIndex, offsetBy: offset)
+        return self[index...]
+    }
+}
+
+// swiftlint:disable:this file_length

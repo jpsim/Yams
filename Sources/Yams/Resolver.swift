@@ -122,13 +122,6 @@ extension Resolver.Rule {
     public static let value = try! Resolver.Rule(.value, "^(?:=)$")
 }
 
-#if os(Linux)
-#if swift(>=3.1)
-#else
-    typealias NSRegularExpression = RegularExpression
-#endif
-#endif
-
 func pattern(_ string: String) -> NSRegularExpression {
     do {
         return try .init(pattern: string, options: [])

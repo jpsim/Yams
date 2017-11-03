@@ -93,7 +93,7 @@ extension Date: ScalarRepresentable {
         #endif
     }
 
-    private var iso8601StringWithFullNanosecond: String {
+    fileprivate var iso8601StringWithFullNanosecond: String {
         let calendar = Calendar(identifier: .gregorian)
         let nanosecond = calendar.component(.nanosecond, from: self)
         if nanosecond != 0 {
@@ -163,19 +163,11 @@ private let floatFormatter = numberFormatter(with: 7)
 // TODO: Support `Float80`
 //extension Float80: ScalarRepresentable {}
 
-#if swift(>=4.0)
 extension BinaryInteger {
     public func represented() throws -> Node {
         return Node(String(describing: self), Tag(.int))
     }
 }
-#else
-extension Integer {
-    public func represented() throws -> Node {
-        return Node(String(describing: self), Tag(.int))
-    }
-}
-#endif
 
 extension Int: ScalarRepresentable {}
 extension Int16: ScalarRepresentable {}
@@ -210,8 +202,6 @@ extension URL: ScalarRepresentable {
         return Node(absoluteString)
     }
 }
-
-#if swift(>=4.0)
 
 /// MARK: - ScalarRepresentableCustomizedForCodable
 
@@ -248,5 +238,3 @@ extension FloatingPoint where Self: CVarArg {
         return string
     }
 }
-
-#endif
