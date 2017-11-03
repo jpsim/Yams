@@ -5,7 +5,7 @@
 A sweet and swifty [Yaml](http://yaml.org/) parser built on
 [libYAML](http://pyyaml.org/wiki/LibYAML).
 
-![Test Status](https://travis-ci.org/jpsim/Yams.svg?branch=master)
+[![CircleCI](https://circleci.com/gh/jpsim/Yams.svg?style=svg)](https://circleci.com/gh/jpsim/Yams)
 
 ## Installation
 
