@@ -43,7 +43,7 @@ jobs:
 
   linux_swift_4:
     docker:
-      - image: norionomura/swiftlint:swift-4.0
+      - image: norionomura/swiftlint:swift-4.0.0
     steps:
       - checkout
       - run: swift test
