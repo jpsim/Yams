@@ -28,16 +28,16 @@ class EncoderTests: XCTestCase {
 
     // MARK: - Encoding Top-Level Single-Value Types
     func testEncodingTopLevelSingleValueEnum() {
-        _testRoundTrip(of: Switch.off, expectedYAML: "false\n...\n")
-        _testRoundTrip(of: Switch.on, expectedYAML: "true\n...\n")
+        _testRoundTrip(of: Switch.off, expectedYAML: "false\n")
+        _testRoundTrip(of: Switch.on, expectedYAML: "true\n")
     }
 
     func testEncodingTopLevelSingleValueStruct() {
-        _testRoundTrip(of: Timestamp(3141592653), expectedYAML: "3.141592653e+9\n...\n")
+        _testRoundTrip(of: Timestamp(3141592653), expectedYAML: "3.141592653e+9\n")
     }
 
     func testEncodingTopLevelSingleValueClass() {
-        _testRoundTrip(of: Counter(), expectedYAML: "0\n...\n")
+        _testRoundTrip(of: Counter(), expectedYAML: "0\n")
     }
 
     // MARK: - Encoding Top-Level Structured Types
@@ -113,9 +113,9 @@ class EncoderTests: XCTestCase {
 
     func testEncodingTopLevelNullableType() {
         // EnhancedBool is a type which encodes either as a Bool or as nil.
-        _testRoundTrip(of: EnhancedBool.true, expectedYAML: "true\n...\n")
-        _testRoundTrip(of: EnhancedBool.false, expectedYAML: "false\n...\n")
-        _testRoundTrip(of: EnhancedBool.fileNotFound, expectedYAML: "null\n...\n")
+        _testRoundTrip(of: EnhancedBool.true, expectedYAML: "true\n")
+        _testRoundTrip(of: EnhancedBool.false, expectedYAML: "false\n")
+        _testRoundTrip(of: EnhancedBool.fileNotFound, expectedYAML: "null\n")
     }
 
     // MARK: - Date Strategy Tests
@@ -131,13 +131,13 @@ class EncoderTests: XCTestCase {
     #if os(Linux)
         print("Decoding 'Date' has issue on Linux with nanoseconds. https://bugs.swift.org/browse/SR-6223")
     #else
-        _testRoundTrip(of: Date(timeIntervalSince1970: 1000.0), expectedYAML: "1970-01-01T00:16:40Z\n...\n")
+        _testRoundTrip(of: Date(timeIntervalSince1970: 1000.0), expectedYAML: "1970-01-01T00:16:40Z\n")
     #endif
     }
 
     // MARK: - Data Tests
     func testEncodingBase64Data() {
-        _testRoundTrip(of: Data(bytes: [0xDE, 0xAD, 0xBE, 0xEF]), expectedYAML: "3q2+7w==\n...\n")
+        _testRoundTrip(of: Data(bytes: [0xDE, 0xAD, 0xBE, 0xEF]), expectedYAML: "3q2+7w==\n")
     }
 
     // MARK: - Encoder Features
