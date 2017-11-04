@@ -3163,6 +3163,10 @@ yaml_parser_scan_flow_scalar(yaml_parser_t *parser, yaml_token_t *token,
                         *(string.pointer++) = '"';
                         break;
 
+                    case '/':
+                        *(string.pointer++) = '/';
+                        break;
+
                     case '\'':
                         *(string.pointer++) = '\'';
                         break;
