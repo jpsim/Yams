@@ -1946,10 +1946,6 @@ yaml_emitter_write_plain_scalar(yaml_emitter_t *emitter,
 
     emitter->whitespace = 0;
     emitter->indention = 0;
-    if (emitter->root_context)
-    {
-        emitter->open_ended = 1;
-    }
 
     return 1;
 }
