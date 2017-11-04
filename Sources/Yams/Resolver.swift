@@ -81,43 +81,43 @@ extension Resolver {
 
 extension Resolver.Rule {
     // swiftlint:disable:next force_try
-    public static let bool = try! Resolver.Rule(.bool, [
-        "^(?:yes|Yes|YES|no|No|NO",
-        "|true|True|TRUE|false|False|FALSE",
-        "|on|On|ON|off|Off|OFF)$"
-        ].joined())
+    public static let bool = try! Resolver.Rule(.bool, """
+        ^(?:yes|Yes|YES|no|No|NO\
+        |true|True|TRUE|false|False|FALSE\
+        |on|On|ON|off|Off|OFF)$
+        """)
     // swiftlint:disable:next force_try
-    public static let int = try! Resolver.Rule(.int, [
-        "^(?:[-+]?0b[0-1_]+",
-        "|[-+]?0o?[0-7_]+",
-        "|[-+]?(?:0|[1-9][0-9_]*)",
-        "|[-+]?0x[0-9a-fA-F_]+",
-        "|[-+]?[1-9][0-9_]*(?::[0-5]?[0-9])+)$"
-        ].joined())
+    public static let int = try! Resolver.Rule(.int, """
+        ^(?:[-+]?0b[0-1_]+\
+        |[-+]?0o?[0-7_]+\
+        |[-+]?(?:0|[1-9][0-9_]*)\
+        |[-+]?0x[0-9a-fA-F_]+\
+        |[-+]?[1-9][0-9_]*(?::[0-5]?[0-9])+)$
+        """)
     // swiftlint:disable:next force_try
-    public static let float = try! Resolver.Rule(.float, [
-        "^(?:[-+]?(?:[0-9][0-9_]*)(?:\\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?",
-        "|\\.[0-9_]+(?:[eE][-+][0-9]+)?",
-        "|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*",
-        "|[-+]?\\.(?:inf|Inf|INF)",
-        "|\\.(?:nan|NaN|NAN))$"
-        ].joined())
+    public static let float = try! Resolver.Rule(.float, """
+        ^(?:[-+]?(?:[0-9][0-9_]*)(?:\\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?\
+        |\\.[0-9_]+(?:[eE][-+][0-9]+)?\
+        |[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*\
+        |[-+]?\\.(?:inf|Inf|INF)\
+        |\\.(?:nan|NaN|NAN))$
+        """)
     // swiftlint:disable:next force_try
     public static let merge = try! Resolver.Rule(.merge, "^(?:<<)$")
     // swiftlint:disable:next force_try
-    public static let null = try! Resolver.Rule(.null, [
-        "^(?:~",
-        "|null|Null|NULL",
-        "|)$"
-        ].joined())
+    public static let null = try! Resolver.Rule(.null, """
+        ^(?:~\
+        |null|Null|NULL\
+        |)$
+        """)
      // swiftlint:disable:next force_try
-    public static let timestamp = try! Resolver.Rule(.timestamp, [
-        "^(?:[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]",
-        "|[0-9][0-9][0-9][0-9]-[0-9][0-9]?-[0-9][0-9]?",
-        "(?:[Tt]|[ \\t]+)[0-9][0-9]?",
-        ":[0-9][0-9]:[0-9][0-9](?:\\.[0-9]*)?",
-        "(?:[ \\t]*(?:Z|[-+][0-9][0-9]?(?::[0-9][0-9])?))?)$"
-        ].joined())
+    public static let timestamp = try! Resolver.Rule(.timestamp, """
+        ^(?:[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\
+        |[0-9][0-9][0-9][0-9]-[0-9][0-9]?-[0-9][0-9]?\
+        (?:[Tt]|[ \\t]+)[0-9][0-9]?\
+        :[0-9][0-9]:[0-9][0-9](?:\\.[0-9]*)?\
+        (?:[ \\t]*(?:Z|[-+][0-9][0-9]?(?::[0-9][0-9])?))?)$
+        """)
     // swiftlint:disable:next force_try
     public static let value = try! Resolver.Rule(.value, "^(?:=)$")
 }

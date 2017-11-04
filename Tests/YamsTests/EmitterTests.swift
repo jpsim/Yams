@@ -33,12 +33,12 @@ class EmitterTests: XCTestCase {
     func testSequence() throws {
         var node: Node = ["a", "b", "c"]
 
-        let expectedAnyIsBlock = [
-            "- a",
-            "- b",
-            "- c",
-            ""
-            ].joined(separator: "\n")
+        let expectedAnyIsBlock = """
+            - a
+            - b
+            - c
+
+            """
         node.sequence?.style = .any
         XCTAssertEqual(try Yams.serialize(node: node), expectedAnyIsBlock)
         node.sequence?.style = .block
@@ -51,11 +51,11 @@ class EmitterTests: XCTestCase {
     func testMapping() throws {
         var node: Node = ["key1": "value1", "key2": "value2"]
 
-        let expectedAnyIsBlock = [
-            "key1: value1",
-            "key2: value2",
-            ""
-            ].joined(separator: "\n")
+        let expectedAnyIsBlock = """
+            key1: value1
+            key2: value2
+
+            """
         node.mapping?.style = .any
         XCTAssertEqual(try Yams.serialize(node: node), expectedAnyIsBlock)
         node.mapping?.style = .block

@@ -23,11 +23,11 @@ class YamlErrorTests: XCTestCase {
         let yaml = "test: 'テスト\u{12}'"
         XCTAssertThrowsError(_ = try Parser(yaml: yaml).nextRoot()) { error in
             XCTAssertTrue(error is YamlError)
-            XCTAssertEqual("\(error)", [
-                "1:11: error: reader: control characters are not allowed:",
-                "test: 'テスト\u{12}'",
-                "          ^"
-                ].joined(separator: "\n")
+            XCTAssertEqual("\(error)", """
+                1:11: error: reader: control characters are not allowed:
+                test: 'テスト\u{12}'
+                          ^
+                """
             )
         }
     }
@@ -36,12 +36,12 @@ class YamlErrorTests: XCTestCase {
         let yaml = "test: 'テスト"
         XCTAssertThrowsError(_ = try Parser(yaml: yaml).nextRoot()) { error in
             XCTAssertTrue(error is YamlError)
-            XCTAssertEqual("\(error)", [
-                "1:11: error: scanner: while scanning a quoted scalar in line 1, column 7",
-                "found unexpected end of stream:",
-                "test: 'テスト",
-                "          ^"
-                ].joined(separator: "\n")
+            XCTAssertEqual("\(error)", """
+                1:11: error: scanner: while scanning a quoted scalar in line 1, column 7
+                found unexpected end of stream:
+                test: 'テスト
+                          ^
+                """
             )
         }
     }
@@ -50,12 +50,12 @@ class YamlErrorTests: XCTestCase {
         let yaml = "- [キー1: 値1]\n- [key1: value1, key2: ,"
         XCTAssertThrowsError(_ = try Parser(yaml: yaml).nextRoot()) { error in
             XCTAssertTrue(error is YamlError)
-            XCTAssertEqual("\(error)", [
-                "3:1: error: parser: while parsing a flow node in line 3, column 1",
-                "did not find expected node content:",
-                "- [key1: value1, key2: ,",
-                "^"
-                ].joined(separator: "\n")
+            XCTAssertEqual("\(error)", """
+                3:1: error: parser: while parsing a flow node in line 3, column 1
+                did not find expected node content:
+                - [key1: value1, key2: ,
+                ^
+                """
             )
         }
     }
@@ -69,11 +69,11 @@ class YamlErrorTests: XCTestCase {
         // second iteration throws error
         XCTAssertThrowsError(try parser.nextRoot()) { error in
             XCTAssertTrue(error is YamlError)
-            XCTAssertEqual("\(error)", [
-                "2:1: error: parser: did not find expected <document start>:",
-                "a",
-                "^"
-                ].joined(separator: "\n")
+            XCTAssertEqual("\(error)", """
+                2:1: error: parser: did not find expected <document start>:
+                a
+                ^
+                """
             )
         }
     }
@@ -84,11 +84,11 @@ class YamlErrorTests: XCTestCase {
         let parser = try Parser(yaml: invalidYAML)
         XCTAssertThrowsError(try parser.singleRoot()) { error in
             XCTAssertTrue(error is YamlError)
-            XCTAssertEqual("\(error)", [
-                "2:1: error: parser: did not find expected <document start>:",
-                "a",
-                "^"
-                ].joined(separator: "\n")
+            XCTAssertEqual("\(error)", """
+                2:1: error: parser: did not find expected <document start>:
+                a
+                ^
+                """
             )
         }
     }
@@ -98,12 +98,12 @@ class YamlErrorTests: XCTestCase {
         let parser = try Parser(yaml: multipleDocuments)
         XCTAssertThrowsError(try parser.singleRoot()) { error in
             XCTAssertTrue(error is YamlError)
-            XCTAssertEqual("\(error)", [
-                "2:1: error: composer: expected a single document in the stream in line 1, column 1",
-                "but found another document:",
-                "---",
-                "^"
-                ].joined(separator: "\n")
+            XCTAssertEqual("\(error)", """
+                2:1: error: composer: expected a single document in the stream in line 1, column 1
+                but found another document:
+                ---
+                ^
+                """
             )
         }
     }
@@ -113,11 +113,11 @@ class YamlErrorTests: XCTestCase {
         let parser = try Parser(yaml: undefinedAlias)
         XCTAssertThrowsError(try parser.singleRoot()) { error in
             XCTAssertTrue(error is YamlError)
-            XCTAssertEqual("\(error)", [
-                "1:1: error: composer: found undefined alias:",
-                "*undefinedAlias",
-                "^"
-                ].joined(separator: "\n")
+            XCTAssertEqual("\(error)", """
+                1:1: error: composer: found undefined alias:
+                *undefinedAlias
+                ^
+                """
             )
         }
     }
@@ -128,11 +128,11 @@ class YamlErrorTests: XCTestCase {
         let parser = try Parser(yaml: swiftlint1436)
         XCTAssertThrowsError(try parser.singleRoot()) { error in
             XCTAssertTrue(error is YamlError)
-            XCTAssertEqual("\(error)", [
-                "1:21: error: scanner: mapping values are not allowed in this context:",
-                "large_tuple: warning: 3",
-                "                    ^"
-                ].joined(separator: "\n")
+            XCTAssertEqual("\(error)", """
+                1:21: error: scanner: mapping values are not allowed in this context:
+                large_tuple: warning: 3
+                                    ^
+                """
             )
         }
     }
