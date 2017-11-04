@@ -663,7 +663,7 @@ yaml_event_delete(yaml_event_t *event);
 
 /** The tag @c !!null with the only possible value: @c null. */
 #define YAML_NULL_TAG       "tag:yaml.org,2002:null"
-/** The tag @c !!bool with the values: @c true and @c falce. */
+/** The tag @c !!bool with the values: @c true and @c false. */
 #define YAML_BOOL_TAG       "tag:yaml.org,2002:bool"
 /** The tag @c !!str for string values. */
 #define YAML_STR_TAG        "tag:yaml.org,2002:str"
