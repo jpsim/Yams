@@ -14,7 +14,7 @@ class EmitterTests: XCTestCase {
     func testScalar() throws {
         var node: Node = "key"
 
-        let expectedAnyAndPlain = "key\n...\n"
+        let expectedAnyAndPlain = "key\n"
         node.scalar?.style = .any
         XCTAssertEqual(try Yams.serialize(node: node), expectedAnyAndPlain)
         node.scalar?.style = .plain
@@ -69,7 +69,6 @@ class EmitterTests: XCTestCase {
         let node: Node = "key"
         let expected = [
             "key",
-            "...",
             ""
         ]
         XCTAssertEqual(try Yams.serialize(node: node, lineBreak: .ln),
@@ -90,7 +89,7 @@ class EmitterTests: XCTestCase {
             }
             do {
                 let yaml = try Yams.serialize(node: node, allowUnicode: true)
-                let expected = "あ\n...\n"
+                let expected = "あ\n"
                 XCTAssertEqual(yaml, expected)
             }
         }

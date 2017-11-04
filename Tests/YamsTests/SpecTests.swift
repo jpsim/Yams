@@ -476,11 +476,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
         YamsAssertEqual(object, expectedObject)
 
         let yaml = try Yams.dump(object: object)
-        let expectedYaml = [
-            "Mark McGwire's year was crippled by a knee injury.",
-            "...",
-            ""
-        ].joined(separator: "\n")
+        let expectedYaml = "Mark McGwire's year was crippled by a knee injury.\n"
         XCTAssertEqual(yaml, expectedYaml)
     }
 
