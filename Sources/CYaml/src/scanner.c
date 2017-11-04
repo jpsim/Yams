@@ -3285,6 +3285,11 @@ yaml_parser_scan_flow_scalar(yaml_parser_t *parser, yaml_token_t *token,
 
         /* Check if we are at the end of the scalar. */
 
+        /* Fix for crash unitialized value crash
+         * Credit for the bug and input is to OSS Fuzz
+         * Credit for the fix to Alex Gaynor
+         */
+        if (!CACHE(parser, 1)) goto error;
         if (CHECK(parser->buffer, single ? '\'' : '"'))
             break;
 
