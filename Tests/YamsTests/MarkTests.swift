@@ -21,13 +21,13 @@ class MarkTests: XCTestCase {
                 "'\(changed)' and will be completely removed in a future release."
         }
 
-        let yaml = [
-            "disabled_rules:",
-            "  - variable_name",
-            "  - line_length",
-            "variable_name:",
-            "  min_length: 2"
-            ].joined(separator: "\n")
+        let yaml = """
+            disabled_rules:
+              - variable_name
+              - line_length
+            variable_name:
+              min_length: 2
+            """
         let configuration = try Yams.compose(yaml: yaml)
         let disabled_rules = configuration?.mapping?["disabled_rules"]?.array() ?? []
         let configured_rules = configuration?.mapping?.keys.filter({ $0 != "disabled_rules" }) ?? []
