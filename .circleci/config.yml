@@ -33,9 +33,33 @@ jobs:
       - store_test_results:
           path: build/reports/
 
+  xcode_9.1_swift_4.0.2:
+    macos:
+      xcode: "9.1.0"
+    steps:
+      - checkout
+      - run:
+          command: |
+            ( xcodebuild -scheme Yams test # -sdk macosx -destination arch=x86_64
+              xcodebuild -scheme Yams test OTHER_SWIFT_FLAGS=-DUSE_UTF8
+              xcodebuild -scheme Yams test -sdk iphonesimulator -destination "name=iPhone 8"
+              xcodebuild -scheme Yams test -sdk appletvsimulator -destination "name=Apple TV 4K"
+              xcodebuild -scheme Yams build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
+            ) | xcpretty -r junit
+      - store_test_results:
+          path: build/reports/
+
   spm_swift_4:
     macos:
       xcode: "9.0"
+    steps:
+      - checkout
+      - run: swift test
+      - run: swift test -Xswiftc -DUSE_UTF8
+
+  spm_swift_4.0.2:
+    macos:
+      xcode: "9.1.0"
     steps:
       - checkout
       - run: swift test
@@ -53,11 +77,26 @@ jobs:
       - store_test_results:
           path: build/reports/
 
+  linux_swift_4.0.2:
+    docker:
+      - image: norionomura/swiftlint:swift-4.0.2
+    steps:
+      - checkout
+      - run: swift test
+      - run: swift test -Xswiftc -DUSE_UTF8
+      - run: mkdir -p build/reports/
+      - run: swiftlint lint --reporter junit > build/reports/junit.xml
+      - store_test_results:
+          path: build/reports/
+
 workflows:
   version: 2
   workflow:
     jobs:
       - xcode_9_swift_3
       - xcode_9_swift_4
+      - xcode_9.1_swift_4.0.2
       - spm_swift_4
+      - spm_swift_4.0.2
       - linux_swift_4
+      - linux_swift_4.0.2
