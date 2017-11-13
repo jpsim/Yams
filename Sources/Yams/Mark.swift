@@ -12,7 +12,7 @@ import Foundation
 public struct Mark {
     /// line start from 1
     public let line: Int
-    /// column start from 1. libYAML counts column in `UnicodeScalar`.
+    /// column start from 1. libYAML counts columns in `UnicodeScalar`.
     public let column: Int
 }
 

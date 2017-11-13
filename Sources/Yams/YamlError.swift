@@ -25,6 +25,7 @@ public enum YamlError: Swift.Error {
     /// - Parameters:
     ///   - problem: Error description.
     ///   - byteOffset: The byte about which the problem occured.
+    ///   - value: The problematic value (-1 is none).
     ///   - yaml: YAML String which the problem occured while reading.
     case reader(problem: String, byteOffset: Int, value: Int32, yaml: String)
 
