@@ -77,19 +77,19 @@ extension Node.Mapping: MutableCollection {
     // Collection
     public typealias Index = Array<Element>.Index
 
-    public var startIndex: Int {
+    public var startIndex: Index {
         return pairs.startIndex
     }
 
-    public var endIndex: Int {
+    public var endIndex: Index {
         return pairs.endIndex
     }
 
-    public func index(after index: Int) -> Int {
+    public func index(after index: Index) -> Index {
         return pairs.index(after: index)
     }
 
-    public subscript(index: Int) -> Element {
+    public subscript(index: Index) -> Element {
         get {
             return (key: pairs[index].key, value: pairs[index].value)
         }
@@ -142,7 +142,7 @@ extension Node.Mapping {
         }
     }
 
-    public func index(forKey key: Node) -> Int? {
+    public func index(forKey key: Node) -> Index? {
         return pairs.reversed().index(where: { $0.key == key }).map({ pairs.index(before: $0.base) })
     }
 }
