@@ -68,14 +68,6 @@ extension Tag.Name: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
         self.rawValue = value
     }
-
-    public init(unicodeScalarLiteral value: String) {
-        self.rawValue = value
-    }
-
-    public init(extendedGraphemeClusterLiteral value: String) {
-        self.rawValue = value
-    }
 }
 
 extension Tag.Name: Hashable {

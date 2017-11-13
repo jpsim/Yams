@@ -232,14 +232,6 @@ extension Node: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
         self.init(value)
     }
-
-    public init(extendedGraphemeClusterLiteral value: String) {
-        self.init(value)
-    }
-
-    public init(unicodeScalarLiteral value: String) {
-        self.init(value)
-    }
 }
 
 // MARK: - internal
