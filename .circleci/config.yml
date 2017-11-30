@@ -16,6 +16,13 @@ jobs:
             ) | xcpretty -r junit
       - store_test_results:
           path: build/reports/
+      - restore_cache:
+          key: cocoapods
+      - run: pod lib lint --swift-version=3.2
+      - save_cache:
+          key: cocoapods
+          paths:
+            - ~/.cocoapods
 
   xcode_9_swift_4:
     macos:
@@ -32,6 +39,13 @@ jobs:
             ) | xcpretty -r junit
       - store_test_results:
           path: build/reports/
+      - restore_cache:
+          key: cocoapods
+      - run: pod lib lint
+      - save_cache:
+          key: cocoapods
+          paths:
+            - ~/.cocoapods
 
   xcode_9.1_swift_4.0.2:
     macos:
@@ -48,6 +62,13 @@ jobs:
             ) | xcpretty -r junit
       - store_test_results:
           path: build/reports/
+      - restore_cache:
+          key: cocoapods
+      - run: pod lib lint
+      - save_cache:
+          key: cocoapods
+          paths:
+            - ~/.cocoapods
 
   spm_swift_4:
     macos:
