@@ -110,6 +110,18 @@ jobs:
       - store_test_results:
           path: build/reports/
 
+  linux_swift_4.0.3:
+    docker:
+      - image: norionomura/swiftlint:swift-4.0.3
+    steps:
+      - checkout
+      - run: swift test
+      - run: swift test -Xswiftc -DUSE_UTF8
+      - run: mkdir -p build/reports/
+      - run: swiftlint lint --reporter junit > build/reports/junit.xml
+      - store_test_results:
+          path: build/reports/
+
 workflows:
   version: 2
   workflow:
@@ -121,3 +133,4 @@ workflows:
       - spm_swift_4.0.2
       - linux_swift_4
       - linux_swift_4.0.2
+      - linux_swift_4.0.3
