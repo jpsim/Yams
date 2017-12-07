@@ -70,6 +70,29 @@ jobs:
           paths:
             - ~/.cocoapods
 
+  xcode_9.2_swift_4.0.3:
+    macos:
+      xcode: "9.2.0"
+    steps:
+      - checkout
+      - run:
+          command: |
+            ( xcodebuild -scheme Yams test # -sdk macosx -destination arch=x86_64
+              xcodebuild -scheme Yams test OTHER_SWIFT_FLAGS=-DUSE_UTF8
+              xcodebuild -scheme Yams test -sdk iphonesimulator -destination "name=iPhone 8"
+              xcodebuild -scheme Yams test -sdk appletvsimulator -destination "name=Apple TV 4K"
+              xcodebuild -scheme Yams build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
+            ) | xcpretty -r junit
+      - store_test_results:
+          path: build/reports/
+      - restore_cache:
+          key: cocoapods
+      - run: pod lib lint
+      - save_cache:
+          key: cocoapods
+          paths:
+            - ~/.cocoapods
+
   spm_swift_4:
     macos:
       xcode: "9.0"
@@ -81,6 +104,14 @@ jobs:
   spm_swift_4.0.2:
     macos:
       xcode: "9.1.0"
+    steps:
+      - checkout
+      - run: swift test
+      - run: swift test -Xswiftc -DUSE_UTF8
+
+  spm_swift_4.0.3:
+    macos:
+      xcode: "9.2.0"
     steps:
       - checkout
       - run: swift test
@@ -129,8 +160,10 @@ workflows:
       - xcode_9_swift_3
       - xcode_9_swift_4
       - xcode_9.1_swift_4.0.2
+      - xcode_9.2_swift_4.0.3
       - spm_swift_4
       - spm_swift_4.0.2
+      - spm_swift_4.0.3
       - linux_swift_4
       - linux_swift_4.0.2
       - linux_swift_4.0.3
