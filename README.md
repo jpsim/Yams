@@ -28,6 +28,77 @@ Add `pod 'Yams'` to your `Podfile`.
 
 Add `github "jpsim/Yams"` to your `Cartfile`.
 
+## Usage
+
+### `Codable`
+```swift
+import Foundation
+import Yams
+
+struct S: Codable {
+    var p: String
+}
+
+let s: S = S(p: "test")
+let encodedYAML: String = try YAMLEncoder().encode(s)
+encodedYAML == """
+p: test
+
+"""
+let decoded: S = try YAMLDecoder().decode(S.self, from: encodedYAML)
+```
+
+### `[String: Any]`, `[Any]` or `Any`
+```swift
+// [String: Any]
+let dictionary: [String: Any] = ["key": "value"]
+let mapYAML: String = try Yams.dump(object: dictionary)
+mapYAML == """
+key: value
+
+"""
+let loadedDictionary: [String: Any]? = try Yams.load(yaml: mapYAML) as? [String: Any]
+
+// [Any]
+let array: [Int] = [1, 2, 3]
+let sequenceYAML = try Yams.dump(object: array)
+sequenceYAML == """
+- 1
+- 2
+- 3
+
+"""
+let loadedArray: [Int]? = try Yams.load(yaml: sequenceYAML) as? [Int]
+
+// Any
+let string = "string"
+let scalarYAML = try Yams.dump(object: string)
+scalarYAML == """
+string
+
+"""
+let loadedString: String? = try Yams.load(yaml: scalarYAML) as? String
+```
+
+### `Yams.Node`
+```swift
+let map: Yams.Node = [
+    "array": [
+        1, 2, 3
+    ]
+]
+let yaml = try Yams.serialize(node: map)
+yaml == """
+array:
+- 1
+- 2
+- 3
+
+"""
+let node = try Yams.compose(yaml: yaml)
+map == node
+```
+
 ## License
 
 Both Yams and libYAML are MIT licensed.
