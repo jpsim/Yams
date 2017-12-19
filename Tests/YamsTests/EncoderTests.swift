@@ -10,11 +10,10 @@ import Foundation
 import XCTest
 import Yams
 
-
 // swiftlint:disable identifier_name line_length
 
 /// Tests are copied from https://github.com/apple/swift/blob/master/test/stdlib/TestJSONEncoder.swift
-class EncoderTests: XCTestCase {
+class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
     // MARK: - Encoding Top-Level Empty Types
     func testEncodingTopLevelEmptyStruct() {
         let empty = EmptyStruct()
@@ -140,6 +139,342 @@ class EncoderTests: XCTestCase {
         _testRoundTrip(of: Data(bytes: [0xDE, 0xAD, 0xBE, 0xEF]), expectedYAML: "3q2+7w==\n")
     }
 
+    // MARK: - Key Strategy Tests
+    private struct EncodeMe: Encodable {
+        var keyName: String
+        func encode(to coder: Encoder) throws {
+            var c = coder.container(keyedBy: _TestKey.self)
+            try c.encode("test", forKey: _TestKey(stringValue: keyName)!)
+        }
+    }
+
+    func testEncodingKeyStrategySnake() {
+        let toSnakeCaseTests = [
+            ("simpleOneTwo", "simple_one_two"),
+            ("myURL", "my_url"),
+            ("singleCharacterAtEndX", "single_character_at_end_x"),
+            ("thisIsAnXMLProperty", "this_is_an_xml_property"),
+            ("single", "single"), // no underscore
+//            ("", ""), // don't die on empty string
+            ("a", "a"), // single character
+            ("aA", "a_a"), // two characters
+            ("version4Thing", "version4_thing"), // numerics
+            ("partCAPS", "part_caps"), // only insert underscore before first all caps
+            ("partCAPSLowerAGAIN", "part_caps_lower_again"), // switch back and forth caps.
+            ("manyWordsInThisThing", "many_words_in_this_thing"), // simple lowercase + underscore + more
+            ("asdfĆqer", "asdf_ćqer"),
+            ("already_snake_case", "already_snake_case"),
+            ("dataPoint22", "data_point22"),
+            ("dataPoint22Word", "data_point22_word"),
+            ("_oneTwoThree", "_one_two_three"),
+            ("oneTwoThree_", "one_two_three_"),
+            ("__oneTwoThree", "__one_two_three"),
+            ("oneTwoThree__", "one_two_three__"),
+            ("_oneTwoThree_", "_one_two_three_"),
+            ("__oneTwoThree", "__one_two_three"),
+            ("__oneTwoThree__", "__one_two_three__"),
+            ("_test", "_test"),
+            ("_test_", "_test_"),
+            ("__test", "__test"),
+            ("test__", "test__"),
+//            ("m͉̟̹y̦̳G͍͚͎̳r̤͉̤͕ͅea̲͕t͇̥̼͖U͇̝̠R͙̻̥͓̣L̥̖͎͓̪̫ͅR̩͖̩eq͈͓u̞e̱s̙t̤̺ͅ", "m͉̟̹y̦̳_g͍͚͎̳r̤͉̤͕ͅea̲͕t͇̥̼͖_u͇̝̠r͙̻̥͓̣l̥̖͎͓̪̫ͅ_r̩͖̩eq͈͓u̞e̱s̙t̤̺ͅ"), // because Itai wanted to test this
+//            ("🐧🐟", "🐧🐟") // fishy emoji example?
+        ]
+
+        for test in toSnakeCaseTests {
+            let expected = "\(test.1): test\n"
+            let encoded = EncodeMe(keyName: test.0)
+
+            let encoder = YAMLEncoder()
+            encoder.options.keyEncodingStrategy = .convertToSnakeCase
+            encoder.options.allowUnicode = true
+            do {
+                let resultString = try encoder.encode(encoded)
+                expectEqual(expected, resultString)
+            } catch {
+                XCTFail("Failed by error: \(error)")
+            }
+        }
+    }
+
+    func testEncodingKeyStrategyCustom() {
+        do {
+            let expected = "QQQhello: test\n"
+            let encoded = EncodeMe(keyName: "hello")
+
+            let encoder = YAMLEncoder()
+            let customKeyConversion = { (_ path: [CodingKey]) -> CodingKey in
+                let key = _TestKey(stringValue: "QQQ" + path.last!.stringValue)!
+                return key
+            }
+            encoder.options.keyEncodingStrategy = .custom(customKeyConversion)
+            let resultString = try encoder.encode(encoded)
+            expectEqual(expected, resultString)
+        } catch {
+            XCTFail("Failed by error: \(error)")
+        }
+    }
+
+    private struct EncodeNested: Encodable {
+        let nestedValue: EncodeMe
+    }
+
+    private struct EncodeNestedNested: Encodable {
+        let outerValue: EncodeNested
+    }
+
+    func testEncodingKeyStrategyPath() {
+        // Make sure a more complex path shows up the way we want
+        // Make sure the path reflects keys in the Swift, not the resulting ones in the YAML
+        do {
+            let expected = """
+            QQQouterValue:
+              QQQnestedValue:
+                QQQhelloWorld: test
+
+            """
+            let encoded = EncodeNestedNested(outerValue: EncodeNested(nestedValue: EncodeMe(keyName: "helloWorld")))
+
+            let encoder = YAMLEncoder()
+            var callCount = 0
+
+            let customKeyConversion = { (_ path: [CodingKey]) -> CodingKey in
+                // This should be called three times:
+                // 1. to convert 'outerValue' to something
+                // 2. to convert 'nestedValue' to something
+                // 3. to convert 'helloWorld' to something
+                callCount += 1
+
+                if path.count == 0 {
+                    expectUnreachable("The path should always have at least one entry")
+                } else if path.count == 1 {
+                    expectEqualPaths(["outerValue"].flatMap(_TestKey.init), path)
+                } else if path.count == 2 {
+                    expectEqualPaths(["outerValue", "nestedValue"].flatMap(_TestKey.init), path)
+                } else if path.count == 3 {
+                    expectEqualPaths(["outerValue", "nestedValue", "helloWorld"].flatMap(_TestKey.init), path)
+                } else {
+                    expectUnreachable("The path mysteriously had more entries")
+                }
+
+                let key = _TestKey(stringValue: "QQQ" + path.last!.stringValue)!
+                return key
+            }
+            encoder.options.keyEncodingStrategy = .custom(customKeyConversion)
+            let resultString = try encoder.encode(encoded)
+            expectEqual(expected, resultString)
+            expectEqual(3, callCount)
+        } catch {
+            XCTFail("Failed by error: \(error)")
+        }
+    }
+
+    private struct DecodeMe: Decodable {
+        let found: Bool
+        init(from coder: Decoder) throws {
+            let c = try coder.container(keyedBy: _TestKey.self)
+            // Get the key that we expect to be passed in (camel case)
+            let camelCaseKey = try c.decode(String.self, forKey: _TestKey(stringValue: "camelCaseKey")!)
+
+            // Use the camel case key to decode from the YAML. The decoder should convert it to snake case to find it.
+            found = try c.decode(Bool.self, forKey: _TestKey(stringValue: camelCaseKey)!)
+        }
+    }
+
+    func testDecodingKeyStrategyCamel() {
+        let fromSnakeCaseTests = [
+//            ("", ""), // don't die on empty string
+            ("a", "a"), // single character
+//            ("ALLCAPS", "ALLCAPS"), // If no underscores, we leave the word as-is
+//            ("ALL_CAPS", "allCaps"), // Conversion from screaming snake case
+            ("single", "single"), // do not capitalize anything with no underscore
+            ("snake_case", "snakeCase"), // capitalize a character
+            ("one_two_three", "oneTwoThree"), // more than one word
+//            ("one_2_three", "one2Three"), // numerics
+            ("one2_three", "one2Three"), // numerics, part 2
+//            ("snake_Ćase", "snakeĆase"), // do not further modify a capitalized diacritic
+            ("snake_ćase", "snakeĆase"), // capitalize a diacritic
+//            ("alreadyCamelCase", "alreadyCamelCase"), // do not modify already camel case
+            ("__this_and_that", "__thisAndThat"),
+            ("_this_and_that", "_thisAndThat"),
+//            ("this__and__that", "thisAndThat"),
+            ("this_and_that__", "thisAndThat__"),
+//            ("this_aNd_that", "thisAndThat"),
+            ("_one_two_three", "_oneTwoThree"),
+            ("one_two_three_", "oneTwoThree_"),
+            ("__one_two_three", "__oneTwoThree"),
+            ("one_two_three__", "oneTwoThree__"),
+            ("_one_two_three_", "_oneTwoThree_"),
+            ("__one_two_three", "__oneTwoThree"),
+            ("__one_two_three__", "__oneTwoThree__"),
+            ("_test", "_test"),
+            ("_test_", "_test_"),
+            ("__test", "__test"),
+            ("test__", "test__"),
+            ("_", "_"),
+            ("__", "__"),
+            ("___", "___"),
+//            ("m͉̟̹y̦̳G͍͚͎̳r̤͉̤͕ͅea̲͕t͇̥̼͖U͇̝̠R͙̻̥͓̣L̥̖͎͓̪̫ͅR̩͖̩eq͈͓u̞e̱s̙t̤̺ͅ", "m͉̟̹y̦̳G͍͚͎̳r̤͉̤͕ͅea̲͕t͇̥̼͖U͇̝̠R͙̻̥͓̣L̥̖͎͓̪̫ͅR̩͖̩eq͈͓u̞e̱s̙t̤̺ͅ"), // because Itai wanted to test this
+//            ("🐧_🐟", "🐧🐟") // fishy emoji example?
+        ]
+
+        for test in fromSnakeCaseTests {
+            // This YAML contains the camel case key that the test object should decode with, then it uses the snake case key (test.0) as the actual key for the boolean value.
+            let input = "camel_case_key: \(test.1)\n\(test.0): true\n"
+
+            let decoder = YAMLDecoder()
+            decoder.options.keyDecodingStrategy = .convertFromSnakeCase
+
+            do {
+                let result = try decoder.decode(DecodeMe.self, from: input)
+                expectTrue(result.found)
+            } catch {
+                XCTFail("Failed by error: \(error)")
+            }
+        }
+    }
+
+    private struct DecodeMe2: Decodable { var hello: String }
+
+    func testDecodingKeyStrategyCustom() {
+        do {
+            let input = "----hello: test\n"
+            let decoder = YAMLDecoder()
+            let customKeyConversion = { (_ path: [CodingKey]) -> CodingKey in
+                // This converter removes the first 4 characters from the start of all string keys, if it has more than 4 characters
+                let string = path.last!.stringValue
+                guard string.count > 4 else { return path.last! }
+                let newString = string[string.index(string.startIndex, offsetBy: 4, limitedBy: string.endIndex)!...]
+                return _TestKey(stringValue: String(newString))!
+            }
+            decoder.options.keyDecodingStrategy = .custom(customKeyConversion)
+            let result = try decoder.decode(DecodeMe2.self, from: input)
+            expectEqual("test", result.hello)
+        } catch {
+            XCTFail("Failed by error: \(error)")
+        }
+
+    }
+
+    private struct DecodeMe3: Codable {
+        var thisIsCamelCase: String
+    }
+
+    func testEncodingKeyStrategySnakeGenerated() {
+        // Test that this works with a struct that has automatically generated keys
+        do {
+            let input = "{\"this_is_camel_case\":\"test\"}"
+            let decoder = YAMLDecoder()
+            decoder.options.keyDecodingStrategy = .convertFromSnakeCase
+            let result = try decoder.decode(DecodeMe3.self, from: input)
+            expectEqual("test", result.thisIsCamelCase)
+        } catch {
+            XCTFail("Failed by error: \(error)")
+        }
+    }
+
+    func testDecodingKeyStrategyCamelGenerated() {
+        do {
+            let encoded = DecodeMe3(thisIsCamelCase: "test")
+            let encoder = YAMLEncoder()
+            encoder.options.keyEncodingStrategy = .convertToSnakeCase
+            let resultString = try encoder.encode(encoded)
+            expectEqual("this_is_camel_case: test\n", resultString)
+        } catch {
+            XCTFail("Failed by error: \(error)")
+        }
+
+    }
+
+    private struct DecodeMe4: Codable {
+        var thisIsCamelCase: String
+        var thisIsCamelCaseToo: String
+        private enum CodingKeys: String, CodingKey { // swiftlint:disable:this nesting
+            case thisIsCamelCase = "fooBar"
+            case thisIsCamelCaseToo
+        }
+    }
+    func testKeyStrategySnakeGeneratedAndCustom() {
+        // Test that this works with a struct that has automatically generated keys
+        do {
+            // Decoding
+            let input = "foo_bar: test\nthis_is_camel_case_too: test2\n"
+            let decoder = YAMLDecoder()
+            decoder.options.keyDecodingStrategy = .convertFromSnakeCase
+            let decodingResult = try decoder.decode(DecodeMe4.self, from: input)
+
+            expectEqual("test", decodingResult.thisIsCamelCase)
+            expectEqual("test2", decodingResult.thisIsCamelCaseToo)
+
+            // Encoding
+            let encoded = DecodeMe4(thisIsCamelCase: "test", thisIsCamelCaseToo: "test2")
+            let encoder = YAMLEncoder()
+            encoder.options.keyEncodingStrategy = .convertToSnakeCase
+            let encodingResultString = try encoder.encode(encoded)
+            expectEqual("foo_bar: test\nthis_is_camel_case_too: test2\n", encodingResultString)
+        } catch {
+            XCTFail("Failed by error: \(error)")
+        }
+    }
+
+    private struct DecodeMe5: Codable {
+        var oneTwo: String
+        var numberOfKeys: Int
+
+        enum CodingKeys: String, CodingKey { // swiftlint:disable:this nesting
+            case oneTwo
+            case oneTwoThree
+        }
+
+        init() {
+            oneTwo = "test"
+            numberOfKeys = 0
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            oneTwo = try container.decode(String.self, forKey: .oneTwo)
+            numberOfKeys = container.allKeys.count
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(oneTwo, forKey: .oneTwo)
+            try container.encode("test2", forKey: .oneTwoThree)
+        }
+    }
+
+    func testKeyStrategyDuplicateKeys() {
+        // This test is mostly to make sure we don't assert on duplicate keys
+        do {
+            let customKeyConversion = { (_ path: [CodingKey]) -> CodingKey in
+                // All keys are the same!
+                return _TestKey(stringValue: "oneTwo")!
+            }
+
+            // Decoding
+            // This input has a dictionary with two keys, but only one will end up in the container
+            let input = "\"unused key 1\": test1\n\"unused key 2\": test2\n"
+            let decoder = YAMLDecoder()
+            decoder.options.keyDecodingStrategy = .custom(customKeyConversion)
+
+            let decodingResult = try decoder.decode(DecodeMe5.self, from: input)
+            // There will be only one result for oneTwo (the second one in the json)
+            expectEqual(1, decodingResult.numberOfKeys)
+
+            // Encoding
+            let encoded = DecodeMe5()
+            let encoder = YAMLEncoder()
+            encoder.options.keyEncodingStrategy = .custom(customKeyConversion)
+            let decodingResultString = try encoder.encode(encoded)
+
+            // There will be only one value in the result (the second one encoded)
+            expectEqual("{\"oneTwo\":\"test2\"}", decodingResultString)
+        } catch {
+            XCTFail("Failed by error: \(error)")
+        }
+    }
+
     // MARK: - Encoder Features
     func testNestedContainerCodingPaths() {
         _testRoundTrip(of: NestedContainersTestType())
@@ -236,7 +571,7 @@ class EncoderTests: XCTestCase {
     // MARK: - Helper Functions
     private func _testEncodeFailure<T: Encodable>(of value: T) {
         do {
-            _ = try JSONEncoder().encode(value)
+            _ = try YAMLEncoder().encode(value)
             expectUnreachable("Encode of top-level \(T.self) was expected to fail.")
         } catch {}
     }
@@ -289,7 +624,7 @@ public func expectUnreachable(
 func expectEqualPaths(
     _ lhs: [CodingKey],
     _ rhs: [CodingKey],
-    _ prefix: String,
+    _ prefix: String = "",
     file: StaticString = #file, line: UInt = #line) {
     if lhs.count != rhs.count {
         expectUnreachable("\(prefix) [CodingKey].count mismatch: \(lhs.count) != \(rhs.count)", file: file, line: line)
@@ -314,6 +649,14 @@ func expectEqualPaths(
 
         expectEqual(key1.stringValue, key2.stringValue, "\(prefix) CodingKey.stringValue mismatch: \(type(of: key1))('\(key1.stringValue)') != \(type(of: key2))('\(key2.stringValue)')", file: file, line: line)
     }
+}
+
+func expectTrue(
+    _ expression: @autoclosure () throws -> Bool,
+    _ message: @autoclosure () -> String = "",
+    file: StaticString = #file, line: UInt = #line
+    ) {
+    XCTAssertTrue(expression, message, file: file, line: line)
 }
 
 // MARK: - Empty Types
@@ -994,6 +1337,15 @@ extension EncoderTests {
             ("testEncodingDate", testEncodingDate),
             ("testEncodingDateMillisecondsSince1970", testEncodingDateMillisecondsSince1970),
             ("testEncodingBase64Data", testEncodingBase64Data),
+            ("testEncodingKeyStrategySnake", testEncodingKeyStrategySnake),
+            ("testEncodingKeyStrategyCustom", testEncodingKeyStrategyCustom),
+            ("testEncodingKeyStrategyPath", testEncodingKeyStrategyPath),
+            ("testDecodingKeyStrategyCamel", testDecodingKeyStrategyCamel),
+            ("testDecodingKeyStrategyCustom", testDecodingKeyStrategyCustom),
+            ("testEncodingKeyStrategySnakeGenerated", testEncodingKeyStrategySnakeGenerated),
+            ("testDecodingKeyStrategyCamelGenerated", testDecodingKeyStrategyCamelGenerated),
+            ("testKeyStrategySnakeGeneratedAndCustom", testKeyStrategySnakeGeneratedAndCustom),
+            ("testKeyStrategyDuplicateKeys", testKeyStrategyDuplicateKeys),
             ("testNestedContainerCodingPaths", testNestedContainerCodingPaths),
             ("testSuperEncoderCodingPaths", testSuperEncoderCodingPaths),
             ("testInterceptDecimal", testInterceptDecimal),
@@ -1004,5 +1356,4 @@ extension EncoderTests {
         ]
     }
 }
-
 // swiftlint:disable:this file_length

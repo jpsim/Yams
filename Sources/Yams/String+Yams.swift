@@ -91,4 +91,30 @@ extension String {
             return self + "\n"
         }
     }
+
+    /// Returns snake cased string
+    /// - example: "myURLProperty".snakecased() == "my_url_property"
+    var snakecased: String {
+        guard !isEmpty else { return self }
+        var words = [Range<Index>](), wordStart = startIndex, searchStart = startIndex
+        while let upperCaseRange = rangeOfCharacter(from: .uppercaseLetters, range: searchStart..<endIndex) {
+            if upperCaseRange.lowerBound != startIndex {
+                words.append(wordStart..<upperCaseRange.lowerBound)
+            }
+            guard let lowerCaseRange = rangeOfCharacter(from: .lowercaseLetters,
+                                                        range: upperCaseRange.upperBound..<endIndex) else {
+                                                            wordStart = upperCaseRange.lowerBound
+                                                            break
+            }
+            if upperCaseRange.upperBound == lowerCaseRange.lowerBound {
+                wordStart = upperCaseRange.lowerBound
+            } else {
+                wordStart = index(before: lowerCaseRange.lowerBound)
+                words.append(upperCaseRange.lowerBound..<wordStart)
+            }
+            searchStart = lowerCaseRange.upperBound
+        }
+        words.append(wordStart..<endIndex)
+        return words.map({ self[$0] }).joined(separator: "_").lowercased()
+    }
 }

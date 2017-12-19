@@ -9,13 +9,14 @@
 import Foundation
 
 public class YAMLDecoder {
+    public var options = Options()
     public init() {}
     public func decode<T>(_ type: T.Type = T.self,
                           from yaml: String,
                           userInfo: [CodingUserInfoKey: Any] = [:]) throws -> T where T: Swift.Decodable {
         do {
             let node = try Yams.compose(yaml: yaml, .basic) ?? ""
-            let decoder = _Decoder(referencing: node, userInfo: userInfo)
+            let decoder = _Decoder(referencing: node, options: options, userInfo: userInfo)
             let container = try decoder.singleValueContainer()
             return try container.decode(T.self)
         } catch let error as DecodingError {
@@ -26,14 +27,39 @@ public class YAMLDecoder {
                                                     underlyingError: error))
         }
     }
+
+    public struct Options {
+        /// The strategy to use for decoding keys. Defaults to `.useDefaultKeys`.
+        public var keyDecodingStrategy: KeyDecodingStrategy = .useDefaultKeys
+    }
+
+    /// The strategy to use for automatically changing the value of keys before decoding.
+    public enum KeyDecodingStrategy {
+        /// Use the keys specified by each type. This is the default strategy.
+        case useDefaultKeys
+
+        /// Convert from "snake_case_keys" to "camelCaseKeys" before attempting to match a key with the one specified
+        /// by each type.
+        case convertFromSnakeCase
+
+        /// Provide a custom conversion from the key in the encoded JSON to the keys specified by the decoded types.
+        /// The full path to the current decoding position is provided for context (in case you need to locate this
+        /// key within the payload). The returned key is used in place of the last component in the coding path before
+        /// decoding.
+        /// If the result of the conversion is a duplicate key, then only one value will be present in the container
+        /// for the type to decode from.
+        case custom((_ codingPath: [CodingKey]) -> CodingKey)
+    }
 }
 
 struct _Decoder: Decoder { // swiftlint:disable:this type_name
-
     fileprivate let node: Node
+    typealias Options = YAMLDecoder.Options
+    var options: Options
 
-    init(referencing node: Node, userInfo: [CodingUserInfoKey: Any], codingPath: [CodingKey] = []) {
+    init(referencing node: Node, options: Options, userInfo: [CodingUserInfoKey: Any], codingPath: [CodingKey] = []) {
         self.node = node
+        self.options = options
         self.userInfo = userInfo
         self.codingPath = codingPath
     }
@@ -69,9 +95,19 @@ struct _Decoder: Decoder { // swiftlint:disable:this type_name
         return constructed
     }
 
+
+    /// Returns `String` applied `KeyDecodingStrategy`
+    fileprivate func convert(_ key: CodingKey) -> String {
+        switch options.keyDecodingStrategy {
+        case .useDefaultKeys: return key.stringValue
+        case .convertFromSnakeCase: return key.stringValue.snakecased
+        case let .custom(converter): return converter(codingPath + [key]).stringValue
+        }
+    }
+
     /// create a new `_Decoder` instance referencing `node` as `key` inheriting `userInfo`
     fileprivate func decoder(referencing node: Node, `as` key: CodingKey) -> _Decoder {
-        return .init(referencing: node, userInfo: userInfo, codingPath: codingPath + [key])
+        return .init(referencing: node, options: options, userInfo: userInfo, codingPath: codingPath + [key])
     }
 }
 
@@ -92,7 +128,7 @@ struct _KeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
 
     var codingPath: [CodingKey] { return decoder.codingPath }
     var allKeys: [Key] { return mapping.keys.flatMap { $0.string.flatMap(Key.init(stringValue:)) } }
-    func contains(_ key: Key) -> Bool { return mapping[key.stringValue] != nil }
+    func contains(_ key: Key) -> Bool { return mapping[decoder.convert(key)] != nil }
 
     func decodeNil(forKey key: Key) throws -> Bool {
         return try node(for: key) == Node("null", Tag(.null))
@@ -132,8 +168,9 @@ struct _KeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
     // MARK: -
 
     private func node(for key: CodingKey) throws -> Node {
-        guard let node = mapping[key.stringValue] else {
-            throw _keyNotFound(at: codingPath, key, "No value associated with key \(key) (\"\(key.stringValue)\").")
+        let convertedKey = decoder.convert(key)
+        guard let node = mapping[convertedKey] else {
+            throw _keyNotFound(at: codingPath, key, "No value associated with key \(key) (\"\(convertedKey)\").")
         }
         return node
     }

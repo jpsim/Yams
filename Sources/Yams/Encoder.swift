@@ -9,15 +9,14 @@
 import Foundation
 
 public class YAMLEncoder {
-    public typealias Options = Emitter.Options
     public var options = Options()
     public init() {}
     public func encode<T: Swift.Encodable>(_ value: T, userInfo: [CodingUserInfoKey: Any] = [:]) throws -> String {
         do {
-            let encoder = _Encoder(userInfo: userInfo)
+            let encoder = _Encoder(options: options, userInfo: userInfo)
             var container = encoder.singleValueContainer()
             try container.encode(value)
-            return try serialize(node: encoder.node, options: options)
+            return try serialize(node: encoder.node, options: options.emitterOptions)
         } catch let error as EncodingError {
             throw error
         } catch {
@@ -28,12 +27,78 @@ public class YAMLEncoder {
             throw EncodingError.invalidValue(value, context)
         }
     }
+
+    public struct Options {
+        /// Set if the output should be in the "canonical" format as in the YAML specification.
+        public var canonical: Bool = false
+        /// Set the intendation increment.
+        public var indent: Int = 0
+        /// Set the preferred line width. -1 means unlimited.
+        public var width: Int = 0
+        /// Set if unescaped non-ASCII characters are allowed.
+        public var allowUnicode: Bool = false
+        /// Set the preferred line break.
+        public var lineBreak: Emitter.LineBreak = .ln
+
+        // internal since we don't know if these should be exposed.
+        var explicitStart: Bool = false
+        var explicitEnd: Bool = false
+
+        /// The %YAML directive value or nil
+        public var version: (major: Int, minor: Int)?
+
+        /// Set if emitter should sort keys in lexicographic order.
+        public var sortKeys: Bool = false
+
+        /// The strategy to use for encoding keys. Defaults to `.useDefaultKeys`.
+        public var keyEncodingStrategy: KeyEncodingStrategy = .useDefaultKeys
+
+        fileprivate var emitterOptions: Emitter.Options {
+            return .init(canonical: canonical, indent: indent, width: width, allowUnicode: allowUnicode,
+                         lineBreak: lineBreak, version: version, sortKeys: sortKeys)
+        }
+    }
+
+    /// The strategy to use for automatically changing the value of keys before encoding.
+    public enum KeyEncodingStrategy {
+        /// Use the keys specified by each type. This is the default strategy.
+        case useDefaultKeys
+
+        /// Convert from "camelCaseKeys" to "snake_case_keys" before writing a key to YAML payload.
+        case convertToSnakeCase
+
+        /// Provide a custom conversion to the key in the encoded YAML from the keys specified by the encoded types.
+        /// The full path to the current encoding position is provided for context (in case you need to locate this
+        /// key within the payload). The returned key is used in place of the last component in the coding path before
+        /// encoding.
+        /// If the result of the conversion is a duplicate key, then only one value will be present in the result.
+        case custom((_ codingPath: [CodingKey]) -> CodingKey)
+    }
+}
+
+extension YAMLEncoder.Options {
+    // initializer without exposing internal properties
+    public init(canonical: Bool = false, indent: Int = 0, width: Int = 0, allowUnicode: Bool = false,
+                lineBreak: Emitter.LineBreak = .ln, version: (major: Int, minor: Int)? = nil, sortKeys: Bool = false,
+                keyEncodingStrategy: YAMLEncoder.KeyEncodingStrategy = .useDefaultKeys) {
+        self.canonical = canonical
+        self.indent = indent
+        self.width = width
+        self.allowUnicode = allowUnicode
+        self.lineBreak = lineBreak
+        self.version = version
+        self.sortKeys = sortKeys
+        self.keyEncodingStrategy = keyEncodingStrategy
+    }
 }
 
 class _Encoder: Swift.Encoder { // swiftlint:disable:this type_name
     var node: Node = .unused
+    typealias Options = YAMLEncoder.Options
+    let options: Options
 
-    init(userInfo: [CodingUserInfoKey: Any] = [:], codingPath: [CodingKey] = []) {
+    init(options: Options, userInfo: [CodingUserInfoKey: Any] = [:], codingPath: [CodingKey] = []) {
+        self.options = options
         self.userInfo = userInfo
         self.codingPath = codingPath
     }
@@ -116,6 +181,15 @@ class _Encoder: Swift.Encoder { // swiftlint:disable:this type_name
     }
 
     fileprivate var canEncodeNewValue: Bool { return node == .unused }
+
+    /// Returns `String` applied `KeyEncodingStrategy`
+    fileprivate func convert(_ key: CodingKey) -> String {
+        switch options.keyEncodingStrategy {
+        case .useDefaultKeys: return key.stringValue
+        case .convertToSnakeCase: return key.stringValue.snakecased
+        case let .custom(converter): return converter(codingPath + [key]).stringValue
+        }
+    }
 }
 
 class _ReferencingEncoder: _Encoder { // swiftlint:disable:this type_name
@@ -126,14 +200,16 @@ class _ReferencingEncoder: _Encoder { // swiftlint:disable:this type_name
 
     fileprivate init(referencing encoder: _Encoder, key: CodingKey) {
         self.encoder = encoder
-        reference = .mapping(key.stringValue)
-        super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [key])
+        reference = .mapping(encoder.convert(key))
+        super.init(options: encoder.options, userInfo: encoder.userInfo, codingPath: encoder.codingPath + [key])
     }
 
     fileprivate init(referencing encoder: _Encoder, at index: Int) {
         self.encoder = encoder
         reference = .sequence(index)
-        super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [_YAMLCodingKey(index: index)])
+        super.init(options: encoder.options,
+                   userInfo: encoder.userInfo,
+                   codingPath: encoder.codingPath + [_YAMLCodingKey(index: index)])
     }
 
     deinit {
@@ -158,7 +234,7 @@ struct _KeyedEncodingContainer<K: CodingKey> : KeyedEncodingContainerProtocol { 
     // MARK: - Swift.KeyedEncodingContainerProtocol Methods
 
     var codingPath: [CodingKey] { return encoder.codingPath }
-    func encodeNil(forKey key: Key)               throws { encoder.mapping[key.stringValue] = .null }
+    func encodeNil(forKey key: Key)               throws { encoder.mapping[encoder.convert(key)] = .null }
     func encode(_ value: Bool, forKey key: Key)   throws { try encoder(for: key).represent(value) }
     func encode(_ value: Int, forKey key: Key)    throws { try encoder(for: key).represent(value) }
     func encode(_ value: Int8, forKey key: Key)   throws { try encoder(for: key).represent(value) }
@@ -172,7 +248,7 @@ struct _KeyedEncodingContainer<K: CodingKey> : KeyedEncodingContainerProtocol { 
     func encode(_ value: UInt64, forKey key: Key) throws { try encoder(for: key).represent(value) }
     func encode(_ value: Float, forKey key: Key)  throws { try encoder(for: key).represent(value) }
     func encode(_ value: Double, forKey key: Key) throws { try encoder(for: key).represent(value) }
-    func encode(_ value: String, forKey key: Key) throws { encoder.mapping[key.stringValue] = Node(value) }
+    func encode(_ value: String, forKey key: Key) throws { encoder.mapping[encoder.convert(key)] = Node(value) }
     func encode<T>(_ value: T, forKey key: Key)   throws where T: Encodable { try encoder(for: key).encode(value) }
 
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type,
@@ -339,3 +415,4 @@ private func serialize(node: Node, options: Emitter.Options) throws -> String {
         version: options.version,
         sortKeys: options.sortKeys)
 }
+// swiftlint:disable:this file_length
