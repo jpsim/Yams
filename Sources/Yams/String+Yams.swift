@@ -78,4 +78,42 @@ extension String {
             return self + "\n"
         }
     }
+
+    /// Returns snake cased string
+    ///
+    /// Capital characters are determined by testing membership in `CharacterSet.uppercaseLetters` and
+    /// `CharacterSet.lowercaseLetters` (Unicode General Categories Lu and Lt).
+    /// The conversion to lower case uses `Locale.system`, also known as the ICU "root" locale. This means the result is
+    /// consistent regardless of the current user's locale and language preferences.
+    ///
+    /// Converting from camel case to snake case:
+    /// 1. Splits words at the boundary of lower-case to upper-case
+    /// 2. Inserts `_` between words
+    /// 3. Lowercases the entire string
+    /// 4. Preserves starting and ending `_`.
+    ///
+    /// For example, `oneTwoThree` becomes `one_two_three`. `_oneTwoThree_` becomes `_one_two_three_`.
+    var snakecased: String {
+        guard !isEmpty else { return self }
+        var words = [Range<Index>](), wordStart = startIndex, searchStart = startIndex
+        while let upperCaseRange = rangeOfCharacter(from: .uppercaseLetters, range: searchStart..<endIndex) {
+            if upperCaseRange.lowerBound != startIndex {
+                words.append(wordStart..<upperCaseRange.lowerBound)
+            }
+            guard let lowerCaseRange = rangeOfCharacter(from: .lowercaseLetters,
+                                                        range: upperCaseRange.upperBound..<endIndex) else {
+                                                            wordStart = upperCaseRange.lowerBound
+                                                            break
+            }
+            if upperCaseRange.upperBound == lowerCaseRange.lowerBound {
+                wordStart = upperCaseRange.lowerBound
+            } else {
+                wordStart = index(before: lowerCaseRange.lowerBound)
+                words.append(upperCaseRange.lowerBound..<wordStart)
+            }
+            searchStart = lowerCaseRange.upperBound
+        }
+        words.append(wordStart..<endIndex)
+        return words.map({ self[$0] }).joined(separator: "_").lowercased()
+    }
 }
