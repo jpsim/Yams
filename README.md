@@ -30,7 +30,24 @@ Add `github "jpsim/Yams"` to your `Cartfile`.
 
 ## Usage
 
-### `Codable`
+Each of input / output YAML APIs can be classified into three, depending on the model types to be handled.
+
+### Model types:
+- `Codable` types
+  - Serialization method introduced in Swift 4. It will be easy to have compatibility with serialization other than YAML.
+  - The amount of computation will be kept equivalent to `Yams.Node`.
+- Swift Standard Library types
+  - The type of Swift Standard Library is inferred from the contents of `Yams.Node` by matching regular expression.
+  - The type inference of all objects is done at YAML input time, so the amount of calculation is the largest.
+  - It may be easier to use in such a way as to handle objects created from `JSONSerialization`.
+- `Yams.Node`  
+  - Yams' native model representing [Nodes of YAML](http://www.yaml.org/spec/1.2/spec.html#id2764044) which provides all functions such as detection and customization of YAML format.
+  - Depending on how it is used, the amount of computation can be minimized.
+
+### Examples by Model Types
+#### `Codable` types
+- `YAMLEncoder.encode(_:)` Produces a YAML `String` from an instance of type conforming `Encodable`.
+- `YAMLDecoder.decode(_:from:)`: Decodes an instance of type conforming `Decodable` from YAML.
 ```swift
 import Foundation
 import Yams
@@ -48,7 +65,9 @@ p: test
 let decoded: S = try YAMLDecoder().decode(S.self, from: encodedYAML)
 ```
 
-### `[String: Any]`, `[Any]` or `Any`
+#### Swift Standard Library types
+- `Yams.load(yaml:)`: Produces an instance of Swift Standard Library types as `Any` from YAML `String`. Since Yams infer the type of each object by matching the regular expression to the contents of all instances, it is the slowest method on reading YAML.
+- `Yams.dump(object:)`: Produces a YAML `String` from an instance of Swift Standard Library types.
 ```swift
 // [String: Any]
 let dictionary: [String: Any] = ["key": "value"]
@@ -61,7 +80,7 @@ let loadedDictionary: [String: Any]? = try Yams.load(yaml: mapYAML) as? [String:
 
 // [Any]
 let array: [Int] = [1, 2, 3]
-let sequenceYAML = try Yams.dump(object: array)
+let sequenceYAML: String = try Yams.dump(object: array)
 sequenceYAML == """
 - 1
 - 2
@@ -72,7 +91,7 @@ let loadedArray: [Int]? = try Yams.load(yaml: sequenceYAML) as? [Int]
 
 // Any
 let string = "string"
-let scalarYAML = try Yams.dump(object: string)
+let scalarYAML: String = try Yams.dump(object: string)
 scalarYAML == """
 string
 
@@ -80,19 +99,20 @@ string
 let loadedString: String? = try Yams.load(yaml: scalarYAML) as? String
 ```
 
-### `Yams.Node`
+#### `Yams.Node`
+- `Yams.compose(yaml:)`: Produces an instance of `Node` from YAML `String`.
+- `Yams.serialize(node:)`: Produces a YAML `String` from an instance of `Node`.
 ```swift
-let map: Yams.Node = [
+var map: Yams.Node = [
     "array": [
         1, 2, 3
     ]
 ]
+map.mapping?.style = .flow
+map["array"]?.sequence?.style = .flow
 let yaml = try Yams.serialize(node: map)
 yaml == """
-array:
-- 1
-- 2
-- 3
+{array: [1, 2, 3]}
 
 """
 let node = try Yams.compose(yaml: yaml)
