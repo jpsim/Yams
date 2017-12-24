@@ -1,157 +1,98 @@
+aliases:
+  - &steps-for-xcode-9
+    - checkout
+    - run: |
+        ( export XCODE_FLAGS="-scheme Yams SWIFT_VERSION=${SWIFT_VERSION}"
+          xcodebuild ${XCODE_FLAGS} test # -sdk macosx -destination arch=x86_64
+          xcodebuild ${XCODE_FLAGS} test OTHER_SWIFT_FLAGS=-DUSE_UTF8
+          xcodebuild ${XCODE_FLAGS} test -sdk iphonesimulator -destination "name=iPhone 8"
+          xcodebuild ${XCODE_FLAGS} test -sdk appletvsimulator -destination "name=Apple TV 4K"
+          xcodebuild ${XCODE_FLAGS} build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
+        ) | xcpretty -r junit
+    - store_test_results:
+        path: build/reports/
+    - restore_cache:
+        key: cocoapods
+    - run: pod lib lint --swift-version=${SWIFT_VERSION}
+    - save_cache: 
+        key: cocoapods
+        paths:
+          - ~/.cocoapods
+
+  - &steps-for-spm
+    - checkout
+    - run: swift test
+    - run: swift test -Xswiftc -DUSE_UTF8
+
+  - &steps-for-linux
+    - checkout
+    - run: swift test
+    - run: swift test -Xswiftc -DUSE_UTF8
+    - run: mkdir -p build/reports/
+    - run: swiftlint lint --reporter junit > build/reports/junit.xml
+    - store_test_results:
+        path: build/reports/
+
 version: 2
 jobs:
 
   xcode_9_swift_3:
     macos:
       xcode: "9.0"
-    steps:
-      - checkout
-      - run:
-          command: |
-            ( xcodebuild -scheme Yams test SWIFT_VERSION=3.2 # -sdk macosx -destination arch=x86_64
-              xcodebuild -scheme Yams test SWIFT_VERSION=3.2 OTHER_SWIFT_FLAGS=-DUSE_UTF8
-              xcodebuild -scheme Yams test SWIFT_VERSION=3.2 -sdk iphonesimulator -destination "name=iPhone 8"
-              xcodebuild -scheme Yams test SWIFT_VERSION=3.2 -sdk appletvsimulator -destination "name=Apple TV 4K"
-              xcodebuild -scheme Yams build SWIFT_VERSION=3.2 -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
-            ) | xcpretty -r junit
-      - store_test_results:
-          path: build/reports/
-      - restore_cache:
-          key: cocoapods
-      - run: pod lib lint --swift-version=3.2
-      - save_cache:
-          key: cocoapods
-          paths:
-            - ~/.cocoapods
+    environment:
+      - SWIFT_VERSION: 3.2
+    steps: *steps-for-xcode-9
 
   xcode_9_swift_4:
     macos:
       xcode: "9.0"
-    steps:
-      - checkout
-      - run:
-          command: |
-            ( xcodebuild -scheme Yams test # -sdk macosx -destination arch=x86_64
-              xcodebuild -scheme Yams test OTHER_SWIFT_FLAGS=-DUSE_UTF8
-              xcodebuild -scheme Yams test -sdk iphonesimulator -destination "name=iPhone 8"
-              xcodebuild -scheme Yams test -sdk appletvsimulator -destination "name=Apple TV 4K"
-              xcodebuild -scheme Yams build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
-            ) | xcpretty -r junit
-      - store_test_results:
-          path: build/reports/
-      - restore_cache:
-          key: cocoapods
-      - run: pod lib lint
-      - save_cache:
-          key: cocoapods
-          paths:
-            - ~/.cocoapods
+    environment:
+      - SWIFT_VERSION: 4.0
+    steps: *steps-for-xcode-9
 
   xcode_9.1_swift_4.0.2:
     macos:
       xcode: "9.1.0"
-    steps:
-      - checkout
-      - run:
-          command: |
-            ( xcodebuild -scheme Yams test # -sdk macosx -destination arch=x86_64
-              xcodebuild -scheme Yams test OTHER_SWIFT_FLAGS=-DUSE_UTF8
-              xcodebuild -scheme Yams test -sdk iphonesimulator -destination "name=iPhone 8"
-              xcodebuild -scheme Yams test -sdk appletvsimulator -destination "name=Apple TV 4K"
-              xcodebuild -scheme Yams build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
-            ) | xcpretty -r junit
-      - store_test_results:
-          path: build/reports/
-      - restore_cache:
-          key: cocoapods
-      - run: pod lib lint
-      - save_cache:
-          key: cocoapods
-          paths:
-            - ~/.cocoapods
+    environment:
+      - SWIFT_VERSION: 4.0
+    steps: *steps-for-xcode-9
 
   xcode_9.2_swift_4.0.3:
     macos:
       xcode: "9.2.0"
-    steps:
-      - checkout
-      - run:
-          command: |
-            ( xcodebuild -scheme Yams test # -sdk macosx -destination arch=x86_64
-              xcodebuild -scheme Yams test OTHER_SWIFT_FLAGS=-DUSE_UTF8
-              xcodebuild -scheme Yams test -sdk iphonesimulator -destination "name=iPhone 8"
-              xcodebuild -scheme Yams test -sdk appletvsimulator -destination "name=Apple TV 4K"
-              xcodebuild -scheme Yams build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
-            ) | xcpretty -r junit
-      - store_test_results:
-          path: build/reports/
-      - restore_cache:
-          key: cocoapods
-      - run: pod lib lint
-      - save_cache:
-          key: cocoapods
-          paths:
-            - ~/.cocoapods
+    environment:
+      - SWIFT_VERSION: 4.0
+    steps: *steps-for-xcode-9
 
   spm_swift_4:
     macos:
       xcode: "9.0"
-    steps:
-      - checkout
-      - run: swift test
-      - run: swift test -Xswiftc -DUSE_UTF8
+    steps: *steps-for-spm
 
   spm_swift_4.0.2:
     macos:
       xcode: "9.1.0"
-    steps:
-      - checkout
-      - run: swift test
-      - run: swift test -Xswiftc -DUSE_UTF8
+    steps: *steps-for-spm
 
   spm_swift_4.0.3:
     macos:
       xcode: "9.2.0"
-    steps:
-      - checkout
-      - run: swift test
-      - run: swift test -Xswiftc -DUSE_UTF8
+    steps: *steps-for-spm
 
   linux_swift_4:
     docker:
       - image: norionomura/swiftlint:swift-4.0.0
-    steps:
-      - checkout
-      - run: swift test
-      - run: swift test -Xswiftc -DUSE_UTF8
-      - run: mkdir -p build/reports/
-      - run: swiftlint lint --reporter junit > build/reports/junit.xml
-      - store_test_results:
-          path: build/reports/
+    steps: *steps-for-linux
 
   linux_swift_4.0.2:
     docker:
       - image: norionomura/swiftlint:swift-4.0.2
-    steps:
-      - checkout
-      - run: swift test
-      - run: swift test -Xswiftc -DUSE_UTF8
-      - run: mkdir -p build/reports/
-      - run: swiftlint lint --reporter junit > build/reports/junit.xml
-      - store_test_results:
-          path: build/reports/
+    steps: *steps-for-linux
 
   linux_swift_4.0.3:
     docker:
       - image: norionomura/swiftlint:swift-4.0.3
-    steps:
-      - checkout
-      - run: swift test
-      - run: swift test -Xswiftc -DUSE_UTF8
-      - run: mkdir -p build/reports/
-      - run: swiftlint lint --reporter junit > build/reports/junit.xml
-      - store_test_results:
-          path: build/reports/
+    steps: *steps-for-linux
 
 workflows:
   version: 2
