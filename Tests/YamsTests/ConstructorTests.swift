@@ -42,6 +42,8 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             "description": "The binary value above is a tiny arrow encoded as a gif image."
         ]
         YamsAssertEqual(objects, expected)
+
+        XCTAssertNil(Data.construct(from: [Node("1"), Node("2")]))
     }
 
     func testBool() throws {
@@ -67,6 +69,8 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ]
         ]
         YamsAssertEqual(objects, expected)
+
+        XCTAssertNil(Bool.construct(from: [Node("1"), Node("2")]))
     }
 
     func testFloat() throws {
@@ -89,6 +93,8 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             "not a number": Double.nan
         ]
         YamsAssertEqual(objects, expected)
+
+        XCTAssertNil(Float.construct(from: [Node("1"), Node("2")]))
     }
 
     func testInt() throws {
@@ -127,6 +133,8 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             "canonicalMax": 9223372036854775807
         ]
         YamsAssertEqual(objects, expected)
+
+        XCTAssertNil(Int.construct(from: [Node("1"), Node("2")]))
     }
 
     func testMap() throws {
@@ -237,6 +245,8 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ]
         ]
         YamsAssertEqual(objects, expected)
+
+        XCTAssertNil(NSNull.construct(from: [Node("1"), Node("2")]))
     }
 
     func testOmap() throws {
@@ -362,6 +372,8 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             "date (00:00:00Z)": timestamp( 0, 2002, 12, 14)
         ]
         YamsAssertEqual(objects, expected)
+
+        XCTAssertNil(Date.construct(from: [Node("1"), Node("2")]))
     }
 
     func testTimestampWithNanosecond() throws {
@@ -406,6 +418,32 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
 
         YamsAssertEqual(objects, expected)
     }
+
+    func testString() throws {
+        let example = """
+            one: two
+            three: four
+            """
+        let objects = try Yams.load(yaml: example)
+        let expected: [String: Any] = [
+            "one": "two",
+            "three": "four"
+        ]
+        YamsAssertEqual(objects, expected)
+
+        XCTAssertNil(String.construct(from: [Node("1"), Node("2")]))
+    }
+
+    func testDecimal() throws {
+        XCTAssertEqual(Decimal.construct(from: Node("1.2")), Decimal(string: "1.2")!)
+        XCTAssertNil(Decimal.construct(from: [Node("1"), Node("2")]))
+    }
+
+    func testURL() throws {
+        XCTAssertEqual(URL.construct(from: Node("http://www.google.com")), URL(string: "http://www.google.com")!)
+        XCTAssertEqual(URL.construct(from: Node("~/file.txt")), URL(string: "~/file.txt")!)
+        XCTAssertNil(URL.construct(from: [Node("1"), Node("2")]))
+    }
 }
 
 extension ConstructorTests {
@@ -424,7 +462,10 @@ extension ConstructorTests {
             ("testSeq", testSeq),
             ("testTimestamp", testTimestamp),
             ("testTimestampWithNanosecond", testTimestampWithNanosecond),
-            ("testValue", testValue)
+            ("testValue", testValue),
+            ("testString", testString),
+            ("testDecimal", testDecimal),
+            ("testURL", testURL)
         ]
     }
 } // swiftlint:disable:this file_length
