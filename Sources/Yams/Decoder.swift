@@ -308,14 +308,14 @@ extension UInt8: ScalarConstructible {}
 
 extension Decimal: ScalarConstructible {
     public static func construct(from node: Node) -> Decimal? {
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        return Decimal(string: node.scalar!.string)
+        guard let string = node.scalar?.string else { return nil }
+        return Decimal(string: string)
     }
 }
 
 extension URL: ScalarConstructible {
     public static func construct(from node: Node) -> URL? {
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        return URL(string: node.scalar!.string)
+        guard let string = node.scalar?.string else { return nil }
+        return URL(string: string)
     }
 }
