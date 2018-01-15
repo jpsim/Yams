@@ -33,6 +33,7 @@
 		6CF025381E9CF4380061FB47 /* Mark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF025371E9CF4380061FB47 /* Mark.swift */; };
 		6CF0253A1E9D12680061FB47 /* MarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF025391E9D12680061FB47 /* MarkTests.swift */; };
 		6CF6CE091E0E3B1000CB87D4 /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF6CE081E0E3B1000CB87D4 /* PerformanceTests.swift */; };
+		C8B2056E200D5C000036C063 /* DecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B2056D200D5C000036C063 /* DecoderTests.swift */; };
 		E8EDB8851DE2181B0062268D /* api.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* api.c */; };
 		E8EDB8871DE2181B0062268D /* emitter.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* emitter.c */; };
 		E8EDB8891DE2181B0062268D /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* parser.c */; };
@@ -84,6 +85,7 @@
 		6CF025391E9D12680061FB47 /* MarkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkTests.swift; sourceTree = "<group>"; };
 		6CF6CE071E0E3A5900CB87D4 /* Fixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fixtures; sourceTree = "<group>"; };
 		6CF6CE081E0E3B1000CB87D4 /* PerformanceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
+		C8B2056D200D5C000036C063 /* DecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecoderTests.swift; sourceTree = "<group>"; };
 		OBJ_10 /* api.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = api.c; sourceTree = "<group>"; };
 		OBJ_12 /* emitter.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = emitter.c; sourceTree = "<group>"; };
 		OBJ_14 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			children = (
 				6CF6CE071E0E3A5900CB87D4 /* Fixtures */,
 				6C0488ED1E0CBD56006F9F80 /* ConstructorTests.swift */,
+				C8B2056D200D5C000036C063 /* DecoderTests.swift */,
 				6C0A00D41E152D6200222704 /* EmitterTests.swift */,
 				6C788A001EB87232005386F0 /* EncoderTests.swift */,
 				6CF025391E9D12680061FB47 /* MarkTests.swift */,
@@ -375,6 +378,7 @@
 				6C0488EE1E0CBD56006F9F80 /* ConstructorTests.swift in Sources */,
 				OBJ_59 /* YamlErrorTests.swift in Sources */,
 				6C6834D11E0297390047B4D1 /* SpecTests.swift in Sources */,
+				C8B2056E200D5C000036C063 /* DecoderTests.swift in Sources */,
 				6C6834D51E02BC1F0047B4D1 /* ResolverTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

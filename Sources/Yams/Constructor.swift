@@ -21,7 +21,7 @@ public final class Constructor {
         }
         switch node {
         case .scalar:
-            return String._construct(from: node)
+            return String._construct(from: node)! // swiftlint:disable:this force_unwrapping
         case .mapping:
             return [AnyHashable: Any]._construct_mapping(from: node)
         case .sequence:
@@ -230,12 +230,13 @@ extension String: ScalarConstructible {
         return _construct(from: node)
     }
 
-    fileprivate static func _construct(from node: Node) -> String {
+    fileprivate static func _construct(from node: Node) -> String? {
         // This will happen while `Dictionary.flatten_mapping()` if `node.tag.name` was `.value`
         if case let .mapping(mapping) = node {
             for (key, value) in mapping where key.tag.name == .value {
                 return _construct(from: value)
             }
+            return nil
         }
         assert(node.isScalar) // swiftlint:disable:next force_unwrapping
         return node.scalar!.string
@@ -267,7 +268,9 @@ extension Dictionary {
         var dictionary = [AnyHashable: Any](minimumCapacity: mapping.count)
         mapping.forEach {
             // TODO: YAML supports keys other than str.
-            dictionary[String._construct(from: $0.key)] = node.tag.constructor.any(from: $0.value)
+            if let key = String._construct(from: $0.key) {
+                dictionary[key] = node.tag.constructor.any(from: $0.value)
+            }
         }
         return dictionary
     }
@@ -314,7 +317,10 @@ extension Set {
     public static func construct_set(from node: Node) -> Set<AnyHashable>? {
         // TODO: YAML supports Hashable elements other than str.
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
-        return Set<AnyHashable>(node.mapping!.map({ String._construct(from: $0.key) as AnyHashable }))
+        return Set<AnyHashable>(node.mapping!.flatMap({
+            guard let key = String._construct(from: $0.key) else { return nil }
+            return key as AnyHashable
+        }))
         // Explicitly declaring the generic parameter as `<AnyHashable>` above is required,
         // because this is inside extension of `Set` and Swift 3.0.2 can't infer the type without that.
     }
