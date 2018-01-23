@@ -21,7 +21,7 @@ public final class Constructor {
         }
         switch node {
         case .scalar:
-            return String._construct(from: node)
+            return String.construct(from: node)!
         case .mapping:
             return [AnyHashable: Any]._construct_mapping(from: node)
         case .sequence:
@@ -66,8 +66,8 @@ public protocol ScalarConstructible {
 
 extension Bool: ScalarConstructible {
     public static func construct(from node: Node) -> Bool? {
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        switch node.scalar!.string.lowercased() {
+        guard let string = node.scalar?.string else { return nil }
+        switch string.lowercased() {
         case "true", "yes", "on":
             return true
         case "false", "no", "off":
@@ -80,29 +80,27 @@ extension Bool: ScalarConstructible {
 
 extension Data: ScalarConstructible {
     public static func construct(from node: Node) -> Data? {
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        let data = Data(base64Encoded: node.scalar!.string, options: .ignoreUnknownCharacters)
-        return data
+        guard let string = node.scalar?.string else { return nil }
+        return Data(base64Encoded: string, options: .ignoreUnknownCharacters)
     }
 }
 
 extension Date: ScalarConstructible {
     public static func construct(from node: Node) -> Date? {
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        let scalar = node.scalar!.string
+        guard let string = node.scalar?.string else { return nil }
 
-        let range = NSRange(location: 0, length: scalar.utf16.count)
-        guard let result = timestampPattern.firstMatch(in: scalar, options: [], range: range),
+        let range = NSRange(location: 0, length: string.utf16.count)
+        guard let result = timestampPattern.firstMatch(in: string, options: [], range: range),
             result.range.location != NSNotFound else {
                 return nil
         }
         #if os(Linux) || swift(>=4.0)
             let components = (1..<result.numberOfRanges).map {
-                scalar.substring(with: result.range(at: $0))
+                string.substring(with: result.range(at: $0))
             }
         #else
             let components = (1..<result.numberOfRanges).map {
-                scalar.substring(with: result.rangeAt($0))
+                string.substring(with: result.rangeAt($0))
             }
         #endif
 
@@ -161,9 +159,8 @@ extension Float: ScalarConstructible {}
 
 extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible {
     public static func construct(from node: Node) -> Self? {
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        var scalar = node.scalar!.string
-        switch scalar {
+        guard var string = node.scalar?.string else { return nil }
+        switch string {
         case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
             return .infinity
         case "-.inf", "-.Inf", "-.INF":
@@ -171,19 +168,21 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
         case ".nan", ".NaN", ".NAN":
             return .nan
         default:
-            scalar = scalar.replacingOccurrences(of: "_", with: "")
-            if scalar.contains(":") {
-                return Self(sexagesimal: scalar)
+            string = string.replacingOccurrences(of: "_", with: "")
+            if string.contains(":") {
+                return Self(sexagesimal: string)
             }
-            return .create(from: scalar)
+            return .create(from: string)
         }
     }
 }
 
 extension FixedWidthInteger where Self: SexagesimalConvertible {
     fileprivate static func _construct(from node: Node) -> Self? {
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        let scalarWithSign = node.scalar!.string.replacingOccurrences(of: "_", with: "")
+        guard let string = node.scalar?.string else { return nil }
+        
+        let scalarWithSign = string.replacingOccurrences(of: "_", with: "")
+
         if scalarWithSign == "0" {
             return 0
         }
@@ -227,18 +226,15 @@ extension UInt: ScalarConstructible {
 
 extension String: ScalarConstructible {
     public static func construct(from node: Node) -> String? {
-        return _construct(from: node)
-    }
-
-    fileprivate static func _construct(from node: Node) -> String {
         // This will happen while `Dictionary.flatten_mapping()` if `node.tag.name` was `.value`
         if case let .mapping(mapping) = node {
             for (key, value) in mapping where key.tag.name == .value {
-                return _construct(from: value)
+                return construct(from: value)!
             }
         }
-        assert(node.isScalar) // swiftlint:disable:next force_unwrapping
-        return node.scalar!.string
+
+        guard let string = node.scalar?.string else { return nil }
+        return string
     }
 }
 
@@ -267,7 +263,7 @@ extension Dictionary {
         var dictionary = [AnyHashable: Any](minimumCapacity: mapping.count)
         mapping.forEach {
             // TODO: YAML supports keys other than str.
-            dictionary[String._construct(from: $0.key)] = node.tag.constructor.any(from: $0.value)
+            dictionary[String.construct(from: $0.key)!] = node.tag.constructor.any(from: $0.value)
         }
         return dictionary
     }
@@ -314,7 +310,7 @@ extension Set {
     public static func construct_set(from node: Node) -> Set<AnyHashable>? {
         // TODO: YAML supports Hashable elements other than str.
         assert(node.isMapping) // swiftlint:disable:next force_unwrapping
-        return Set<AnyHashable>(node.mapping!.map({ String._construct(from: $0.key) as AnyHashable }))
+        return Set<AnyHashable>(node.mapping!.map({ String.construct(from: $0.key)! as AnyHashable }))
         // Explicitly declaring the generic parameter as `<AnyHashable>` above is required,
         // because this is inside extension of `Set` and Swift 3.0.2 can't infer the type without that.
     }
