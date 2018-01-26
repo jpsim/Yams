@@ -10,7 +10,6 @@ import Foundation
 import XCTest
 import Yams
 
-
 // swiftlint:disable identifier_name line_length
 
 /// Tests are copied from https://github.com/apple/swift/blob/master/test/stdlib/TestJSONEncoder.swift

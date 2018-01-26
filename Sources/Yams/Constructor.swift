@@ -180,7 +180,7 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
 extension FixedWidthInteger where Self: SexagesimalConvertible {
     fileprivate static func _construct(from node: Node) -> Self? {
         guard let string = node.scalar?.string else { return nil }
-        
+
         let scalarWithSign = string.replacingOccurrences(of: "_", with: "")
 
         if scalarWithSign == "0" {
