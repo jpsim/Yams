@@ -287,7 +287,7 @@ extension Dictionary {
                 case let .sequence(sequence):
                     let submerge = sequence
                         .filter { $0.isMapping } // TODO: Should raise error on other than mapping
-                        .flatMap { flatten_mapping($0).mapping }
+                        .compactMap { flatten_mapping($0).mapping }
                         .reversed()
                     submerge.forEach {
                         merge.append(contentsOf: $0)
@@ -326,7 +326,7 @@ extension Array {
     public static func construct_omap(from node: Node) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
-        return node.sequence!.flatMap { subnode -> (Any, Any)? in
+        return node.sequence!.compactMap { subnode -> (Any, Any)? in
             // TODO: Should raise error if subnode is not mapping or mapping.count != 1
             guard let (key, value) = subnode.mapping?.first else { return nil }
             return (node.tag.constructor.any(from: key), node.tag.constructor.any(from: value))
@@ -336,7 +336,7 @@ extension Array {
     public static func construct_pairs(from node: Node) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
         assert(node.isSequence) // swiftlint:disable:next force_unwrapping
-        return node.sequence!.flatMap { subnode -> (Any, Any)? in
+        return node.sequence!.compactMap { subnode -> (Any, Any)? in
             // TODO: Should raise error if subnode is not mapping or mapping.count != 1
             guard let (key, value) = subnode.mapping?.first else { return nil }
             return (node.tag.constructor.any(from: key), node.tag.constructor.any(from: value))
@@ -409,7 +409,7 @@ fileprivate extension String {
         } else {
             sign = 1
         }
-        let digits = scalar.components(separatedBy: ":").flatMap(T.create).reversed()
+        let digits = scalar.components(separatedBy: ":").compactMap(T.create).reversed()
         let (_, value) = digits.reduce((1, 0) as (T, T)) { baseAndValue, digit in
             let value = baseAndValue.1 + (digit * baseAndValue.0)
             let base = baseAndValue.0 * 60
