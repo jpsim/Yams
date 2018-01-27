@@ -229,7 +229,7 @@ extension String: ScalarConstructible {
         // This will happen while `Dictionary.flatten_mapping()` if `node.tag.name` was `.value`
         if case let .mapping(mapping) = node {
             for (key, value) in mapping where key.tag.name == .value {
-                return construct(from: value)!
+                return construct(from: value)
             }
         }
 
