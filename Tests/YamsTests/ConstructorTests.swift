@@ -418,10 +418,10 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
 
         YamsAssertEqual(nodes, expected)
 
-        // "="'s value will be returned by accessing `string`
+        // value for "=" key will be returned on accessing `string`
         XCTAssertEqual(nodes[1]["link with"]?[0]?.string, "library1.dll")
         XCTAssertEqual(nodes[1]["link with"]?[1]?.string, "library2.dll")
-        // it also work as mapping
+        // it also works as mapping
         XCTAssertEqual(nodes[1]["link with"]?[0]?["="], "library1.dll")
         XCTAssertEqual(nodes[1]["link with"]?[0]?["version"], "1.2")
         XCTAssertEqual(nodes[1]["link with"]?[1]?["="], "library2.dll")
