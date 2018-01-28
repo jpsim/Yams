@@ -232,6 +232,13 @@ class EncoderTests: XCTestCase {
         ))
     }
 
+    func testDictionary() throws {
+        // https://github.com/jpsim/Yams/issues/99
+        let yaml = "'200': ok"
+        let decodedYaml = try YAMLDecoder().decode([String: String].self, from: yaml)
+        XCTAssertEqual(decodedYaml, ["200": "ok"])
+    }
+
     // MARK: - Helper Functions
     private func _testEncodeFailure<T: Encodable>(of value: T) {
         do {
@@ -999,7 +1006,8 @@ extension EncoderTests {
             ("testInterceptURL", testInterceptURL),
             ("testValuesInSingleValueContainer", testValuesInSingleValueContainer),
             ("testValuesInKeyedContainer", testValuesInKeyedContainer),
-            ("testValuesInUnkeyedContainer", testValuesInUnkeyedContainer)
+            ("testValuesInUnkeyedContainer", testValuesInUnkeyedContainer),
+            ("testDictionary", testDictionary)
         ]
     }
 }
