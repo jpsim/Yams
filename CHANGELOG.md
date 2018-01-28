@@ -1,3 +1,23 @@
+## master
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* None.
+
+##### Bug Fixes
+
+* `subscript(string:)` fails to lookup value if `Node` has non default `Resolver`.  
+  [Norio Nomura](https://github.com/norio-nomura)
+  [#100](https://github.com/jpsim/Yams/issues/100)
+
+* Removed asserts in Constructor that were stopping the YAMLDecoder from returning correct errors.  
+  [David Hart](https://github.com/hartbit)
+  [#94](https://github.com/jpsim/Yams/pull/94)
+
 ## 0.5.0
 
 ##### Breaking
