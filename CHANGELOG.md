@@ -6,7 +6,9 @@
 
 ##### Enhancements
 
-* None.
+* Improve test of "tag:yaml.org,2002:value".  
+  [Norio Nomura](https://github.com/norio-nomura)
+  [#97](https://github.com/jpsim/Yams/issues/97)
 
 ##### Bug Fixes
 
