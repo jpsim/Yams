@@ -123,6 +123,12 @@ class NodeTests: XCTestCase {
         XCTAssertEqual(mapping[Int(2)]?.string, "value3")    // Int
     }
 
+    func testSubscriptWithNonDefaultResolver() {
+        let yaml = "200: value"
+        XCTAssertEqual(try Yams.compose(yaml: yaml)?["200"]?.string, "value")
+        XCTAssertEqual(try Yams.compose(yaml: yaml, .basic)?["200"]?.string, "value")
+    }
+
     func testMappingBehavesLikeADictionary() {
         let node: Node = ["key1": "value1", "key2": "value2"]
         let mapping = node.mapping!
@@ -207,6 +213,7 @@ extension NodeTests {
             ("testArray", testArray),
             ("testSubscriptMapping", testSubscriptMapping),
             ("testSubscriptSequence", testSubscriptSequence),
+            ("testSubscriptWithNonDefaultResolver", testSubscriptWithNonDefaultResolver),
             ("testMappingBehavesLikeADictionary", testMappingBehavesLikeADictionary),
             ("testSequenceBehavesLikeAnArray", testSequenceBehavesLikeAnArray),
             ("testScalar", testScalar)

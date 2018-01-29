@@ -115,10 +115,10 @@ extension Node.Mapping {
 
     public subscript(string: String) -> Node? {
         get {
-            return self[Node(string)]
+            return self[Node(string, tag.copy(with: .implicit))]
         }
         set {
-            self[Node(string)] = newValue
+            self[Node(string, tag.copy(with: .implicit))] = newValue
         }
     }
 
