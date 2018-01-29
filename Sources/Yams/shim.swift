@@ -8,18 +8,6 @@
 
 #if (!swift(>=4.1) && swift(>=4.0)) || !swift(>=3.3)
 
-    extension Array {
-        func compactMap(_ transform: (Element) throws -> String?) rethrows -> [String] {
-            return try flatMap(transform)
-        }
-    }
-
-    extension LazyMapCollection {
-        func compactMap(_ transform: (Element) throws -> String?) rethrows -> [String] {
-            return try flatMap(transform)
-        }
-    }
-
     extension Sequence {
         func compactMap<ElementOfResult>(
             _ transform: (Self.Element
