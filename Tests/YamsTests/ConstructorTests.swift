@@ -404,8 +404,8 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
                 version: 2.3
 
             """
-        let objects = Array(try Yams.load_all(yaml: example))
-        let expected: [Any] = [
+        let nodes = Array(try Yams.compose_all(yaml: example))
+        let expected: [Node] = [
             [
                 "link with": [ "library1.dll", "library2.dll" ]
             ], [
@@ -416,7 +416,16 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             ]
         ]
 
-        YamsAssertEqual(objects, expected)
+        YamsAssertEqual(nodes, expected)
+
+        // value for "=" key will be returned on accessing `string`
+        XCTAssertEqual(nodes[1]["link with"]?[0]?.string, "library1.dll")
+        XCTAssertEqual(nodes[1]["link with"]?[1]?.string, "library2.dll")
+        // it also works as mapping
+        XCTAssertEqual(nodes[1]["link with"]?[0]?["="], "library1.dll")
+        XCTAssertEqual(nodes[1]["link with"]?[0]?["version"], "1.2")
+        XCTAssertEqual(nodes[1]["link with"]?[1]?["="], "library2.dll")
+        XCTAssertEqual(nodes[1]["link with"]?[1]?["version"], "2.3")
     }
 
     func testString() throws {
