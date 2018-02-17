@@ -2,7 +2,7 @@
 
 ##### Breaking
 
-* Some APIs are changed related to `ScalarConstructible`
+* Some APIs have changed related to `ScalarConstructible`
   * Change parameter type of `ScalarConstructible.construct(from:)` from `Node`
     to `Node.Scalar`  
   * Change `Constructor`:
