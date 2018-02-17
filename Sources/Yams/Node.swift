@@ -86,18 +86,11 @@ extension Node {
         return sequence.map(Array.init) ?? []
     }
 
-    /// Typed Array using cast: e.g. `array() as [String]`
-    ///
-    /// - Returns: Array of `Type`
-    public func array<Type: ScalarConstructible>() -> [Type] {
-        return sequence?.compactMap(Type.construct) ?? []
-    }
-
     /// Typed Array using type parameter: e.g. `array(of: String.self)`
     ///
     /// - Parameter type: Type conforms to ScalarConstructible
     /// - Returns: Array of `Type`
-    public func array<Type: ScalarConstructible>(of type: Type.Type) -> [Type] {
+    public func array<Type: ScalarConstructible>(of type: Type.Type = Type.self) -> [Type] {
         return sequence?.compactMap(Type.construct) ?? []
     }
 
