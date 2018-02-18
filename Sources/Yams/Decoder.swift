@@ -63,8 +63,9 @@ struct _Decoder: Decoder { // swiftlint:disable:this type_name
 
     /// constuct `T` from `node`
     fileprivate func construct<T: ScalarConstructible>() throws -> T {
-        guard let constructed = T.construct(from: node) else {
-            throw _typeMismatch(at: codingPath, expectation: T.self, reality: node)
+        let scalar = try self.scalar()
+        guard let constructed = T.construct(from: scalar) else {
+            throw _typeMismatch(at: codingPath, expectation: T.self, reality: scalar)
         }
         return constructed
     }
@@ -72,6 +73,18 @@ struct _Decoder: Decoder { // swiftlint:disable:this type_name
     /// create a new `_Decoder` instance referencing `node` as `key` inheriting `userInfo`
     fileprivate func decoder(referencing node: Node, `as` key: CodingKey) -> _Decoder {
         return .init(referencing: node, userInfo: userInfo, codingPath: codingPath + [key])
+    }
+
+    /// returns `Node.Scalar` or throws `DecodingError.typeMismatch`
+    fileprivate func scalar() throws -> Node.Scalar {
+        switch node {
+        case .scalar(let scalar):
+            return scalar
+        case .mapping(let mapping):
+            throw _typeMismatch(at: codingPath, expectation: Node.Scalar.self, reality: mapping)
+        case .sequence(let sequence):
+            throw _typeMismatch(at: codingPath, expectation: Node.Scalar.self, reality: sequence)
+        }
     }
 }
 
@@ -258,8 +271,9 @@ extension _Decoder: SingleValueDecodingContainer {
         guard let constructibleType = T.self as? ScalarConstructible.Type else {
             return nil
         }
-        guard let value = constructibleType.construct(from: node) else {
-            throw _valueNotFound(at: codingPath, T.self, "Expected \(T.self) value but found null instead.")
+        let scalar = try self.scalar()
+        guard let value = constructibleType.construct(from: scalar) else {
+            throw _valueNotFound(at: codingPath, T.self, "Expected \(T.self) value but found \(scalar) instead.")
         }
         return value as? T
     }
@@ -284,16 +298,14 @@ private func _typeMismatch(at codingPath: [CodingKey], expectation: Any.Type, re
 }
 
 extension FixedWidthInteger where Self: SignedInteger {
-    public static func construct(from node: Node) -> Self? {
-        guard let int = Int.construct(from: node) else { return nil }
-        return Self.init(exactly: int)
+    public static func construct(from scalar: Node.Scalar) -> Self? {
+        return Int.construct(from: scalar).flatMap(Self.init(exactly:))
     }
 }
 
 extension FixedWidthInteger where Self: UnsignedInteger {
-    public static func construct(from node: Node) -> Self? {
-        guard let int = UInt.construct(from: node) else { return nil }
-        return Self.init(exactly: int)
+    public static func construct(from scalar: Node.Scalar) -> Self? {
+        return UInt.construct(from: scalar).flatMap(Self.init(exactly:))
     }
 }
 
@@ -307,15 +319,13 @@ extension UInt64: ScalarConstructible {}
 extension UInt8: ScalarConstructible {}
 
 extension Decimal: ScalarConstructible {
-    public static func construct(from node: Node) -> Decimal? {
-        guard let string = node.scalar?.string else { return nil }
-        return Decimal(string: string)
+    public static func construct(from scalar: Node.Scalar) -> Decimal? {
+        return Decimal(string: scalar.string)
     }
 }
 
 extension URL: ScalarConstructible {
-    public static func construct(from node: Node) -> URL? {
-        guard let string = node.scalar?.string else { return nil }
-        return URL(string: string)
+    public static func construct(from scalar: Node.Scalar) -> URL? {
+        return URL(string: scalar.string)
     }
 }

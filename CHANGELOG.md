@@ -2,7 +2,17 @@
 
 ##### Breaking
 
-* None.
+* Some APIs have changed related to `ScalarConstructible`
+  * Change parameter type of `ScalarConstructible.construct(from:)` from `Node`
+    to `Node.Scalar`  
+  * Change `Constructor`:
+    * Split `Map` into `ScalarMap`, `MappingMap` and `SequenceMap`
+    * Split `defaultMap` into `defaultScalarMap`, `defaultMappingMap` and 
+      `defaultSequenceMap`
+    * Change `init(_:)` to `init(_:_:_:)`
+
+  [Norio Nomura](https://github.com/norio-nomura)
+  [#105](https://github.com/jpsim/Yams/issues/105)
 
 ##### Enhancements
 

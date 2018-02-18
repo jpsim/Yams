@@ -56,27 +56,27 @@ extension Node {
     }
 
     public var bool: Bool? {
-        return Bool.construct(from: self)
+        return scalar.flatMap(Bool.construct)
     }
 
     public var float: Double? {
-        return Double.construct(from: self)
+        return scalar.flatMap(Double.construct)
     }
 
     public var null: NSNull? {
-        return NSNull.construct(from: self)
+        return scalar.flatMap(NSNull.construct)
     }
 
     public var int: Int? {
-        return Int.construct(from: self)
+        return scalar.flatMap(Int.construct)
     }
 
     public var binary: Data? {
-        return Data.construct(from: self)
+        return scalar.flatMap(Data.construct)
     }
 
     public var timestamp: Date? {
-        return Date.construct(from: self)
+        return scalar.flatMap(Date.construct)
     }
 
     // MARK: Typed accessor methods
@@ -91,7 +91,7 @@ extension Node {
     /// - Parameter type: Type conforms to ScalarConstructible
     /// - Returns: Array of `Type`
     public func array<Type: ScalarConstructible>(of type: Type.Type = Type.self) -> [Type] {
-        return sequence?.compactMap(Type.construct) ?? []
+        return sequence?.compactMap { $0.scalar.flatMap(Type.construct) } ?? []
     }
 
     public subscript(node: Node) -> Node? {

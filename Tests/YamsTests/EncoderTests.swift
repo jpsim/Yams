@@ -239,6 +239,59 @@ class EncoderTests: XCTestCase {
         XCTAssertEqual(decodedYaml, ["200": "ok"])
     }
 
+    func testNodeTypeMismatch() throws {
+        // https://github.com/jpsim/Yams/pull/95
+        struct Sample: Decodable { // swiftlint:disable:this nesting
+            let values: [String]
+        }
+
+        let validYaml = """
+            values:
+            - hello
+            """
+        XCTAssertNoThrow(try YAMLDecoder().decode(Sample.self, from: validYaml))
+
+        let invalidYamls = [
+        // expecting scalar,
+            // but mapping instead
+            """
+            values:
+            - hello:
+            """,
+            // but sequence instead
+            """
+            values:
+            - [hello1, hello2]
+            """,
+        // expecting mapping,
+            // but scalar instead
+            """
+            hello
+            """,
+            // but sequence instead
+            """
+            - hello
+            """,
+        // expecting sequence,
+            // but scalar instead
+            """
+            values: hello
+            """,
+            // but mapping instead
+            """
+            values:
+              hello:
+            """
+        ]
+        for invalidYaml in invalidYamls {
+            XCTAssertThrowsError(try YAMLDecoder().decode(Sample.self, from: invalidYaml)) { error in
+                if case DecodingError.typeMismatch = error {} else {
+                    XCTFail("unexpected error: \(error)")
+                }
+            }
+        }
+    }
+
     // MARK: - Helper Functions
     private func _testEncodeFailure<T: Encodable>(of value: T) {
         do {
@@ -1007,7 +1060,8 @@ extension EncoderTests {
             ("testValuesInSingleValueContainer", testValuesInSingleValueContainer),
             ("testValuesInKeyedContainer", testValuesInKeyedContainer),
             ("testValuesInUnkeyedContainer", testValuesInUnkeyedContainer),
-            ("testDictionary", testDictionary)
+            ("testDictionary", testDictionary),
+            ("testNodeTypeMismatch", testNodeTypeMismatch)
         ]
     }
 }
