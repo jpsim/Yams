@@ -91,7 +91,7 @@ extension Node {
     /// - Parameter type: Type conforms to ScalarConstructible
     /// - Returns: Array of `Type`
     public func array<Type: ScalarConstructible>(of type: Type.Type = Type.self) -> [Type] {
-        return sequence?.compactMap { $0.scalar.flatMap(Type.construct) } ?? []
+        return sequence?.compactMap { $0.scalar.flatMap(type.construct) } ?? []
     }
 
     public subscript(node: Node) -> Node? {
