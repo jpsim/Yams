@@ -263,11 +263,13 @@ extension _Decoder: SingleValueDecodingContainer {
     func decode(_ type: Float.Type)  throws -> Float { return try construct(type) }
     func decode(_ type: Double.Type) throws -> Double { return try construct(type) }
     func decode(_ type: String.Type) throws -> String { return try construct(type) }
-    func decode<T>(_ type: T.Type)   throws -> T where T: Decodable { return try decode(type) ?? type.init(from: self) }
+    func decode<T>(_ type: T.Type)   throws -> T where T: Decodable {
+        return try construct(type) ?? type.init(from: self)
+    }
 
     // MARK: -
 
-    private func decode<T>(_ type: T.Type) throws -> T? {
+    private func construct<T>(_ type: T.Type) throws -> T? {
         guard let constructibleType = type as? ScalarConstructible.Type else {
             return nil
         }
