@@ -11,9 +11,17 @@ aliases:
         ) | xcpretty -r junit
     - store_test_results:
         path: build/reports/
+    - run: echo "ruby-2.3" > ~/.ruby-version
+    - restore_cache:
+        key: 1-gems-{{ checksum "Gemfile.lock" }}
+    - run: bundle check || bundle install --path vendor/bundle
+    - save_cache:
+        key: 1-gems-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
     - restore_cache:
         key: cocoapods
-    - run: pod lib lint --swift-version=${SWIFT_VERSION}
+    - run: bundle exec pod lib lint --swift-version=${SWIFT_VERSION}
     - save_cache: 
         key: cocoapods
         paths:
@@ -46,6 +54,7 @@ jobs:
       xcode: "9.0"
     environment:
       - SWIFT_VERSION: 3.2
+    shell: /bin/bash --login -eo pipefail
     steps: *steps-for-xcode-9
 
   xcode_9_swift_4:
@@ -53,6 +62,7 @@ jobs:
       xcode: "9.0"
     environment:
       - SWIFT_VERSION: 4.0
+    shell: /bin/bash --login -eo pipefail
     steps: *steps-for-xcode-9
 
   xcode_9.1_swift_4.0.2:
@@ -60,6 +70,7 @@ jobs:
       xcode: "9.1.0"
     environment:
       - SWIFT_VERSION: 4.0
+    shell: /bin/bash --login -eo pipefail
     steps: *steps-for-xcode-9
 
   xcode_9.2_swift_4.0.3:
@@ -67,6 +78,7 @@ jobs:
       xcode: "9.2.0"
     environment:
       - SWIFT_VERSION: 4.0
+    shell: /bin/bash --login -eo pipefail
     steps: *steps-for-xcode-9
 
   spm_swift_4:
