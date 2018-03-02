@@ -13,7 +13,9 @@ aliases:
         path: build/reports/
     - restore_cache:
         key: cocoapods
-    - run: pod lib lint --swift-version=${SWIFT_VERSION}
+    - run: brew install ruby
+    - run: bundle install
+    - run: bundle exec pod lib lint --swift-version=${SWIFT_VERSION}
     - save_cache: 
         key: cocoapods
         paths:
