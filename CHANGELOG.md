@@ -1,13 +1,13 @@
-## master
+## 0.6.0
 
 ##### Breaking
 
-* Some APIs have changed related to `ScalarConstructible`
+* Some APIs have changed related to `ScalarConstructible`.
   * Change parameter type of `ScalarConstructible.construct(from:)` from `Node`
-    to `Node.Scalar`  
+    to `Node.Scalar`
   * Change `Constructor`:
     * Split `Map` into `ScalarMap`, `MappingMap` and `SequenceMap`
-    * Split `defaultMap` into `defaultScalarMap`, `defaultMappingMap` and 
+    * Split `defaultMap` into `defaultScalarMap`, `defaultMappingMap` and
       `defaultSequenceMap`
     * Change `init(_:)` to `init(_:_:_:)`
 
