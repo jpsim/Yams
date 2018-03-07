@@ -294,14 +294,14 @@ class EncoderTests: XCTestCase {
 
     func testDecodingConcreteTypeParameter() {
         let encoder = YAMLEncoder()
-        guard let json = try? encoder.encode(Employee.testValue) else {
+        guard let yaml = try? encoder.encode(Employee.testValue) else {
             expectUnreachable("Unable to encode Employee.")
             return
         }
 
         let decoder = YAMLDecoder()
-        guard let decoded = try? decoder.decode(Employee.self as Person.Type, from: json) else {
-            expectUnreachable("Failed to decode Employee as Person from JSON.")
+        guard let decoded = try? decoder.decode(Employee.self as Person.Type, from: yaml) else {
+            expectUnreachable("Failed to decode Employee as Person from YAML.")
             return
         }
 
