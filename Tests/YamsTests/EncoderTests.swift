@@ -292,6 +292,22 @@ class EncoderTests: XCTestCase {
         }
     }
 
+    func testDecodingConcreteTypeParameter() {
+        let encoder = YAMLEncoder()
+        guard let yaml = try? encoder.encode(Employee.testValue) else {
+            expectUnreachable("Unable to encode Employee.")
+            return
+        }
+
+        let decoder = YAMLDecoder()
+        guard let decoded = try? decoder.decode(Employee.self as Person.Type, from: yaml) else {
+            expectUnreachable("Failed to decode Employee as Person from YAML.")
+            return
+        }
+
+        expectEqual(type(of: decoded), Employee.self, "Expected decoded value to be of type Employee; got \(type(of: decoded)) instead.")
+    }
+
     // MARK: - Helper Functions
     private func _testEncodeFailure<T: Encodable>(of value: T) {
         do {
@@ -337,6 +353,14 @@ public func expectEqual<T: Equatable>(
     file: StaticString = #file, line: UInt = #line
     ) {
     XCTAssertEqual(expected, actual, message, file: file, line: line)
+}
+
+public func expectEqual(
+    _ expected: Any.Type, _ actual: Any.Type,
+    _ message: @autoclosure () -> String = "",
+    file: StaticString = #file, line: UInt = #line
+    ) {
+    XCTAssertTrue(expected == actual, message, file: file, line: line)
 }
 
 public func expectUnreachable(
@@ -1061,7 +1085,8 @@ extension EncoderTests {
             ("testValuesInKeyedContainer", testValuesInKeyedContainer),
             ("testValuesInUnkeyedContainer", testValuesInUnkeyedContainer),
             ("testDictionary", testDictionary),
-            ("testNodeTypeMismatch", testNodeTypeMismatch)
+            ("testNodeTypeMismatch", testNodeTypeMismatch),
+            ("testDecodingConcreteTypeParameter", testDecodingConcreteTypeParameter)
         ]
     }
 }
