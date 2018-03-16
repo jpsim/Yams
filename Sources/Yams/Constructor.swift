@@ -112,15 +112,9 @@ extension Date: ScalarConstructible {
             result.range.location != NSNotFound else {
                 return nil
         }
-        #if os(Linux) || swift(>=4.0)
-            let components = (1..<result.numberOfRanges).map {
-                scalar.string.substring(with: result.range(at: $0))
-            }
-        #else
-            let components = (1..<result.numberOfRanges).map {
-                scalar.string.substring(with: result.rangeAt($0))
-            }
-        #endif
+        let components = (1..<result.numberOfRanges).map {
+            scalar.string.substring(with: result.range(at: $0))
+        }
 
         var datecomponents = DateComponents()
         datecomponents.calendar = Calendar(identifier: .gregorian)
