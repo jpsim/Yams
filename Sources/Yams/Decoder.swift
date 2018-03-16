@@ -30,7 +30,7 @@ public class YAMLDecoder {
 
 struct _Decoder: Decoder { // swiftlint:disable:this type_name
 
-    fileprivate let node: Node
+    private let node: Node
 
     init(referencing node: Node, userInfo: [CodingUserInfoKey: Any], codingPath: [CodingKey] = []) {
         self.node = node
@@ -76,7 +76,7 @@ struct _Decoder: Decoder { // swiftlint:disable:this type_name
     }
 
     /// returns `Node.Scalar` or throws `DecodingError.typeMismatch`
-    fileprivate func scalar() throws -> Node.Scalar {
+    private func scalar() throws -> Node.Scalar {
         switch node {
         case .scalar(let scalar):
             return scalar

@@ -162,8 +162,8 @@ public final class Parser {
     }
 
     // MARK: private
-    fileprivate var anchors = [String: Node]()
-    fileprivate var parser = yaml_parser_t()
+    private var anchors = [String: Node]()
+    private var parser = yaml_parser_t()
 #if USE_UTF8
     private let utf8CString: ContiguousArray<CChar>
 #else

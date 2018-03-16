@@ -104,7 +104,7 @@ class _Encoder: Swift.Encoder { // swiftlint:disable:this type_name
 
     /// Create `Node` from `ScalarRepresentable`.
     /// Errors throwed by `ScalarRepresentable` will be boxed into `EncodingError`
-    fileprivate func box(_ representable: ScalarRepresentable) throws -> Node {
+    private func box(_ representable: ScalarRepresentable) throws -> Node {
         do {
             return try representable.represented()
         } catch {
@@ -115,7 +115,7 @@ class _Encoder: Swift.Encoder { // swiftlint:disable:this type_name
         }
     }
 
-    fileprivate var canEncodeNewValue: Bool { return node == .unused }
+    private var canEncodeNewValue: Bool { return node == .unused }
 }
 
 class _ReferencingEncoder: _Encoder { // swiftlint:disable:this type_name
@@ -279,7 +279,7 @@ extension _Encoder: SingleValueEncodingContainer {
     /// Asserts that a single value can be encoded at the current coding path
     /// (i.e. that one has not already been encoded through this container).
     /// `preconditionFailure()`s if one cannot be encoded.
-    fileprivate func assertCanEncodeNewValue() {
+    private func assertCanEncodeNewValue() {
         precondition(
             canEncodeNewValue,
             "Attempt to encode value through single value container when previously value already encoded."
