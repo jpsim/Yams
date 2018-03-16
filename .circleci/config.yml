@@ -1,31 +1,35 @@
 aliases:
-  - &steps-for-xcode-9
-    - checkout
-    - run: |
-        ( export XCODE_FLAGS="-scheme Yams SWIFT_VERSION=${SWIFT_VERSION}"
-          xcodebuild ${XCODE_FLAGS} test # -sdk macosx -destination arch=x86_64
-          xcodebuild ${XCODE_FLAGS} test OTHER_SWIFT_FLAGS=-DUSE_UTF8
-          xcodebuild ${XCODE_FLAGS} test -sdk iphonesimulator -destination "name=iPhone 8"
-          xcodebuild ${XCODE_FLAGS} test -sdk appletvsimulator -destination "name=Apple TV 4K"
-          xcodebuild ${XCODE_FLAGS} build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
-        ) | xcpretty -r junit
-    - store_test_results:
-        path: build/reports/
-    - run: echo "ruby-2.3" > ~/.ruby-version
-    - restore_cache:
-        key: 1-gems-{{ checksum "Gemfile.lock" }}
-    - run: bundle check || bundle install --path vendor/bundle
-    - save_cache:
-        key: 1-gems-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
-    - restore_cache:
-        key: cocoapods
-    - run: bundle exec pod lib lint --swift-version=${SWIFT_VERSION}
-    - save_cache: 
-        key: cocoapods
-        paths:
-          - ~/.cocoapods
+  - &XCODE9
+    environment:
+      - SWIFT_VERSION: 4.0
+    shell: /bin/bash --login -eo pipefail
+    steps:
+      - checkout
+      - run: |
+          ( export XCODE_FLAGS="-scheme Yams SWIFT_VERSION=${SWIFT_VERSION}"
+            xcodebuild ${XCODE_FLAGS} test # -sdk macosx -destination arch=x86_64
+            xcodebuild ${XCODE_FLAGS} test OTHER_SWIFT_FLAGS=-DUSE_UTF8
+            xcodebuild ${XCODE_FLAGS} test -sdk iphonesimulator -destination "name=iPhone 8"
+            xcodebuild ${XCODE_FLAGS} test -sdk appletvsimulator -destination "name=Apple TV 4K"
+            xcodebuild ${XCODE_FLAGS} build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
+          ) | xcpretty -r junit
+      - store_test_results:
+          path: build/reports/
+      - run: echo "ruby-2.3" > ~/.ruby-version
+      - restore_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+      - run: bundle check || bundle install --path vendor/bundle
+      - save_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - restore_cache:
+          key: cocoapods
+      - run: bundle exec pod lib lint --swift-version=${SWIFT_VERSION}
+      - save_cache: 
+          key: cocoapods
+          paths:
+            - ~/.cocoapods
 
   - &steps-for-spm
     - checkout
@@ -54,32 +58,27 @@ jobs:
       xcode: "9.0"
     environment:
       - SWIFT_VERSION: 3.2
-    shell: /bin/bash --login -eo pipefail
-    steps: *steps-for-xcode-9
+    << : *XCODE9
 
   xcode_9_swift_4:
     macos:
       xcode: "9.0"
-    environment:
-      - SWIFT_VERSION: 4.0
-    shell: /bin/bash --login -eo pipefail
-    steps: *steps-for-xcode-9
+    << : *XCODE9
 
   xcode_9.1_swift_4.0.2:
     macos:
       xcode: "9.1.0"
-    environment:
-      - SWIFT_VERSION: 4.0
-    shell: /bin/bash --login -eo pipefail
-    steps: *steps-for-xcode-9
+    << : *XCODE9
 
   xcode_9.2_swift_4.0.3:
     macos:
       xcode: "9.2.0"
-    environment:
-      - SWIFT_VERSION: 4.0
-    shell: /bin/bash --login -eo pipefail
-    steps: *steps-for-xcode-9
+    << : *XCODE9
+
+  xcode_9.3_swift_4.1:
+    macos:
+      xcode: "9.3.0"
+    << : *XCODE9
 
   spm_swift_4:
     macos:
@@ -94,6 +93,11 @@ jobs:
   spm_swift_4.0.3:
     macos:
       xcode: "9.2.0"
+    steps: *steps-for-spm
+
+  spm_swift_4.1:
+    macos:
+      xcode: "9.3.0"
     steps: *steps-for-spm
 
   linux_swift_4:
@@ -124,9 +128,11 @@ workflows:
       - xcode_9_swift_4
       - xcode_9.1_swift_4.0.2
       - xcode_9.2_swift_4.0.3
+      - xcode_9.3_swift_4.1
       - spm_swift_4
       - spm_swift_4.0.2
       - spm_swift_4.0.3
+      - spm_swift_4.1
       - linux_swift_4
       - linux_swift_4.0.2
       - linux_swift_4.0.3
