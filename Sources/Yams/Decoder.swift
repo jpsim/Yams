@@ -28,7 +28,7 @@ public class YAMLDecoder {
     }
 }
 
-struct _Decoder: Decoder { // swiftlint:disable:this type_name
+private struct _Decoder: Decoder {
 
     private let node: Node
 
@@ -62,7 +62,7 @@ struct _Decoder: Decoder { // swiftlint:disable:this type_name
     // MARK: -
 
     /// constuct `T` from `node`
-    fileprivate func construct<T: ScalarConstructible>(_ type: T.Type) throws -> T {
+    func construct<T: ScalarConstructible>(_ type: T.Type) throws -> T {
         let scalar = try self.scalar()
         guard let constructed = type.construct(from: scalar) else {
             throw _typeMismatch(at: codingPath, expectation: type, reality: scalar)
@@ -71,7 +71,7 @@ struct _Decoder: Decoder { // swiftlint:disable:this type_name
     }
 
     /// create a new `_Decoder` instance referencing `node` as `key` inheriting `userInfo`
-    fileprivate func decoder(referencing node: Node, `as` key: CodingKey) -> _Decoder {
+    func decoder(referencing node: Node, `as` key: CodingKey) -> _Decoder {
         return .init(referencing: node, userInfo: userInfo, codingPath: codingPath + [key])
     }
 
@@ -88,15 +88,14 @@ struct _Decoder: Decoder { // swiftlint:disable:this type_name
     }
 }
 
-struct _KeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
-    // swiftlint:disable:previous type_name
+private struct _KeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
 
     typealias Key = K
 
     private let decoder: _Decoder
     private let mapping: Node.Mapping
 
-    fileprivate init(decoder: _Decoder, wrapping mapping: Node.Mapping) {
+    init(decoder: _Decoder, wrapping mapping: Node.Mapping) {
         self.decoder = decoder
         self.mapping = mapping
     }
@@ -156,12 +155,12 @@ struct _KeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
     }
 }
 
-struct _UnkeyedDecodingContainer: UnkeyedDecodingContainer { // swiftlint:disable:this type_name
+private struct _UnkeyedDecodingContainer: UnkeyedDecodingContainer {
 
     private let decoder: _Decoder
     private let sequence: Node.Sequence
 
-    fileprivate init(decoder: _Decoder, wrapping sequence: Node.Sequence) {
+    init(decoder: _Decoder, wrapping sequence: Node.Sequence) {
         self.decoder = decoder
         self.sequence = sequence
         self.currentIndex = 0
