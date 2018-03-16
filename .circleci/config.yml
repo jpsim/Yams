@@ -1,12 +1,10 @@
 aliases:
   - &XCODE9
-    environment:
-      - SWIFT_VERSION: 4.0
     shell: /bin/bash --login -eo pipefail
     steps:
       - checkout
       - run: |
-          ( export XCODE_FLAGS="-scheme Yams SWIFT_VERSION=${SWIFT_VERSION}"
+          ( export XCODE_FLAGS="-scheme Yams"
             xcodebuild ${XCODE_FLAGS} test # -sdk macosx -destination arch=x86_64
             xcodebuild ${XCODE_FLAGS} test OTHER_SWIFT_FLAGS=-DUSE_UTF8
             xcodebuild ${XCODE_FLAGS} test -sdk iphonesimulator -destination "name=iPhone 8"
@@ -25,7 +23,7 @@ aliases:
             - vendor/bundle
       - restore_cache:
           key: cocoapods
-      - run: bundle exec pod lib lint --swift-version=${SWIFT_VERSION}
+      - run: bundle exec pod lib lint
       - save_cache: 
           key: cocoapods
           paths:
@@ -52,13 +50,6 @@ aliases:
 
 version: 2
 jobs:
-
-  xcode_9_swift_3:
-    macos:
-      xcode: "9.0"
-    environment:
-      - SWIFT_VERSION: 3.2
-    << : *XCODE9
 
   xcode_9_swift_4:
     macos:
@@ -124,7 +115,6 @@ workflows:
   version: 2
   workflow:
     jobs:
-      - xcode_9_swift_3
       - xcode_9_swift_4
       - xcode_9.1_swift_4.0.2
       - xcode_9.2_swift_4.0.3
