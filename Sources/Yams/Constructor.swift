@@ -188,8 +188,8 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
     }
 }
 
-extension FixedWidthInteger where Self: SexagesimalConvertible {
-    fileprivate static func _construct(from scalar: Node.Scalar) -> Self? {
+private extension FixedWidthInteger where Self: SexagesimalConvertible {
+    static func _construct(from scalar: Node.Scalar) -> Self? {
         let scalarWithSign = scalar.string.replacingOccurrences(of: "_", with: "")
 
         if scalarWithSign == "0" {
@@ -268,8 +268,10 @@ extension Dictionary {
     public static func construct_mapping(from mapping: Node.Mapping) -> [AnyHashable: Any]? {
         return _construct_mapping(from: mapping)
     }
+}
 
-    fileprivate static func _construct_mapping(from mapping: Node.Mapping) -> [AnyHashable: Any] {
+private extension Dictionary {
+    static func _construct_mapping(from mapping: Node.Mapping) -> [AnyHashable: Any] {
         let mapping = flatten_mapping(mapping)
         var dictionary = [AnyHashable: Any](minimumCapacity: mapping.count)
         mapping.forEach {
@@ -345,7 +347,7 @@ extension Array {
     }
 }
 
-fileprivate extension String {
+private extension String {
     func substring(with range: NSRange) -> Substring? {
         guard range.location != NSNotFound else { return nil }
         let utf16lowerBound = utf16.index(utf16.startIndex, offsetBy: range.location)
@@ -358,7 +360,7 @@ fileprivate extension String {
     }
 }
 
-fileprivate extension String {
+private extension String {
     func substring(from offset: Int) -> Substring {
         let index = self.index(startIndex, offsetBy: offset)
         return self[index...]
@@ -372,8 +374,8 @@ public protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
     static func + (lhs: Self, rhs: Self) -> Self
 }
 
-extension SexagesimalConvertible {
-    fileprivate init(sexagesimal value: String) {
+private extension SexagesimalConvertible {
+    init(sexagesimal value: String) {
         self = value.sexagesimal()
     }
 }
@@ -395,7 +397,7 @@ extension Float: SexagesimalConvertible {}
 extension Int: SexagesimalConvertible {}
 extension UInt: SexagesimalConvertible {}
 
-fileprivate extension String {
+private extension String {
     func sexagesimal<T>() -> T where T: SexagesimalConvertible {
         assert(contains(":"))
         var scalar = self
@@ -420,7 +422,7 @@ fileprivate extension String {
     }
 }
 
-fileprivate extension Substring {
+private extension Substring {
 #if os(Linux)
     func hasPrefix(_ prefix: String) -> Bool {
         return String(self).hasPrefix(prefix)

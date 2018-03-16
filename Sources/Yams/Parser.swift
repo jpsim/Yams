@@ -172,12 +172,12 @@ public final class Parser {
 }
 
 // MARK: implementation details
-extension Parser {
-    fileprivate var streamEndProduced: Bool {
+private extension Parser {
+    private var streamEndProduced: Bool {
         return parser.stream_end_produced != 0
     }
 
-    fileprivate func loadDocument() throws -> Node {
+    func loadDocument() throws -> Node {
         let node = try loadNode(from: parse())
         try parse() // Drop YAML_DOCUMENT_END_EVENT
         return node
@@ -199,7 +199,7 @@ extension Parser {
     }
 
     @discardableResult
-    fileprivate func parse() throws -> Event {
+    func parse() throws -> Event {
         let event = Event()
         guard yaml_parser_parse(&parser, &event.event) == 1 else {
             throw YamlError(from: parser, with: yaml)
