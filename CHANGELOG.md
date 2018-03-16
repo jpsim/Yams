@@ -2,7 +2,8 @@
 
 ##### Breaking
 
-* None.
+* No longer support building with `-swift-version 3`.  
+  [Norio Nomura](https://github.com/norio-nomura)
 
 ##### Enhancements
 
