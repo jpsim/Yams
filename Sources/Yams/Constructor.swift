@@ -445,7 +445,7 @@ private extension Substring {
 extension Constructor {
     @available(*, unavailable, message: "Use `Constructor.ScalarMap` instead")
     public typealias Map = [Tag.Name: (Node) -> Any?]
-    
+
     @available(*, unavailable, message: "Use `Constructor.defaultScalarMap` instead")
     public static let defaultMap: ScalarMap = [:]
 }
