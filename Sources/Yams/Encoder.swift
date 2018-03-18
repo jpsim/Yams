@@ -146,8 +146,7 @@ private class _ReferencingEncoder: _Encoder {
     }
 }
 
-private struct _KeyedEncodingContainer<K: CodingKey> : KeyedEncodingContainerProtocol {
-    typealias Key = K
+private struct _KeyedEncodingContainer<Key: CodingKey> : KeyedEncodingContainerProtocol {
 
     private let encoder: _Encoder
 

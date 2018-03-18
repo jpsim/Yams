@@ -13,7 +13,7 @@ import Yams
 // swiftlint:disable identifier_name line_length
 
 /// Tests are copied from https://github.com/apple/swift/blob/master/test/stdlib/TestJSONEncoder.swift
-class EncoderTests: XCTestCase {
+class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
     // MARK: - Encoding Top-Level Empty Types
     func testEncodingTopLevelEmptyStruct() {
         let empty = EmptyStruct()

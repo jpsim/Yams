@@ -88,9 +88,7 @@ private struct _Decoder: Decoder {
     }
 }
 
-private struct _KeyedDecodingContainer<K: CodingKey> : KeyedDecodingContainerProtocol {
-
-    typealias Key = K
+private struct _KeyedDecodingContainer<Key: CodingKey> : KeyedDecodingContainerProtocol {
 
     private let decoder: _Decoder
     private let mapping: Node.Mapping
