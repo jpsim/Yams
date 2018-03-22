@@ -128,7 +128,7 @@ extension Date: ScalarConstructible {
             let length = $0.count
             let nanosecond: Int?
             if length < 9 {
-                nanosecond = Int($0 + String(repeating: "0", count: 9 - length))
+                nanosecond = Int($0).map { repeatElement(10, count: 9 - length).reduce($0, *) }
             } else {
                 nanosecond = Int($0[..<$0.index($0.startIndex, offsetBy: 9)])
             }
