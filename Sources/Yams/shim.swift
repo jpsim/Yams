@@ -18,7 +18,7 @@
 
 #endif
 
-#if os(Linux)
+#if os(Linux) && !swift(>=4.2)
 
     extension Substring {
         func hasPrefix(_ prefix: String) -> Bool {
