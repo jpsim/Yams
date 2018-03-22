@@ -219,25 +219,52 @@ extension String: ScalarRepresentable {
 
 /// MARK: - ScalarRepresentableCustomizedForCodable
 
-public protocol ScalarRepresentableCustomizedForCodable: ScalarRepresentable {
-    func representedForCodable() -> Node
+public protocol YAMLEncodable: Encodable {
+    func box() -> Node
 }
 
-extension Date: ScalarRepresentableCustomizedForCodable {
-    public func representedForCodable() -> Node {
+extension YAMLEncodable where Self: ScalarRepresentable {
+    public func box() -> Node {
+        return .scalar(represented())
+    }
+}
+
+extension Bool: YAMLEncodable {}
+extension Data: YAMLEncodable {}
+extension Decimal: YAMLEncodable {}
+extension Int: YAMLEncodable {}
+extension Int8: YAMLEncodable {}
+extension Int16: YAMLEncodable {}
+extension Int32: YAMLEncodable {}
+extension Int64: YAMLEncodable {}
+extension UInt: YAMLEncodable {}
+extension UInt8: YAMLEncodable {}
+extension UInt16: YAMLEncodable {}
+extension UInt32: YAMLEncodable {}
+extension UInt64: YAMLEncodable {}
+extension URL: YAMLEncodable {}
+extension String: YAMLEncodable {}
+
+extension Date: YAMLEncodable {
+    public func box() -> Node {
         return Node(iso8601StringWithFullNanosecond, Tag(.timestamp))
     }
 }
 
-extension Double: ScalarRepresentableCustomizedForCodable {}
-extension Float: ScalarRepresentableCustomizedForCodable {}
-
-extension FloatingPoint where Self: CVarArg {
-    public func representedForCodable() -> Node {
+extension Double: YAMLEncodable {
+    public func box() -> Node {
         return Node(formattedStringForCodable, Tag(.float))
     }
+}
 
-    private var formattedStringForCodable: String {
+extension Float: YAMLEncodable {
+    public func box() -> Node {
+        return Node(formattedStringForCodable, Tag(.float))
+    }
+}
+
+private extension FloatingPoint where Self: CVarArg {
+    var formattedStringForCodable: String {
         // Since `NumberFormatter` creates a string with insufficient precision for Decode,
         // it uses with `String(format:...)`
 #if os(Linux)
@@ -251,4 +278,12 @@ extension FloatingPoint where Self: CVarArg {
         }
         return string
     }
+}
+
+@available(*, unavailable, renamed: "YAMLEncodable")
+typealias ScalarRepresentableCustomizedForCodable = YAMLEncodable
+
+extension YAMLEncodable {
+    @available(*, unavailable, renamed: "box()")
+    func representedForCodable() -> Node { fatalError("unreachable") }
 }
