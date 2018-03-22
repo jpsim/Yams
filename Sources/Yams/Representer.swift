@@ -57,23 +57,31 @@ private func represent(_ value: Any) throws -> Node {
 
 // MARK: - ScalarRepresentable
 /// Type is representabe as `Node.scalar`
-public protocol ScalarRepresentable: NodeRepresentable {}
+public protocol ScalarRepresentable: NodeRepresentable {
+    func represented() -> Node.Scalar
+}
+
+extension ScalarRepresentable {
+    public func represented() throws -> Node {
+        return .scalar(represented())
+    }
+}
 
 extension Bool: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(self ? "true" : "false", Tag(.bool))
+    public func represented() -> Node.Scalar {
+        return .init(self ? "true" : "false", Tag(.bool))
     }
 }
 
 extension Data: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(base64EncodedString(), Tag(.binary))
+    public func represented() -> Node.Scalar {
+        return .init(base64EncodedString(), Tag(.binary))
     }
 }
 
 extension Date: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(iso8601String, Tag(.timestamp))
+    public func represented() -> Node.Scalar {
+        return .init(iso8601String, Tag(.timestamp))
     }
 
     private var iso8601String: String {
@@ -133,14 +141,14 @@ private let iso8601WithFractionalSecondFormatter: DateFormatter = {
 }()
 
 extension Double: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+    public func represented() -> Node.Scalar {
+        return .init(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
 }
 
 extension Float: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+    public func represented() -> Node.Scalar {
+        return .init(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
 }
 
@@ -164,8 +172,8 @@ private let floatFormatter = numberFormatter(with: 7)
 //extension Float80: ScalarRepresentable {}
 
 extension BinaryInteger {
-    public func represented() throws -> Node {
-        return Node(String(describing: self), Tag(.int))
+    public func represented() -> Node.Scalar {
+        return .init(String(describing: self), Tag(.int))
     }
 }
 
@@ -192,14 +200,20 @@ extension Optional: NodeRepresentable {
 }
 
 extension Decimal: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(description)
+    public func represented() -> Node.Scalar {
+        return .init(description)
     }
 }
 
 extension URL: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(absoluteString)
+    public func represented() -> Node.Scalar {
+        return .init(absoluteString)
+    }
+}
+
+extension String: ScalarRepresentable {
+    public func represented() -> Node.Scalar {
+        return .init(self)
     }
 }
 
