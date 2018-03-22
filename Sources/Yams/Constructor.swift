@@ -427,10 +427,6 @@ private extension Substring {
     func hasPrefix(_ prefix: String) -> Bool {
         return String(self).hasPrefix(prefix)
     }
-
-    func components(separatedBy separator: String) -> [String] {
-        return String(self).components(separatedBy: separator)
-    }
 #endif
 
     func substring(from offset: Int) -> Substring {
