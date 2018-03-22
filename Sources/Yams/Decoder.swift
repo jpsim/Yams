@@ -61,15 +61,6 @@ private struct _Decoder: Decoder {
 
     // MARK: -
 
-    /// constuct `T` from `node`
-    func construct<T: ScalarConstructible>(_ type: T.Type) throws -> T {
-        let scalar = try self.scalar()
-        guard let constructed = type.construct(from: scalar) else {
-            throw _typeMismatch(at: codingPath, expectation: type, reality: scalar)
-        }
-        return constructed
-    }
-
     /// create a new `_Decoder` instance referencing `node` as `key` inheriting `userInfo`
     func decoder(referencing node: Node, `as` key: CodingKey) -> _Decoder {
         return .init(referencing: node, userInfo: userInfo, codingPath: codingPath + [key])
@@ -109,11 +100,11 @@ private struct _KeyedDecodingContainer<Key: CodingKey> : KeyedDecodingContainerP
     }
 
     func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable & ScalarConstructible {
-        return try decoder(for: key).construct(type)
+        return try decoder(for: key).decode(type)
     }
 
     func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable {
-        return try decoder(for: key).decode(type) // use SingleValueDecodingContainer's method
+        return try decoder(for: key).decode(type)
     }
 
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type,
@@ -171,49 +162,35 @@ private struct _UnkeyedDecodingContainer: UnkeyedDecodingContainer {
     }
 
     mutating func decode<T>(_ type: T.Type) throws -> T where T: Decodable & ScalarConstructible {
-        return try construct(type)
+        return try currentDecoder { try $0.decode(type) }
     }
 
     mutating func decode<T>(_ type: T.Type) throws -> T where T: Decodable {
-        try throwErrorIfAtEnd(type)
-        let value = try currentDecoder.decode(type) // use SingleValueDecodingContainer's method
-        currentIndex += 1
-        return value
+        return try currentDecoder { try $0.decode(type) }
     }
 
     mutating func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> {
-        try throwErrorIfAtEnd(KeyedDecodingContainer<NestedKey>.self)
-        let container = try currentDecoder.container(keyedBy: type)
-        currentIndex += 1
-        return container
+        return try currentDecoder { try $0.container(keyedBy: type) }
     }
 
     mutating func nestedUnkeyedContainer() throws -> UnkeyedDecodingContainer {
-        try throwErrorIfAtEnd(UnkeyedDecodingContainer.self)
-        let container = try currentDecoder.unkeyedContainer()
-        currentIndex += 1
-        return container
+        return try currentDecoder { try $0.unkeyedContainer() }
     }
 
-    mutating func superDecoder() throws -> Decoder {
-        try throwErrorIfAtEnd(Decoder.self)
-        defer { currentIndex += 1 }
-        return currentDecoder
-    }
+    mutating func superDecoder() throws -> Decoder { return try currentDecoder { $0 } }
 
     // MARK: -
 
     private var currentKey: CodingKey { return _YAMLCodingKey(index: currentIndex) }
     private var currentNode: Node { return sequence[currentIndex] }
-    private var currentDecoder: _Decoder { return decoder.decoder(referencing: currentNode, as: currentKey) }
 
     private func throwErrorIfAtEnd<T>(_ type: T.Type) throws {
         if isAtEnd { throw _valueNotFound(at: codingPath + [currentKey], type, "Unkeyed container is at end.") }
     }
 
-    private mutating func construct<T: ScalarConstructible>(_ type: T.Type) throws -> T {
-        try throwErrorIfAtEnd(type)
-        let decoded: T = try currentDecoder.construct(type)
+    private mutating func currentDecoder<T>(closure: (_Decoder) throws -> T) throws -> T {
+        try throwErrorIfAtEnd(T.self)
+        let decoded: T = try closure(decoder.decoder(referencing: currentNode, as: currentKey))
         currentIndex += 1
         return decoded
     }
@@ -225,11 +202,18 @@ extension _Decoder: SingleValueDecodingContainer {
 
     func decodeNil() -> Bool { return node.null == NSNull() }
     func decode<T>(_ type: T.Type) throws -> T where T: Decodable & ScalarConstructible { return try construct(type) }
-    func decode<T>(_ type: T.Type) throws -> T where T: Decodable {
-        return try construct(type) ?? type.init(from: self)
-    }
+    func decode<T>(_ type: T.Type) throws -> T where T: Decodable {return try construct(type) ?? type.init(from: self) }
 
     // MARK: -
+
+    /// constuct `T` from `node`
+    private func construct<T: ScalarConstructible>(_ type: T.Type) throws -> T {
+        let scalar = try self.scalar()
+        guard let constructed = type.construct(from: scalar) else {
+            throw _typeMismatch(at: codingPath, expectation: type, reality: scalar)
+        }
+        return constructed
+    }
 
     private func construct<T>(_ type: T.Type) throws -> T? {
         guard let constructibleType = type as? ScalarConstructible.Type else {
