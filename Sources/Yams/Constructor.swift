@@ -423,12 +423,6 @@ private extension String {
 }
 
 private extension Substring {
-#if os(Linux)
-    func hasPrefix(_ prefix: String) -> Bool {
-        return String(self).hasPrefix(prefix)
-    }
-#endif
-
     func substring(from offset: Int) -> Substring {
         if offset == 0 { return self }
         let index = self.index(startIndex, offsetBy: offset)
