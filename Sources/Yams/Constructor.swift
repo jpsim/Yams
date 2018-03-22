@@ -360,12 +360,33 @@ private extension String {
     }
 }
 
+#if swift(>=4.1)
+
+private extension StringProtocol where Self.SubSequence == Substring {
+    func substring(from offset: Int) -> Substring {
+        let index = self.index(startIndex, offsetBy: offset)
+        return self[index...]
+    }
+}
+
+#else
+
 private extension String {
     func substring(from offset: Int) -> Substring {
         let index = self.index(startIndex, offsetBy: offset)
         return self[index...]
     }
 }
+
+private extension Substring {
+    func substring(from offset: Int) -> Substring {
+        if offset == 0 { return self }
+        let index = self.index(startIndex, offsetBy: offset)
+        return self[index...]
+    }
+}
+
+#endif
 
 // MARK: - SexagesimalConvertible
 public protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
@@ -419,14 +440,6 @@ private extension String {
             return (base, value)
         }
         return sign * value
-    }
-}
-
-private extension Substring {
-    func substring(from offset: Int) -> Substring {
-        if offset == 0 { return self }
-        let index = self.index(startIndex, offsetBy: offset)
-        return self[index...]
     }
 }
 
