@@ -65,7 +65,7 @@ class YamlErrorTests: XCTestCase {
 
         let parser = try Parser(yaml: invalidYAML)
         // first iteration returns scalar
-        XCTAssertEqual(try parser.nextRoot(), Node("", Tag(.null), .literal))
+        XCTAssertEqual(try parser.nextRoot(), Node("", Tag(.str), .literal))
         // second iteration throws error
         XCTAssertThrowsError(try parser.nextRoot()) { error in
             XCTAssertTrue(error is YamlError)

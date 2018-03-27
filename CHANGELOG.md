@@ -11,7 +11,9 @@
 
 ##### Bug Fixes
 
-* None.
+* Fix parse quoted values as strings.  
+  [Norio Nomura](https://github.com/norio-nomura)
+  [#116](https://github.com/jpsim/Yams/issues/116)
 
 ## 0.6.0
 
