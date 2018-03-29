@@ -1,8 +1,8 @@
-## Master
+## 0.7.0
 
 ##### Breaking
 
-* No longer support building with `-swift-version 3`.  
+* Drop support for building with `-swift-version 3`.  
   [Norio Nomura](https://github.com/norio-nomura)
 
 ##### Enhancements
@@ -11,7 +11,7 @@
 
 ##### Bug Fixes
 
-* Fix parse quoted values as strings.  
+* Always parse quoted values as strings.  
   [Norio Nomura](https://github.com/norio-nomura)
   [#116](https://github.com/jpsim/Yams/issues/116)
 
