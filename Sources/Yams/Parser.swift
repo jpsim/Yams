@@ -287,9 +287,8 @@ private class Event {
         return Node.Scalar.Style(rawValue: event.data.scalar.style.rawValue)!
     }
     var scalarTag: String? {
-        guard event.data.scalar.plain_implicit == 0,
-            event.data.scalar.quoted_implicit == 0 else {
-                return nil
+        if event.data.scalar.quoted_implicit == 1 {
+            return Tag.Name.str.rawValue
         }
         return string(from: event.data.scalar.tag)
     }

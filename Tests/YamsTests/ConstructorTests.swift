@@ -287,6 +287,67 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         YamsAssertEqual(objects, expected)
     }
 
+    func testQuotationMark() throws {
+        // swiftlint:disable line_length
+        // ```terminal.sh-session
+        // $ python
+        // Python 3.6.4 (default, Mar 16 2018, 17:10:15)
+        // [GCC 4.2.1 Compatible Apple LLVM 9.1.0 (clang-902.0.37.1)] on darwin
+        // Type "help", "copyright", "credits" or "license" for more information.
+        // >>> import yaml
+        // >>> yaml.load(r"""plain: 10.10
+        // ... single quote: '10.10'
+        // ... double quote: "10.10"
+        // ... literal: |
+        // ...     10.10
+        // ... literal single quote: |
+        // ...     '10.10'
+        // ... literal double quote: |
+        // ...     "10.10"
+        // ... folded: >
+        // ...     10.10
+        // ... folded single quote: >
+        // ...     '10.10'
+        // ... folded double quote: >
+        // ...     "10.10"
+        // ... """)
+        // {'plain': 10.1, 'single quote': '10.10', 'double quote': '10.10', 'literal': '10.10\n', 'literal single quote': "'10.10'\n", 'literal double quote': '"10.10"\n', 'folded': '10.10\n', 'folded single quote': "'10.10'\n", 'folded double quote': '"10.10"\n'}
+        // >>>
+        // ```
+        // swiftlint:enable line_length
+        let example = """
+            plain: 10.10
+            single quote: '10.10'
+            double quote: "10.10"
+            literal: |
+              10.10
+            literal single quote: |
+              '10.10'
+            literal double quote: |
+              "10.10"
+            folded: >
+              10.10
+            folded single quote: >
+              '10.10'
+            folded double quote: >
+              "10.10"
+
+            """
+        let objects = try Yams.load(yaml: example)
+        let expected: [String: Any] = [
+            "plain": 10.10,
+            "single quote": "10.10",
+            "double quote": "10.10",
+            "literal": "10.10\n",
+            "literal single quote": "'10.10'\n",
+            "literal double quote": "\"10.10\"\n",
+            "folded": "10.10\n",
+            "folded single quote": "'10.10'\n",
+            "folded double quote": "\"10.10\"\n"
+        ]
+        YamsAssertEqual(objects, expected)
+    }
+
     func testSet() throws {
         let example = """
             # Explicitly typed set.
@@ -429,6 +490,7 @@ extension ConstructorTests {
             ("testNull", testNull),
             ("testOmap", testOmap),
             ("testPairs", testPairs),
+            ("testQuotationMark", testQuotationMark),
             ("testSet", testSet),
             ("testSeq", testSeq),
             ("testTimestamp", testTimestamp),
