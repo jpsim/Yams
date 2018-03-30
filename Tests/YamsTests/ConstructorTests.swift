@@ -287,7 +287,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         YamsAssertEqual(objects, expected)
     }
 
-    func testQuotationMark() throws {
+    func testQuotationMark() throws { // swiftlint:disable:this function_body_length
         // swiftlint:disable line_length
         // ```terminal.sh-session
         // $ python
@@ -310,8 +310,22 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         // ...     '10.10'
         // ... folded double quote: >
         // ...     "10.10"
+        // ... empty:
+        // ... single quoted empty: ''
+        // ... double quoted empty: ""
+        // ... literal empty: |
+        // ... literal single quoted empty: |
+        // ...     ''
+        // ... literal double quoted empty: |
+        // ...     ""
+        // ... folded empty: >
+        // ...
+        // ... folded single quoted empty: >
+        // ...     ''
+        // ... folded double quoted empty: >
+        // ...     ""
         // ... """)
-        // {'plain': 10.1, 'single quote': '10.10', 'double quote': '10.10', 'literal': '10.10\n', 'literal single quote': "'10.10'\n", 'literal double quote': '"10.10"\n', 'folded': '10.10\n', 'folded single quote': "'10.10'\n", 'folded double quote': '"10.10"\n'}
+        // {'plain': 10.1, 'single quote': '10.10', 'double quote': '10.10', 'literal': '10.10\n', 'literal single quote': "'10.10'\n", 'literal double quote': '"10.10"\n', 'folded': '10.10\n', 'folded single quote': "'10.10'\n", 'folded double quote': '"10.10"\n', 'empty': None, 'single quoted empty': '', 'double quoted empty': '', 'literal empty': '', 'literal single quoted empty': "''\n", 'literal double quoted empty': '""\n', 'folded empty': '', 'folded single quoted empty': "''\n", 'folded double quoted empty': '""\n'}
         // >>>
         // ```
         // swiftlint:enable line_length
@@ -331,6 +345,20 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
               '10.10'
             folded double quote: >
               "10.10"
+            empty:
+            single quoted empty: ''
+            double quoted empty: ""
+            literal empty: |
+            literal single quoted empty: |
+              ''
+            literal double quoted empty: |
+              ""
+            folded empty: >
+
+            folded single quoted empty: >
+              ''
+            folded double quoted empty: >
+              ""
 
             """
         let objects = try Yams.load(yaml: example)
@@ -343,7 +371,16 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             "literal double quote": "\"10.10\"\n",
             "folded": "10.10\n",
             "folded single quote": "'10.10'\n",
-            "folded double quote": "\"10.10\"\n"
+            "folded double quote": "\"10.10\"\n",
+            "empty": NSNull(),
+            "single quoted empty": "",
+            "double quoted empty": "",
+            "literal empty": "",
+            "literal single quoted empty": "''\n",
+            "literal double quoted empty": "\"\"\n",
+            "folded empty": "",
+            "folded single quoted empty": "''\n",
+            "folded double quoted empty": "\"\"\n"
         ]
         YamsAssertEqual(objects, expected)
     }
