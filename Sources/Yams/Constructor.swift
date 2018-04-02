@@ -124,13 +124,15 @@ extension Date: ScalarConstructible {
         datecomponents.hour = components[3].flatMap { Int($0) }
         datecomponents.minute = components[4].flatMap { Int($0) }
         datecomponents.second = components[5].flatMap { Int($0) }
-        datecomponents.nanosecond = components[6].flatMap {
-            let length = $0.count
+        datecomponents.nanosecond = components[6].flatMap { fraction in
+            let length = fraction.count
             let nanosecond: Int?
             if length < 9 {
-                nanosecond = Int($0 + String(repeating: "0", count: 9 - length))
+                nanosecond = Int(fraction).map { number in
+                    repeatElement(10, count: 9 - length).reduce(number, *)
+                }
             } else {
-                nanosecond = Int($0[..<$0.index($0.startIndex, offsetBy: 9)])
+                nanosecond = Int(fraction[..<fraction.index(fraction.startIndex, offsetBy: 9)])
             }
             return nanosecond
         }
@@ -360,11 +362,16 @@ private extension String {
     }
 }
 
-private extension String {
-    func substring(from offset: Int) -> Substring {
-        let index = self.index(startIndex, offsetBy: offset)
-        return self[index...]
+private extension StringProtocol {
+#if swift(>=4.1)
+    func substring(from offset: Int) -> SubSequence {
+        return self[index(startIndex, offsetBy: offset)...]
     }
+#else
+    func substring(from offset: IndexDistance) -> SubSequence {
+        return self[index(startIndex, offsetBy: offset)...]
+    }
+#endif
 }
 
 // MARK: - SexagesimalConvertible
@@ -419,24 +426,6 @@ private extension String {
             return (base, value)
         }
         return sign * value
-    }
-}
-
-private extension Substring {
-#if os(Linux)
-    func hasPrefix(_ prefix: String) -> Bool {
-        return String(self).hasPrefix(prefix)
-    }
-
-    func components(separatedBy separator: String) -> [String] {
-        return String(self).components(separatedBy: separator)
-    }
-#endif
-
-    func substring(from offset: Int) -> Substring {
-        if offset == 0 { return self }
-        let index = self.index(startIndex, offsetBy: offset)
-        return self[index...]
     }
 }
 
