@@ -2,7 +2,8 @@
 
 ##### Breaking
 
-* None.
+* Rename `ScalarRepresentableCustomizedForCodable` to `YAMLEncodable`.  
+  [Norio Nomura](https://github.com/norio-nomura)
 
 ##### Enhancements
 

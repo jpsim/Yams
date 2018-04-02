@@ -57,23 +57,31 @@ private func represent(_ value: Any) throws -> Node {
 
 // MARK: - ScalarRepresentable
 /// Type is representabe as `Node.scalar`
-public protocol ScalarRepresentable: NodeRepresentable {}
+public protocol ScalarRepresentable: NodeRepresentable {
+    func represented() -> Node.Scalar
+}
+
+extension ScalarRepresentable {
+    public func represented() throws -> Node {
+        return .scalar(represented())
+    }
+}
 
 extension Bool: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(self ? "true" : "false", Tag(.bool))
+    public func represented() -> Node.Scalar {
+        return .init(self ? "true" : "false", Tag(.bool))
     }
 }
 
 extension Data: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(base64EncodedString(), Tag(.binary))
+    public func represented() -> Node.Scalar {
+        return .init(base64EncodedString(), Tag(.binary))
     }
 }
 
 extension Date: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(iso8601String, Tag(.timestamp))
+    public func represented() -> Node.Scalar {
+        return .init(iso8601String, Tag(.timestamp))
     }
 
     private var iso8601String: String {
@@ -133,14 +141,14 @@ private let iso8601WithFractionalSecondFormatter: DateFormatter = {
 }()
 
 extension Double: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+    public func represented() -> Node.Scalar {
+        return .init(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
 }
 
 extension Float: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+    public func represented() -> Node.Scalar {
+        return .init(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
 }
 
@@ -164,8 +172,8 @@ private let floatFormatter = numberFormatter(with: 7)
 //extension Float80: ScalarRepresentable {}
 
 extension BinaryInteger {
-    public func represented() throws -> Node {
-        return Node(String(describing: self), Tag(.int))
+    public func represented() -> Node.Scalar {
+        return .init(String(describing: self), Tag(.int))
     }
 }
 
@@ -192,38 +200,71 @@ extension Optional: NodeRepresentable {
 }
 
 extension Decimal: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(description)
+    public func represented() -> Node.Scalar {
+        return .init(description)
     }
 }
 
 extension URL: ScalarRepresentable {
-    public func represented() throws -> Node {
-        return Node(absoluteString)
+    public func represented() -> Node.Scalar {
+        return .init(absoluteString)
+    }
+}
+
+extension String: ScalarRepresentable {
+    public func represented() -> Node.Scalar {
+        return .init(self)
     }
 }
 
 /// MARK: - ScalarRepresentableCustomizedForCodable
 
-public protocol ScalarRepresentableCustomizedForCodable: ScalarRepresentable {
-    func representedForCodable() -> Node
+public protocol YAMLEncodable: Encodable {
+    func box() -> Node
 }
 
-extension Date: ScalarRepresentableCustomizedForCodable {
-    public func representedForCodable() -> Node {
+extension YAMLEncodable where Self: ScalarRepresentable {
+    public func box() -> Node {
+        return .scalar(represented())
+    }
+}
+
+extension Bool: YAMLEncodable {}
+extension Data: YAMLEncodable {}
+extension Decimal: YAMLEncodable {}
+extension Int: YAMLEncodable {}
+extension Int8: YAMLEncodable {}
+extension Int16: YAMLEncodable {}
+extension Int32: YAMLEncodable {}
+extension Int64: YAMLEncodable {}
+extension UInt: YAMLEncodable {}
+extension UInt8: YAMLEncodable {}
+extension UInt16: YAMLEncodable {}
+extension UInt32: YAMLEncodable {}
+extension UInt64: YAMLEncodable {}
+extension URL: YAMLEncodable {}
+extension String: YAMLEncodable {}
+
+extension Date: YAMLEncodable {
+    public func box() -> Node {
         return Node(iso8601StringWithFullNanosecond, Tag(.timestamp))
     }
 }
 
-extension Double: ScalarRepresentableCustomizedForCodable {}
-extension Float: ScalarRepresentableCustomizedForCodable {}
-
-extension FloatingPoint where Self: CVarArg {
-    public func representedForCodable() -> Node {
+extension Double: YAMLEncodable {
+    public func box() -> Node {
         return Node(formattedStringForCodable, Tag(.float))
     }
+}
 
-    private var formattedStringForCodable: String {
+extension Float: YAMLEncodable {
+    public func box() -> Node {
+        return Node(formattedStringForCodable, Tag(.float))
+    }
+}
+
+private extension FloatingPoint where Self: CVarArg {
+    var formattedStringForCodable: String {
         // Since `NumberFormatter` creates a string with insufficient precision for Decode,
         // it uses with `String(format:...)`
 #if os(Linux)
@@ -237,4 +278,12 @@ extension FloatingPoint where Self: CVarArg {
         }
         return string
     }
+}
+
+@available(*, unavailable, renamed: "YAMLEncodable")
+typealias ScalarRepresentableCustomizedForCodable = YAMLEncodable
+
+extension YAMLEncodable {
+    @available(*, unavailable, renamed: "box()")
+    func representedForCodable() -> Node { fatalError("unreachable") }
 }
