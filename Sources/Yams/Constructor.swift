@@ -124,13 +124,15 @@ extension Date: ScalarConstructible {
         datecomponents.hour = components[3].flatMap { Int($0) }
         datecomponents.minute = components[4].flatMap { Int($0) }
         datecomponents.second = components[5].flatMap { Int($0) }
-        datecomponents.nanosecond = components[6].flatMap {
-            let length = $0.count
+        datecomponents.nanosecond = components[6].flatMap { fraction in
+            let length = fraction.count
             let nanosecond: Int?
             if length < 9 {
-                nanosecond = Int($0).map { repeatElement(10, count: 9 - length).reduce($0, *) }
+                nanosecond = Int(fraction).map { number in
+                    repeatElement(10, count: 9 - length).reduce(number, *)
+                }
             } else {
-                nanosecond = Int($0[..<$0.index($0.startIndex, offsetBy: 9)])
+                nanosecond = Int(fraction[..<fraction.index(fraction.startIndex, offsetBy: 9)])
             }
             return nanosecond
         }
