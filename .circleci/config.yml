@@ -21,13 +21,7 @@ aliases:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-      - restore_cache:
-          key: cocoapods
       - run: bundle exec pod lib lint
-      - save_cache: 
-          key: cocoapods
-          paths:
-            - ~/.cocoapods
 
   - &steps-for-spm
     - checkout
