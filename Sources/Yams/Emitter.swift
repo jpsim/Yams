@@ -37,8 +37,7 @@ public func dump<Objects>(
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
     sortKeys: Bool = false) throws -> String
-    where Objects: Sequence
-{
+    where Objects: Sequence {
     func representable(from object: Any) throws -> NodeRepresentable {
         if let representable = object as? NodeRepresentable {
             return representable
@@ -85,8 +84,7 @@ public func dump(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String
-{
+    sortKeys: Bool = false) throws -> String {
     return try serialize(
         node: object.represented(),
         canonical: canonical,
@@ -127,8 +125,7 @@ public func serialize<Nodes>(
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
     sortKeys: Bool = false) throws -> String
-    where Nodes: Sequence, Nodes.Iterator.Element == Node
-{
+    where Nodes: Sequence, Nodes.Iterator.Element == Node {
     let emitter = Emitter(
         canonical: canonical,
         indent: indent,
@@ -175,8 +172,7 @@ public func serialize(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String
-{
+    sortKeys: Bool = false) throws -> String {
     return try serialize(
         nodes: [node],
         canonical: canonical,
@@ -191,22 +187,25 @@ public func serialize(
     )
 }
 
+/// Class responsible for emitting libYAML events.
 public final class Emitter {
+    /// Line break options to use when emitting YAML.
     public enum LineBreak {
         /// Use CR for line breaks (Mac style).
-        case cr // swiftlint:disable:this identifier_name
+        case cr
         /// Use LN for line breaks (Unix style).
-        case ln // swiftlint:disable:this identifier_name
+        case ln
         /// Use CR LN for line breaks (DOS style).
         case crln
     }
 
-    public var data = Data()
+    internal var data = Data()
 
+    /// Configuration options to use when emitting YAML.
     public struct Options {
-        /// Set if the output should be in the "canonical" format as in the YAML specification.
+        /// Set if the output should be in the "canonical" format described in the YAML specification.
         public var canonical: Bool = false
-        /// Set the intendation increment.
+        /// Set the indentation value.
         public var indent: Int = 0
         /// Set the preferred line width. -1 means unlimited.
         public var width: Int = 0
@@ -219,19 +218,32 @@ public final class Emitter {
         var explicitStart: Bool = false
         var explicitEnd: Bool = false
 
-        /// The %YAML directive value or nil
+        /// The `%YAML` directive value or nil.
         public var version: (major: Int, minor: Int)?
 
         /// Set if emitter should sort keys in lexicographic order.
         public var sortKeys: Bool = false
     }
 
+    /// Configuration options to use when emitting YAML.
     public var options: Options {
         didSet {
             applyOptionsToEmitter()
         }
     }
 
+    /// Create an `Emitter` with the specified options.
+    ///
+    /// - parameter canonical:     Set if the output should be in the "canonical" format described in the YAML
+    ///                            specification.
+    /// - parameter indent:        Set the indentation value.
+    /// - parameter width:         Set the preferred line width. -1 means unlimited.
+    /// - parameter allowUnicode:  Set if unescaped non-ASCII characters are allowed.
+    /// - parameter lineBreak:     Set the preferred line break.
+    /// - parameter explicitStart: Explicit document start `---`.
+    /// - parameter explicitEnd:   Explicit document end `...`.
+    /// - parameter version:       The `%YAML` directive value or nil.
+    /// - parameter sortKeys:      Set if emitter should sort keys in lexicographic order.
     public init(canonical: Bool = false,
                 indent: Int = 0,
                 width: Int = 0,
@@ -261,27 +273,30 @@ public final class Emitter {
 
         applyOptionsToEmitter()
 
-        #if USE_UTF8
-            yaml_emitter_set_encoding(&emitter, YAML_UTF8_ENCODING)
-        #else
-            yaml_emitter_set_encoding(&emitter, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
-        #endif
+#if USE_UTF8
+        yaml_emitter_set_encoding(&emitter, YAML_UTF8_ENCODING)
+#else
+        yaml_emitter_set_encoding(&emitter, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
+#endif
     }
 
     deinit {
         yaml_emitter_delete(&emitter)
     }
 
+    /// Open & initialize the emmitter.
+    ///
+    /// - throws: `YamlError` if the `Emitter` was already opened or closed.
     public func open() throws {
         switch state {
         case .initialized:
             var event = yaml_event_t()
-            #if USE_UTF8
-                yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING)
-            #else
-                let encoding = isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING
-                yaml_stream_start_event_initialize(&event, encoding)
-            #endif
+#if USE_UTF8
+            yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING)
+#else
+            let encoding = isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING
+            yaml_stream_start_event_initialize(&event, encoding)
+#endif
             try emit(&event)
             state = .opened
         case .opened:
@@ -291,6 +306,9 @@ public final class Emitter {
         }
     }
 
+    /// Close the `Emitter.`
+    ///
+    /// - throws: `YamlError` if the `Emitter` hasn't yet been initialized.
     public func close() throws {
         switch state {
         case .initialized:
@@ -305,6 +323,11 @@ public final class Emitter {
         }
     }
 
+    /// Ingest a `Node` to include when emitting the YAML output.
+    ///
+    /// - parameter node: The `Node` to serialize.
+    ///
+    /// - throws: `YamlError` if the `Emitter` hasn't yet been opened or has been closed.
     public func serialize(node: Node) throws {
         switch state {
         case .initialized:
@@ -330,7 +353,7 @@ public final class Emitter {
         try emit(&event)
     }
 
-    // private
+    // MARK: Private
     private var emitter = yaml_emitter_t()
 
     private enum State { case initialized, opened, closed }
@@ -349,10 +372,24 @@ public final class Emitter {
     }
 }
 
+// MARK: - Options Initializer
+
 extension Emitter.Options {
-    // initializer without exposing internal properties
+    /// Create `Emitter.Options` with the specified values.
+    ///
+    /// - parameter canonical:     Set if the output should be in the "canonical" format described in the YAML
+    ///                            specification.
+    /// - parameter indent:        Set the indentation value.
+    /// - parameter width:         Set the preferred line width. -1 means unlimited.
+    /// - parameter allowUnicode:  Set if unescaped non-ASCII characters are allowed.
+    /// - parameter lineBreak:     Set the preferred line break.
+    /// - parameter explicitStart: Explicit document start `---`.
+    /// - parameter explicitEnd:   Explicit document end `...`.
+    /// - parameter version:       The `%YAML` directive value or nil.
+    /// - parameter sortKeys:      Set if emitter should sort keys in lexicographic order.
     public init(canonical: Bool = false, indent: Int = 0, width: Int = 0, allowUnicode: Bool = false,
-                lineBreak: Emitter.LineBreak = .ln, version: (major: Int, minor: Int)? = nil, sortKeys: Bool = false) {
+                lineBreak: Emitter.LineBreak = .ln, version: (major: Int, minor: Int)? = nil,
+                sortKeys: Bool = false) {
         self.canonical = canonical
         self.indent = indent
         self.width = width
@@ -363,7 +400,8 @@ extension Emitter.Options {
     }
 }
 
-// MARK: implementation details
+// MARK: Implementation Details
+
 extension Emitter {
     private func emit(_ event: UnsafeMutablePointer<yaml_event_t>) throws {
         guard yaml_emitter_emit(&emitter, event) == 1 else {

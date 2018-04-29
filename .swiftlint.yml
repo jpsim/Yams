@@ -1,3 +1,7 @@
 disabled_rules:
   - identifier_name
 line_length: 120
+identifier_name:
+  excluded:
+    - cr
+    - ln
