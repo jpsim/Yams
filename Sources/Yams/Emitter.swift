@@ -7,24 +7,25 @@
 //
 
 #if SWIFT_PACKAGE
-    import CYaml
+import CYaml
 #endif
 import Foundation
 
-/// Produce YAML String from objects
+/// Produce a YAML string from objects.
 ///
-/// - Parameters:
-///   - objects: Sequence of Object
-///   - canonical: output should be the "canonical" format as in the YAML specification.
-///   - indent: the intendation increment.
-///   - width: the preferred line width. @c -1 means unlimited.
-///   - allowUnicode: unescaped non-ASCII characters are allowed if true.
-///   - lineBreak: preferred line break.
-///   - explicitStart: explicit document start `---`
-///   - explicitEnd: explicit document end `...`
-///   - version: YAML version directive
-/// - Returns: YAML String
-/// - Throws: `YamlError`
+/// - parameter objects:       Sequence of Objects.
+/// - parameter canonical:     Output should be the "canonical" format as in the YAML specification.
+/// - parameter indent:        The intendation increment.
+/// - parameter width:         The preferred line width. @c -1 means unlimited.
+/// - parameter allowUnicode:  Unescaped non-ASCII characters are allowed if true.
+/// - parameter lineBreak:     Preferred line break.
+/// - parameter explicitStart: Explicit document start `---`.
+/// - parameter explicitEnd:   Explicit document end `...`.
+/// - parameter version:       YAML version directive.
+///
+/// - returns: YAML string.
+///
+/// - throws: `YamlError`.
 public func dump<Objects>(
     objects: Objects,
     canonical: Bool = false,
@@ -36,41 +37,44 @@ public func dump<Objects>(
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
     sortKeys: Bool = false) throws -> String
-    where Objects: Sequence {
-        func representable(from object: Any) throws -> NodeRepresentable {
-            if let representable = object as? NodeRepresentable {
-                return representable
-            }
-            throw YamlError.emitter(problem: "\(object) does not conform to NodeRepresentable!")
+    where Objects: Sequence
+{
+    func representable(from object: Any) throws -> NodeRepresentable {
+        if let representable = object as? NodeRepresentable {
+            return representable
         }
-        let nodes = try objects.map(representable(from:)).map { try $0.represented() }
-        return try serialize(
-            nodes: nodes,
-            canonical: canonical,
-            indent: indent,
-            width: width,
-            allowUnicode: allowUnicode,
-            lineBreak: lineBreak,
-            explicitStart: explicitStart,
-            explicitEnd: explicitEnd,
-            version: version,
-            sortKeys: sortKeys)
+        throw YamlError.emitter(problem: "\(object) does not conform to NodeRepresentable!")
+    }
+    let nodes = try objects.map(representable(from:)).map { try $0.represented() }
+    return try serialize(
+        nodes: nodes,
+        canonical: canonical,
+        indent: indent,
+        width: width,
+        allowUnicode: allowUnicode,
+        lineBreak: lineBreak,
+        explicitStart: explicitStart,
+        explicitEnd: explicitEnd,
+        version: version,
+        sortKeys: sortKeys
+    )
 }
 
-/// Produce YAML String from object
+/// Produce a YAML string from an object.
 ///
-/// - Parameters:
-///   - object: Object
-///   - canonical: output should be the "canonical" format as in the YAML specification.
-///   - indent: the intendation increment.
-///   - width: the preferred line width. @c -1 means unlimited.
-///   - allowUnicode: unescaped non-ASCII characters are allowed if true.
-///   - lineBreak: preferred line break.
-///   - explicitStart: explicit document start `---`
-///   - explicitEnd: explicit document end `...`
-///   - version: YAML version directive
-/// - Returns: YAML String
-/// - Throws: `YamlError`
+/// - parameter object:        Object.
+/// - parameter canonical:     Output should be the "canonical" format as in the YAML specification.
+/// - parameter indent:        The intendation increment.
+/// - parameter width:         The preferred line width. @c -1 means unlimited.
+/// - parameter allowUnicode:  Unescaped non-ASCII characters are allowed if true.
+/// - parameter lineBreak:     Preferred line break.
+/// - parameter explicitStart: Explicit document start `---`.
+/// - parameter explicitEnd:   Explicit document end `...`.
+/// - parameter version:       YAML version directive.
+///
+/// - returns: YAML string.
+///
+/// - throws: `YamlError`.
 public func dump(
     object: Any?,
     canonical: Bool = false,
@@ -81,7 +85,8 @@ public func dump(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String {
+    sortKeys: Bool = false) throws -> String
+{
     return try serialize(
         node: object.represented(),
         canonical: canonical,
@@ -92,23 +97,25 @@ public func dump(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortKeys: sortKeys)
+        sortKeys: sortKeys
+    )
 }
 
-/// Produce YAML String from `Node`
+/// Produce a YAML string from a `Node`.
 ///
-/// - Parameters:
-///   - nodes: Sequence of `Node`
-///   - canonical: output should be the "canonical" format as in the YAML specification.
-///   - indent: the intendation increment.
-///   - width: the preferred line width. @c -1 means unlimited.
-///   - allowUnicode: unescaped non-ASCII characters are allowed if true.
-///   - lineBreak: preferred line break.
-///   - explicitStart: explicit document start `---`
-///   - explicitEnd: explicit document end `...`
-///   - version: YAML version directive
-/// - Returns: YAML String
-/// - Throws: `YamlError`
+/// - parameter nodes:         Sequence of `Node`s.
+/// - parameter canonical:     Output should be the "canonical" format as in the YAML specification.
+/// - parameter indent:        The intendation increment.
+/// - parameter width:         The preferred line width. @c -1 means unlimited.
+/// - parameter allowUnicode:  Unescaped non-ASCII characters are allowed if true.
+/// - parameter lineBreak:     Preferred line break.
+/// - parameter explicitStart: Explicit document start `---`.
+/// - parameter explicitEnd:   Explicit document end `...`.
+/// - parameter version:       YAML version directive.
+///
+/// - returns: YAML string.
+///
+/// - throws: `YamlError`.
 public func serialize<Nodes>(
     nodes: Nodes,
     canonical: Bool = false,
@@ -120,41 +127,44 @@ public func serialize<Nodes>(
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
     sortKeys: Bool = false) throws -> String
-    where Nodes: Sequence, Nodes.Iterator.Element == Node {
-        let emitter = Emitter(
-            canonical: canonical,
-            indent: indent,
-            width: width,
-            allowUnicode: allowUnicode,
-            lineBreak: lineBreak,
-            explicitStart: explicitStart,
-            explicitEnd: explicitEnd,
-            version: version,
-            sortKeys: sortKeys)
-        try emitter.open()
-        try nodes.forEach(emitter.serialize)
-        try emitter.close()
-        #if USE_UTF8
-            return String(data: emitter.data, encoding: .utf8)!
-        #else
-            return String(data: emitter.data, encoding: .utf16)!
-        #endif
+    where Nodes: Sequence, Nodes.Iterator.Element == Node
+{
+    let emitter = Emitter(
+        canonical: canonical,
+        indent: indent,
+        width: width,
+        allowUnicode: allowUnicode,
+        lineBreak: lineBreak,
+        explicitStart: explicitStart,
+        explicitEnd: explicitEnd,
+        version: version,
+        sortKeys: sortKeys
+    )
+    try emitter.open()
+    try nodes.forEach(emitter.serialize)
+    try emitter.close()
+#if USE_UTF8
+    return String(data: emitter.data, encoding: .utf8)!
+#else
+    return String(data: emitter.data, encoding: .utf16)!
+#endif
 }
 
-/// Produce YAML String from `Node`
+/// Produce a YAML string from a `Node`.
 ///
-/// - Parameters:
-///   - node: `Node`
-///   - canonical: output should be the "canonical" format as in the YAML specification.
-///   - indent: the intendation increment.
-///   - width: the preferred line width. @c -1 means unlimited.
-///   - allowUnicode: unescaped non-ASCII characters are allowed if true.
-///   - lineBreak: preferred line break.
-///   - explicitStart: explicit document start `---`
-///   - explicitEnd: explicit document end `...`
-///   - version: YAML version directive
-/// - Returns: YAML String
-/// - Throws: `YamlError`
+/// - parameter node:          `Node`.
+/// - parameter canonical:     Output should be the "canonical" format as in the YAML specification.
+/// - parameter indent:        The intendation increment.
+/// - parameter width:         The preferred line width. @c -1 means unlimited.
+/// - parameter allowUnicode:  Unescaped non-ASCII characters are allowed if true.
+/// - parameter lineBreak:     Preferred line break.
+/// - parameter explicitStart: Explicit document start `---`.
+/// - parameter explicitEnd:   Explicit document end `...`.
+/// - parameter version:       YAML version directive.
+///
+/// - returns: YAML string.
+///
+/// - throws: `YamlError`.
 public func serialize(
     node: Node,
     canonical: Bool = false,
@@ -165,7 +175,8 @@ public func serialize(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String {
+    sortKeys: Bool = false) throws -> String
+{
     return try serialize(
         nodes: [node],
         canonical: canonical,
@@ -176,7 +187,8 @@ public func serialize(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortKeys: sortKeys)
+        sortKeys: sortKeys
+    )
 }
 
 public final class Emitter {
