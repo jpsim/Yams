@@ -21,7 +21,7 @@ public extension Node {
 }
 
 // MARK: - NodeRepresentable
-/// Type is representabe as `Node`
+/// Type is representable as `Node`
 public protocol NodeRepresentable {
     func represented() throws -> Node
 }
@@ -56,7 +56,7 @@ private func represent(_ value: Any) throws -> Node {
 }
 
 // MARK: - ScalarRepresentable
-/// Type is representabe as `Node.scalar`
+/// Type is representable as `Node.scalar`
 public protocol ScalarRepresentable: NodeRepresentable {
     func represented() -> Node.Scalar
 }
