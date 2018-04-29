@@ -11,6 +11,7 @@ import CYaml
 #endif
 import Foundation
 
+/// Errors thrown by Yams APIs.
 public enum YamlError: Swift.Error {
     // Used in `yaml_emitter_t` and `yaml_parser_t`
     /// `YAML_NO_ERROR`. No error is produced.
@@ -69,7 +70,7 @@ public enum YamlError: Swift.Error {
 
     /// The error context
     public struct Context: CustomStringConvertible {
-        /// error context
+        /// context text
         public let text: String
         /// context position
         public let mark: Mark
