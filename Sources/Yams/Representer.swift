@@ -7,7 +7,7 @@
 //
 
 #if SWIFT_PACKAGE
-    import CYaml
+import CYaml
 #endif
 import Foundation
 
@@ -87,18 +87,18 @@ extension Date: ScalarRepresentable {
     private var iso8601String: String {
         let calendar = Calendar(identifier: .gregorian)
         let nanosecond = calendar.component(.nanosecond, from: self)
-        #if os(Linux)
-            // swift-corelibs-foundation has bug with nanosecond.
-            // https://bugs.swift.org/browse/SR-3158
+#if os(Linux)
+        // swift-corelibs-foundation has bug with nanosecond.
+        // https://bugs.swift.org/browse/SR-3158
+        return iso8601Formatter.string(from: self)
+#else
+        if nanosecond != 0 {
+            return iso8601WithFractionalSecondFormatter.string(from: self)
+                .trimmingCharacters(in: characterSetZero) + "Z"
+        } else {
             return iso8601Formatter.string(from: self)
-        #else
-            if nanosecond != 0 {
-                return iso8601WithFractionalSecondFormatter.string(from: self)
-                    .trimmingCharacters(in: characterSetZero) + "Z"
-            } else {
-                return iso8601Formatter.string(from: self)
-            }
-        #endif
+        }
+#endif
     }
 
     private var iso8601StringWithFullNanosecond: String {
