@@ -158,13 +158,13 @@ extension YamlError: CustomStringConvertible {
 
 extension YamlError {
     private func markAndSnippet(from yaml: String, _ byteOffset: Int) -> (Mark, String)? {
-        #if USE_UTF8
-            guard let (line, column, contents) = yaml.utf8LineNumberColumnAndContents(at: byteOffset)
-                else { return nil }
-        #else
-            guard let (line, column, contents) = yaml.utf16LineNumberColumnAndContents(at: byteOffset / 2)
-                else { return nil }
-        #endif
+#if USE_UTF8
+        guard let (line, column, contents) = yaml.utf8LineNumberColumnAndContents(at: byteOffset)
+            else { return nil }
+#else
+        guard let (line, column, contents) = yaml.utf16LineNumberColumnAndContents(at: byteOffset / 2)
+            else { return nil }
+#endif
         return (Mark(line: line + 1, column: column + 1), contents)
     }
 }
