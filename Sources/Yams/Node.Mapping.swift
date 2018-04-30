@@ -155,8 +155,7 @@ extension Node.Mapping {
     /// Set or get the specified `Node`.
     public subscript(node: Node) -> Node? {
         get {
-            let v = pairs.reversed().first(where: { $0.key == node })
-            return v?.value
+            return pairs.reversed().first(where: { $0.key == node })?.value
         }
         set {
             if let newValue = newValue {

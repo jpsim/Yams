@@ -441,7 +441,6 @@ extension Array {
         return sequence.map(sequence.tag.constructor.any)
     }
 
-
     /// Construct an "O-map" (array of `(Any, Any)` tuples) from the specified `sequence`.
     ///
     /// - parameter sequence: Sequence to convert to `Array<(Any, Any)>`.
