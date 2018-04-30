@@ -432,10 +432,21 @@ extension Set {
 // MARK: Sequence
 
 extension Array {
+    /// Construct an Array of `Any` from the specified `sequence`.
+    ///
+    /// - parameter sequence: Sequence to convert to `Array<Any>`.
+    ///
+    /// - returns: Array of `Any`.
     public static func construct_seq(from sequence: Node.Sequence) -> [Any] {
         return sequence.map(sequence.tag.constructor.any)
     }
 
+
+    /// Construct an "O-map" (array of `(Any, Any)` tuples) from the specified `sequence`.
+    ///
+    /// - parameter sequence: Sequence to convert to `Array<(Any, Any)>`.
+    ///
+    /// - returns: Array of `(Any, Any)` tuples.
     public static func construct_omap(from sequence: Node.Sequence) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
         return sequence.compactMap { subnode -> (Any, Any)? in
@@ -445,6 +456,11 @@ extension Array {
         }
     }
 
+    /// Construct an array of `(Any, Any)` tuples from the specified `sequence`.
+    ///
+    /// - parameter sequence: Sequence to convert to `Array<(Any, Any)>`.
+    ///
+    /// - returns: Array of `(Any, Any)` tuples.
     public static func construct_pairs(from sequence: Node.Sequence) -> [(Any, Any)] {
         // Note: we do not check for duplicate keys.
         return sequence.compactMap { subnode -> (Any, Any)? in
