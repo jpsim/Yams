@@ -120,7 +120,7 @@ extension Node {
         return sequence.map(Array.init) ?? []
     }
 
-    /// Typed Array using type parameter: e.g. `array(of: String.self)`
+    /// Typed Array using type parameter: e.g. `array(of: String.self)`.
     ///
     /// - parameter type: Type conforming to `ScalarConstructible`.
     ///
@@ -129,7 +129,7 @@ extension Node {
         return sequence?.compactMap { $0.scalar.flatMap(type.construct) } ?? []
     }
 
-    /// If the node is a `.sequence` or `.mapping`, set or get the specified node.
+    /// If the node is a `.sequence` or `.mapping`, set or get the specified `Node`.
     /// If the node is a `.scalar`, this is a no-op.
     public subscript(node: Node) -> Node? {
         get {
