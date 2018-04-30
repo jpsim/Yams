@@ -19,7 +19,7 @@ extension Node {
         public var style: Style
         public var mark: Mark?
 
-        public enum Style: UInt32 { // swiftlint:disable:this nesting
+        public enum Style: UInt32 {
             /// Let the emitter choose the style.
             case any = 0
             /// The plain scalar style.

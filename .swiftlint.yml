@@ -5,3 +5,5 @@ identifier_name:
   excluded:
     - cr
     - ln
+nesting:
+  type_level: 2

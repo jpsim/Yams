@@ -9,13 +9,17 @@
 import Foundation
 
 extension Node {
+    /// A mapping is the YAML equivalent of a `Dictionary`.
     public struct Mapping {
         private var pairs: [Pair<Node>]
+        /// This mapping's `Tag`.
         public var tag: Tag
+        /// This mapping's `Style`.
         public var style: Style
+        /// This mapping's `Mark`.
         public var mark: Mark?
 
-        public enum Style: UInt32 { // swiftlint:disable:this nesting
+        public enum Style: UInt32 {
             /// Let the emitter choose the style.
             case any
             /// The block mapping style.
