@@ -9,6 +9,7 @@
 #if SWIFT_PACKAGE
     import CYaml
 #endif
+import CoreFoundation
 import Foundation
 
 public extension Node {
@@ -267,9 +268,6 @@ private extension FloatingPoint where Self: CVarArg {
     var formattedStringForCodable: String {
         // Since `NumberFormatter` creates a string with insufficient precision for Decode,
         // it uses with `String(format:...)`
-#if os(Linux)
-        let DBL_DECIMAL_DIG = 17
-#endif
         let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
         // "%*.g" does not use scientific notation if the exponent is less than –4.
         // So fallback to using `NumberFormatter` if string does not uses scientific notation.
