@@ -203,7 +203,8 @@ public final class Emitter {
         case crln
     }
 
-    internal var data = Data()
+    /// Retrieve this Emitter's binary output.
+    public internal(set) var data = Data()
 
     /// Configuration options to use when emitting YAML.
     public struct Options {
