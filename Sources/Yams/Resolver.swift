@@ -95,7 +95,7 @@ public final class Resolver {
 extension Resolver {
     /// Resolver with no rules.
     public static let basic = Resolver()
-    /// Resolver with a default set of rules rules.
+    /// Resolver with a default set of rules.
     public static let `default` = Resolver([.bool, .int, .float, .merge, .null, .timestamp, .value])
 }
 
