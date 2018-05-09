@@ -22,6 +22,7 @@ import Foundation
 /// - parameter explicitStart: Explicit document start `---`.
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
+/// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
 ///
 /// - returns: YAML string.
 ///
@@ -70,6 +71,7 @@ public func dump<Objects>(
 /// - parameter explicitStart: Explicit document start `---`.
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
+/// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
 ///
 /// - returns: YAML string.
 ///
@@ -110,6 +112,7 @@ public func dump(
 /// - parameter explicitStart: Explicit document start `---`.
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
+/// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
 ///
 /// - returns: YAML string.
 ///
@@ -158,6 +161,7 @@ public func serialize<Nodes>(
 /// - parameter explicitStart: Explicit document start `---`.
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
+/// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
 ///
 /// - returns: YAML string.
 ///
