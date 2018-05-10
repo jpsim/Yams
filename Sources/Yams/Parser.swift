@@ -14,12 +14,13 @@ import Foundation
 /// Parse all YAML documents in a String
 /// and produce corresponding Swift objects.
 ///
-/// - Parameters:
-///   - yaml: String
-///   - resolver: Resolver
-///   - constructor: Constructor
+/// - parameter yaml: String
+/// - parameter resolver: Resolver
+/// - parameter constructor: Constructor
+///
 /// - returns: YamlSequence<Any>
-/// - Throws: YamlError
+///
+/// - throws: YamlError
 public func load_all(yaml: String,
                      _ resolver: Resolver = .default,
                      _ constructor: Constructor = .default) throws -> YamlSequence<Any> {
@@ -30,12 +31,13 @@ public func load_all(yaml: String,
 /// Parse the first YAML document in a String
 /// and produce the corresponding Swift object.
 ///
-/// - Parameters:
-///   - yaml: String
-///   - resolver: Resolver
-///   - constructor: Constructor
+/// - parameter yaml: String
+/// - parameter resolver: Resolver
+/// - parameter constructor: Constructor
+///
 /// - returns: Any?
-/// - Throws: YamlError
+///
+/// - throws: YamlError
 public func load(yaml: String,
                  _ resolver: Resolver = .default,
                  _ constructor: Constructor = .default) throws -> Any? {
@@ -45,12 +47,13 @@ public func load(yaml: String,
 /// Parse all YAML documents in a String
 /// and produce corresponding representation trees.
 ///
-/// - Parameters:
-///   - yaml: String
-///   - resolver: Resolver
-///   - constructor: Constructor
+/// - parameter yaml: String
+/// - parameter resolver: Resolver
+/// - parameter constructor: Constructor
+///
 /// - returns: YamlSequence<Node>
-/// - Throws: YamlError
+///
+/// - throws: YamlError
 public func compose_all(yaml: String,
                         _ resolver: Resolver = .default,
                         _ constructor: Constructor = .default) throws -> YamlSequence<Node> {
@@ -61,12 +64,13 @@ public func compose_all(yaml: String,
 /// Parse the first YAML document in a String
 /// and produce the corresponding representation tree.
 ///
-/// - Parameters:
-///   - yaml: String
-///   - resolver: Resolver
-///   - constructor: Constructor
+/// - parameter yaml: String
+/// - parameter resolver: Resolver
+/// - parameter constructor: Constructor
+///
 /// - returns: Node?
-/// - Throws: YamlError
+///
+/// - throws: YamlError
 public func compose(yaml: String,
                     _ resolver: Resolver = .default,
                     _ constructor: Constructor = .default) throws -> Node? {

@@ -22,8 +22,8 @@ public class YAMLEncoder {
 
     /// Encode a value of type `T` to a YAML string.
     ///
-    /// - value:    Value to encode.
-    /// - userInfo: Additional key/values which can be used when looking up keys to encode.
+    /// - parameter value:    Value to encode.
+    /// - parameter userInfo: Additional key/values which can be used when looking up keys to encode.
     ///
     /// - returns: The YAML string.
     ///
