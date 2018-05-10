@@ -241,7 +241,7 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     func testNodeTypeMismatch() throws {
         // https://github.com/jpsim/Yams/pull/95
-        struct Sample: Decodable { // swiftlint:disable:this nesting
+        struct Sample: Decodable {
             let values: [String]
         }
 

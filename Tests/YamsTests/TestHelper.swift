@@ -35,16 +35,16 @@ func timestamp(_ timeZoneHour: Int = 0,
 
 /// AssertEqual for Any
 ///
-/// - Parameters:
-///   - lhs: Any
-///   - rhs: Any
-///   - context: Closure generating String that used on generating assertion
-///   - file: file path string
-///   - line: line number
-/// - Returns: true if lhs is equal to rhs
+/// - parameter lhs: Any
+/// - parameter rhs: Any
+/// - parameter context: Closure generating String that used on generating assertion
+/// - parameter file: file path string
+/// - parameter line: line number
+///
+/// - returns: true if lhs is equal to rhs
 
 @discardableResult func YamsAssertEqual(_ lhs: Any?, _ rhs: Any?,
-                                        // swiftlint:disable:previous function_body_length identifier_name
+                                        // swiftlint:disable:previous function_body_length
                                         _ context: @autoclosure @escaping () -> String = "",
                                         file: StaticString = #file, line: UInt = #line) -> Bool {
     // use inner function for capturing `file` and `line`

@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name                      = 'Yams'
   s.version                   = '0.7.0'
-  s.summary                   = 'A sweet and swifty Yaml parser.'
+  s.summary                   = 'A sweet and swifty YAML parser.'
   s.homepage                  = 'https://github.com/jpsim/Yams'
   s.source                    = { :git => s.homepage + '.git', :tag => s.version }
   s.license                   = { :type => 'MIT', :file => 'LICENSE' }

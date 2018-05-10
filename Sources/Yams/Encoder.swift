@@ -8,10 +8,26 @@
 
 import Foundation
 
+/// `Codable`-style `Encoder` that can be used to encode an `Encodable` type to a YAML string using optional
+/// user info mapping. Similar to `Foundation.JSONEncoder`.
 public class YAMLEncoder {
+    /// Options to use when encoding to YAML.
     public typealias Options = Emitter.Options
+
+    /// Options to use when encoding to YAML.
     public var options = Options()
+
+    /// Creates a `YAMLEncoder` instance.
     public init() {}
+
+    /// Encode a value of type `T` to a YAML string.
+    ///
+    /// - parameter value:    Value to encode.
+    /// - parameter userInfo: Additional key/values which can be used when looking up keys to encode.
+    ///
+    /// - returns: The YAML string.
+    ///
+    /// - throws: `EncodingError` if something went wrong while encoding.
     public func encode<T: Swift.Encodable>(_ value: T, userInfo: [CodingUserInfoKey: Any] = [:]) throws -> String {
         do {
             let encoder = _Encoder(userInfo: userInfo)

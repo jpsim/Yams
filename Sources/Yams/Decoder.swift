@@ -8,8 +8,21 @@
 
 import Foundation
 
+/// `Codable`-style `Decoder` that can be used to decode a `Decodable` type from a given `String` and optional
+/// user info mapping. Similar to `Foundation.JSONDecoder`.
 public class YAMLDecoder {
+    /// Creates a `YAMLDecoder` instance.
     public init() {}
+
+    /// Decode a `Decodable` type from a given `String` and optional user info mapping.
+    ///
+    /// - parameter type:    `Decodable` type to decode.
+    /// - parameter yaml:     YAML string to decode.
+    /// - parameter userInfo: Additional key/values which can be used when looking up keys to decode.
+    ///
+    /// - returns: Returns the decoded type `T`.
+    ///
+    /// - throws: `DecodingError` if something went wrong while decoding.
     public func decode<T>(_ type: T.Type = T.self,
                           from yaml: String,
                           userInfo: [CodingUserInfoKey: Any] = [:]) throws -> T where T: Swift.Decodable {
@@ -245,34 +258,70 @@ private func _typeMismatch(at codingPath: [CodingKey], expectation: Any.Type, re
     return .typeMismatch(expectation, context)
 }
 
+// MARK: - ScalarConstructible FixedWidthInteger & SignedInteger Conformance
+
 extension FixedWidthInteger where Self: SignedInteger {
+    /// Construct an instance of `Self`, if possible, from the specified scalar.
+    ///
+    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `Self`, if possible.
+    ///
+    /// - returns: An instance of `Self`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> Self? {
         return Int.construct(from: scalar).flatMap(Self.init(exactly:))
     }
 }
 
+// MARK: - ScalarConstructible FixedWidthInteger & UnsignedInteger Conformance
+
 extension FixedWidthInteger where Self: UnsignedInteger {
+    /// Construct an instance of `Self`, if possible, from the specified scalar.
+    ///
+    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `Self`, if possible.
+    ///
+    /// - returns: An instance of `Self`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> Self? {
         return UInt.construct(from: scalar).flatMap(Self.init(exactly:))
     }
 }
 
-extension Int16: ScalarConstructible {}
-extension Int32: ScalarConstructible {}
-extension Int64: ScalarConstructible {}
+// MARK: - ScalarConstructible Int8 Conformance
 extension Int8: ScalarConstructible {}
-extension UInt16: ScalarConstructible {}
-extension UInt32: ScalarConstructible {}
-extension UInt64: ScalarConstructible {}
+// MARK: - ScalarConstructible Int16 Conformance
+extension Int16: ScalarConstructible {}
+// MARK: - ScalarConstructible Int32 Conformance
+extension Int32: ScalarConstructible {}
+// MARK: - ScalarConstructible Int64 Conformance
+extension Int64: ScalarConstructible {}
+// MARK: - ScalarConstructible UInt8 Conformance
 extension UInt8: ScalarConstructible {}
+// MARK: - ScalarConstructible UInt16 Conformance
+extension UInt16: ScalarConstructible {}
+// MARK: - ScalarConstructible UInt32 Conformance
+extension UInt32: ScalarConstructible {}
+// MARK: - ScalarConstructible UInt64 Conformance
+extension UInt64: ScalarConstructible {}
+
+// MARK: - ScalarConstructible Decimal Conformance
 
 extension Decimal: ScalarConstructible {
+    /// Construct an instance of `Decimal`, if possible, from the specified scalar.
+    ///
+    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `Decimal`, if possible.
+    ///
+    /// - returns: An instance of `Decimal`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> Decimal? {
         return Decimal(string: scalar.string)
     }
 }
 
+// MARK: - ScalarConstructible URL Conformance
+
 extension URL: ScalarConstructible {
+    /// Construct an instance of `URL`, if possible, from the specified scalar.
+    ///
+    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `URL`, if possible.
+    ///
+    /// - returns: An instance of `URL`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> URL? {
         return URL(string: scalar.string)
     }
