@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Constructor Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/Constructor" class="dashAnchor"></a>
+
+    <a title="Constructor Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          Yams Docs
+        </a>
+         (100% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/jpsim/Yams">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">Yams Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      Constructor Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Constructor.html">Constructor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Emitter.html">Emitter</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Emitter/LineBreak.html">– LineBreak</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Emitter/Options.html">– Options</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Parser.html">Parser</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Resolver.html">Resolver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Resolver/Rule.html">– Rule</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Tag.html">Tag</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Tag/Name.html">– Name</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/YAMLDecoder.html">YAMLDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/YAMLEncoder.html">YAMLEncoder</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node.html">Node</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node/Mapping.html">– Mapping</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node/Scalar.html">– Scalar</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node/Sequence.html">– Sequence</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/YamlError.html">YamlError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/YamlError/Context.html">– Context</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/BinaryInteger.html">BinaryInteger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Bool.html">Bool</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Data.html">Data</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Date.html">Date</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Decimal.html">Decimal</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Dictionary.html">Dictionary</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/FixedWidthInteger.html">FixedWidthInteger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Float.html">Float</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSNull.html">NSNull</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Optional.html">Optional</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Set.html">Set</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/UInt.html">UInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/URL.html">URL</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams7composeAA4NodeOSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams11compose_allAA12YamlSequenceVyAA4NodeOGSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose_all(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams4dumpSSypSg6object_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKF">dump(object:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams4dumpSSx7objects_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzlF">dump(objects:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams4loadypSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">load(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams8load_allAA12YamlSequenceVyypGSS4yaml_AA8ResolverCAA11ConstructorCtKF">load_all(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams9serializeSSAA4NodeO4node_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineL0Sb13explicitStartSb0N3EndSi5major_Si5minortSg7versionSb8sortKeystKF">serialize(node:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams9serializeSSx5nodes_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzAA4NodeO7ElementRtzlF">serialize(nodes:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/NodeRepresentable.html">NodeRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ScalarConstructible.html">ScalarConstructible</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ScalarRepresentable.html">ScalarRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/SexagesimalConvertible.html">SexagesimalConvertible</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/YAMLEncodable.html">YAMLEncodable</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Mark.html">Mark</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/YamlSequence.html">YamlSequence</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>Constructor</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">Constructor</span></code></pre>
+
+                </div>
+              </div>
+            <p>Constructors are used to translate <code><a href="../Enums/Node.html">Node</a></code>s to Swift values.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11ConstructorC9ScalarMapa"></a>
+                    <a name="//apple_ref/swift/Alias/ScalarMap" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11ConstructorC9ScalarMapa">ScalarMap</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Maps <code><a href="../Classes/Tag/Name.html">Tag.Name</a></code>s to <code><a href="../Enums/Node/Scalar.html">Node.Scalar</a></code>s.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">ScalarMap</span> <span class="o">=</span> <span class="p">[</span><span class="kt"><a href="../Classes/Tag.html">Tag</a></span><span class="o">.</span><span class="kt">Name</span> <span class="p">:</span> <span class="p">(</span><span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Scalar</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Constructor.swift#L14">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11ConstructorC10MappingMapa"></a>
+                    <a name="//apple_ref/swift/Alias/MappingMap" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11ConstructorC10MappingMapa">MappingMap</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Maps <code><a href="../Classes/Tag/Name.html">Tag.Name</a></code>s to <code><a href="../Enums/Node/Mapping.html">Node.Mapping</a></code>s.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">MappingMap</span> <span class="o">=</span> <span class="p">[</span><span class="kt"><a href="../Classes/Tag.html">Tag</a></span><span class="o">.</span><span class="kt">Name</span> <span class="p">:</span> <span class="p">(</span><span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Constructor.swift#L16">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11ConstructorC11SequenceMapa"></a>
+                    <a name="//apple_ref/swift/Alias/SequenceMap" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11ConstructorC11SequenceMapa">SequenceMap</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Maps <code><a href="../Classes/Tag/Name.html">Tag.Name</a></code>s to <code><a href="../Enums/Node/Sequence.html">Node.Sequence</a></code>s.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">SequenceMap</span> <span class="o">=</span> <span class="p">[</span><span class="kt"><a href="../Classes/Tag.html">Tag</a></span><span class="o">.</span><span class="kt">Name</span> <span class="p">:</span> <span class="p">(</span><span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Sequence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Constructor.swift#L18">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11ConstructorCACs10DictionaryVyAA3TagC4NameVypSgAA4NodeO6ScalarVcG_AEyAijL7MappingVcGAEyAijL8SequenceVcGtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11ConstructorCACs10DictionaryVyAA3TagC4NameVypSgAA4NodeO6ScalarVcG_AEyAijL7MappingVcGAEyAijL8SequenceVcGtcfc">init(_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initialize a <code>Constructor</code> with the specified maps, falling back to default maps.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">scalarMap</span><span class="p">:</span> <span class="kt"><a href="../Classes/Constructor.html#/s:4Yams11ConstructorC9ScalarMapa">ScalarMap</a></span> <span class="o">=</span> <span class="n"><a href="../Classes/Constructor.html#/s:4Yams11ConstructorC16defaultScalarMaps10DictionaryVyAA3TagC4NameVypSgAA4NodeO0D0VcGvpZ">defaultScalarMap</a></span><span class="p">,</span>
+            <span class="n">_</span> <span class="nv">mappingMap</span><span class="p">:</span> <span class="kt"><a href="../Classes/Constructor.html#/s:4Yams11ConstructorC10MappingMapa">MappingMap</a></span> <span class="o">=</span> <span class="n"><a href="../Classes/Constructor.html#/s:4Yams11ConstructorC17defaultMappingMaps10DictionaryVyAA3TagC4NameVypSgAA4NodeO0D0VcGvpZ">defaultMappingMap</a></span><span class="p">,</span>
+            <span class="n">_</span> <span class="nv">sequenceMap</span><span class="p">:</span> <span class="kt"><a href="../Classes/Constructor.html#/s:4Yams11ConstructorC11SequenceMapa">SequenceMap</a></span> <span class="o">=</span> <span class="n"><a href="../Classes/Constructor.html#/s:4Yams11ConstructorC18defaultSequenceMaps10DictionaryVyAA3TagC4NameVypSgAA4NodeO0D0VcGvpZ">defaultSequenceMap</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>scalarMap</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Maps <code><a href="../Classes/Tag/Name.html">Tag.Name</a></code>s to <code><a href="../Enums/Node/Scalar.html">Node.Scalar</a></code>s.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mappingMap</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Maps <code><a href="../Classes/Tag/Name.html">Tag.Name</a></code>s to <code><a href="../Enums/Node/Mapping.html">Node.Mapping</a></code>s.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sequenceMap</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Maps <code><a href="../Classes/Tag/Name.html">Tag.Name</a></code>s to <code><a href="../Enums/Node/Sequence.html">Node.Sequence</a></code>s.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Constructor.swift#L25-L31">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11ConstructorC3anyypAA4NodeO4from_tF"></a>
+                    <a name="//apple_ref/swift/Method/any(from:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11ConstructorC3anyypAA4NodeO4from_tF">any(from:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Constructs Swift values based on the maps this <code>Constructor</code> was initialized with.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">any</span><span class="p">(</span><span class="n">from</span> <span class="nv">node</span><span class="p">:</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>node</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code><a href="../Enums/Node.html">Node</a></code> from which to extract an <code>Any</code> Swift value, if one was produced by the Node
+              type&rsquo;s relevant mapping on this <code>Constructor</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An <code>Any</code> Swift value, if one was produced by the Node type&rsquo;s relevant mapping on this
+       <code>Constructor</code>.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Constructor.swift#L40-L58">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Default%20Mappings"></a>
+                <a name="//apple_ref/swift/Section/Default Mappings" class="dashAnchor"></a>
+                <a href="#/Default%20Mappings">
+                  <h3 class="section-name">Default Mappings</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11ConstructorC7defaultACvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/default" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11ConstructorC7defaultACvpZ">default</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The default <code>Constructor</code> to be used with APIs where none is explicitly provided.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">let</span> <span class="p">`</span><span class="nv">default</span><span class="p">`:</span> <span class="kt">Constructor</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Constructor.swift#L69">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11ConstructorC16defaultScalarMaps10DictionaryVyAA3TagC4NameVypSgAA4NodeO0D0VcGvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/defaultScalarMap" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11ConstructorC16defaultScalarMaps10DictionaryVyAA3TagC4NameVypSgAA4NodeO0D0VcGvpZ">defaultScalarMap</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The default <code><a href="../Classes/Tag/Name.html">Tag.Name</a></code> to <code><a href="../Enums/Node/Scalar.html">Node.Scalar</a></code> map.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">defaultScalarMap</span><span class="p">:</span> <span class="kt">Constructor</span><span class="o">.</span><span class="kt"><a href="../Classes/Constructor.html#/s:4Yams11ConstructorC9ScalarMapa">ScalarMap</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Constructor.swift#L72">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11ConstructorC17defaultMappingMaps10DictionaryVyAA3TagC4NameVypSgAA4NodeO0D0VcGvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/defaultMappingMap" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11ConstructorC17defaultMappingMaps10DictionaryVyAA3TagC4NameVypSgAA4NodeO0D0VcGvpZ">defaultMappingMap</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The default <code><a href="../Classes/Tag/Name.html">Tag.Name</a></code> to <code><a href="../Enums/Node/Mapping.html">Node.Mapping</a></code> map.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">defaultMappingMap</span><span class="p">:</span> <span class="kt">Constructor</span><span class="o">.</span><span class="kt"><a href="../Classes/Constructor.html#/s:4Yams11ConstructorC10MappingMapa">MappingMap</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Constructor.swift#L86">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11ConstructorC18defaultSequenceMaps10DictionaryVyAA3TagC4NameVypSgAA4NodeO0D0VcGvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/defaultSequenceMap" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11ConstructorC18defaultSequenceMaps10DictionaryVyAA3TagC4NameVypSgAA4NodeO0D0VcGvpZ">defaultSequenceMap</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The default <code><a href="../Classes/Tag/Name.html">Tag.Name</a></code> to <code><a href="../Enums/Node/Sequence.html">Node.Sequence</a></code> map.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">defaultSequenceMap</span><span class="p">:</span> <span class="kt">Constructor</span><span class="o">.</span><span class="kt"><a href="../Classes/Constructor.html#/s:4Yams11ConstructorC11SequenceMapa">SequenceMap</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Constructor.swift#L95">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>© 2018 <a class="link" href="http://jpsim.com" target="_blank" rel="external">JP Simard</a> under MIT.</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

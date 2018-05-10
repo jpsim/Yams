@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Functions  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Section/Functions" class="dashAnchor"></a>
+
+    <a title="Functions  Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="index.html">
+          Yams Docs
+        </a>
+         (100% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/jpsim/Yams">
+            <img class="header-icon" src="img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="index.html">Yams Reference</a>
+      <img class="carat" src="img/carat.png" />
+      Functions  Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Constructor.html">Constructor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Emitter.html">Emitter</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Emitter/LineBreak.html">– LineBreak</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Emitter/Options.html">– Options</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Parser.html">Parser</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Resolver.html">Resolver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Resolver/Rule.html">– Rule</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Tag.html">Tag</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Tag/Name.html">– Name</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/YAMLDecoder.html">YAMLDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/YAMLEncoder.html">YAMLEncoder</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/Node.html">Node</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/Node/Mapping.html">– Mapping</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/Node/Scalar.html">– Scalar</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/Node/Sequence.html">– Sequence</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/YamlError.html">YamlError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/YamlError/Context.html">– Context</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/BinaryInteger.html">BinaryInteger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Bool.html">Bool</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Data.html">Data</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Date.html">Date</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Decimal.html">Decimal</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Dictionary.html">Dictionary</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/FixedWidthInteger.html">FixedWidthInteger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Float.html">Float</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/NSNull.html">NSNull</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Optional.html">Optional</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/Set.html">Set</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/UInt.html">UInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/URL.html">URL</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Functions.html#/s:4Yams7composeAA4NodeOSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Functions.html#/s:4Yams11compose_allAA12YamlSequenceVyAA4NodeOGSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose_all(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Functions.html#/s:4Yams4dumpSSypSg6object_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKF">dump(object:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Functions.html#/s:4Yams4dumpSSx7objects_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzlF">dump(objects:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Functions.html#/s:4Yams4loadypSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">load(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Functions.html#/s:4Yams8load_allAA12YamlSequenceVyypGSS4yaml_AA8ResolverCAA11ConstructorCtKF">load_all(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Functions.html#/s:4Yams9serializeSSAA4NodeO4node_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineL0Sb13explicitStartSb0N3EndSi5major_Si5minortSg7versionSb8sortKeystKF">serialize(node:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Functions.html#/s:4Yams9serializeSSx5nodes_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzAA4NodeO7ElementRtzlF">serialize(nodes:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/NodeRepresentable.html">NodeRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/ScalarConstructible.html">ScalarConstructible</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/ScalarRepresentable.html">ScalarRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/SexagesimalConvertible.html">SexagesimalConvertible</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/YAMLEncodable.html">YAMLEncodable</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Structs/Mark.html">Mark</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Structs/YamlSequence.html">YamlSequence</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>Functions</h1>
+            <p>The following functions are available globally.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4dumpSSx7objects_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzlF"></a>
+                    <a name="//apple_ref/swift/Function/dump(objects:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4dumpSSx7objects_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzlF">dump(objects:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Produce a YAML string from objects.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="Enums/YamlError.html">YamlError</a></code>.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">dump</span><span class="o">&lt;</span><span class="kt">Objects</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="nv">objects</span><span class="p">:</span> <span class="kt">Objects</span><span class="p">,</span>
+    <span class="nv">canonical</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">indent</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">width</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">allowUnicode</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">lineBreak</span><span class="p">:</span> <span class="kt"><a href="Classes/Emitter.html">Emitter</a></span><span class="o">.</span><span class="kt">LineBreak</span> <span class="o">=</span> <span class="o">.</span><span class="n">ln</span><span class="p">,</span>
+    <span class="nv">explicitStart</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">explicitEnd</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">version</span><span class="p">:</span> <span class="p">(</span><span class="nv">major</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">minor</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">sortKeys</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span>
+    <span class="k">where</span> <span class="kt">Objects</span><span class="p">:</span> <span class="kt">Sequence</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>objects</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Sequence of Objects.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>canonical</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Output should be the <q>canonical</q> format as in the YAML specification.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>indent</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The intendation increment.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>width</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The preferred line width. @c -1 means unlimited.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowUnicode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Unescaped non-ASCII characters are allowed if true.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>lineBreak</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Preferred line break.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>explicitStart</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Explicit document start <code>---</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>explicitEnd</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Explicit document end <code><a href="Classes/Constructor.html">...</a></code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>version</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>YAML version directive.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sortKeys</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Whether or not to sort Mapping keys in lexicographic order.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>YAML string.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L30-L61">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4dumpSSypSg6object_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKF"></a>
+                    <a name="//apple_ref/swift/Function/dump(object:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4dumpSSypSg6object_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKF">dump(object:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Produce a YAML string from an object.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="Enums/YamlError.html">YamlError</a></code>.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">dump</span><span class="p">(</span>
+    <span class="nv">object</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?,</span>
+    <span class="nv">canonical</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">indent</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">width</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">allowUnicode</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">lineBreak</span><span class="p">:</span> <span class="kt"><a href="Classes/Emitter.html">Emitter</a></span><span class="o">.</span><span class="kt">LineBreak</span> <span class="o">=</span> <span class="o">.</span><span class="n">ln</span><span class="p">,</span>
+    <span class="nv">explicitStart</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">explicitEnd</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">version</span><span class="p">:</span> <span class="p">(</span><span class="nv">major</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">minor</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">sortKeys</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>object</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Object.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>canonical</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Output should be the <q>canonical</q> format as in the YAML specification.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>indent</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The intendation increment.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>width</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The preferred line width. @c -1 means unlimited.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowUnicode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Unescaped non-ASCII characters are allowed if true.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>lineBreak</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Preferred line break.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>explicitStart</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Explicit document start <code>---</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>explicitEnd</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Explicit document end <code><a href="Classes/Constructor.html">...</a></code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>version</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>YAML version directive.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sortKeys</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Whether or not to sort Mapping keys in lexicographic order.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>YAML string.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L79-L102">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams9serializeSSx5nodes_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzAA4NodeO7ElementRtzlF"></a>
+                    <a name="//apple_ref/swift/Function/serialize(nodes:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams9serializeSSx5nodes_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzAA4NodeO7ElementRtzlF">serialize(nodes:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Produce a YAML string from a <code><a href="Enums/Node.html">Node</a></code>.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="Enums/YamlError.html">YamlError</a></code>.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">serialize</span><span class="o">&lt;</span><span class="kt">Nodes</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="nv">nodes</span><span class="p">:</span> <span class="kt">Nodes</span><span class="p">,</span>
+    <span class="nv">canonical</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">indent</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">width</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">allowUnicode</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">lineBreak</span><span class="p">:</span> <span class="kt"><a href="Classes/Emitter.html">Emitter</a></span><span class="o">.</span><span class="kt">LineBreak</span> <span class="o">=</span> <span class="o">.</span><span class="n">ln</span><span class="p">,</span>
+    <span class="nv">explicitStart</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">explicitEnd</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">version</span><span class="p">:</span> <span class="p">(</span><span class="nv">major</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">minor</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">sortKeys</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span>
+    <span class="k">where</span> <span class="kt">Nodes</span><span class="p">:</span> <span class="kt">Sequence</span><span class="p">,</span> <span class="kt">Nodes</span><span class="o">.</span><span class="kt">Iterator</span><span class="o">.</span><span class="kt">Element</span> <span class="o">==</span> <span class="kt"><a href="Enums/Node.html">Node</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>nodes</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Sequence of <code><a href="Enums/Node.html">Node</a></code>s.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>canonical</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Output should be the <q>canonical</q> format as in the YAML specification.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>indent</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The intendation increment.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>width</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The preferred line width. @c -1 means unlimited.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowUnicode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Unescaped non-ASCII characters are allowed if true.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>lineBreak</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Preferred line break.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>explicitStart</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Explicit document start <code>---</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>explicitEnd</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Explicit document end <code><a href="Classes/Constructor.html">...</a></code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>version</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>YAML version directive.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sortKeys</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Whether or not to sort Mapping keys in lexicographic order.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>YAML string.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L120-L151">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams9serializeSSAA4NodeO4node_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineL0Sb13explicitStartSb0N3EndSi5major_Si5minortSg7versionSb8sortKeystKF"></a>
+                    <a name="//apple_ref/swift/Function/serialize(node:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams9serializeSSAA4NodeO4node_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineL0Sb13explicitStartSb0N3EndSi5major_Si5minortSg7versionSb8sortKeystKF">serialize(node:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Produce a YAML string from a <code><a href="Enums/Node.html">Node</a></code>.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="Enums/YamlError.html">YamlError</a></code>.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">serialize</span><span class="p">(</span>
+    <span class="nv">node</span><span class="p">:</span> <span class="kt"><a href="Enums/Node.html">Node</a></span><span class="p">,</span>
+    <span class="nv">canonical</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">indent</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">width</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">allowUnicode</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">lineBreak</span><span class="p">:</span> <span class="kt"><a href="Classes/Emitter.html">Emitter</a></span><span class="o">.</span><span class="kt">LineBreak</span> <span class="o">=</span> <span class="o">.</span><span class="n">ln</span><span class="p">,</span>
+    <span class="nv">explicitStart</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">explicitEnd</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">version</span><span class="p">:</span> <span class="p">(</span><span class="nv">major</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">minor</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">sortKeys</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>node</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code><a href="Enums/Node.html">Node</a></code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>canonical</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Output should be the <q>canonical</q> format as in the YAML specification.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>indent</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The intendation increment.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>width</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The preferred line width. @c -1 means unlimited.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowUnicode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Unescaped non-ASCII characters are allowed if true.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>lineBreak</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Preferred line break.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>explicitStart</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Explicit document start <code>---</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>explicitEnd</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Explicit document end <code><a href="Classes/Constructor.html">...</a></code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>version</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>YAML version directive.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sortKeys</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Whether or not to sort Mapping keys in lexicographic order.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>YAML string.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L169-L192">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams8load_allAA12YamlSequenceVyypGSS4yaml_AA8ResolverCAA11ConstructorCtKF"></a>
+                    <a name="//apple_ref/swift/Function/load_all(yaml:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams8load_allAA12YamlSequenceVyypGSS4yaml_AA8ResolverCAA11ConstructorCtKF">load_all(yaml:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse all YAML documents in a String
+and produce corresponding Swift objects.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    YamlError
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">load_all</span><span class="p">(</span><span class="nv">yaml</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+                     <span class="n">_</span> <span class="nv">resolver</span><span class="p">:</span> <span class="kt"><a href="Classes/Resolver.html">Resolver</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span>
+                     <span class="n">_</span> <span class="nv">constructor</span><span class="p">:</span> <span class="kt"><a href="Classes/Constructor.html">Constructor</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt"><a href="Structs/YamlSequence.html">YamlSequence</a></span><span class="o">&lt;</span><span class="kt">Any</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>yaml</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>String</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>resolver</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Resolver</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>constructor</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Constructor</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>YamlSequence<Any></p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Parser.swift#L23-L28">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4loadypSgSS4yaml_AA8ResolverCAA11ConstructorCtKF"></a>
+                    <a name="//apple_ref/swift/Function/load(yaml:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4loadypSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">load(yaml:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse the first YAML document in a String
+and produce the corresponding Swift object.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    YamlError
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">load</span><span class="p">(</span><span class="nv">yaml</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+                 <span class="n">_</span> <span class="nv">resolver</span><span class="p">:</span> <span class="kt"><a href="Classes/Resolver.html">Resolver</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span>
+                 <span class="n">_</span> <span class="nv">constructor</span><span class="p">:</span> <span class="kt"><a href="Classes/Constructor.html">Constructor</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Any</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>yaml</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>String</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>resolver</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Resolver</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>constructor</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Constructor</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Any?</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Parser.swift#L39-L43">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11compose_allAA12YamlSequenceVyAA4NodeOGSS4yaml_AA8ResolverCAA11ConstructorCtKF"></a>
+                    <a name="//apple_ref/swift/Function/compose_all(yaml:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11compose_allAA12YamlSequenceVyAA4NodeOGSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose_all(yaml:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse all YAML documents in a String
+and produce corresponding representation trees.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    YamlError
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">compose_all</span><span class="p">(</span><span class="nv">yaml</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+                        <span class="n">_</span> <span class="nv">resolver</span><span class="p">:</span> <span class="kt"><a href="Classes/Resolver.html">Resolver</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span>
+                        <span class="n">_</span> <span class="nv">constructor</span><span class="p">:</span> <span class="kt"><a href="Classes/Constructor.html">Constructor</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt"><a href="Structs/YamlSequence.html">YamlSequence</a></span><span class="o">&lt;</span><span class="kt"><a href="Enums/Node.html">Node</a></span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>yaml</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>String</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>resolver</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Resolver</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>constructor</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Constructor</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>YamlSequence<Node></p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Parser.swift#L54-L59">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams7composeAA4NodeOSgSS4yaml_AA8ResolverCAA11ConstructorCtKF"></a>
+                    <a name="//apple_ref/swift/Function/compose(yaml:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams7composeAA4NodeOSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose(yaml:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse the first YAML document in a String
+and produce the corresponding representation tree.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    YamlError
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">compose</span><span class="p">(</span><span class="nv">yaml</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+                    <span class="n">_</span> <span class="nv">resolver</span><span class="p">:</span> <span class="kt"><a href="Classes/Resolver.html">Resolver</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span>
+                    <span class="n">_</span> <span class="nv">constructor</span><span class="p">:</span> <span class="kt"><a href="Classes/Constructor.html">Constructor</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt"><a href="Enums/Node.html">Node</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>yaml</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>String</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>resolver</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Resolver</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>constructor</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Constructor</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Node?</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Parser.swift#L70-L74">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>© 2018 <a class="link" href="http://jpsim.com" target="_blank" rel="external">JP Simard</a> under MIT.</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

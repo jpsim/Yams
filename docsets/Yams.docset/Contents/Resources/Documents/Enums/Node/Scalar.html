@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Scalar Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../../js/jquery.min.js" defer></script>
+    <script src="../../js/jazzy.js" defer></script>
+    
+    <script src="../../js/lunr.min.js" defer></script>
+    <script src="../../js/typeahead.jquery.js" defer></script>
+    <script src="../../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Struct/Scalar" class="dashAnchor"></a>
+
+    <a title="Scalar Structure Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../../index.html">
+          Yams Docs
+        </a>
+         (100% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/jpsim/Yams">
+            <img class="header-icon" src="../../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../../index.html">Yams Reference</a>
+      <img class="carat" src="../../img/carat.png" />
+      Scalar Structure Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/Constructor.html">Constructor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/Emitter.html">Emitter</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/Emitter/LineBreak.html">– LineBreak</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/Emitter/Options.html">– Options</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/Parser.html">Parser</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/Resolver.html">Resolver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/Resolver/Rule.html">– Rule</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/Tag.html">Tag</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/Tag/Name.html">– Name</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/YAMLDecoder.html">YAMLDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/YAMLEncoder.html">YAMLEncoder</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Enums/Node.html">Node</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Enums/Node/Mapping.html">– Mapping</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Enums/Node/Scalar.html">– Scalar</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Enums/Node/Sequence.html">– Sequence</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Enums/YamlError.html">YamlError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Enums/YamlError/Context.html">– Context</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/BinaryInteger.html">BinaryInteger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Bool.html">Bool</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Data.html">Data</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Date.html">Date</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Decimal.html">Decimal</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Dictionary.html">Dictionary</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/FixedWidthInteger.html">FixedWidthInteger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Float.html">Float</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/NSNull.html">NSNull</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Optional.html">Optional</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Set.html">Set</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/UInt.html">UInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/URL.html">URL</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Functions.html#/s:4Yams7composeAA4NodeOSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Functions.html#/s:4Yams11compose_allAA12YamlSequenceVyAA4NodeOGSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose_all(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Functions.html#/s:4Yams4dumpSSypSg6object_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKF">dump(object:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Functions.html#/s:4Yams4dumpSSx7objects_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzlF">dump(objects:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Functions.html#/s:4Yams4loadypSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">load(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Functions.html#/s:4Yams8load_allAA12YamlSequenceVyypGSS4yaml_AA8ResolverCAA11ConstructorCtKF">load_all(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Functions.html#/s:4Yams9serializeSSAA4NodeO4node_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineL0Sb13explicitStartSb0N3EndSi5major_Si5minortSg7versionSb8sortKeystKF">serialize(node:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Functions.html#/s:4Yams9serializeSSx5nodes_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzAA4NodeO7ElementRtzlF">serialize(nodes:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/NodeRepresentable.html">NodeRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/ScalarConstructible.html">ScalarConstructible</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/ScalarRepresentable.html">ScalarRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/SexagesimalConvertible.html">SexagesimalConvertible</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/YAMLEncodable.html">YAMLEncodable</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Structs/Mark.html">Mark</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Structs/YamlSequence.html">YamlSequence</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>Scalar</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Scalar</span></code></pre>
+
+                </div>
+              </div>
+            <p>Scalar node.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO6ScalarV6stringSSvp"></a>
+                    <a name="//apple_ref/swift/Property/string" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO6ScalarV6stringSSvp">string</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This node&rsquo;s string value.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">string</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Scalar.swift#L17-L21">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO6ScalarV3tagAA3TagCvp"></a>
+                    <a name="//apple_ref/swift/Property/tag" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO6ScalarV3tagAA3TagCvp">tag</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This node&rsquo;s tag (its type).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt"><a href="../../Classes/Tag.html">Tag</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Scalar.swift#L23">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO6ScalarV5styleAE5StyleOvp"></a>
+                    <a name="//apple_ref/swift/Property/style" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO6ScalarV5styleAE5StyleOvp">style</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The style to be used when emitting this node.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../../Enums/Node/Scalar/Style.html">Style</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Scalar.swift#L25">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO6ScalarV4markAA4MarkVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/mark" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO6ScalarV4markAA4MarkVSgvp">mark</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The location for this node.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">mark</span><span class="p">:</span> <span class="kt"><a href="../../Structs/Mark.html">Mark</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Scalar.swift#L27">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO6ScalarV5StyleO"></a>
+                    <a name="//apple_ref/swift/Enum/Style" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO6ScalarV5StyleO">Style</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The style to use when emitting a <code><a href="../../Enums/Node/Scalar.html">Scalar</a></code>.</p>
+
+                        <a href="../../Enums/Node/Scalar/Style.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Style</span> <span class="p">:</span> <span class="kt">UInt32</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Scalar.swift#L30-L45">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO6ScalarVAESS_AA3TagCAE5StyleOAA4MarkVSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(_:_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO6ScalarVAESS_AA3TagCAE5StyleOAA4MarkVSgtcfc">init(_:_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a <code>Node.Scalar</code> using the specified parameters.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt"><a href="../../Classes/Tag.html">Tag</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">implicit</span><span class="p">,</span> <span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../../Enums/Node/Scalar/Style.html">Style</a></span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../../Enums/Node.html#/s:4Yams4NodeO3anyypvp">any</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">mark</span><span class="p">:</span> <span class="kt"><a href="../../Structs/Mark.html">Mark</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>string</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The string to generate this scalar.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tag</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>This scalar&rsquo;s <code><a href="../../Classes/Tag.html">Tag</a></code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>style</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The style to use when emitting this <code>Scalar</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mark</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>This scalar&rsquo;s <code><a href="../../Structs/Mark.html">Mark</a></code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Scalar.swift#L53-L58">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>© 2018 <a class="link" href="http://jpsim.com" target="_blank" rel="external">JP Simard</a> under MIT.</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

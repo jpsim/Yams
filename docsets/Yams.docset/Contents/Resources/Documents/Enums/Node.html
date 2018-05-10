@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Node Enumeration Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Enum/Node" class="dashAnchor"></a>
+
+    <a title="Node Enumeration Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          Yams Docs
+        </a>
+         (100% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/jpsim/Yams">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">Yams Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      Node Enumeration Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Constructor.html">Constructor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Emitter.html">Emitter</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Emitter/LineBreak.html">– LineBreak</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Emitter/Options.html">– Options</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Parser.html">Parser</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Resolver.html">Resolver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Resolver/Rule.html">– Rule</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Tag.html">Tag</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Tag/Name.html">– Name</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/YAMLDecoder.html">YAMLDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/YAMLEncoder.html">YAMLEncoder</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node.html">Node</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node/Mapping.html">– Mapping</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node/Scalar.html">– Scalar</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node/Sequence.html">– Sequence</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/YamlError.html">YamlError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/YamlError/Context.html">– Context</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/BinaryInteger.html">BinaryInteger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Bool.html">Bool</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Data.html">Data</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Date.html">Date</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Decimal.html">Decimal</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Dictionary.html">Dictionary</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/FixedWidthInteger.html">FixedWidthInteger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Float.html">Float</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSNull.html">NSNull</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Optional.html">Optional</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Set.html">Set</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/UInt.html">UInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/URL.html">URL</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams7composeAA4NodeOSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams11compose_allAA12YamlSequenceVyAA4NodeOGSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose_all(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams4dumpSSypSg6object_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKF">dump(object:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams4dumpSSx7objects_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzlF">dump(objects:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams4loadypSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">load(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams8load_allAA12YamlSequenceVyypGSS4yaml_AA8ResolverCAA11ConstructorCtKF">load_all(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams9serializeSSAA4NodeO4node_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineL0Sb13explicitStartSb0N3EndSi5major_Si5minortSg7versionSb8sortKeystKF">serialize(node:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams9serializeSSx5nodes_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzAA4NodeO7ElementRtzlF">serialize(nodes:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/NodeRepresentable.html">NodeRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ScalarConstructible.html">ScalarConstructible</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ScalarRepresentable.html">ScalarRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/SexagesimalConvertible.html">SexagesimalConvertible</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/YAMLEncodable.html">YAMLEncodable</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Mark.html">Mark</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/YamlSequence.html">YamlSequence</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>Node</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Node</span></code></pre>
+
+                </div>
+              </div>
+            <p>YAML Node.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO6scalarA2C6ScalarVcACmF"></a>
+                    <a name="//apple_ref/swift/Element/scalar" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO6scalarA2C6ScalarVcACmF">scalar</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Scalar node.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">scalar</span><span class="p">(</span><span class="kt">Node</span><span class="o">.</span><span class="kt"><a href="../Enums/Node/Scalar.html">Scalar</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L14">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO7mappingA2C7MappingVcACmF"></a>
+                    <a name="//apple_ref/swift/Element/mapping" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO7mappingA2C7MappingVcACmF">mapping</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Mapping node.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">mapping</span><span class="p">(</span><span class="kt">Node</span><span class="o">.</span><span class="kt"><a href="../Enums/Node/Mapping.html">Mapping</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L16">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO8sequenceA2C8SequenceVcACmF"></a>
+                    <a name="//apple_ref/swift/Element/sequence" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO8sequenceA2C8SequenceVcACmF">sequence</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sequence node.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">sequence</span><span class="p">(</span><span class="kt">Node</span><span class="o">.</span><span class="kt"><a href="../Enums/Node/Sequence.html">Sequence</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L18">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO7MappingV"></a>
+                    <a name="//apple_ref/swift/Struct/Mapping" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO7MappingV">Mapping</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A mapping is the YAML equivalent of a <code>Dictionary</code>.</p>
+
+                        <a href="../Enums/Node/Mapping.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Mapping</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Mapping.swift#L13-L44">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO7mappingAC7MappingVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/mapping" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO7mappingAC7MappingVSgvp">mapping</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get or set the <code><a href="../Enums/Node/Mapping.html">Node.Mapping</a></code> value if this node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO7mappingA2C7MappingVcACmF">Node.mapping</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">mapping</span><span class="p">:</span> <span class="kt"><a href="../Enums/Node/Mapping.html">Mapping</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Mapping.swift#L47-L59">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Node+Scalar"></a>
+                <a name="//apple_ref/swift/Section/Node+Scalar" class="dashAnchor"></a>
+                <a href="#/Node+Scalar">
+                  <h3 class="section-name">Node+Scalar</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO6ScalarV"></a>
+                    <a name="//apple_ref/swift/Struct/Scalar" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO6ScalarV">Scalar</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Scalar node.</p>
+
+                        <a href="../Enums/Node/Scalar.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Scalar</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Scalar.swift#L15-L59">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO6scalarAC6ScalarVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/scalar" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO6scalarAC6ScalarVSgvp">scalar</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get or set the <code><a href="../Enums/Node/Scalar.html">Node.Scalar</a></code> value if this node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarA2C6ScalarVcACmF">Node.scalar</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">scalar</span><span class="p">:</span> <span class="kt"><a href="../Enums/Node/Scalar.html">Scalar</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Scalar.swift#L62-L74">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Node+Sequence"></a>
+                <a name="//apple_ref/swift/Section/Node+Sequence" class="dashAnchor"></a>
+                <a href="#/Node+Sequence">
+                  <h3 class="section-name">Node+Sequence</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO8SequenceV"></a>
+                    <a name="//apple_ref/swift/Struct/Sequence" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO8SequenceV">Sequence</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sequence node.</p>
+
+                        <a href="../Enums/Node/Sequence.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Sequence</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Sequence.swift#L15-L46">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO8sequenceAC8SequenceVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/sequence" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO8sequenceAC8SequenceVSgvp">sequence</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get or set the <code><a href="../Enums/Node/Sequence.html">Node.Sequence</a></code> value if this node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO8sequenceA2C8SequenceVcACmF">Node.sequence</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">sequence</span><span class="p">:</span> <span class="kt"><a href="../Enums/Node/Sequence.html">Sequence</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.Sequence.swift#L49-L61">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOACSS_AA3TagCAC6ScalarV5StyleOtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOACSS_AA3TagCAC6ScalarV5StyleOtcfc">init(_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarA2C6ScalarVcACmF">Node.scalar</a></code> with a string, tag &amp; scalar style.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt"><a href="../Classes/Tag.html">Tag</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">implicit</span><span class="p">,</span> <span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../Enums/Node/Scalar.html">Scalar</a></span><span class="o">.</span><span class="kt">Style</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Enums/Node.html#/s:4Yams4NodeO3anyypvp">any</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>string</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>String value for this node.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tag</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Tag for this node.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>style</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Style to use when emitting this node.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L27-L29">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOACSayAC_ACtG_AA3TagCAC7MappingV5StyleOtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOACSayAC_ACtG_AA3TagCAC7MappingV5StyleOtcfc">init(_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a <code><a href="../Enums/Node.html#/s:4Yams4NodeO7mappingA2C7MappingVcACmF">Node.mapping</a></code> with a sequence of node pairs, tag &amp; scalar style.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">pairs</span><span class="p">:</span> <span class="p">[(</span><span class="kt">Node</span><span class="p">,</span> <span class="kt">Node</span><span class="p">)],</span> <span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt"><a href="../Classes/Tag.html">Tag</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">implicit</span><span class="p">,</span> <span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../Enums/Node/Mapping.html">Mapping</a></span><span class="o">.</span><span class="kt">Style</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Enums/Node.html#/s:4Yams4NodeO3anyypvp">any</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>pairs</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Pairs of nodes to use for this node.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tag</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Tag for this node.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>style</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Style to use when emitting this node.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L36-L38">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOACSayACG_AA3TagCAC8SequenceV5StyleOtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOACSayACG_AA3TagCAC8SequenceV5StyleOtcfc">init(_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a <code><a href="../Enums/Node.html#/s:4Yams4NodeO8sequenceA2C8SequenceVcACmF">Node.sequence</a></code> with a sequence of nodes, tag &amp; scalar style.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">nodes</span><span class="p">:</span> <span class="p">[</span><span class="kt">Node</span><span class="p">],</span> <span class="n">_</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt"><a href="../Classes/Tag.html">Tag</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">implicit</span><span class="p">,</span> <span class="n">_</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../Enums/Node/Sequence.html">Sequence</a></span><span class="o">.</span><span class="kt">Style</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Enums/Node.html#/s:4Yams4NodeO3anyypvp">any</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>nodes</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Sequence of nodes to use for this node.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tag</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Tag for this node.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>style</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Style to use when emitting this node.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L45-L47">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Node%20Members"></a>
+                <a name="//apple_ref/swift/Section/Public Node Members" class="dashAnchor"></a>
+                <a href="#/Public%20Node%20Members">
+                  <h3 class="section-name">Public Node Members</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO3tagAA3TagCvp"></a>
+                    <a name="//apple_ref/swift/Property/tag" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO3tagAA3TagCvp">tag</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The tag for this node.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    Accessing this property causes the tag to be resolved by tag.resolver.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">tag</span><span class="p">:</span> <span class="kt"><a href="../Classes/Tag.html">Tag</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L56-L62">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO4markAA4MarkVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/mark" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO4markAA4MarkVSgvp">mark</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The location for this node.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">mark</span><span class="p">:</span> <span class="kt"><a href="../Structs/Mark.html">Mark</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L65-L71">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Typed%20accessor%20properties"></a>
+                <a name="//apple_ref/swift/Section/Typed accessor properties" class="dashAnchor"></a>
+                <a href="#/Typed%20accessor%20properties">
+                  <h3 class="section-name">Typed accessor properties</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO3anyypvp"></a>
+                    <a name="//apple_ref/swift/Property/any" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO3anyypvp">any</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This node as an <code>Any</code>, if convertible.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">any</span><span class="p">:</span> <span class="kt">Any</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L76-L78">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO6stringSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/string" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO6stringSSSgvp">string</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This node as a <code>String</code>, if convertible.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L81-L83">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO4boolSbSgvp"></a>
+                    <a name="//apple_ref/swift/Property/bool" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO4boolSbSgvp">bool</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This node as a <code>Bool</code>, if convertible.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">bool</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L86-L88">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO5floatSdSgvp"></a>
+                    <a name="//apple_ref/swift/Property/float" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO5floatSdSgvp">float</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This node as a <code>Double</code>, if convertible.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">float</span><span class="p">:</span> <span class="kt">Double</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L91-L93">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO4nullSo6NSNullCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/null" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO4nullSo6NSNullCSgvp">null</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This node as an <code>NSNull</code>, if convertible.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">null</span><span class="p">:</span> <span class="kt">NSNull</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L96-L98">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO3intSiSgvp"></a>
+                    <a name="//apple_ref/swift/Property/int" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO3intSiSgvp">int</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This node as an <code>Int</code>, if convertible.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">int</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L101-L103">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO6binary10Foundation4DataVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/binary" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO6binary10Foundation4DataVSgvp">binary</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This node as a <code>Data</code>, if convertible.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">binary</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L106-L108">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO9timestamp10Foundation4DateVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/timestamp" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO9timestamp10Foundation4DateVSgvp">timestamp</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This node as a <code>Date</code>, if convertible.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">timestamp</span><span class="p">:</span> <span class="kt">Date</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L111-L113">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Typed%20accessor%20methods"></a>
+                <a name="//apple_ref/swift/Section/Typed accessor methods" class="dashAnchor"></a>
+                <a href="#/Typed%20accessor%20methods">
+                  <h3 class="section-name">Typed accessor methods</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO5arraySayACGyF"></a>
+                    <a name="//apple_ref/swift/Method/array()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO5arraySayACGyF">array()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns this node mapped as an <code>Array&lt;Node&gt;</code>. If the node isn&rsquo;t a <code><a href="../Enums/Node.html#/s:4Yams4NodeO8sequenceA2C8SequenceVcACmF">Node.sequence</a></code>, the array will be
+empty.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">array</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">Node</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L119-L121">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO5arraySayxGxm2of_tAA19ScalarConstructibleRzlF"></a>
+                    <a name="//apple_ref/swift/Method/array(of:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO5arraySayxGxm2of_tAA19ScalarConstructibleRzlF">array(of:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Typed Array using type parameter: e.g. <code>array(of: String.self)</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">array</span><span class="o">&lt;</span><span class="k">Type</span><span class="p">:</span> <span class="kt"><a href="../Protocols/ScalarConstructible.html">ScalarConstructible</a></span><span class="o">&gt;</span><span class="p">(</span><span class="n">of</span> <span class="nv">type</span><span class="p">:</span> <span class="k">Type</span><span class="o">.</span><span class="k">Type</span> <span class="o">=</span> <span class="k">Type</span><span class="o">.</span><span class="k">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="k">Type</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>type</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Type conforming to <code><a href="../Protocols/ScalarConstructible.html">ScalarConstructible</a></code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Array of <code>Type</code>.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L128-L130">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOACSgACcip"></a>
+                    <a name="//apple_ref/swift/Method/subscript(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOACSgACcip">subscript(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO8sequenceA2C8SequenceVcACmF">.sequence</a></code> or <code><a href="../Enums/Node.html#/s:4Yams4NodeO7mappingA2C7MappingVcACmF">.mapping</a></code>, set or get the specified <code>Node</code>.
+If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarA2C6ScalarVcACmF">.scalar</a></code>, this is a no-op.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">subscript</span><span class="p">(</span><span class="nv">node</span><span class="p">:</span> <span class="kt">Node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Node</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L134-L158">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOACSgAA0B13Representable_pcip"></a>
+                    <a name="//apple_ref/swift/Method/subscript(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOACSgAA0B13Representable_pcip">subscript(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO8sequenceA2C8SequenceVcACmF">.sequence</a></code> or <code><a href="../Enums/Node.html#/s:4Yams4NodeO7mappingA2C7MappingVcACmF">.mapping</a></code>, set or get the specified parameter&rsquo;s <code>Node</code>
+representation.
+If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarA2C6ScalarVcACmF">.scalar</a></code>, this is a no-op.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">subscript</span><span class="p">(</span><span class="nv">representable</span><span class="p">:</span> <span class="kt"><a href="../Protocols/NodeRepresentable.html">NodeRepresentable</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Node</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L163-L172">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOACSgSScip"></a>
+                    <a name="//apple_ref/swift/Method/subscript(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOACSgSScip">subscript(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO8sequenceA2C8SequenceVcACmF">.sequence</a></code> or <code><a href="../Enums/Node.html#/s:4Yams4NodeO7mappingA2C7MappingVcACmF">.mapping</a></code>, set or get the specified string&rsquo;s <code>Node</code> representation.
+If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarA2C6ScalarVcACmF">.scalar</a></code>, this is a no-op.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">subscript</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Node</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L176-L183">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Hashable"></a>
+                <a name="//apple_ref/swift/Section/Hashable" class="dashAnchor"></a>
+                <a href="#/Hashable">
+                  <h3 class="section-name">Hashable</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO9hashValueSivp"></a>
+                    <a name="//apple_ref/swift/Property/hashValue" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO9hashValueSivp">hashValue</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This <code>Node</code>&lsquo;s Hashable <code>hashValue</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">hashValue</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L190-L199">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO2eeoiSbAC_ACtFZ"></a>
+                    <a name="//apple_ref/swift/Method/==(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO2eeoiSbAC_ACtFZ">==(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns true if both nodes are equal.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">Node</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">Node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>lhs</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The left hand side Node to compare.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>rhs</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The right hand side Node to compare.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>True if both nodes are equal.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L207-L218">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Comparable"></a>
+                <a name="//apple_ref/swift/Section/Comparable" class="dashAnchor"></a>
+                <a href="#/Comparable">
+                  <h3 class="section-name">Comparable</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO1loiSbAC_ACtFZ"></a>
+                    <a name="//apple_ref/swift/Method/&lt;(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO1loiSbAC_ACtFZ">&lt;(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns true if <code>lhs</code> is ordered before <code>rhs</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">Node</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">Node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>lhs</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The left hand side Node to compare.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>rhs</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The right hand side Node to compare.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>True if <code>lhs</code> is ordered before <code>rhs</code>.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L230-L241">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ExpressibleBy*Literal"></a>
+                <a name="//apple_ref/swift/Section/ExpressibleBy*Literal" class="dashAnchor"></a>
+                <a href="#/ExpressibleBy*Literal">
+                  <h3 class="section-name">ExpressibleBy*Literal</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOA2C12arrayLiterald_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(arrayLiteral:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOA2C12arrayLiterald_tcfc">init(arrayLiteral:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a <code><a href="../Enums/Node.html#/s:4Yams4NodeO8sequenceA2C8SequenceVcACmF">Node.sequence</a></code> from an array literal of <code>Node</code>s.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">arrayLiteral</span> <span class="nv">elements</span><span class="p">:</span> <span class="kt">Node</span><span class="o">...</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L261-L263">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ExpressibleBy*Literal2"></a>
+                <a name="//apple_ref/swift/Section/ExpressibleBy*Literal" class="dashAnchor"></a>
+                <a href="#/ExpressibleBy*Literal2">
+                  <h3 class="section-name">ExpressibleBy*Literal</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOA2C_ACt17dictionaryLiterald_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(dictionaryLiteral:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOA2C_ACt17dictionaryLiterald_tcfc">init(dictionaryLiteral:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a <code><a href="../Enums/Node.html#/s:4Yams4NodeO7mappingA2C7MappingVcACmF">Node.mapping</a></code> from a dictionary literal of <code>Node</code>s.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">dictionaryLiteral</span> <span class="nv">elements</span><span class="p">:</span> <span class="p">(</span><span class="kt">Node</span><span class="p">,</span> <span class="kt">Node</span><span class="p">)</span><span class="o">...</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L268-L270">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ExpressibleBy*Literal3"></a>
+                <a name="//apple_ref/swift/Section/ExpressibleBy*Literal" class="dashAnchor"></a>
+                <a href="#/ExpressibleBy*Literal3">
+                  <h3 class="section-name">ExpressibleBy*Literal</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOACSd12floatLiteral_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(floatLiteral:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOACSd12floatLiteral_tcfc">init(floatLiteral:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarA2C6ScalarVcACmF">Node.scalar</a></code> from a float literal.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">floatLiteral</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Double</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L275-L277">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ExpressibleBy*Literal4"></a>
+                <a name="//apple_ref/swift/Section/ExpressibleBy*Literal" class="dashAnchor"></a>
+                <a href="#/ExpressibleBy*Literal4">
+                  <h3 class="section-name">ExpressibleBy*Literal</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOACSi14integerLiteral_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(integerLiteral:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOACSi14integerLiteral_tcfc">init(integerLiteral:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarA2C6ScalarVcACmF">Node.scalar</a></code> from an integer literal.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">integerLiteral</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L282-L284">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/ExpressibleBy*Literal5"></a>
+                <a name="//apple_ref/swift/Section/ExpressibleBy*Literal" class="dashAnchor"></a>
+                <a href="#/ExpressibleBy*Literal5">
+                  <h3 class="section-name">ExpressibleBy*Literal</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOACSS13stringLiteral_tcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(stringLiteral:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOACSS13stringLiteral_tcfc">init(stringLiteral:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarA2C6ScalarVcACmF">Node.scalar</a></code> from a string literal.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">stringLiteral</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Node.swift#L289-L291">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeOACxKcAA0B13RepresentableRzlufc"></a>
+                    <a name="//apple_ref/swift/Method/init(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeOACxKcAA0B13RepresentableRzlufc">init(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initialize a <code>Node</code> with a value of <code><a href="../Protocols/NodeRepresentable.html">NodeRepresentable</a></code>.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="../Enums/YamlError.html">YamlError</a></code>.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">init</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">representable</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="k">throws</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/NodeRepresentable.html">NodeRepresentable</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>representable</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Value of <code><a href="../Protocols/NodeRepresentable.html">NodeRepresentable</a></code> to represent as a <code>Node</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Representer.swift#L20-L22">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/NodeRepresentable"></a>
+                <a name="//apple_ref/swift/Section/NodeRepresentable" class="dashAnchor"></a>
+                <a href="#/NodeRepresentable">
+                  <h3 class="section-name">NodeRepresentable</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams4NodeO11representedACyKF"></a>
+                    <a name="//apple_ref/swift/Method/represented()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams4NodeO11representedACyKF">represented()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This value&rsquo;s <code>Node</code> representation.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">represented</span><span class="p">()</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Node</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Representer.swift#L34-L36">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>© 2018 <a class="link" href="http://jpsim.com" target="_blank" rel="external">JP Simard</a> under MIT.</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

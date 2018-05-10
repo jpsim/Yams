@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Emitter Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/Emitter" class="dashAnchor"></a>
+
+    <a title="Emitter Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          Yams Docs
+        </a>
+         (100% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/jpsim/Yams">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">Yams Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      Emitter Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Constructor.html">Constructor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Emitter.html">Emitter</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Emitter/LineBreak.html">– LineBreak</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Emitter/Options.html">– Options</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Parser.html">Parser</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Resolver.html">Resolver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Resolver/Rule.html">– Rule</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Tag.html">Tag</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Tag/Name.html">– Name</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/YAMLDecoder.html">YAMLDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/YAMLEncoder.html">YAMLEncoder</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node.html">Node</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node/Mapping.html">– Mapping</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node/Scalar.html">– Scalar</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/Node/Sequence.html">– Sequence</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/YamlError.html">YamlError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/YamlError/Context.html">– Context</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/BinaryInteger.html">BinaryInteger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Bool.html">Bool</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Data.html">Data</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Date.html">Date</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Decimal.html">Decimal</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Dictionary.html">Dictionary</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/FixedWidthInteger.html">FixedWidthInteger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Float.html">Float</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSNull.html">NSNull</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Optional.html">Optional</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Set.html">Set</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/UInt.html">UInt</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/URL.html">URL</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams7composeAA4NodeOSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams11compose_allAA12YamlSequenceVyAA4NodeOGSS4yaml_AA8ResolverCAA11ConstructorCtKF">compose_all(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams4dumpSSypSg6object_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKF">dump(object:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams4dumpSSx7objects_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzlF">dump(objects:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams4loadypSgSS4yaml_AA8ResolverCAA11ConstructorCtKF">load(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams8load_allAA12YamlSequenceVyypGSS4yaml_AA8ResolverCAA11ConstructorCtKF">load_all(yaml:_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams9serializeSSAA4NodeO4node_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineL0Sb13explicitStartSb0N3EndSi5major_Si5minortSg7versionSb8sortKeystKF">serialize(node:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:4Yams9serializeSSx5nodes_Sb9canonicalSi6indentSi5widthSb12allowUnicodeAA7EmitterC9LineBreakO04lineK0Sb13explicitStartSb0M3EndSi5major_Si5minortSg7versionSb8sortKeystKs8SequenceRzAA4NodeO7ElementRtzlF">serialize(nodes:canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/NodeRepresentable.html">NodeRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ScalarConstructible.html">ScalarConstructible</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ScalarRepresentable.html">ScalarRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/SexagesimalConvertible.html">SexagesimalConvertible</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/YAMLEncodable.html">YAMLEncodable</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Mark.html">Mark</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/YamlSequence.html">YamlSequence</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>Emitter</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">Emitter</span></code></pre>
+
+                </div>
+              </div>
+            <p>Class responsible for emitting libYAML events.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams7EmitterC9LineBreakO"></a>
+                    <a name="//apple_ref/swift/Enum/LineBreak" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams7EmitterC9LineBreakO">LineBreak</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Line break options to use when emitting YAML.</p>
+
+                        <a href="../Classes/Emitter/LineBreak.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">LineBreak</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L197-L204">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams7EmitterC4data10Foundation4DataVvp"></a>
+                    <a name="//apple_ref/swift/Property/data" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams7EmitterC4data10Foundation4DataVvp">data</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Retrieve this Emitter&rsquo;s binary output.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">internal(set)</span> <span class="k">var</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L207">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams7EmitterC7OptionsV"></a>
+                    <a name="//apple_ref/swift/Struct/Options" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams7EmitterC7OptionsV">Options</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Configuration options to use when emitting YAML.</p>
+
+                        <a href="../Classes/Emitter/Options.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Options</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L210-L231">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams7EmitterC7optionsAC7OptionsVvp"></a>
+                    <a name="//apple_ref/swift/Property/options" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams7EmitterC7optionsAC7OptionsVvp">options</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Configuration options to use when emitting YAML.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Classes/Emitter/Options.html">Options</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L234-L238">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams7EmitterCACSb9canonical_Si6indentSi5widthSb12allowUnicodeAC9LineBreakO04lineI0Sb13explicitStartSb0K3EndSi5major_Si5minortSg7versionSb8sortKeystcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams7EmitterCACSb9canonical_Si6indentSi5widthSb12allowUnicodeAC9LineBreakO04lineI0Sb13explicitStartSb0K3EndSi5major_Si5minortSg7versionSb8sortKeystcfc">init(canonical:indent:width:allowUnicode:lineBreak:explicitStart:explicitEnd:version:sortKeys:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Create an <code>Emitter</code> with the specified options.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">canonical</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nv">indent</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nv">width</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nv">allowUnicode</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nv">lineBreak</span><span class="p">:</span> <span class="kt"><a href="../Classes/Emitter/LineBreak.html">LineBreak</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">ln</span><span class="p">,</span>
+            <span class="nv">explicitStart</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nv">explicitEnd</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nv">version</span><span class="p">:</span> <span class="p">(</span><span class="nv">major</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">minor</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+            <span class="nv">sortKeys</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>canonical</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Set if the output should be in the <q>canonical</q> format described in the YAML
+                       specification.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>indent</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Set the indentation value.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>width</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Set the preferred line width. -1 means unlimited.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowUnicode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Set if unescaped non-ASCII characters are allowed.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>lineBreak</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Set the preferred line break.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>explicitStart</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Explicit document start <code>---</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>explicitEnd</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Explicit document end <code><a href="../Classes/Emitter/LineBreak.html">...</a></code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>version</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>%YAML</code> directive value or nil.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sortKeys</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Set if emitter should sort keys in lexicographic order.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L252-L286">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams7EmitterC4openyyKF"></a>
+                    <a name="//apple_ref/swift/Method/open()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams7EmitterC4openyyKF">open()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Open &amp; initialize the emmitter.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code><a href="../Enums/YamlError.html">YamlError</a></code> if the <code>Emitter</code> was already opened or closed.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">open</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L295-L312">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams7EmitterC5closeyyKF"></a>
+                    <a name="//apple_ref/swift/Method/close()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams7EmitterC5closeyyKF">close()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Close the <code>Emitter.</code></p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code><a href="../Enums/YamlError.html">YamlError</a></code> if the <code>Emitter</code> hasn&rsquo;t yet been initialized.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">close</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L317-L329">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams7EmitterC9serializeyAA4NodeO4node_tKF"></a>
+                    <a name="//apple_ref/swift/Method/serialize(node:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams7EmitterC9serializeyAA4NodeO4node_tKF">serialize(node:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Ingest a <code><a href="../Enums/Node.html">Node</a></code> to include when emitting the YAML output.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="../Enums/YamlError.html">YamlError</a></code> if the <code>Emitter</code> hasn&rsquo;t yet been opened or has been closed.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">serialize</span><span class="p">(</span><span class="nv">node</span><span class="p">:</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>node</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Enums/Node.html">Node</a></code> to serialize.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/docs/Sources/Yams/Emitter.swift#L336-L359">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>© 2018 <a class="link" href="http://jpsim.com" target="_blank" rel="external">JP Simard</a> under MIT.</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>
