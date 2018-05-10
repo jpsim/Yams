@@ -1,8 +1,9 @@
 module: Yams
 author: JP Simard, Norio Nomura
-author_url: http://jpsim.com
+author_url: https://jpsim.com
+root_url: https://jpsim.com/Yams/
 github_url: https://github.com/jpsim/Yams
 github_file_prefix: https://github.com/jpsim/Yams/tree/docs
 theme: fullwidth
 clean: true
-copyright: '© 2018 [JP Simard](http://jpsim.com) under MIT.'
+copyright: '© 2018 [JP Simard](https://jpsim.com) under MIT.'

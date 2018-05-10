@@ -2,8 +2,8 @@
 
 ![Yams](https://raw.githubusercontent.com/jpsim/Yams/master/yams.jpg)
 
-A sweet and swifty [Yaml](http://yaml.org/) parser built on
-[libYAML](http://pyyaml.org/wiki/LibYAML).
+A sweet and swifty [YAML](http://yaml.org/) parser built on
+[LibYAML](https://github.com/yaml/libyaml).
 
 [![CircleCI](https://circleci.com/gh/jpsim/Yams.svg?style=svg)](https://circleci.com/gh/jpsim/Yams)
 
