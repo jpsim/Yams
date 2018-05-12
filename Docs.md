@@ -2,7 +2,7 @@
 
 For installation instructions, see [README.md](README.md).
 
-API documentation coming soon.
+API documentation available at [jpsim.com/Yams](https://jpsim.com/Yams).
 
 ## Usage
 
