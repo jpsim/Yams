@@ -1,4 +1,4 @@
-## Master
+## 1.0.0
 
 ##### Breaking
 
@@ -7,7 +7,8 @@
 
 ##### Enhancements
 
-* None.
+* API documentation now available at [jpsim.com/Yams](https://jpsim.com/Yams).  
+  [JP Simard](https://github.com/jpsim)
 
 ##### Bug Fixes
 
