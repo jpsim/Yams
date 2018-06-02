@@ -81,6 +81,11 @@ aliases:
     - store_test_results:
         path: build/reports/
 
+  - &steps-for-linux-without-swiftlint
+    - checkout
+    - run: swift test
+    - run: swift test -Xswiftc -DUSE_UTF8
+
 version: 2
 jobs:
 
@@ -159,6 +164,11 @@ jobs:
       - image: norionomura/swiftlint:swift-4.1.2
     steps: *steps-for-linux
 
+  linux_swift_4.2:
+    docker:
+      - image: norionomura/swift:swift-4.2-branch
+    steps: *steps-for-linux-without-swiftlint
+
 workflows:
   version: 2
   workflow:
@@ -178,3 +188,4 @@ workflows:
       - linux_swift_4.1.0
       - linux_swift_4.1.1
       - linux_swift_4.1.2
+      - linux_swift_4.2
