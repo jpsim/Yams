@@ -101,7 +101,7 @@ jobs:
 
   xcode_9.3_swift_4.1:
     macos:
-      xcode: "9.3.0"
+      xcode: "9.3.1"
     << : *XCODE9
 
   jazzy:
@@ -126,7 +126,7 @@ jobs:
 
   spm_swift_4.1:
     macos:
-      xcode: "9.3.0"
+      xcode: "9.3.1"
     steps: *steps-for-spm
 
   linux_swift_4:
