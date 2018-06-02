@@ -144,9 +144,19 @@ jobs:
       - image: norionomura/swiftlint:swift-4.0.3
     steps: *steps-for-linux
 
-  linux_swift_4.1:
+  linux_swift_4.1.0:
     docker:
-      - image: norionomura/swiftlint:swift-4.1
+      - image: norionomura/swiftlint:swift-4.1.0
+    steps: *steps-for-linux
+
+  linux_swift_4.1.1:
+    docker:
+      - image: norionomura/swiftlint:swift-4.1.1
+    steps: *steps-for-linux
+
+  linux_swift_4.1.2:
+    docker:
+      - image: norionomura/swiftlint:swift-4.1.2
     steps: *steps-for-linux
 
 workflows:
@@ -165,4 +175,6 @@ workflows:
       - linux_swift_4
       - linux_swift_4.0.2
       - linux_swift_4.0.3
-      - linux_swift_4.1
+      - linux_swift_4.1.0
+      - linux_swift_4.1.1
+      - linux_swift_4.1.2
