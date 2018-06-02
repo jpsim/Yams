@@ -189,3 +189,14 @@ workflows:
       - linux_swift_4.1.1
       - linux_swift_4.1.2
       - linux_swift_4.2
+
+  daily:
+    triggers:
+      - schedule:
+          cron: "0 4 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - linux_swift_4.2
