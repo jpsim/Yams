@@ -81,6 +81,11 @@ aliases:
     - store_test_results:
         path: build/reports/
 
+  - &steps-for-linux-without-swiftlint
+    - checkout
+    - run: swift test
+    - run: swift test -Xswiftc -DUSE_UTF8
+
 version: 2
 jobs:
 
@@ -101,7 +106,7 @@ jobs:
 
   xcode_9.3_swift_4.1:
     macos:
-      xcode: "9.3.0"
+      xcode: "9.3.1"
     << : *XCODE9
 
   jazzy:
@@ -126,7 +131,7 @@ jobs:
 
   spm_swift_4.1:
     macos:
-      xcode: "9.3.0"
+      xcode: "9.3.1"
     steps: *steps-for-spm
 
   linux_swift_4:
@@ -144,10 +149,25 @@ jobs:
       - image: norionomura/swiftlint:swift-4.0.3
     steps: *steps-for-linux
 
-  linux_swift_4.1:
+  linux_swift_4.1.0:
     docker:
-      - image: norionomura/swiftlint:swift-4.1
+      - image: norionomura/swiftlint:swift-4.1.0
     steps: *steps-for-linux
+
+  linux_swift_4.1.1:
+    docker:
+      - image: norionomura/swiftlint:swift-4.1.1
+    steps: *steps-for-linux
+
+  linux_swift_4.1.2:
+    docker:
+      - image: norionomura/swiftlint:swift-4.1.2
+    steps: *steps-for-linux
+
+  linux_swift_4.2:
+    docker:
+      - image: norionomura/swift:swift-4.2-branch
+    steps: *steps-for-linux-without-swiftlint
 
 workflows:
   version: 2
@@ -165,4 +185,18 @@ workflows:
       - linux_swift_4
       - linux_swift_4.0.2
       - linux_swift_4.0.3
-      - linux_swift_4.1
+      - linux_swift_4.1.0
+      - linux_swift_4.1.1
+      - linux_swift_4.1.2
+      - linux_swift_4.2
+
+  daily:
+    triggers:
+      - schedule:
+          cron: "0 4 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - linux_swift_4.2
