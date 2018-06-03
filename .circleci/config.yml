@@ -25,19 +25,10 @@ aliases:
 
   - &steps-for-jazzy
     - checkout
-    - run: echo "ruby-2.3" > ~/.ruby-version
-    - restore_cache:
-        key: 1-gems-{{ checksum "Gemfile.lock" }}
     - run: |
-        (
-          export ARCHFLAGS="-arch x86_64"
-          bundle check || bundle install --path vendor/bundle
-        )
-    - save_cache:
-        key: 1-gems-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
-    - run: bundle exec jazzy
+        swift build
+        sourcekitten doc --spm-module Yams>yams.json
+        jazzy --clean --sourcekitten-sourcefile yams.json
     - store_artifacts:
         path: docs
     - run: |
@@ -110,8 +101,8 @@ jobs:
     << : *XCODE9
 
   jazzy:
-    macos:
-      xcode: "9.3.0"
+    docker:
+      - image: norionomura/sourcekitten:swift-4.1.2
     steps: *steps-for-jazzy
 
   spm_swift_4:
