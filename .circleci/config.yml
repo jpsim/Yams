@@ -28,7 +28,8 @@ aliases:
     - run: |
         swift build
         sourcekitten doc --spm-module Yams>yams.json
-        jazzy --clean --sourcekitten-sourcefile yams.json
+        bundle check || bundle install
+        bundle exec jazzy --clean --sourcekitten-sourcefile yams.json
     - store_artifacts:
         path: docs
     - run: |
