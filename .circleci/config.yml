@@ -102,7 +102,7 @@ jobs:
 
   jazzy:
     docker:
-      - image: norionomura/sourcekitten:swift-4.1.2
+      - image: norionomura/jazzy:0.9.3_swift-4.1.2
     steps: *steps-for-jazzy
 
   spm_swift_4:
