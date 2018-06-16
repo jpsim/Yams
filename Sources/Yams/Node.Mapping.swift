@@ -197,9 +197,11 @@ private struct Pair<Value: Comparable & Equatable>: Comparable, Equatable {
         self.value = value
     }
 
+#if !swift(>=4.1.50)
     static func == (lhs: Pair, rhs: Pair) -> Bool {
         return lhs.key == rhs.key && lhs.value == rhs.value
     }
+#endif
 
     static func < (lhs: Pair<Value>, rhs: Pair<Value>) -> Bool {
         return lhs.key < rhs.key

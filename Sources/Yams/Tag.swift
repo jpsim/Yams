@@ -105,6 +105,7 @@ extension Tag.Name: ExpressibleByStringLiteral {
 }
 
 extension Tag.Name: Hashable {
+#if !swift(>=4.1.50)
     /// :nodoc:
     public var hashValue: Int {
         return rawValue.hashValue
@@ -114,6 +115,7 @@ extension Tag.Name: Hashable {
     public static func == (lhs: Tag.Name, rhs: Tag.Name) -> Bool {
         return lhs.rawValue == rhs.rawValue
     }
+#endif
 }
 
 // http://www.yaml.org/spec/1.2/spec.html#Schema
