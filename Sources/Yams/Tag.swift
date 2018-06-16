@@ -79,10 +79,17 @@ extension Tag: CustomStringConvertible {
 }
 
 extension Tag: Hashable {
+#if swift(>=4.1.50)
+    /// :nodoc:
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+    }
+#else
     /// :nodoc:
     public var hashValue: Int {
         return name.hashValue
     }
+#endif
 
     /// :nodoc:
     public static func == (lhs: Tag, rhs: Tag) -> Bool {
