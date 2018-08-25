@@ -525,13 +525,13 @@ private class Person: Codable, Equatable {
         self.website = website
     }
 
+#if !swift(>=4.1.50)
     private enum CodingKeys: String, CodingKey {
         case name
         case email
         case website
     }
 
-    // FIXME: Remove when subclasses (Employee) are able to override synthesized conformance.
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
@@ -545,6 +545,7 @@ private class Person: Codable, Equatable {
         try container.encode(email, forKey: .email)
         try container.encodeIfPresent(website, forKey: .website)
     }
+#endif
 
     func isEqual(_ other: Person) -> Bool {
         return self.name == other.name &&
