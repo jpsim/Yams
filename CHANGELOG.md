@@ -6,11 +6,15 @@
 
 ##### Enhancements
 
-* None.
+* Improve support for compiling with Swift 4.2 or later.  
+  [Norio Nomura](https://github.com/norio-nomura)
 
 ##### Bug Fixes
 
-* None.
+* Fix issues with unset `DYLIB_COMPATIBILITY_VERSION` and
+  `DYLIB_CURRENT_VERSION`. Now both values are set to `1`.  
+  [Norio Nomura](https://github.com/norio-nomura)
+  [#131](https://github.com/jpsim/Yams/issues/131)
 
 ## 1.0.0
 
