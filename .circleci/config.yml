@@ -43,11 +43,11 @@ aliases:
           fastlane snapshot reset_simulators --force
       - *xcodebuild
       - *store_test_results
-      - *set_ruby_version
-      - *restore_bundle_cache
-      - *bundle_install
-      - *save_bundle_cache
-      - *pod_lib_lint
+      # - *set_ruby_version
+      # - *restore_bundle_cache
+      # - *bundle_install
+      # - *save_bundle_cache
+      # - *pod_lib_lint
 
   - &steps-for-jazzy
     - checkout
