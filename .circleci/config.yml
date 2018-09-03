@@ -1,37 +1,59 @@
 aliases:
   - &XCODE9
     shell: /bin/bash --login -eo pipefail
+    environment:
+      XCODE_FLAGS: -scheme Yams
     steps:
       - checkout
-      - run: |
-          ( export XCODE_FLAGS="-scheme Yams"
-            xcodebuild ${XCODE_FLAGS} test # -sdk macosx -destination arch=x86_64
+      - &xcodebuild
+        run: |
+          ( xcodebuild ${XCODE_FLAGS} test # -sdk macosx -destination arch=x86_64
             xcodebuild ${XCODE_FLAGS} test OTHER_SWIFT_FLAGS=-DUSE_UTF8
             xcodebuild ${XCODE_FLAGS} test -sdk iphonesimulator -destination "name=iPhone 8"
             xcodebuild ${XCODE_FLAGS} test -sdk appletvsimulator -destination "name=Apple TV 4K"
             xcodebuild ${XCODE_FLAGS} build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
           ) | xcpretty -r junit
-      - store_test_results:
+      - &store_test_results
+        store_test_results:
           path: build/reports/
-      - run: echo "ruby-2.3" > ~/.ruby-version
-      - restore_cache:
-          key: 1-gems-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
-      - run: bundle check --path vendor/bundle || bundle install --path vendor/bundle
-      - save_cache:
-          key: 1-gems-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
+      - &set_ruby_version
+        run: echo "ruby-2.3" > ~/.ruby-version
+      - &restore_bundle_cache
+        restore_cache:
+          key: &GEM_CACHE_KEY 1-gems-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Gemfile.lock" }}
+      - &bundle_install
+        run: bundle check --path vendor/bundle || bundle install --path vendor/bundle
+      - &save_bundle_cache
+        save_cache:
+          key: *GEM_CACHE_KEY
           paths:
             - vendor/bundle
-      - run: bundle exec pod lib lint
+      - &pod_lib_lint
+        run: bundle exec pod lib lint
+
+  - &XCODE10
+    shell: /bin/bash --login -eo pipefail
+    environment:
+      XCODE_FLAGS: -scheme Yams -parallel-testing-enabled NO
+    steps:
+      - checkout
+      - run: |
+          export LC_ALL=en_US.UTF-8
+          export LANG=en_US.UTF-8
+          fastlane snapshot reset_simulators --force
+      - *xcodebuild
+      - *store_test_results
+      # - *set_ruby_version
+      # - *restore_bundle_cache
+      # - *bundle_install
+      # - *save_bundle_cache
+      # - *pod_lib_lint
 
   - &steps-for-jazzy
     - checkout
-    - restore_cache:
-        key: 1-gems-linux-{{ checksum "Gemfile.lock" }}
-    - run: bundle check --path vendor/bundle || bundle install --path vendor/bundle
-    - save_cache:
-        key: 1-gems-linux-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
+    - *restore_bundle_cache
+    - *bundle_install
+    - *save_bundle_cache
     - run: swift build
     - run: sourcekitten doc --spm-module Yams>yams.json
     - run: bundle exec jazzy --clean --sourcekitten-sourcefile yams.json
@@ -75,8 +97,7 @@ aliases:
     - run: swift test -Xswiftc -DUSE_UTF8
     - run: mkdir -p build/reports/
     - run: swiftlint lint --reporter junit > build/reports/junit.xml
-    - store_test_results:
-        path: build/reports/
+    - *store_test_results
 
   - &steps-for-linux-without-swiftlint
     - checkout
@@ -86,79 +107,49 @@ aliases:
 version: 2
 jobs:
 
-  xcode_9_swift_4:
-    macos:
-      xcode: "9.0"
-    << : *XCODE9
-
-  xcode_9.1_swift_4.0.2:
-    macos:
-      xcode: "9.1.0"
-    << : *XCODE9
-
   xcode_9.2_swift_4.0.3:
     macos:
       xcode: "9.2.0"
     << : *XCODE9
 
-  xcode_9.3_swift_4.1:
+  xcode_9.4_swift_4.1.2:
     macos:
-      xcode: "9.3.1"
+      xcode: "9.4.1"
     << : *XCODE9
+
+  xcode_10_swift_4.2:
+    macos:
+      xcode: "10.0.0"
+    << : *XCODE10
 
   jazzy:
     docker:
-      - image: norionomura/jazzy:0.9.3_swift-4.1.2
+      - image: norionomura/jazzy:0.9.3_swift-4.1.3
     steps: *steps-for-jazzy
-
-  spm_swift_4:
-    macos:
-      xcode: "9.0"
-    steps: *steps-for-spm
-
-  spm_swift_4.0.2:
-    macos:
-      xcode: "9.1.0"
-    steps: *steps-for-spm
 
   spm_swift_4.0.3:
     macos:
       xcode: "9.2.0"
     steps: *steps-for-spm
 
-  spm_swift_4.1:
+  spm_swift_4.1.2:
     macos:
-      xcode: "9.3.1"
+      xcode: "9.4.1"
     steps: *steps-for-spm
 
-  linux_swift_4:
-    docker:
-      - image: norionomura/swiftlint:swift-4.0.0
-    steps: *steps-for-linux
-
-  linux_swift_4.0.2:
-    docker:
-      - image: norionomura/swiftlint:swift-4.0.2
-    steps: *steps-for-linux
+  spm_swift_4.2:
+    macos:
+      xcode: "10.0.0"
+    steps: *steps-for-spm
 
   linux_swift_4.0.3:
     docker:
       - image: norionomura/swiftlint:swift-4.0.3
     steps: *steps-for-linux
 
-  linux_swift_4.1.0:
+  linux_swift_4.1.3:
     docker:
-      - image: norionomura/swiftlint:swift-4.1.0
-    steps: *steps-for-linux
-
-  linux_swift_4.1.1:
-    docker:
-      - image: norionomura/swiftlint:swift-4.1.1
-    steps: *steps-for-linux
-
-  linux_swift_4.1.2:
-    docker:
-      - image: norionomura/swiftlint:swift-4.1.2
+      - image: norionomura/swiftlint:swift-4.1.3
     steps: *steps-for-linux
 
   linux_swift_4.2:
@@ -170,21 +161,15 @@ workflows:
   version: 2
   workflow:
     jobs:
-      - xcode_9_swift_4
-      - xcode_9.1_swift_4.0.2
       - xcode_9.2_swift_4.0.3
-      - xcode_9.3_swift_4.1
+      - xcode_9.4_swift_4.1.2
+      - xcode_10_swift_4.2
       - jazzy
-      - spm_swift_4
-      - spm_swift_4.0.2
       - spm_swift_4.0.3
-      - spm_swift_4.1
-      - linux_swift_4
-      - linux_swift_4.0.2
+      - spm_swift_4.1.2
+      - spm_swift_4.2
       - linux_swift_4.0.3
-      - linux_swift_4.1.0
-      - linux_swift_4.1.1
-      - linux_swift_4.1.2
+      - linux_swift_4.1.3
       - linux_swift_4.2
 
   daily:
