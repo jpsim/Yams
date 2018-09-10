@@ -1,4 +1,4 @@
-// swift-tools-version:4.2
+// swift-tools-version:4.0
 import PackageDescription
 
 let package = Package(
@@ -10,6 +10,5 @@ let package = Package(
         .target(name: "CYaml"),
         .target(name: "Yams", dependencies: ["CYaml"]),
         .testTarget(name: "YamsTests", dependencies: ["Yams"])
-    ],
-    swiftLanguageVersions: [.v4, .v4_2]
+    ]
 )
