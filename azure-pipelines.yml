@@ -69,6 +69,7 @@ jobs:
         XCODE_APP: 'Xcode_9.3.1'
       xcode941:
         XCODE_APP: 'Xcode_9.4.1'
+        POD_LIB_LINT: 'true'
       xcode10:
         XCODE_APP: 'Xcode_10_beta'
   steps:
@@ -118,7 +119,7 @@ jobs:
         (bundle check --path vendor/bundle || bundle install --path vendor/bundle) &&
         bundle exec pod lib lint
       displayName: pod lib lint
-      condition: succeededOrFailed()
+      condition: eq(variables['POD_LIB_LINT'], 'true')
     - task: PublishTestResults@2
       inputs:
         testRunner: JUnit
