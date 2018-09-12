@@ -1,17 +1,15 @@
 resources:
   containers:
   - container: '4.0.2'
-    image: norionomura/swift:swift-4.0.2
+    image: norionomura/swift:402
   - container: '4.0.3'
-    image: norionomura/swift:swift-4.0.3
-  - container: '4.1.0'
-    image: norionomura/swift:swift-4.1.0
+    image: norionomura/swift:403
   - container: '4.1.1'
-    image: norionomura/swift:swift-4.1.1
+    image: norionomura/swift:411
   - container: '4.1.2'
-    image: norionomura/swift:swift-4.1.2
+    image: norionomura/swift:412
   - container: '4.1.3'
-    image: norionomura/swift:swift-4.1.3
+    image: norionomura/swift:413
   - container: '4.2'
     image: norionomura/swift:swift-4.2-branch
 
@@ -26,8 +24,6 @@ jobs:
         containerResource: '4.0.2'
       swift403:
         containerResource: '4.0.3'
-      swift410:
-        containerResource: '4.1.0'
       swift411:
         containerResource: '4.1.1'
       swift412:
