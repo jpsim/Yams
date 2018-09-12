@@ -84,6 +84,12 @@ jobs:
       condition: succeededOrFailed()
     - script: >
         set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test OTHER_SWIFT_FLAGS=-DUSE_UTF8 |
+        xcpretty -r junit -o build/reports/xcodebuild-macos.xml
+      displayName: tests on macOS with UTF8
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
         xcodebuild $XCODE_FLAGS test -sdk iphonesimulator -destination "name=iPhone 8" |
         xcpretty -r junit -o build/reports/xcodebuild-iOS.xml
       displayName: tests on iOS
@@ -107,8 +113,9 @@ jobs:
       displayName: swift test
       condition: succeededOrFailed()
     - script: >
-        echo "ruby-2.3" > ~/.ruby-version
-        bundle check --path vendor/bundle || bundle install --path vendor/bundle
+        set -o pipefail &&
+        echo "ruby-2.3" > ~/.ruby-version &&
+        (bundle check --path vendor/bundle || bundle install --path vendor/bundle) &&
         bundle exec pod lib lint
       displayName: pod lib lint
       condition: succeededOrFailed()
