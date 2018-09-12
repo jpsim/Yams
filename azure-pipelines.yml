@@ -1,0 +1,95 @@
+resources:
+  containers:
+  - container: '4.0.2'
+    image: norionomura/swiftlint:swift-4.0.2
+  - container: '4.0.3'
+    image: norionomura/swiftlint:swift-4.0.3
+  - container: '4.1.0'
+    image: norionomura/swiftlint:swift-4.1.0
+  - container: '4.1.1'
+    image: norionomura/swiftlint:swift-4.1.1
+  - container: '4.1.2'
+    image: norionomura/swiftlint:swift-4.1.2
+  - container: '4.1.3'
+    image: norionomura/swiftlint:swift-4.1.3
+  - container: '4.2'
+    image: norionomura/swift:swift-4.2-branch
+
+jobs:
+- job: linux
+  pool:
+    vmImage: 'Ubuntu 16.04'
+  strategy:
+    maxParallel: 10
+    matrix:
+      swift402:
+        containerResource: '4.0.2'
+      swift403:
+        containerResource: '4.0.3'
+      swift410:
+        containerResource: '4.1.0'
+      swift411:
+        containerResource: '4.1.1'
+      swift412:
+        containerResource: '4.1.2'
+      swift413:
+        containerResource: '4.1.3'
+      swift42:
+        containerResource: '4.2'
+        swiftlint: 'false'
+  container: $[ variables['containerResource'] ]
+  steps:
+    - script: swift test
+      displayName: swift test
+    - script: |
+        set -o pipefail
+        mkdir -p build/reports/
+        swiftlint lint --strict --reporter junit > build/reports/swiftlint.xml
+      displayName: swiftlint
+      condition: ne(variables['swiftlint'], 'false')
+    - task: PublishTestResults@2
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: build/reports/**
+      condition: ne(variables['swiftlint'], 'false')
+
+- job: macOS
+  pool:
+    vmImage: 'macOS 10.13'
+  strategy:
+    maxParallel: 10
+    matrix:
+      xcode901:
+        XCODE_APP: 'Xcode_9.0.1'
+      xcode91:
+        XCODE_APP: 'Xcode_9.1'
+      xcode92:
+        XCODE_APP: 'Xcode_9.2'
+      xcode931:
+        XCODE_APP: 'Xcode_9.3.1'
+      xcode941:
+        XCODE_APP: 'Xcode_9.4.1'
+      xcode10:
+        XCODE_APP: 'Xcode_10_beta'
+  steps:
+    - script: |
+        sudo xcode-select -s /Applications/$XCODE_APP.app
+        echo "##vso[task.setvariable variable=XCODE_FLAGS]-scheme SourceKittenFramework $XCODE_FLAGS_FOR_TEST"
+      displayName: xcode-select & set XCODE_FLAGS
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test |
+        xcpretty -r junit -o build/reports/xcodebuild-macos.xml
+      displayName: tests on macOS
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
+        swift test 2>&1 |
+        xcpretty -r junit -o build/reports/swift-test.xml
+      displayName: swift test
+      condition: succeededOrFailed()
+    - task: PublishTestResults@2
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: build/reports/**
+      condition: succeededOrFailed()
