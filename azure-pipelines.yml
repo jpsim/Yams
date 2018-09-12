@@ -71,7 +71,6 @@ jobs:
         XCODE_APP: 'Xcode_9.4.1'
       xcode10:
         XCODE_APP: 'Xcode_10_beta'
-        XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
   steps:
     - script: |
         sudo xcode-select -s /Applications/$XCODE_APP.app
