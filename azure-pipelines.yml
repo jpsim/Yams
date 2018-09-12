@@ -72,6 +72,7 @@ jobs:
         POD_LIB_LINT: 'true'
       xcode10:
         XCODE_APP: 'Xcode_10_beta'
+        XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
   steps:
     - script: |
         sudo xcode-select -s /Applications/$XCODE_APP.app
