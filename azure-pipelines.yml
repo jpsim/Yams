@@ -39,8 +39,10 @@ jobs:
         swiftlint: 'false'
   container: $[ variables['containerResource'] ]
   steps:
-    - script: swift test
+    - script: swift test --parallel
       displayName: swift test
+    - script: swift test --parallel -Xswiftc -DUSE_UTF8
+      displayName: swift test with UTF8
     - script: |
         set -o pipefail
         mkdir -p build/reports/
@@ -110,7 +112,7 @@ jobs:
       condition: succeededOrFailed()
     - script: >
         set -o pipefail &&
-        swift test 2>&1 |
+        swift test --parallel 2>&1 |
         xcpretty -r junit -o build/reports/swift-test.xml
       displayName: swift test
       condition: succeededOrFailed()
