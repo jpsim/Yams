@@ -86,7 +86,7 @@ jobs:
     - script: >
         set -o pipefail &&
         xcodebuild $XCODE_FLAGS test OTHER_SWIFT_FLAGS=-DUSE_UTF8 |
-        xcpretty -r junit -o build/reports/xcodebuild-macos.xml
+        xcpretty -r junit -o build/reports/xcodebuild-macos-utf8.xml
       displayName: tests on macOS with UTF8
       condition: succeededOrFailed()
     - script: >
