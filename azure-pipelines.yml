@@ -12,8 +12,10 @@ resources:
     image: norionomura/swiftlint:swift-4.1.2
   - container: '4.1.3'
     image: norionomura/swiftlint:swift-4.1.3
-  - container: '4.2'
-    image: norionomura/swiftlint:swift-4.2
+  - container: '4.2.0'
+    image: norionomura/swiftlint:swift-4.2.0
+  - container: '4.2.1'
+    image: norionomura/swiftlint:swift-4.2.1
 
 jobs:
 - job: linux
@@ -34,8 +36,10 @@ jobs:
         containerResource: '4.1.2'
       swift413:
         containerResource: '4.1.3'
-      swift42:
-        containerResource: '4.2'
+      swift420:
+        containerResource: '4.2.0'
+      swift421:
+        containerResource: '4.2.1'
   container: $[ variables['containerResource'] ]
   steps:
     - script: swift test --parallel
@@ -70,8 +74,12 @@ jobs:
         XCODE_APP: 'Xcode_9.4.1'
         POD_LIB_LINT: 'true'
       xcode10:
-        XCODE_APP: 'Xcode_10_beta'
+        XCODE_APP: 'Xcode_10'
         XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
+      xcode101:
+        XCODE_APP: 'Xcode_10.1'
+        XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
+        POD_LIB_LINT: 'true'
   steps:
     - script: |
         sudo xcode-select -s /Applications/$XCODE_APP.app
