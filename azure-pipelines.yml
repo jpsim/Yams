@@ -113,11 +113,7 @@ jobs:
         xcpretty -r junit -o build/reports/swift-test.xml
       displayName: swift test
       condition: succeededOrFailed()
-    - script: >
-        set -o pipefail &&
-        brew install sqlite3 &&
-        (bundle check --path vendor/bundle || bundle install --path vendor/bundle) &&
-        bundle exec pod lib lint
+    - script: pod lib lint
       displayName: pod lib lint
       condition: eq(variables['POD_LIB_LINT'], 'true')
     - task: PublishTestResults@2
