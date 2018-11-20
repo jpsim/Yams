@@ -79,7 +79,6 @@ jobs:
       xcode101:
         XCODE_APP: 'Xcode_10.1'
         XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
-        POD_LIB_LINT: 'true'
   steps:
     - script: |
         sudo xcode-select -s /Applications/$XCODE_APP.app
