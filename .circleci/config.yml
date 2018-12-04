@@ -88,11 +88,6 @@ aliases:
           git push origin gh-pages
         fi
 
-  - &steps-for-spm
-    - checkout
-    - run: swift test
-    - run: swift test -Xswiftc -DUSE_UTF8
-
 commands:
   swiftlint:
     steps:
@@ -122,20 +117,16 @@ jobs:
       - image: norionomura/jazzy:0.9.3_swift-4.1.3
     steps: *steps-for-jazzy
 
-  spm_swift_4.0.3:
+  swiftpm:
+    parameters:
+      xcode:
+        type: string
     macos:
-      xcode: "9.2.0"
-    steps: *steps-for-spm
-
-  spm_swift_4.1.2:
-    macos:
-      xcode: "9.4.1"
-    steps: *steps-for-spm
-
-  spm_swift_4.2:
-    macos:
-      xcode: "10.0.0"
-    steps: *steps-for-spm
+      xcode: << parameters.xcode >>
+    steps:
+      - checkout
+      - run: swift test
+      - run: swift test -Xswiftc -DUSE_UTF8
 
   linux_on_docker:
     parameters:
@@ -156,9 +147,15 @@ workflows:
       - xcode_9.4_swift_4.1.2
       - xcode_10_swift_4.2
       - jazzy
-      - spm_swift_4.0.3
-      - spm_swift_4.1.2
-      - spm_swift_4.2
+      - swiftpm:
+          name: swiftpm-swift-4.0.3
+          xcode: "9.2.0"
+      - swiftpm:
+          name: swiftpm-swift-4.1.2
+          xcode: "9.4.1"
+      - swiftpm:
+          name: swiftpm-swift-4.2.1
+          xcode: "10.1.0"
       - linux_on_docker:
           name: linux-swift-4.0.3
           image: norionomura/swiftlint:swift-4.0.3
