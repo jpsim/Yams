@@ -1,3 +1,5 @@
+version: 2.1
+
 aliases:
   - &XCODE9
     shell: /bin/bash --login -eo pipefail
@@ -91,22 +93,15 @@ aliases:
     - run: swift test
     - run: swift test -Xswiftc -DUSE_UTF8
 
-  - &steps-for-linux
-    - checkout
-    - run: swift test
-    - run: swift test -Xswiftc -DUSE_UTF8
-    - run: mkdir -p build/reports/
-    - run: swiftlint lint --reporter junit > build/reports/junit.xml
-    - *store_test_results
+commands:
+  swiftlint:
+    steps:
+      - run: mkdir -p build/reports/
+      - run: swiftlint lint --reporter junit > build/reports/junit.xml
+      - store_test_results:
+          path: build/reports/
 
-  - &steps-for-linux-without-swiftlint
-    - checkout
-    - run: swift test
-    - run: swift test -Xswiftc -DUSE_UTF8
-
-version: 2
 jobs:
-
   xcode_9.2_swift_4.0.3:
     macos:
       xcode: "9.2.0"
@@ -142,20 +137,16 @@ jobs:
       xcode: "10.0.0"
     steps: *steps-for-spm
 
-  linux_swift_4.0.3:
+  linux_on_docker:
+    parameters:
+      image:
+        type: string
     docker:
-      - image: norionomura/swiftlint:swift-4.0.3
-    steps: *steps-for-linux
-
-  linux_swift_4.1.3:
-    docker:
-      - image: norionomura/swiftlint:swift-4.1.3
-    steps: *steps-for-linux
-
-  linux_swift_4.2:
-    docker:
-      - image: norionomura/swift:swift-4.2-branch
-    steps: *steps-for-linux-without-swiftlint
+      - image: << parameters.image >>
+    steps:
+      - checkout
+      - run: swift test
+      - run: swift test -Xswiftc -DUSE_UTF8
 
 workflows:
   version: 2
@@ -168,9 +159,18 @@ workflows:
       - spm_swift_4.0.3
       - spm_swift_4.1.2
       - spm_swift_4.2
-      - linux_swift_4.0.3
-      - linux_swift_4.1.3
-      - linux_swift_4.2
+      - linux_on_docker:
+          name: linux-swift-4.0.3
+          image: norionomura/swiftlint:swift-4.0.3
+          post-steps: [swiftlint]
+      - linux_on_docker:
+          name: linux-swift-4.1.3
+          image: norionomura/swiftlint:swift-4.1.3
+          post-steps: [swiftlint]
+      - linux_on_docker:
+          name: linux-swift-4.2.1
+          image: norionomura/swiftlint:swift-4.2.1
+          post-steps: [swiftlint]
 
   daily:
     triggers:
@@ -181,4 +181,6 @@ workflows:
               only:
                 - master
     jobs:
-      - linux_swift_4.2
+      - linux_on_docker:
+          name: linux-swift-4.2-branch-daily
+          image: norionomura/swift:swift-4.2-branch
