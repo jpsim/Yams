@@ -93,7 +93,7 @@ jobs:
         type: string
     macos:
       xcode: << parameters.xcode >>
-    steps:
+    steps: &steps-for-swiftpm
       - checkout
       - run: swift test
       - run: swift test -Xswiftc -DUSE_UTF8
@@ -104,10 +104,7 @@ jobs:
         type: string
     docker:
       - image: << parameters.image >>
-    steps:
-      - checkout
-      - run: swift test
-      - run: swift test -Xswiftc -DUSE_UTF8
+    steps: *steps-for-swiftpm
 
 workflows:
   version: 2
