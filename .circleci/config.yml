@@ -144,6 +144,9 @@ workflows:
           name: linux_swift_4.2.1
           image: norionomura/swiftlint:swift-4.2.1
           post-steps: [swiftlint]
+      - linux_on_docker:
+          name: linux_swift_5.0
+          image: norionomura/swift:swift-5.0-branch
 
   daily:
     triggers:
