@@ -12,6 +12,29 @@ import CDispatch
 import Foundation
 import XCTest
 
+/// https://bugs.swift.org/browse/SR-9454
+func doesSR9454Affect(to name: String = #function) -> Bool {
+#if swift(>=4.1.50)
+#if compiler(>=5) && os(Linux)
+    let string = "LINE1_67あ\nLINE2_7890\nLINE3_8901\n"
+    let rangeOfFirstLine = string.lineRange(for: string.startIndex..<string.startIndex)
+    let result = "\(rangeOfFirstLine)"
+    let expected = "Index(_rawBits: 0)..<Index(_rawBits: 786432)"
+    XCTAssertNotEqual(result, expected, "https://bugs.swift.org/browse/SR-9454 seems to be fixed")
+    if result != expected {
+        print("Skip `\(name)` since that is affected by https://bugs.swift.org/browse/SR-9454")
+        return true
+    } else {
+        return false
+    }
+#else
+    return false
+#endif
+#else
+    return false
+#endif
+}
+
 func timestamp(_ timeZoneHour: Int = 0,
                _ year: Int? = nil,
                _ month: Int? = nil,
