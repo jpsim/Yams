@@ -96,12 +96,10 @@ jobs:
         type: string
     macos:
       xcode: << parameters.xcode >>
-    environment:
-      SWIFTPM_FLAGS: << parameters.swiftpm_flags >>
     steps: &steps-for-swiftpm
       - checkout
-      - run: swift test ${SWIFTPM_FLAGS}
-      - run: swift test -Xswiftc -DUSE_UTF8 ${SWIFTPM_FLAGS}
+      - run: swift test << parameters.swiftpm_flags >>
+      - run: swift test -Xswiftc -DUSE_UTF8 << parameters.swiftpm_flags >>
 
   linux_on_docker:
     parameters:
@@ -112,8 +110,6 @@ jobs:
         type: string
     docker:
       - image: << parameters.image >>
-    environment:
-      SWIFTPM_FLAGS: << parameters.swiftpm_flags >>
     steps: *steps-for-swiftpm
 
 workflows:
