@@ -18,7 +18,7 @@ public extension Node {
     /// - parameter representable: Value of `NodeRepresentable` to represent as a `Node`.
     ///
     /// - throws: `YamlError`.
-    public init<T: NodeRepresentable>(_ representable: T) throws {
+    init<T: NodeRepresentable>(_ representable: T) throws {
         self = try representable.represented()
     }
 }
