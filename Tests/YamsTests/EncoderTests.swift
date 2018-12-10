@@ -352,7 +352,7 @@ public func expectEqual<T: Equatable>(
     _ message: @autoclosure () -> String = "",
     file: StaticString = #file, line: UInt = #line
     ) {
-    XCTAssertEqual(expected, actual, message, file: file, line: line)
+    XCTAssertEqual(expected, actual, message(), file: file, line: line)
 }
 
 public func expectEqual(
@@ -360,7 +360,7 @@ public func expectEqual(
     _ message: @autoclosure () -> String = "",
     file: StaticString = #file, line: UInt = #line
     ) {
-    XCTAssertTrue(expected == actual, message, file: file, line: line)
+    XCTAssertTrue(expected == actual, message(), file: file, line: line)
 }
 
 public func expectUnreachable(
