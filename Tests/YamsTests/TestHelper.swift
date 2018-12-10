@@ -97,7 +97,7 @@ func timestamp(_ timeZoneHour: Int = 0,
             return false
         }
     }
-    return equal(lhs, rhs, context)
+    return equal(lhs, rhs, context())
 }
 
 private func dumped<T>(_ value: T) -> String {
