@@ -91,19 +91,29 @@ jobs:
     parameters:
       xcode:
         type: string
+      swiftpm_flags:
+        default: ""
+        type: string
     macos:
       xcode: << parameters.xcode >>
+    environment:
+      SWIFTPM_FLAGS: << parameters.swiftpm_flags >>
     steps: &steps-for-swiftpm
       - checkout
-      - run: swift test
-      - run: swift test -Xswiftc -DUSE_UTF8
+      - run: swift test ${SWIFTPM_FLAGS}
+      - run: swift test -Xswiftc -DUSE_UTF8 ${SWIFTPM_FLAGS}
 
   linux_on_docker:
     parameters:
       image:
         type: string
+      swiftpm_flags:
+        default: ""
+        type: string
     docker:
       - image: << parameters.image >>
+    environment:
+      SWIFTPM_FLAGS: << parameters.swiftpm_flags >>
     steps: *steps-for-swiftpm
 
 workflows:
@@ -146,6 +156,7 @@ workflows:
           post-steps: [swiftlint]
       - linux_on_docker:
           name: linux_swift_5.0
+          swiftpm_flags: -Xswiftc -swift-version -Xswiftc 5
           image: norionomura/swift:swift-5.0-branch
 
   daily:
@@ -159,4 +170,5 @@ workflows:
     jobs:
       - linux_on_docker:
           name: linux_swift_5.0
+          swiftpm_flags: -Xswiftc -swift-version -Xswiftc 5
           image: norionomura/swift:swift-5.0-branch
