@@ -158,5 +158,5 @@ workflows:
                 - master
     jobs:
       - linux_on_docker:
-          name: linux_swift_4.2
-          image: norionomura/swift:swift-4.2-branch
+          name: linux_swift_5.0
+          image: norionomura/swift:swift-5.0-branch
