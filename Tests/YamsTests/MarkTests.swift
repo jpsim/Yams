@@ -13,9 +13,15 @@ class MarkTests: XCTestCase {
     func testLocatableDeprecationMessageForSwiftLint() throws {
         let deprecatedRulesIdentifiers = [("variable_name", "identifier_name")].map { (Node($0.0), $0.1) }
         func deprecatedMessage(from rule: Node) -> String? {
+        #if swift(>=5.0)
+            guard let index = deprecatedRulesIdentifiers.firstIndex(where: { $0.0 == rule }) else {
+                return nil
+            }
+        #else
             guard let index = deprecatedRulesIdentifiers.index(where: { $0.0 == rule }) else {
                 return nil
             }
+        #endif
             let changed = deprecatedRulesIdentifiers[index].1
             return "\(rule.mark?.description ?? ""): warning: '\(rule.string ?? "")' has been renamed to " +
                 "'\(changed)' and will be completely removed in a future release."
