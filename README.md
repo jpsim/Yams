@@ -5,7 +5,7 @@
 A sweet and swifty [YAML](http://yaml.org/) parser built on
 [LibYAML](https://github.com/yaml/libyaml).
 
-[![CircleCI](https://circleci.com/gh/jpsim/Yams.svg?style=svg)](https://circleci.com/gh/jpsim/Yams)
+[![Azure Pipelines](https://dev.azure.com/jpsim/Yams/_apis/build/status/jpsim.Yams)](https://dev.azure.com/jpsim/Yams/_build/latest?definitionId=1)
 
 ## Installation
 
