@@ -19,6 +19,9 @@ resources:
   - container: 'jazzy'
     image: norionomura/jazzy:0.9.4_swift-4.2.1
 
+trigger:
+- master
+
 jobs:
 - job: linux
   pool:
