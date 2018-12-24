@@ -134,7 +134,7 @@ jobs:
     vmImage: 'Ubuntu 16.04'
   container: 'jazzy'
   steps:
-    - script: bundle install
+    - script: bundle install --path vendor/bundle
       displayName: bundle install
     - script: swift build
       displayName: swift build
