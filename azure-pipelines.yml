@@ -1,0 +1,163 @@
+resources:
+  containers:
+  - container: '4.0.2'
+    image: norionomura/swiftlint:swift-4.0.2
+  - container: '4.0.3'
+    image: norionomura/swiftlint:swift-4.0.3
+  - container: '4.1.0'
+    image: norionomura/swiftlint:swift-4.1.0
+  - container: '4.1.1'
+    image: norionomura/swiftlint:swift-4.1.1
+  - container: '4.1.2'
+    image: norionomura/swiftlint:swift-4.1.2
+  - container: '4.1.3'
+    image: norionomura/swiftlint:swift-4.1.3
+  - container: '4.2.0'
+    image: norionomura/swiftlint:swift-4.2.0
+  - container: '4.2.1'
+    image: norionomura/swiftlint:swift-4.2.1
+  - container: 'jazzy'
+    image: norionomura/jazzy:0.9.4_swift-4.2.1
+
+trigger:
+- master
+
+jobs:
+- job: linux
+  pool:
+    vmImage: 'Ubuntu 16.04'
+  strategy:
+    maxParallel: 10
+    matrix:
+      swift402:
+        containerResource: '4.0.2'
+      swift403:
+        containerResource: '4.0.3'
+      swift410:
+        containerResource: '4.1.0'
+      swift411:
+        containerResource: '4.1.1'
+      swift412:
+        containerResource: '4.1.2'
+      swift413:
+        containerResource: '4.1.3'
+      swift420:
+        containerResource: '4.2.0'
+      swift421:
+        containerResource: '4.2.1'
+  container: $[ variables['containerResource'] ]
+  steps:
+    - script: swift test --parallel
+      displayName: swift test
+    - script: swift test --parallel -Xswiftc -DUSE_UTF8
+      displayName: swift test with UTF8
+    - script: |
+        set -o pipefail
+        mkdir -p build/reports/
+        swiftlint lint --reporter junit > build/reports/swiftlint.xml
+      displayName: swiftlint
+    - task: PublishTestResults@2
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: build/reports/**
+
+- job: macOS
+  pool:
+    vmImage: 'macOS 10.13'
+  strategy:
+    maxParallel: 10
+    matrix:
+      xcode901:
+        XCODE_APP: 'Xcode_9.0.1'
+      xcode91:
+        XCODE_APP: 'Xcode_9.1'
+      xcode92:
+        XCODE_APP: 'Xcode_9.2'
+      xcode931:
+        XCODE_APP: 'Xcode_9.3.1'
+      xcode941:
+        XCODE_APP: 'Xcode_9.4.1'
+      xcode10:
+        XCODE_APP: 'Xcode_10'
+        XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
+      xcode101:
+        XCODE_APP: 'Xcode_10.1'
+        XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
+  steps:
+    - script: |
+        sudo xcode-select -s /Applications/$XCODE_APP.app
+        echo "##vso[task.setvariable variable=XCODE_FLAGS]-scheme Yams $XCODE_FLAGS_FOR_TEST"
+      displayName: xcode-select & set XCODE_FLAGS
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test |
+        xcpretty -r junit -o build/reports/xcodebuild-macos.xml
+      displayName: tests on macOS
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test OTHER_SWIFT_FLAGS=-DUSE_UTF8 |
+        xcpretty -r junit -o build/reports/xcodebuild-macos-utf8.xml
+      displayName: tests on macOS with UTF8
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test -sdk iphonesimulator -destination "name=iPhone 8" |
+        xcpretty -r junit -o build/reports/xcodebuild-iOS.xml
+      displayName: tests on iOS
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test -sdk appletvsimulator -destination "name=Apple TV 4K" |
+        xcpretty -r junit -o build/reports/xcodebuild-tvOS.xml
+      displayName: tests on tvOS
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
+      displayName: build on watchOS
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
+        swift test --parallel
+      displayName: swift test
+      condition: succeededOrFailed()
+    - task: PublishTestResults@2
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: build/reports/**
+      condition: succeededOrFailed()
+
+- job: CocoaPods
+  pool:
+    vmImage: 'macOS 10.13'
+  steps:
+    - script: sudo xcode-select -s /Applications/Xcode_9.4.1.app
+      displayName: xcode-select
+    - script: pod lib lint
+      displayName: pod lib lint
+
+- job: jazzy
+  pool:
+    vmImage: 'Ubuntu 16.04'
+  container: 'jazzy'
+  steps:
+    - script: bundle install --path vendor/bundle
+      displayName: bundle install
+    - script: swift build
+      displayName: swift build
+    - script: sourcekitten doc --spm-module Yams > yams.json
+      displayName: Generate documentation json
+    - script: bundle exec jazzy --clean --sourcekitten-sourcefile yams.json
+      displayName: Run jazzy
+    - script: >
+        if ruby -rjson -e "j = JSON.parse(File.read('docs/undocumented.json')); exit j['warnings'].length != 0"; then
+          echo "Undocumented declarations:"
+          cat docs/undocumented.json
+          exit 1
+        fi
+      displayName: Validate documentation coverage
+    - task: PublishPipelineArtifact@0
+      inputs:
+        artifactName: 'API Docs'
+        targetPath: 'docs'
