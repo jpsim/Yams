@@ -110,14 +110,12 @@ jobs:
       condition: succeededOrFailed()
     - script: >
         set -o pipefail &&
-        xcodebuild $XCODE_FLAGS build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm" |
-        xcpretty -r junit -o build/reports/xcodebuild-watchOS.xml
+        xcodebuild $XCODE_FLAGS build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
       displayName: build on watchOS
       condition: succeededOrFailed()
     - script: >
         set -o pipefail &&
-        swift test --parallel 2>&1 |
-        xcpretty -r junit -o build/reports/swift-test.xml
+        swift test --parallel
       displayName: swift test
       condition: succeededOrFailed()
     - script: pod lib lint
