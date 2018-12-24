@@ -145,7 +145,7 @@ jobs:
     - script: >
         if ruby -rjson -e "j = JSON.parse(File.read('docs/undocumented.json')); exit j['warnings'].length != 0"; then
           echo "Undocumented declarations:"
-          cat "$undocumented"
+          cat docs/undocumented.json
           exit 1
         fi
       displayName: Validate documentation coverage
