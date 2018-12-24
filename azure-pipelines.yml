@@ -77,7 +77,6 @@ jobs:
         XCODE_APP: 'Xcode_9.3.1'
       xcode941:
         XCODE_APP: 'Xcode_9.4.1'
-        POD_LIB_LINT: 'true'
       xcode10:
         XCODE_APP: 'Xcode_10'
         XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
@@ -123,14 +122,20 @@ jobs:
         swift test --parallel
       displayName: swift test
       condition: succeededOrFailed()
-    - script: pod lib lint
-      displayName: pod lib lint
-      condition: eq(variables['POD_LIB_LINT'], 'true')
     - task: PublishTestResults@2
       inputs:
         testRunner: JUnit
         testResultsFiles: build/reports/**
       condition: succeededOrFailed()
+
+- job: CocoaPods
+  pool:
+    vmImage: 'macOS 10.13'
+  steps:
+    - script: sudo xcode-select -s /Applications/Xcode_9.4.1.app
+      displayName: xcode-select
+    - script: pod lib lint
+      displayName: pod lib lint
 
 - job: jazzy
   pool:
