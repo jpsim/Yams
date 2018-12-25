@@ -16,6 +16,8 @@ resources:
     image: norionomura/swiftlint:swift-4.2.0
   - container: '4.2.1'
     image: norionomura/swiftlint:swift-4.2.1
+  - container: '5.0'
+    image: norionomura/swift:swift-5.0-branch
   - container: 'jazzy'
     image: norionomura/jazzy:0.9.4_swift-4.2.1
 
@@ -60,6 +62,16 @@ jobs:
       inputs:
         testRunner: JUnit
         testResultsFiles: build/reports/**
+
+- job: linux_swift50
+  pool:
+    vmImage: 'Ubuntu 16.04'
+  container: '5.0'
+  steps:
+    - script: swift test --parallel
+      displayName: swift test
+    - script: swift test --parallel -Xswiftc -DUSE_UTF8
+      displayName: swift test with UTF8
 
 - job: macOS
   pool:
