@@ -126,9 +126,10 @@ public final class Parser {
 #if USE_UTF8
         yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
         utf8CString = string.utf8CString
-        utf8CString.withUnsafeBytes { bytes in
+        try utf8CString.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) in
             let input = bytes.baseAddress?.assumingMemoryBound(to: UInt8.self)
             yaml_parser_set_input_string(&parser, input, bytes.count - 1)
+            try parse() // Drop YAML_STREAM_START_EVENT
         }
 #else
         // use native endian
@@ -136,11 +137,11 @@ public final class Parser {
         yaml_parser_set_encoding(&parser, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
         let encoding: String.Encoding = isLittleEndian ? .utf16LittleEndian : .utf16BigEndian
         data = yaml.data(using: encoding)!
-        data.withUnsafeBytes { bytes in
+        try data.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) in
             yaml_parser_set_input_string(&parser, bytes, data.count)
+            try parse() // Drop YAML_STREAM_START_EVENT
         }
 #endif
-        try parse() // Drop YAML_STREAM_START_EVENT
     }
 
     deinit {
