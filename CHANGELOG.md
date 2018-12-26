@@ -10,7 +10,9 @@
 
 ##### Bug Fixes
 
-* None.
+* Fix some test failures with the latest Swift 5 snapshot on Apple platforms.  
+  [Norio Nomura](https://github.com/norio-nomura)
+  [#143](https://github.com/jpsim/Yams/issues/143)
 
 ## 1.0.1
 
