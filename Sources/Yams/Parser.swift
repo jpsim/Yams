@@ -125,22 +125,15 @@ public final class Parser {
         yaml_parser_initialize(&parser)
 #if USE_UTF8
         yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
-        utf8CString = string.utf8CString
-        try utf8CString.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) in
-            let input = bytes.baseAddress?.assumingMemoryBound(to: UInt8.self)
-            yaml_parser_set_input_string(&parser, input, bytes.count - 1)
-            try parse() // Drop YAML_STREAM_START_EVENT
-        }
+        utf8Slice = string.utf8CString.dropLast()
+        try utf8Slice.withUnsafeBytes(startParse(with:))
 #else
         // use native endian
         let isLittleEndian = 1 == 1.littleEndian
         yaml_parser_set_encoding(&parser, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
         let encoding: String.Encoding = isLittleEndian ? .utf16LittleEndian : .utf16BigEndian
         data = yaml.data(using: encoding)!
-        try data.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) in
-            yaml_parser_set_input_string(&parser, bytes, data.count)
-            try parse() // Drop YAML_STREAM_START_EVENT
-        }
+        try data.withUnsafeBytes(startParse(with:))
 #endif
     }
 
@@ -183,7 +176,7 @@ public final class Parser {
     private var anchors = [String: Node]()
     private var parser = yaml_parser_t()
 #if USE_UTF8
-    private let utf8CString: ContiguousArray<CChar>
+    private let utf8Slice: ArraySlice<CChar>
 #else
     private let data: Data
 #endif
@@ -214,6 +207,11 @@ private extension Parser {
         default:
             fatalError("unreachable")
         }
+    }
+
+    func startParse(with buffer: UnsafeRawBufferPointer) throws {
+        yaml_parser_set_input_string(&parser, buffer.baseAddress?.assumingMemoryBound(to: UInt8.self), buffer.count)
+        try parse() // Drop YAML_STREAM_START_EVENT
     }
 
     @discardableResult
@@ -353,3 +351,24 @@ private class Event {
 private func string(from pointer: UnsafePointer<UInt8>!) -> String? {
     return String.decodeCString(pointer, as: UTF8.self, repairingInvalidCodeUnits: true)?.result
 }
+
+#if swift(>=4.2)
+#if compiler(>=5) && canImport(Darwin)
+#else
+private extension Data {
+    func withUnsafeBytes<Result>(_ apply: (UnsafeRawBufferPointer) throws -> Result) rethrows -> Result {
+        return try withUnsafeBytes {
+            try apply(UnsafeRawBufferPointer(start: $0, count: count))
+        }
+    }
+}
+#endif
+#else
+private extension Data {
+    func withUnsafeBytes<Result>(_ apply: (UnsafeRawBufferPointer) throws -> Result) rethrows -> Result {
+        return try withUnsafeBytes {
+            try apply(UnsafeRawBufferPointer(start: $0, count: count))
+        }
+    }
+}
+#endif
