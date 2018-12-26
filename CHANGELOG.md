@@ -10,7 +10,9 @@
 
 ##### Bug Fixes
 
-* None.
+* Fix some tests fail with Swift 5.0 on macOS.  
+  [Norio Nomura](https://github.com/norio-nomura)
+  [#143](https://github.com/jpsim/Yams/issues/143)
 
 ## 1.0.1
 
