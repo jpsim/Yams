@@ -2,7 +2,8 @@
 
 ##### Breaking
 
-* None.
+* Change `byteOffset` to `offset` in `YamlError.reader`.  
+  [Norio Nomura](https://github.com/norio-nomura)
 
 ##### Enhancements
 
