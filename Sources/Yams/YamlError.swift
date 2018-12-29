@@ -82,10 +82,12 @@ public enum YamlError: Swift.Error {
         }
     }
 
+#if swift(>=4.1.50)
     @available(*, unavailable, renamed: "reader(problem:offset:value:yaml:)")
     public static func reader(problem: String, byteOffset: Int, value: Int32, yaml: String) {
         fatalError("unavailable")
     }
+#endif
 }
 
 extension YamlError {
