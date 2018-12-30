@@ -7,7 +7,12 @@
 
 ##### Enhancements
 
-* None.
+* Add `encoding` option to `Parser` as `Parser.Encoding` type for select
+  encoding on calling CYaml API. Along with that change, `encoding` option
+  are added to `load()`, `load_all()`, `compose()`, `compose_all` and 
+  `YAMLDecoder`. Default value of `encoding` option will be selected by
+  runtime environment.   
+  [Norio Nomura](https://github.com/norio-nomura)
 
 ##### Bug Fixes
 
