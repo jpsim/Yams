@@ -49,7 +49,7 @@ jobs:
         containerResource: '4.2.1'
   container: $[ variables['containerResource'] ]
   steps:
-    - script: swift test --parallel
+    - script: swift test --parallel -Xswiftc -DUSE_UTF16
       displayName: swift test
     - script: swift test --parallel -Xswiftc -DUSE_UTF8
       displayName: swift test with UTF8
@@ -68,7 +68,7 @@ jobs:
     vmImage: 'Ubuntu 16.04'
   container: '5.0'
   steps:
-    - script: swift test --parallel
+    - script: swift test --parallel -Xswiftc -DUSE_UTF16
       displayName: swift test
     - script: swift test --parallel -Xswiftc -DUSE_UTF8
       displayName: swift test with UTF8
@@ -102,7 +102,7 @@ jobs:
       displayName: xcode-select & set XCODE_FLAGS
     - script: >
         set -o pipefail &&
-        xcodebuild $XCODE_FLAGS test |
+        xcodebuild $XCODE_FLAGS test OTHER_SWIFT_FLAGS=-DUSE_UTF16 |
         xcpretty -r junit -o build/reports/xcodebuild-macos.xml
       displayName: tests on macOS
       condition: succeededOrFailed()
