@@ -108,33 +108,55 @@ public final class Parser {
     /// Constructor.
     public let constructor: Constructor
 
+    /// Encoding
+    public enum Encoding {
+        case utf8
+        case utf16
+        /// Default encoding can be selected at compile time
+        public static var `default`: Encoding = {
+        #if USE_UTF8
+            return .utf8
+        #else
+            return .utf16
+        #endif
+        }()
+    }
+    /// Encoding
+    public let encoding: Encoding
+
     /// Set up Parser.
     ///
     /// - parameter string: YAML string.
     /// - parameter resolver: Resolver, `.default` if omitted.
     /// - parameter constructor: Constructor, `.default` if omitted.
+    /// - parameter encoding: Encoding, `.default` if omitted.
     ///
     /// - throws: `YamlError`.
     public init(yaml string: String,
                 resolver: Resolver = .default,
-                constructor: Constructor = .default) throws {
+                constructor: Constructor = .default,
+                encoding: Encoding = .default) throws {
         yaml = string
         self.resolver = resolver
         self.constructor = constructor
+        self.encoding = encoding
 
         yaml_parser_initialize(&parser)
-#if USE_UTF8
+        switch encoding {
+        case .utf8:
         yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
-        utf8Slice = string.utf8CString.dropLast()
+            let utf8Slice = string.utf8CString.dropLast()
+            buffer = .utf8(utf8Slice)
         try utf8Slice.withUnsafeBytes(startParse(with:))
-#else
+        case .utf16:
         // use native endian
         let isLittleEndian = 1 == 1.littleEndian
         yaml_parser_set_encoding(&parser, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
         let encoding: String.Encoding = isLittleEndian ? .utf16LittleEndian : .utf16BigEndian
-        data = yaml.data(using: encoding)!
+            let data = yaml.data(using: encoding)!
+            buffer = .utf16(data)
         try data.withUnsafeBytes(startParse(with:))
-#endif
+        }
     }
 
     deinit {
@@ -175,11 +197,12 @@ public final class Parser {
 
     private var anchors = [String: Node]()
     private var parser = yaml_parser_t()
-#if USE_UTF8
-    private let utf8Slice: ArraySlice<CChar>
-#else
-    private let data: Data
-#endif
+
+    private enum Buffer {
+        case utf8(ArraySlice<CChar>)
+        case utf16(Data)
+    }
+    private let buffer: Buffer
 }
 
 // MARK: Implementation Details
