@@ -17,14 +17,16 @@ import Foundation
 /// - parameter yaml: String
 /// - parameter resolver: Resolver
 /// - parameter constructor: Constructor
+/// - parameter encoding: Parser.Encoding
 ///
 /// - returns: YamlSequence<Any>
 ///
 /// - throws: YamlError
 public func load_all(yaml: String,
                      _ resolver: Resolver = .default,
-                     _ constructor: Constructor = .default) throws -> YamlSequence<Any> {
-    let parser = try Parser(yaml: yaml, resolver: resolver, constructor: constructor)
+                     _ constructor: Constructor = .default,
+                     _ encoding: Parser.Encoding = .default) throws -> YamlSequence<Any> {
+    let parser = try Parser(yaml: yaml, resolver: resolver, constructor: constructor, encoding: encoding)
     return YamlSequence { try parser.nextRoot()?.any }
 }
 
@@ -34,14 +36,16 @@ public func load_all(yaml: String,
 /// - parameter yaml: String
 /// - parameter resolver: Resolver
 /// - parameter constructor: Constructor
+/// - parameter encoding: Parser.Encoding
 ///
 /// - returns: Any?
 ///
 /// - throws: YamlError
 public func load(yaml: String,
                  _ resolver: Resolver = .default,
-                 _ constructor: Constructor = .default) throws -> Any? {
-    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor).singleRoot()?.any
+                 _ constructor: Constructor = .default,
+                 _ encoding: Parser.Encoding = .default) throws -> Any? {
+    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor, encoding: encoding).singleRoot()?.any
 }
 
 /// Parse all YAML documents in a String
@@ -50,14 +54,16 @@ public func load(yaml: String,
 /// - parameter yaml: String
 /// - parameter resolver: Resolver
 /// - parameter constructor: Constructor
+/// - parameter encoding: Parser.Encoding
 ///
 /// - returns: YamlSequence<Node>
 ///
 /// - throws: YamlError
 public func compose_all(yaml: String,
                         _ resolver: Resolver = .default,
-                        _ constructor: Constructor = .default) throws -> YamlSequence<Node> {
-    let parser = try Parser(yaml: yaml, resolver: resolver, constructor: constructor)
+                        _ constructor: Constructor = .default,
+                        _ encoding: Parser.Encoding = .default) throws -> YamlSequence<Node> {
+    let parser = try Parser(yaml: yaml, resolver: resolver, constructor: constructor, encoding: encoding)
     return YamlSequence(parser.nextRoot)
 }
 
@@ -67,14 +73,16 @@ public func compose_all(yaml: String,
 /// - parameter yaml: String
 /// - parameter resolver: Resolver
 /// - parameter constructor: Constructor
+/// - parameter encoding: Parser.Encoding
 ///
 /// - returns: Node?
 ///
 /// - throws: YamlError
 public func compose(yaml: String,
                     _ resolver: Resolver = .default,
-                    _ constructor: Constructor = .default) throws -> Node? {
-    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor).singleRoot()
+                    _ constructor: Constructor = .default,
+                    _ encoding: Parser.Encoding = .default) throws -> Node? {
+    return try Parser(yaml: yaml, resolver: resolver, constructor: constructor, encoding: encoding).singleRoot()
 }
 
 /// Sequence that holds an error.
@@ -144,18 +152,18 @@ public final class Parser {
         yaml_parser_initialize(&parser)
         switch encoding {
         case .utf8:
-        yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
+            yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
             let utf8Slice = string.utf8CString.dropLast()
             buffer = .utf8(utf8Slice)
-        try utf8Slice.withUnsafeBytes(startParse(with:))
+            try utf8Slice.withUnsafeBytes(startParse(with:))
         case .utf16:
-        // use native endian
-        let isLittleEndian = 1 == 1.littleEndian
-        yaml_parser_set_encoding(&parser, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
-        let encoding: String.Encoding = isLittleEndian ? .utf16LittleEndian : .utf16BigEndian
+            // use native endian
+            let isLittleEndian = 1 == 1.littleEndian
+            yaml_parser_set_encoding(&parser, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
+            let encoding: String.Encoding = isLittleEndian ? .utf16LittleEndian : .utf16BigEndian
             let data = yaml.data(using: encoding)!
             buffer = .utf16(data)
-        try data.withUnsafeBytes(startParse(with:))
+            try data.withUnsafeBytes(startParse(with:))
         }
     }
 
