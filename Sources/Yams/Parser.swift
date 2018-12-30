@@ -126,8 +126,10 @@ public final class Parser {
         public static var `default`: Encoding = {
         #if USE_UTF8
             return .utf8
-        #else
+        #elseif USE_UTF16
             return .utf16
+        #else
+            return "test".utf8.withContiguousStorageIfAvailable({ _ in true }) != nil ? .utf8 : .utf16
         #endif
         }()
     }
@@ -157,9 +159,9 @@ public final class Parser {
             yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
             buffer = .utf8View(yaml.utf8)
             if try yaml.utf8.withContiguousStorageIfAvailable(startParse(with:)) == nil {
-            let utf8Slice = string.utf8CString.dropLast()
+                let utf8Slice = string.utf8CString.dropLast()
                 buffer = .utf8Slice(utf8Slice)
-            try utf8Slice.withUnsafeBytes(startParse(with:))
+                try utf8Slice.withUnsafeBytes(startParse(with:))
             }
         case .utf16:
             // use native endian
