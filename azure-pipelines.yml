@@ -49,10 +49,14 @@ jobs:
         containerResource: '4.2.1'
   container: $[ variables['containerResource'] ]
   steps:
-    - script: swift test --parallel -Xswiftc -DUSE_UTF16
-      displayName: swift test
-    - script: swift test --parallel -Xswiftc -DUSE_UTF8
+    - script: swift test --parallel
+      displayName: swift test with UTF16
+      env:
+        YAMS_ENCODING: utf16
+    - script: swift test --parallel
       displayName: swift test with UTF8
+      env:
+        YAMS_ENCODING: utf8
     - script: |
         set -o pipefail
         mkdir -p build/reports/
@@ -68,10 +72,14 @@ jobs:
     vmImage: 'Ubuntu 16.04'
   container: '5.0'
   steps:
-    - script: swift test --parallel -Xswiftc -DUSE_UTF16
-      displayName: swift test
-    - script: swift test --parallel -Xswiftc -DUSE_UTF8
+    - script: swift test --parallel
+      displayName: swift test with UTF16
+      env:
+        YAMS_ENCODING: utf16
+    - script: swift test --parallel
       displayName: swift test with UTF8
+      env:
+        YAMS_ENCODING: utf8
 
 - job: macOS
   pool:
@@ -102,16 +110,20 @@ jobs:
       displayName: xcode-select & set XCODE_FLAGS
     - script: >
         set -o pipefail &&
-        xcodebuild $XCODE_FLAGS test OTHER_SWIFT_FLAGS=-DUSE_UTF16 |
+        xcodebuild $XCODE_FLAGS test |
         xcpretty -r junit -o build/reports/xcodebuild-macos.xml
-      displayName: tests on macOS
+      displayName: tests on macOS with UTF16
       condition: succeededOrFailed()
+      env:
+        YAMS_ENCODING: utf16
     - script: >
         set -o pipefail &&
-        xcodebuild $XCODE_FLAGS test OTHER_SWIFT_FLAGS=-DUSE_UTF8 |
+        xcodebuild $XCODE_FLAGS test |
         xcpretty -r junit -o build/reports/xcodebuild-macos-utf8.xml
       displayName: tests on macOS with UTF8
       condition: succeededOrFailed()
+      env:
+        YAMS_ENCODING: utf8
     - script: >
         set -o pipefail &&
         xcodebuild $XCODE_FLAGS test -sdk iphonesimulator -destination "name=iPhone 8" |
@@ -132,8 +144,17 @@ jobs:
     - script: >
         set -o pipefail &&
         swift test --parallel
-      displayName: swift test
+      displayName: swift test with UTF16
       condition: succeededOrFailed()
+      env:
+        YAMS_ENCODING: utf16
+    - script: >
+        set -o pipefail &&
+        swift test --parallel
+      displayName: swift test with UTF8
+      condition: succeededOrFailed()
+      env:
+        YAMS_ENCODING: utf8
     - task: PublishTestResults@2
       inputs:
         testRunner: JUnit
