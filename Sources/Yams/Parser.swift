@@ -118,7 +118,9 @@ public final class Parser {
 
     /// Encoding
     public enum Encoding {
+        /// Use `YAML_UTF8_ENCODING`
         case utf8
+        /// Use `YAML_UTF16(BE|LE)_ENCODING`
         case utf16
         /// Default encoding can be selected at compile time
         public static var `default`: Encoding = {
