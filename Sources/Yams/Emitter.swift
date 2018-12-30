@@ -143,11 +143,7 @@ public func serialize<Nodes>(
     try emitter.open()
     try nodes.forEach(emitter.serialize)
     try emitter.close()
-#if USE_UTF8
     return String(data: emitter.data, encoding: .utf8)!
-#else
-    return String(data: emitter.data, encoding: .utf16)!
-#endif
 }
 
 /// Produce a YAML string from a `Node`.
@@ -278,11 +274,7 @@ public final class Emitter {
 
         applyOptionsToEmitter()
 
-#if USE_UTF8
         yaml_emitter_set_encoding(&emitter, YAML_UTF8_ENCODING)
-#else
-        yaml_emitter_set_encoding(&emitter, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
-#endif
     }
 
     deinit {
@@ -296,12 +288,7 @@ public final class Emitter {
         switch state {
         case .initialized:
             var event = yaml_event_t()
-#if USE_UTF8
             yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING)
-#else
-            let encoding = isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING
-            yaml_stream_start_event_initialize(&event, encoding)
-#endif
             try emit(&event)
             state = .opened
         case .opened:
