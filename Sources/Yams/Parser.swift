@@ -117,20 +117,20 @@ public final class Parser {
     public let constructor: Constructor
 
     /// Encoding
-    public enum Encoding {
+    public enum Encoding: String {
         /// Use `YAML_UTF8_ENCODING`
         case utf8
         /// Use `YAML_UTF16(BE|LE)_ENCODING`
         case utf16
         /// Default encoding can be selected at compile time
         public static var `default`: Encoding = {
-        #if USE_UTF8
-            return .utf8
-        #elseif USE_UTF16
-            return .utf16
-        #else
+            let key = "YAMS_ENCODING"
+            if let yamsEncoding = ProcessInfo.processInfo.environment[key],
+                let encoding = Encoding(rawValue: yamsEncoding.lowercased()) {
+                print("`Parser.Encoding.default` is set to `\(encoding)` by `\(key)` environment variable.")
+                return encoding
+            }
             return "test".utf8.withContiguousStorageIfAvailable({ _ in true }) != nil ? .utf8 : .utf16
-        #endif
         }()
     }
     /// Encoding
