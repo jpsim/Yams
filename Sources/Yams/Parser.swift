@@ -155,9 +155,12 @@ public final class Parser {
         switch encoding {
         case .utf8:
             yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
+            buffer = .utf8View(yaml.utf8)
+            if try yaml.utf8.withContiguousStorageIfAvailable(startParse(with:)) == nil {
             let utf8Slice = string.utf8CString.dropLast()
-            buffer = .utf8(utf8Slice)
+                buffer = .utf8Slice(utf8Slice)
             try utf8Slice.withUnsafeBytes(startParse(with:))
+            }
         case .utf16:
             // use native endian
             let isLittleEndian = 1 == 1.littleEndian
@@ -209,10 +212,11 @@ public final class Parser {
     private var parser = yaml_parser_t()
 
     private enum Buffer {
-        case utf8(ArraySlice<CChar>)
+        case utf8View(String.UTF8View)
+        case utf8Slice(ArraySlice<CChar>)
         case utf16(Data)
     }
-    private let buffer: Buffer
+    private var buffer: Buffer
 }
 
 // MARK: Implementation Details
@@ -244,6 +248,11 @@ private extension Parser {
 
     func startParse(with buffer: UnsafeRawBufferPointer) throws {
         yaml_parser_set_input_string(&parser, buffer.baseAddress?.assumingMemoryBound(to: UInt8.self), buffer.count)
+        try parse() // Drop YAML_STREAM_START_EVENT
+    }
+
+    func startParse(with buffer: UnsafeBufferPointer<UInt8>) throws {
+        yaml_parser_set_input_string(&parser, buffer.baseAddress, buffer.count)
         try parse() // Drop YAML_STREAM_START_EVENT
     }
 
@@ -401,6 +410,22 @@ private extension Data {
         return try withUnsafeBytes {
             try apply(UnsafeRawBufferPointer(start: $0, count: count))
         }
+    }
+}
+#endif
+
+#if swift(>=4.2)
+#if !compiler(>=5)
+private extension String.UTF8View {
+    func withContiguousStorageIfAvailable<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R? {
+        return nil
+    }
+}
+#endif
+#else
+private extension String.UTF8View {
+    func withContiguousStorageIfAvailable<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R? {
+        return nil
     }
 }
 #endif
