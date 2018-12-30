@@ -57,6 +57,11 @@ class PerformanceTests: XCTestCase {
         "/SourceKitten/Source/SourceKittenFramework/Xcode.swift"
     ]
 
+    func loadYAML() throws -> String {
+        let data = try Data(contentsOf: URL(fileURLWithPath: filename))
+        return String(data: data, encoding: .utf8)!
+    }
+
     func parseSourceKittenIssue289UsingLoad(yaml: String, spmName: String, encoding: Parser.Encoding) {
         do {
             guard let object = try Yams.load(yaml: yaml, .default, .default, encoding) as? [String: Any],
@@ -77,7 +82,7 @@ class PerformanceTests: XCTestCase {
     }
 
     func testUsingLoadWithUTF16() {
-        guard let yaml = try? String(contentsOfFile: filename, encoding: .utf8) else {
+        guard let yaml = try? loadYAML() else {
             XCTFail("Can't load \(filename)")
             return
         }
@@ -87,7 +92,7 @@ class PerformanceTests: XCTestCase {
     }
 
     func testUsingLoadWithUTF8() {
-        guard let yaml = try? String(contentsOfFile: filename, encoding: .utf8) else {
+        guard let yaml = try? loadYAML() else {
             XCTFail("Can't load \(filename)")
             return
         }
@@ -116,7 +121,7 @@ class PerformanceTests: XCTestCase {
     }
 
     func testUsingComposeWithUTF16() {
-        guard let yaml = try? String(contentsOfFile: filename, encoding: .utf8) else {
+        guard let yaml = try? loadYAML() else {
             XCTFail("Can't load \(filename)")
             return
         }
@@ -126,7 +131,7 @@ class PerformanceTests: XCTestCase {
     }
 
     func testUsingComposeWithUTF8() {
-        guard let yaml = try? String(contentsOfFile: filename, encoding: .utf8) else {
+        guard let yaml = try? loadYAML() else {
             XCTFail("Can't load \(filename)")
             return
         }
@@ -154,7 +159,7 @@ class PerformanceTests: XCTestCase {
     }
 
     func testUsingSwiftDecodableWithUTF16() {
-        guard let yaml = try? String(contentsOfFile: filename, encoding: .utf8) else {
+        guard let yaml = try? loadYAML() else {
             XCTFail("Can't load \(filename)")
             return
         }
@@ -164,7 +169,7 @@ class PerformanceTests: XCTestCase {
     }
 
     func testUsingSwiftDecodableWithUTF8() {
-        guard let yaml = try? String(contentsOfFile: filename, encoding: .utf8) else {
+        guard let yaml = try? loadYAML() else {
             XCTFail("Can't load \(filename)")
             return
         }
