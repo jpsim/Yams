@@ -14,14 +14,15 @@ public class YAMLDecoder {
     /// Creates a `YAMLDecoder` instance.
     ///
     /// - parameter encoding: Encoding, `.default` if omitted.
-    public init(encoding: Parser.Encoding = .default) {}
+    public init(encoding: Parser.Encoding = .default) {
+        self.encoding = encoding
+    }
 
     /// Decode a `Decodable` type from a given `String` and optional user info mapping.
     ///
     /// - parameter type:    `Decodable` type to decode.
     /// - parameter yaml:     YAML string to decode.
     /// - parameter userInfo: Additional key/values which can be used when looking up keys to decode.
-    /// - parameter encoding: `Parser.Encoding`
     ///
     /// - returns: Returns the decoded type `T`.
     ///
@@ -44,7 +45,7 @@ public class YAMLDecoder {
     }
 
     /// Encoding
-    public var encoding = Parser.Encoding.default
+    public var encoding: Parser.Encoding
 }
 
 private struct _Decoder: Decoder {
