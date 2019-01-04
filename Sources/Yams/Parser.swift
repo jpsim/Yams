@@ -161,8 +161,12 @@ public final class Parser {
         switch encoding {
         case .utf8:
             yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
-            buffer = .utf8View(yaml.utf8)
-            if try yaml.utf8.withContiguousStorageIfAvailable(startParse(with:)) == nil {
+            let utf8View = yaml.utf8
+            buffer = .utf8View(utf8View)
+            if try utf8View.withContiguousStorageIfAvailable(startParse(with:)) != nil {
+                // Attempt to parse with underlying UTF8 String encoding was successful, nothing further to do
+            } else {
+                // Fall back to using UTF8 slice
                 let utf8Slice = string.utf8CString.dropLast()
                 buffer = .utf8Slice(utf8Slice)
                 try utf8Slice.withUnsafeBytes(startParse(with:))
