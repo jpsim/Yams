@@ -168,7 +168,7 @@ public final class Parser {
                 try utf8Slice.withUnsafeBytes(startParse(with:))
             }
         case .utf16:
-            // use native endian
+            // use native endianness
             let isLittleEndian = 1 == 1.littleEndian
             yaml_parser_set_encoding(&parser, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
             let encoding: String.Encoding = isLittleEndian ? .utf16LittleEndian : .utf16BigEndian
