@@ -52,11 +52,11 @@ jobs:
     - script: swift test --parallel
       displayName: swift test with UTF16
       env:
-        YAMS_ENCODING: utf16
+        YAMS_DEFAULT_ENCODING: utf16
     - script: swift test --parallel
       displayName: swift test with UTF8
       env:
-        YAMS_ENCODING: utf8
+        YAMS_DEFAULT_ENCODING: utf8
     - script: |
         set -o pipefail
         mkdir -p build/reports/
@@ -75,11 +75,11 @@ jobs:
     - script: swift test --parallel
       displayName: swift test with UTF16
       env:
-        YAMS_ENCODING: utf16
+        YAMS_DEFAULT_ENCODING: utf16
     - script: swift test --parallel
       displayName: swift test with UTF8
       env:
-        YAMS_ENCODING: utf8
+        YAMS_DEFAULT_ENCODING: utf8
 
 - job: macOS
   pool:
@@ -115,7 +115,7 @@ jobs:
       displayName: tests on macOS with UTF16
       condition: succeededOrFailed()
       env:
-        YAMS_ENCODING: utf16
+        YAMS_DEFAULT_ENCODING: utf16
     - script: >
         set -o pipefail &&
         xcodebuild $XCODE_FLAGS test |
@@ -123,7 +123,7 @@ jobs:
       displayName: tests on macOS with UTF8
       condition: succeededOrFailed()
       env:
-        YAMS_ENCODING: utf8
+        YAMS_DEFAULT_ENCODING: utf8
     - script: >
         set -o pipefail &&
         xcodebuild $XCODE_FLAGS test -sdk iphonesimulator -destination "name=iPhone 8" |
@@ -147,14 +147,14 @@ jobs:
       displayName: swift test with UTF16
       condition: succeededOrFailed()
       env:
-        YAMS_ENCODING: utf16
+        YAMS_DEFAULT_ENCODING: utf16
     - script: >
         set -o pipefail &&
         swift test --parallel
       displayName: swift test with UTF8
       condition: succeededOrFailed()
       env:
-        YAMS_ENCODING: utf8
+        YAMS_DEFAULT_ENCODING: utf8
     - task: PublishTestResults@2
       inputs:
         testRunner: JUnit

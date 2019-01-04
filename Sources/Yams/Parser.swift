@@ -124,7 +124,7 @@ public final class Parser {
         case utf16
         /// Default encoding can be selected at compile time
         public static var `default`: Encoding = {
-            let key = "YAMS_ENCODING"
+            let key = "YAMS_DEFAULT_ENCODING"
             if let yamsEncoding = ProcessInfo.processInfo.environment[key],
                 let encoding = Encoding(rawValue: yamsEncoding.lowercased()) {
                 print("""
