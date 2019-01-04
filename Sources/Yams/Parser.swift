@@ -127,7 +127,9 @@ public final class Parser {
             let key = "YAMS_ENCODING"
             if let yamsEncoding = ProcessInfo.processInfo.environment[key],
                 let encoding = Encoding(rawValue: yamsEncoding.lowercased()) {
-                print("`Parser.Encoding.default` is set to `\(encoding)` by `\(key)` environment variable.")
+                print("""
+                    `Parser.Encoding.default` was set to `\(encoding)` by the `\(key)` environment variable.
+                    """)
                 return encoding
             }
             return "test".utf8.withContiguousStorageIfAvailable({ _ in true }) != nil ? .utf8 : .utf16
