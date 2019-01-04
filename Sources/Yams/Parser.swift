@@ -122,7 +122,9 @@ public final class Parser {
         case utf8
         /// Use `YAML_UTF16(BE|LE)_ENCODING`
         case utf16
-        /// Default encoding can be selected at compile time
+        /// The default encoding, determined at run time based on the String type's native encoding.
+        /// This can be overridden by setting `YAMS_DEFAULT_ENCODING` to either `UTF8` or `UTF16`.
+        /// This value is case insensitive.
         public static var `default`: Encoding = {
             let key = "YAMS_DEFAULT_ENCODING"
             if let yamsEncoding = ProcessInfo.processInfo.environment[key],
