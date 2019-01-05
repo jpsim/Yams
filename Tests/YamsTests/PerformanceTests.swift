@@ -62,7 +62,8 @@ class PerformanceTests: XCTestCase {
         return String(data: data, encoding: .utf8)!
     }
 
-    func parseSourceKittenIssue289UsingLoad(yaml: String, spmName: String, encoding: Parser.Encoding) {
+    func parseSourceKittenIssue289UsingLoad(yaml: String, encoding: Parser.Encoding) {
+        let spmName = "SourceKittenFramework"
         do {
             guard let object = try Yams.load(yaml: yaml, .default, .default, encoding) as? [String: Any],
                 let commands = (object["commands"] as? [String: [String: Any]])?.values,
@@ -84,18 +85,19 @@ class PerformanceTests: XCTestCase {
     func testUsingLoadWithUTF16() throws {
         let yaml = try loadYAML()
         self.measure {
-            parseSourceKittenIssue289UsingLoad(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf16)
+            parseSourceKittenIssue289UsingLoad(yaml: yaml, encoding: .utf16)
         }
     }
 
     func testUsingLoadWithUTF8() throws {
         let yaml = try loadYAML()
         self.measure {
-            parseSourceKittenIssue289UsingLoad(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf8)
+            parseSourceKittenIssue289UsingLoad(yaml: yaml, encoding: .utf8)
         }
     }
 
-    func parseSourceKittenIssue289UsingCompose(yaml: String, spmName: String, encoding: Parser.Encoding) {
+    func parseSourceKittenIssue289UsingCompose(yaml: String, encoding: Parser.Encoding) {
+        let spmName = "SourceKittenFramework"
         do {
             guard let node = try Yams.compose(yaml: yaml, .default, .default, encoding),
                 let commands = node["commands"]?.mapping?.values,
@@ -117,18 +119,19 @@ class PerformanceTests: XCTestCase {
     func testUsingComposeWithUTF16() throws {
         let yaml = try loadYAML()
         self.measure {
-            parseSourceKittenIssue289UsingCompose(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf16)
+            parseSourceKittenIssue289UsingCompose(yaml: yaml, encoding: .utf16)
         }
     }
 
     func testUsingComposeWithUTF8() throws {
         let yaml = try loadYAML()
         self.measure {
-            parseSourceKittenIssue289UsingCompose(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf8)
+            parseSourceKittenIssue289UsingCompose(yaml: yaml, encoding: .utf8)
         }
     }
 
-    func parseSourceKittenIssue289UsingSwiftDecodable(yaml: String, spmName: String, encoding: Parser.Encoding) {
+    func parseSourceKittenIssue289UsingSwiftDecodable(yaml: String, encoding: Parser.Encoding) {
+        let spmName = "SourceKittenFramework"
         do {
             guard let manifest: Manifest = try YAMLDecoder(encoding: encoding).decode(from: yaml),
                 let command = manifest.commands.values.first(where: { $0.moduleName == spmName }),
@@ -149,14 +152,14 @@ class PerformanceTests: XCTestCase {
     func testUsingSwiftDecodableWithUTF16() throws {
         let yaml = try loadYAML()
         self.measure {
-            parseSourceKittenIssue289UsingSwiftDecodable(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf16)
+            parseSourceKittenIssue289UsingSwiftDecodable(yaml: yaml, encoding: .utf16)
         }
     }
 
     func testUsingSwiftDecodableWithUTF8() throws {
         let yaml = try loadYAML()
         self.measure {
-            parseSourceKittenIssue289UsingSwiftDecodable(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf8)
+            parseSourceKittenIssue289UsingSwiftDecodable(yaml: yaml, encoding: .utf8)
         }
     }
 }
