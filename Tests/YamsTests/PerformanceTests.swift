@@ -57,80 +57,109 @@ class PerformanceTests: XCTestCase {
         "/SourceKitten/Source/SourceKittenFramework/Xcode.swift"
     ]
 
-    func testSourceKittenIssue289UsingLoad() {
-        guard let yamlString = try? String(contentsOfFile: filename, encoding: .utf8) else {
-            XCTFail("Can't load \(filename)")
-            return
-        }
+    func loadYAML() throws -> String {
+        let data = try Data(contentsOf: URL(fileURLWithPath: filename))
+        return String(data: data, encoding: .utf8)!
+    }
+
+    func parseSourceKittenIssue289UsingLoad(yaml: String, encoding: Parser.Encoding) {
         let spmName = "SourceKittenFramework"
-        self.measure {
-            do {
-                guard let yaml = try Yams.load(yaml: yamlString) as? [String: Any],
-                    let commands = (yaml["commands"] as? [String: [String: Any]])?.values,
-                    let moduleCommand = commands.first(where: { ($0["module-name"] as? String ?? "") == spmName }),
-                    let imports = moduleCommand["import-paths"] as? [String],
-                    let otherArguments = moduleCommand["other-args"] as? [String],
-                    let sources = moduleCommand["sources"] as? [String] else {
+        do {
+            guard let object = try Yams.load(yaml: yaml, .default, .default, encoding) as? [String: Any],
+                let commands = (object["commands"] as? [String: [String: Any]])?.values,
+                let moduleCommand = commands.first(where: { ($0["module-name"] as? String ?? "") == spmName }),
+                let imports = moduleCommand["import-paths"] as? [String],
+                let otherArguments = moduleCommand["other-args"] as? [String],
+                let sources = moduleCommand["sources"] as? [String] else {
                     XCTFail("Invalid result form Yams.load()")
                     return
-                }
-                XCTAssertEqual(imports, self.expectedImports)
-                XCTAssertEqual(otherArguments, self.expectedOtherArguments)
-                XCTAssertEqual(sources, self.expectedSources)
-            } catch {
-                XCTFail("\(error)")
             }
+            XCTAssertEqual(imports, self.expectedImports)
+            XCTAssertEqual(otherArguments, self.expectedOtherArguments)
+            XCTAssertEqual(sources, self.expectedSources)
+        } catch {
+            XCTFail("\(error)")
         }
     }
 
-    func testSourceKittenIssue289UsingCompose() {
-        guard let yamlString = try? String(contentsOfFile: filename, encoding: .utf8) else {
-            XCTFail("Can't load \(filename)")
-            return
-        }
-        let spmName = "SourceKittenFramework"
+    func testUsingLoadWithUTF16() throws {
+        let yaml = try loadYAML()
         self.measure {
-            do {
-                guard let yaml = try Yams.compose(yaml: yamlString),
-                    let commands = yaml["commands"]?.mapping?.values,
-                    let moduleCommand = commands.first(where: { $0["module-name"]?.string == spmName }),
-                    let imports = moduleCommand["import-paths"]?.array(of: String.self),
-                    let otherArguments = moduleCommand["other-args"]?.array(of: String.self),
-                    let sources = moduleCommand["sources"]?.array(of: String.self) else {
-                        XCTFail("Invalid result form Yams.load()")
-                        return
-                }
-                XCTAssertEqual(imports, self.expectedImports)
-                XCTAssertEqual(otherArguments, self.expectedOtherArguments)
-                XCTAssertEqual(sources, self.expectedSources)
-            } catch {
-                XCTFail("\(error)")
-            }
+            parseSourceKittenIssue289UsingLoad(yaml: yaml, encoding: .utf16)
         }
     }
 
-    func testSourceKittenIssue289UsingSwiftDecodable() {
-        guard let yamlString = try? String(contentsOfFile: filename, encoding: .utf8) else {
-            XCTFail("Can't load \(filename)")
-            return
-        }
-        let spmName = "SourceKittenFramework"
+    func testUsingLoadWithUTF8() throws {
+        let yaml = try loadYAML()
         self.measure {
-            do {
-                guard let manifest: Manifest = try YAMLDecoder().decode(from: yamlString),
-                    let command = manifest.commands.values.first(where: { $0.moduleName == spmName }),
-                    let imports = command.importPaths,
-                    let otherArguments = command.otherArguments,
-                    let sources = command.sources else {
-                        XCTFail("Invalid result form Yams.load()")
-                        return
-                }
-                XCTAssertEqual(imports, self.expectedImports)
-                XCTAssertEqual(otherArguments, self.expectedOtherArguments)
-                XCTAssertEqual(sources, self.expectedSources)
-            } catch {
-                XCTFail("\(error)")
+            parseSourceKittenIssue289UsingLoad(yaml: yaml, encoding: .utf8)
+        }
+    }
+
+    func parseSourceKittenIssue289UsingCompose(yaml: String, encoding: Parser.Encoding) {
+        let spmName = "SourceKittenFramework"
+        do {
+            guard let node = try Yams.compose(yaml: yaml, .default, .default, encoding),
+                let commands = node["commands"]?.mapping?.values,
+                let moduleCommand = commands.first(where: { $0["module-name"]?.string == spmName }),
+                let imports = moduleCommand["import-paths"]?.array(of: String.self),
+                let otherArguments = moduleCommand["other-args"]?.array(of: String.self),
+                let sources = moduleCommand["sources"]?.array(of: String.self) else {
+                    XCTFail("Invalid result form Yams.load()")
+                    return
             }
+            XCTAssertEqual(imports, self.expectedImports)
+            XCTAssertEqual(otherArguments, self.expectedOtherArguments)
+            XCTAssertEqual(sources, self.expectedSources)
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+
+    func testUsingComposeWithUTF16() throws {
+        let yaml = try loadYAML()
+        self.measure {
+            parseSourceKittenIssue289UsingCompose(yaml: yaml, encoding: .utf16)
+        }
+    }
+
+    func testUsingComposeWithUTF8() throws {
+        let yaml = try loadYAML()
+        self.measure {
+            parseSourceKittenIssue289UsingCompose(yaml: yaml, encoding: .utf8)
+        }
+    }
+
+    func parseSourceKittenIssue289UsingSwiftDecodable(yaml: String, encoding: Parser.Encoding) {
+        let spmName = "SourceKittenFramework"
+        do {
+            guard let manifest: Manifest = try YAMLDecoder(encoding: encoding).decode(from: yaml),
+                let command = manifest.commands.values.first(where: { $0.moduleName == spmName }),
+                let imports = command.importPaths,
+                let otherArguments = command.otherArguments,
+                let sources = command.sources else {
+                    XCTFail("Invalid result form Yams.load()")
+                    return
+            }
+            XCTAssertEqual(imports, self.expectedImports)
+            XCTAssertEqual(otherArguments, self.expectedOtherArguments)
+            XCTAssertEqual(sources, self.expectedSources)
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+
+    func testUsingSwiftDecodableWithUTF16() throws {
+        let yaml = try loadYAML()
+        self.measure {
+            parseSourceKittenIssue289UsingSwiftDecodable(yaml: yaml, encoding: .utf16)
+        }
+    }
+
+    func testUsingSwiftDecodableWithUTF8() throws {
+        let yaml = try loadYAML()
+        self.measure {
+            parseSourceKittenIssue289UsingSwiftDecodable(yaml: yaml, encoding: .utf8)
         }
     }
 }
@@ -138,9 +167,12 @@ class PerformanceTests: XCTestCase {
 extension PerformanceTests {
     static var allTests: [(String, (PerformanceTests) -> () throws -> Void)] {
         return [
-            ("testSourceKittenIssue289Load", testSourceKittenIssue289UsingLoad),
-            ("testSourceKittenIssue289Compose", testSourceKittenIssue289UsingCompose),
-            ("testSourceKittenIssue289UsingSwiftDecodable", testSourceKittenIssue289UsingSwiftDecodable)
+            ("testUsingLoadWithUTF16", testUsingLoadWithUTF16),
+            ("testUsingLoadWithUTF8", testUsingLoadWithUTF8),
+            ("testUsingComposeWithUTF16", testUsingComposeWithUTF16),
+            ("testUsingComposeWithUTF8", testUsingComposeWithUTF8),
+            ("testUsingSwiftDecodableWithUTF16", testUsingSwiftDecodableWithUTF16),
+            ("testUsingSwiftDecodableWithUTF8", testUsingSwiftDecodableWithUTF8)
         ]
     }
 }

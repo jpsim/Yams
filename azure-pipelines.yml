@@ -50,9 +50,13 @@ jobs:
   container: $[ variables['containerResource'] ]
   steps:
     - script: swift test --parallel
-      displayName: swift test
-    - script: swift test --parallel -Xswiftc -DUSE_UTF8
+      displayName: swift test with UTF16
+      env:
+        YAMS_DEFAULT_ENCODING: UTF16
+    - script: swift test --parallel
       displayName: swift test with UTF8
+      env:
+        YAMS_DEFAULT_ENCODING: UTF8
     - script: |
         set -o pipefail
         mkdir -p build/reports/
@@ -69,9 +73,13 @@ jobs:
   container: '5.0'
   steps:
     - script: swift test --parallel
-      displayName: swift test
-    - script: swift test --parallel -Xswiftc -DUSE_UTF8
+      displayName: swift test with UTF16
+      env:
+        YAMS_DEFAULT_ENCODING: UTF16
+    - script: swift test --parallel
       displayName: swift test with UTF8
+      env:
+        YAMS_DEFAULT_ENCODING: UTF8
 
 - job: macOS
   pool:
@@ -104,14 +112,18 @@ jobs:
         set -o pipefail &&
         xcodebuild $XCODE_FLAGS test |
         xcpretty -r junit -o build/reports/xcodebuild-macos.xml
-      displayName: tests on macOS
+      displayName: tests on macOS with UTF16
       condition: succeededOrFailed()
+      env:
+        YAMS_DEFAULT_ENCODING: UTF16
     - script: >
         set -o pipefail &&
-        xcodebuild $XCODE_FLAGS test OTHER_SWIFT_FLAGS=-DUSE_UTF8 |
+        xcodebuild $XCODE_FLAGS test |
         xcpretty -r junit -o build/reports/xcodebuild-macos-utf8.xml
       displayName: tests on macOS with UTF8
       condition: succeededOrFailed()
+      env:
+        YAMS_DEFAULT_ENCODING: UTF8
     - script: >
         set -o pipefail &&
         xcodebuild $XCODE_FLAGS test -sdk iphonesimulator -destination "name=iPhone 8" |
@@ -132,8 +144,17 @@ jobs:
     - script: >
         set -o pipefail &&
         swift test --parallel
-      displayName: swift test
+      displayName: swift test with UTF16
       condition: succeededOrFailed()
+      env:
+        YAMS_DEFAULT_ENCODING: UTF16
+    - script: >
+        set -o pipefail &&
+        swift test --parallel
+      displayName: swift test with UTF8
+      condition: succeededOrFailed()
+      env:
+        YAMS_DEFAULT_ENCODING: UTF8
     - task: PublishTestResults@2
       inputs:
         testRunner: JUnit

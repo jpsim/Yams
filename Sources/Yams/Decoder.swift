@@ -12,7 +12,11 @@ import Foundation
 /// user info mapping. Similar to `Foundation.JSONDecoder`.
 public class YAMLDecoder {
     /// Creates a `YAMLDecoder` instance.
-    public init() {}
+    ///
+    /// - parameter encoding: Encoding, `.default` if omitted.
+    public init(encoding: Parser.Encoding = .default) {
+        self.encoding = encoding
+    }
 
     /// Decode a `Decodable` type from a given `String` and optional user info mapping.
     ///
@@ -27,7 +31,7 @@ public class YAMLDecoder {
                           from yaml: String,
                           userInfo: [CodingUserInfoKey: Any] = [:]) throws -> T where T: Swift.Decodable {
         do {
-            let node = try Yams.compose(yaml: yaml, .basic) ?? ""
+            let node = try Parser(yaml: yaml, resolver: .basic, encoding: encoding).singleRoot() ?? ""
             let decoder = _Decoder(referencing: node, userInfo: userInfo)
             let container = try decoder.singleValueContainer()
             return try container.decode(type)
@@ -39,6 +43,9 @@ public class YAMLDecoder {
                                                     underlyingError: error))
         }
     }
+
+    /// Encoding
+    public var encoding: Parser.Encoding
 }
 
 private struct _Decoder: Decoder {

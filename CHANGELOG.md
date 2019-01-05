@@ -2,11 +2,17 @@
 
 ##### Breaking
 
-* None.
+* Change `byteOffset` to `offset` in `YamlError.reader`.  
+  [Norio Nomura](https://github.com/norio-nomura)
 
 ##### Enhancements
 
-* None.
+* Add `encoding` option to `Parser` as `Parser.Encoding` type to specify
+  which encoding to pass to libYAML. Along with that change, add `encoding`
+  options to `load()`, `load_all()`, `compose()`, `compose_all()` and 
+  `YAMLDecoder`. The default encoding will be determined at run time based on
+  the String type's native encoding.  
+  [Norio Nomura](https://github.com/norio-nomura)
 
 ##### Bug Fixes
 
