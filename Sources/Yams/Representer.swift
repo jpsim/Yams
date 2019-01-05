@@ -97,13 +97,13 @@ extension Date: ScalarRepresentable {
     }
 
     private var iso8601String: String {
-        let calendar = Calendar(identifier: .gregorian)
-        let nanosecond = calendar.component(.nanosecond, from: self)
 #if !_runtime(_ObjC) && !swift(>=5.0)
         // swift-corelibs-foundation has bug with nanosecond.
         // https://bugs.swift.org/browse/SR-3158
         return iso8601Formatter.string(from: self)
 #else
+        let calendar = Calendar(identifier: .gregorian)
+        let nanosecond = calendar.component(.nanosecond, from: self)
         if nanosecond != 0 {
             return iso8601WithFractionalSecondFormatter.string(from: self)
                 .trimmingCharacters(in: characterSetZero) + "Z"
