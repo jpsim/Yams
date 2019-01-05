@@ -231,7 +231,7 @@ public final class Parser {
 
 // MARK: Implementation Details
 private extension Parser {
-    private var streamEndProduced: Bool {
+    var streamEndProduced: Bool {
         return parser.stream_end_produced != 0
     }
 
@@ -241,7 +241,7 @@ private extension Parser {
         return node
     }
 
-    private func loadNode(from event: Event) throws -> Node {
+    func loadNode(from event: Event) throws -> Node {
         switch event.type {
         case YAML_ALIAS_EVENT:
             return try loadAlias(from: event)
@@ -275,7 +275,7 @@ private extension Parser {
         return event
     }
 
-    private func loadAlias(from event: Event) throws -> Node {
+    func loadAlias(from event: Event) throws -> Node {
         guard let alias = event.aliasAnchor else {
             fatalError("unreachable")
         }
@@ -287,7 +287,7 @@ private extension Parser {
         return node
     }
 
-    private func loadScalar(from event: Event) throws -> Node {
+    func loadScalar(from event: Event) throws -> Node {
         let node = Node.scalar(.init(event.scalarValue, tag(event.scalarTag), event.scalarStyle, event.startMark))
         if let anchor = event.scalarAnchor {
             anchors[anchor] = node
@@ -295,7 +295,7 @@ private extension Parser {
         return node
     }
 
-    private func loadSequence(from firstEvent: Event) throws -> Node {
+    func loadSequence(from firstEvent: Event) throws -> Node {
         var array = [Node]()
         var event = try parse()
         while event.type != YAML_SEQUENCE_END_EVENT {
@@ -309,7 +309,7 @@ private extension Parser {
         return node
     }
 
-    private func loadMapping(from firstEvent: Event) throws -> Node {
+    func loadMapping(from firstEvent: Event) throws -> Node {
         var pairs = [(Node, Node)]()
         var event = try parse()
         while event.type != YAML_MAPPING_END_EVENT {
@@ -326,7 +326,7 @@ private extension Parser {
         return node
     }
 
-    private func tag(_ string: String?) -> Tag {
+    func tag(_ string: String?) -> Tag {
         let tagName = string.map(Tag.Name.init(rawValue:)) ?? .implicit
         return Tag(tagName, resolver, constructor)
     }
