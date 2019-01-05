@@ -19,8 +19,7 @@ extension String {
     ///            column: utf16 column start from 0,
     ///            contents: substring of line
     func lineNumberColumnAndContents(at offset: Int) -> LineNumberColumnAndContents? {
-        guard let index = index(startIndex, offsetBy: offset, limitedBy: endIndex) else { return nil }
-        return lineNumberColumnAndContents(at: index)
+        return index(startIndex, offsetBy: offset, limitedBy: endIndex).flatMap(lineNumberColumnAndContents)
     }
 
     /// line number, column and contents at Index.
