@@ -33,8 +33,7 @@ class RepresenterTests: XCTestCase {
             XCTAssertEqual(try Node(date), "2001-12-15T02:59:43Z")
         }
         do { // fractional seconds
-            #if !_runtime(_ObjC)
-                // FIXME: swift-corelibs-foundation can't format date with nanosecond.
+            #if !_runtime(_ObjC) && !swift(>=5.0)
                 // https://bugs.swift.org/browse/SR-3158
             #else
                 let date = timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.1)
