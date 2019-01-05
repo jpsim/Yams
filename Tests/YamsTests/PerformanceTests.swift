@@ -81,21 +81,15 @@ class PerformanceTests: XCTestCase {
         }
     }
 
-    func testUsingLoadWithUTF16() {
-        guard let yaml = try? loadYAML() else {
-            XCTFail("Can't load \(filename)")
-            return
-        }
+    func testUsingLoadWithUTF16() throws {
+        let yaml = try loadYAML()
         self.measure {
             parseSourceKittenIssue289UsingLoad(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf16)
         }
     }
 
-    func testUsingLoadWithUTF8() {
-        guard let yaml = try? loadYAML() else {
-            XCTFail("Can't load \(filename)")
-            return
-        }
+    func testUsingLoadWithUTF8() throws {
+        let yaml = try loadYAML()
         self.measure {
             parseSourceKittenIssue289UsingLoad(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf8)
         }
@@ -120,21 +114,15 @@ class PerformanceTests: XCTestCase {
         }
     }
 
-    func testUsingComposeWithUTF16() {
-        guard let yaml = try? loadYAML() else {
-            XCTFail("Can't load \(filename)")
-            return
-        }
+    func testUsingComposeWithUTF16() throws {
+        let yaml = try loadYAML()
         self.measure {
             parseSourceKittenIssue289UsingCompose(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf16)
         }
     }
 
-    func testUsingComposeWithUTF8() {
-        guard let yaml = try? loadYAML() else {
-            XCTFail("Can't load \(filename)")
-            return
-        }
+    func testUsingComposeWithUTF8() throws {
+        let yaml = try loadYAML()
         self.measure {
             parseSourceKittenIssue289UsingCompose(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf8)
         }
@@ -158,21 +146,15 @@ class PerformanceTests: XCTestCase {
         }
     }
 
-    func testUsingSwiftDecodableWithUTF16() {
-        guard let yaml = try? loadYAML() else {
-            XCTFail("Can't load \(filename)")
-            return
-        }
+    func testUsingSwiftDecodableWithUTF16() throws {
+        let yaml = try loadYAML()
         self.measure {
             parseSourceKittenIssue289UsingSwiftDecodable(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf16)
         }
     }
 
-    func testUsingSwiftDecodableWithUTF8() {
-        guard let yaml = try? loadYAML() else {
-            XCTFail("Can't load \(filename)")
-            return
-        }
+    func testUsingSwiftDecodableWithUTF8() throws {
+        let yaml = try loadYAML()
         self.measure {
             parseSourceKittenIssue289UsingSwiftDecodable(yaml: yaml, spmName: "SourceKittenFramework", encoding: .utf8)
         }
