@@ -134,7 +134,7 @@ public final class Parser {
                     """)
                 return encoding
             }
-            return "test".utf8.withContiguousStorageIfAvailable({ _ in true }) != nil ? .utf8 : .utf16
+            return key.utf8.withContiguousStorageIfAvailable({ _ in true }) != nil ? .utf8 : .utf16
         }()
     }
     /// Encoding
