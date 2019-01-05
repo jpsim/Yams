@@ -161,8 +161,9 @@ extension YamlError: CustomStringConvertible {
         case .memory:
             return "Memory error"
         case let .reader(problem, offset, value, yaml):
-            guard let (line, column, contents) = offset.flatMap(yaml.lineNumberColumnAndContents(at:))
-                else { return "\(problem) at offset: \(String(describing: offset)), value: \(value)" }
+            guard let (line, column, contents) = offset.flatMap(yaml.lineNumberColumnAndContents(at:)) else {
+                return "\(problem) at offset: \(String(describing: offset)), value: \(value)"
+            }
             let mark = Mark(line: line + 1, column: column + 1)
             return "\(mark): error: reader: \(problem):\n" + contents.endingWithNewLine
                 + String(repeating: " ", count: column) + "^"
