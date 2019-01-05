@@ -463,7 +463,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
     }
 
     func testTimestampWithNanosecond() throws {
-        #if os(Linux)
+        #if !_runtime(_ObjC)
             // FIXME: swift-corelibs-foundation can't format date with nanosecond.
             // https://bugs.swift.org/browse/SR-3158
         #else

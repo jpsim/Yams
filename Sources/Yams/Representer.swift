@@ -99,7 +99,7 @@ extension Date: ScalarRepresentable {
     private var iso8601String: String {
         let calendar = Calendar(identifier: .gregorian)
         let nanosecond = calendar.component(.nanosecond, from: self)
-#if os(Linux)
+#if !_runtime(_ObjC)
         // swift-corelibs-foundation has bug with nanosecond.
         // https://bugs.swift.org/browse/SR-3158
         return iso8601Formatter.string(from: self)

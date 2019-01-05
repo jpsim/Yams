@@ -119,7 +119,7 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     // MARK: - Date Strategy Tests
     func testEncodingDate() {
-    #if os(Linux)
+    #if !_runtime(_ObjC)
         print("Decoding 'Date' has issue on Linux with nanoseconds. https://bugs.swift.org/browse/SR-6223")
     #else
         _testRoundTrip(of: Date())
@@ -127,7 +127,7 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
     }
 
     func testEncodingDateMillisecondsSince1970() {
-    #if os(Linux)
+    #if !_runtime(_ObjC)
         print("Decoding 'Date' has issue on Linux with nanoseconds. https://bugs.swift.org/browse/SR-6223")
     #else
         _testRoundTrip(of: Date(timeIntervalSince1970: 1000.0), expectedYAML: "1970-01-01T00:16:40Z\n")
