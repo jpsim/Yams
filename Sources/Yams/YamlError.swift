@@ -27,7 +27,7 @@ public enum YamlError: Swift.Error {
     /// - parameter offset:  The offset from `yaml.startIndex` at which the problem occured.
     /// - parameter value:   The problematic value (-1 is none).
     /// - parameter yaml:    YAML String which the problem occured while reading.
-    case reader(problem: String, offset: String.IndexDistance?, value: Int32, yaml: String)
+    case reader(problem: String, offset: Int?, value: Int32, yaml: String)
 
     // line and column start from 1, column is counted by unicodeScalars
     /// `YAML_SCANNER_ERROR`. Cannot scan the input stream.
