@@ -35,9 +35,9 @@ class MarkTests: XCTestCase {
               min_length: 2
             """
         let configuration = try Yams.compose(yaml: yaml)
-        let disabled_rules = configuration?.mapping?["disabled_rules"]?.array() ?? []
-        let configured_rules = configuration?.mapping?.keys.filter({ $0 != "disabled_rules" }) ?? []
-        let deprecatedMessages = (disabled_rules + configured_rules).compactMap(deprecatedMessage(from:))
+        let disabledRules = configuration?.mapping?["disabled_rules"]?.array() ?? []
+        let configuredRules = configuration?.mapping?.keys.filter({ $0 != "disabled_rules" }) ?? []
+        let deprecatedMessages = (disabledRules + configuredRules).compactMap(deprecatedMessage(from:))
         XCTAssertEqual(deprecatedMessages, [
             "2:5: warning: 'variable_name' has been renamed to " +
                 "'identifier_name' and will be completely removed in a future release.",
