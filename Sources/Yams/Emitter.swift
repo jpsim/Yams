@@ -478,5 +478,4 @@ extension Emitter {
     }
 }
 
-private let isLittleEndian = 1 == 1.littleEndian
 // swiftlint:disable:this file_length
