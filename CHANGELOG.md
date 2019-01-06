@@ -14,6 +14,9 @@
   the String type's native encoding.  
   [Norio Nomura](https://github.com/norio-nomura)
 
+* Update LibYAML sources to latest versions as of January 6 2018.  
+  [JP Simard](https://github.com/jpsim)
+
 ##### Bug Fixes
 
 * Fix some test failures with the latest Swift 5 snapshot on Apple platforms.  
