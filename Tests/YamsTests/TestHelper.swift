@@ -15,7 +15,7 @@ import XCTest
 /// https://bugs.swift.org/browse/SR-9454
 func doesSR9454Affect(to name: String = #function) -> Bool {
 #if swift(>=4.1.50)
-#if compiler(>=5) && os(Linux)
+#if compiler(>=5) && !_runtime(_ObjC)
     let string = "LINE1_67あ\nLINE2_7890\nLINE3_8901\n"
     let rangeOfFirstLine = string.lineRange(for: string.startIndex..<string.startIndex)
     let result = "\(rangeOfFirstLine)"

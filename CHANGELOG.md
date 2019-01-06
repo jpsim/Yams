@@ -20,6 +20,11 @@
   [Norio Nomura](https://github.com/norio-nomura)
   [#143](https://github.com/jpsim/Yams/issues/143)
 
+* Preserve nanoseconds in dates when using swift-corelibs-foundation with
+  Swift 5.  
+  [Norio Nomura](https://github.com/norio-nomura)
+  [#146](https://github.com/jpsim/Yams/pull/146)
+
 ## 1.0.1
 
 ##### Breaking
