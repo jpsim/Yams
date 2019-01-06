@@ -65,11 +65,11 @@ func timestamp(_ timeZoneHour: Int = 0,
 /// - parameter line: line number
 ///
 /// - returns: true if lhs is equal to rhs
-
-@discardableResult func YamsAssertEqual(_ lhs: Any?, _ rhs: Any?,
-                                        // swiftlint:disable:previous function_body_length
-                                        _ context: @autoclosure @escaping () -> String = "",
-                                        file: StaticString = #file, line: UInt = #line) -> Bool {
+@discardableResult
+func YamsAssertEqual(_ lhs: Any?, _ rhs: Any?,
+                     // swiftlint:disable:previous function_body_length identifier_name
+                     _ context: @autoclosure @escaping () -> String = "",
+                     file: StaticString = #file, line: UInt = #line) -> Bool {
     // use inner function for capturing `file` and `line`
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     @discardableResult func equal(_ lhs: Any?, _ rhs: Any?,

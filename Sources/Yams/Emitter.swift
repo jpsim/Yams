@@ -424,7 +424,7 @@ extension Emitter {
 
     private func serializeScalar(_ scalar: Node.Scalar) throws {
         var value = scalar.string.utf8CString, tag = scalar.resolvedTag.name.rawValue.utf8CString
-        let scalar_style = yaml_scalar_style_t(rawValue: scalar.style.rawValue)
+        let scalarStyle = yaml_scalar_style_t(rawValue: scalar.style.rawValue)
         var event = yaml_event_t()
         _ = value.withUnsafeMutableBytes { value in
             tag.withUnsafeMutableBytes { tag in
@@ -436,7 +436,7 @@ extension Emitter {
                     Int32(value.count - 1),
                     1,
                     1,
-                    scalar_style)
+                    scalarStyle)
             }
         }
         try emit(&event)
@@ -445,7 +445,7 @@ extension Emitter {
     private func serializeSequence(_ sequence: Node.Sequence) throws {
         var tag = sequence.resolvedTag.name.rawValue.utf8CString
         let implicit: Int32 = sequence.tag.name == .seq ? 1 : 0
-        let sequence_style = yaml_sequence_style_t(rawValue: sequence.style.rawValue)
+        let sequenceStyle = yaml_sequence_style_t(rawValue: sequence.style.rawValue)
         var event = yaml_event_t()
         _ = tag.withUnsafeMutableBytes { tag in
             yaml_sequence_start_event_initialize(
@@ -453,7 +453,7 @@ extension Emitter {
                 nil,
                 tag.baseAddress?.assumingMemoryBound(to: UInt8.self),
                 implicit,
-                sequence_style)
+                sequenceStyle)
         }
         try emit(&event)
         try sequence.forEach(self.serializeNode)
@@ -464,7 +464,7 @@ extension Emitter {
     private func serializeMapping(_ mapping: Node.Mapping) throws {
         var tag = mapping.resolvedTag.name.rawValue.utf8CString
         let implicit: Int32 = mapping.tag.name == .map ? 1 : 0
-        let mapping_style = yaml_mapping_style_t(rawValue: mapping.style.rawValue)
+        let mappingStyle = yaml_mapping_style_t(rawValue: mapping.style.rawValue)
         var event = yaml_event_t()
         _ = tag.withUnsafeMutableBytes { tag in
             yaml_mapping_start_event_initialize(
@@ -472,7 +472,7 @@ extension Emitter {
                 nil,
                 tag.baseAddress?.assumingMemoryBound(to: UInt8.self),
                 implicit,
-                mapping_style)
+                mappingStyle)
         }
         try emit(&event)
         if options.sortKeys {
