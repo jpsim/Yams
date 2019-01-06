@@ -248,6 +248,8 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
     func testNodeTypeMismatch() throws {
         // https://github.com/jpsim/Yams/pull/95
         struct Sample: Decodable {
+            // Used for its decodable behavior, even though it's not referenced directly.
+            // swiftlint:disable:next unused_private_declaration
             let values: [String]
         }
 
@@ -315,12 +317,6 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
     }
 
     // MARK: - Helper Functions
-    private func _testEncodeFailure<T: Encodable>(of value: T) {
-        do {
-            _ = try JSONEncoder().encode(value)
-            expectUnreachable("Encode of top-level \(T.self) was expected to fail.")
-        } catch {}
-    }
 
     private func _testRoundTrip<T>(of value: T,
                                    with options: YAMLEncoder.Options = .init(),
