@@ -537,7 +537,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
         let expectedYaml = """
             accomplishment: 'Mark set a major league home run record in 1998.
 
-            '
+              '
             name: Mark McGwire
             stats: '65 Home Runs
 
@@ -702,7 +702,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
 
               different documents.
 
-            '
+              '
             not-date: 2002-04-28
             picture: R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5OTk6enp56enmleECcgggoBADs=
 
@@ -788,7 +788,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
 
                   Suite #292
 
-            '
+                  '
                 postal: 48046
                 state: MI
               family: Dumars
@@ -812,7 +812,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
 
                   Suite #292
 
-            '
+                  '
                 postal: 48046
                 state: MI
               family: Dumars
@@ -901,7 +901,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             Stack:
             - code: 'x = MoreObject(\"345\\n\")
 
-            '
+                '
               file: TopClass.py
               line: 23
             - code: foo = bar
