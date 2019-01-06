@@ -170,7 +170,7 @@ jobs:
     - script: pod lib lint
       displayName: pod lib lint
 
-- job: Unused_Imports
+- job: Analyze
   pool:
     vmImage: 'macOS 10.13'
   steps:
