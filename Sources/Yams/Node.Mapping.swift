@@ -6,8 +6,6 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
-import Foundation
-
 extension Node {
     /// A mapping is the YAML equivalent of a `Dictionary`.
     public struct Mapping {

@@ -9,7 +9,9 @@
 #if SWIFT_PACKAGE
 import CYaml
 #endif
+#if os(Linux)
 import CoreFoundation
+#endif
 import Foundation
 
 public extension Node {
