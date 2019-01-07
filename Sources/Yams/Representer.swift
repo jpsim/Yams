@@ -166,7 +166,7 @@ extension Double: ScalarRepresentable {}
 extension Float: ScalarRepresentable {}
 #if !swift(>=4.2)
 // `Float80` requires Swift 4.2 or later
-#else
+#elseif !os(Windows) && (arch(i386) || arch(x86_64))
 extension Float80: ScalarRepresentable {}
 #endif
 
@@ -323,7 +323,7 @@ extension Float: HasExponentialFormatter {
 
 #if !swift(>=4.2)
 // `swift_decompose_float80` exists on Swift 4.2 or later
-#else
+#elseif !os(Windows) && (arch(i386) || arch(x86_64))
 extension Float80: HasExponentialFormatter {
     /// Compute the optimal decimal digits and exponent for Float80
     public func decompose() -> (digits: ArraySlice<Int8>, decimalExponent: Int32) {

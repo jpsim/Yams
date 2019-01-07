@@ -65,7 +65,7 @@ class RepresenterTests: XCTestCase {
     func testFloat80() throws {
     #if !swift(>=4.2)
         // `Float80` requires Swift 4.2 or later
-    #else
+    #elseif !os(Windows) && (arch(i386) || arch(x86_64))
         XCTAssertEqual(try Node(Float80.infinity), ".inf")
         XCTAssertEqual(try Node(-Float80.infinity), "-.inf")
         XCTAssertEqual(try Node(Float80.nan), ".nan")
