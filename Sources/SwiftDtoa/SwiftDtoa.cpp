@@ -1212,14 +1212,16 @@ size_t swift_format_exponential(char *dest, size_t length,
     } else {
         *p++ = '+';
     }
-    if (exponent > 99) {
-        if (exponent > 999) {
-            *p++ = (exponent / 1000 % 10) + '0';
+    if (exponent > 9) {
+        if (exponent > 99) {
+            if (exponent > 999) {
+                *p++ = (exponent / 1000 % 10) + '0';
+            }
+            *p++ = (exponent / 100 % 10) + '0';
+            exponent %= 100;
         }
-        *p++ = (exponent / 100 % 10) + '0';
-        exponent %= 100;
+        *p++ = (exponent / 10) + '0';
     }
-    *p++ = (exponent / 10) + '0';
     *p++ = (exponent % 10) + '0';
     *p = '\0';
     return p - dest;

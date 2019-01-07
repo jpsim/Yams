@@ -8,6 +8,7 @@
 
 #if SWIFT_PACKAGE
 import CYaml
+import SwiftDtoa
 #endif
 #if os(Linux)
 import CoreFoundation
@@ -154,38 +155,16 @@ private let iso8601WithFractionalSecondFormatter: DateFormatter = {
     return formatter
 }()
 
-extension Double: ScalarRepresentable {
+extension FloatingPoint where Self: HasExponentialFormatter {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
-        return .init(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+        return .init(exponentialFormattedString, Tag(.float))
     }
 }
 
-extension Float: ScalarRepresentable {
-    /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
-        return .init(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
-    }
-}
-
-private func numberFormatter(with significantDigits: Int) -> NumberFormatter {
-    let formatter = NumberFormatter()
-    formatter.locale = Locale(identifier: "en_US")
-    formatter.numberStyle = .scientific
-    formatter.usesSignificantDigits = true
-    formatter.maximumSignificantDigits = significantDigits
-    formatter.positiveInfinitySymbol = ".inf"
-    formatter.negativeInfinitySymbol = "-.inf"
-    formatter.notANumberSymbol = ".nan"
-    formatter.exponentSymbol = "e+"
-    return formatter
-}
-
-private let doubleFormatter = numberFormatter(with: 15)
-private let floatFormatter = numberFormatter(with: 7)
-
-// TODO: Support `Float80`
-//extension Float80: ScalarRepresentable {}
+extension Double: ScalarRepresentable {}
+extension Float: ScalarRepresentable {}
+extension Float80: ScalarRepresentable {}
 
 extension BinaryInteger {
     /// This value's `Node.scalar` representation.
@@ -276,31 +255,71 @@ extension Date: YAMLEncodable {
     }
 }
 
-extension Double: YAMLEncodable {
-    /// Returns this value wrapped in a `Node.scalar`.
-    public func box() -> Node {
-        return Node(formattedStringForCodable, Tag(.float))
-    }
+extension Double: YAMLEncodable {}
+extension Float: YAMLEncodable {}
+// `Float80` can not conform to `YAMLEncodable` since that does not conform to `Codable`.
+// https://bugs.swift.org/browse/SR-9607
+//extension Float80: YAMLEncodable {}
+
+public protocol HasExponentialFormatter: FloatingPoint {
+    func decompose() -> (digits: ArraySlice<Int8>, decimalExponent: Int32)
 }
 
-extension Float: YAMLEncodable {
-    /// Returns this value wrapped in a `Node.scalar`.
-    public func box() -> Node {
-        return Node(formattedStringForCodable, Tag(.float))
-    }
-}
-
-private extension FloatingPoint where Self: CVarArg {
-    var formattedStringForCodable: String {
-        // Since `NumberFormatter` creates a string with insufficient precision for Decode,
-        // it uses with `String(format:...)`
-        let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
-        // "%*.g" does not use scientific notation if the exponent is less than –4.
-        // So fallback to using `NumberFormatter` if string does not uses scientific notation.
-        guard string.lazy.suffix(5).contains("e") else {
-            return doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
+extension HasExponentialFormatter {
+    var exponentialFormattedString: String {
+        if !isFinite {
+            if isInfinite {
+                switch sign {
+                case .minus:
+                    return "-.inf"
+                case .plus:
+                    return ".inf"
+                }
+            } else {
+                return ".nan"
+            }
         }
-        return string
+        let (digits, decimalExponent) = decompose()
+        var buffer = ContiguousArray<Int8>(repeating: 0, count: 32)
+        let length = buffer.withUnsafeMutableBufferPointer { dest in
+            digits.withUnsafeBufferPointer { digits in
+                swift_format_exponential(dest.baseAddress, dest.count, sign == .minus, digits.baseAddress, numericCast(digits.count), decimalExponent)
+            }
+        }
+        return buffer.prefix(length).withUnsafeBytes { String(bytes: $0, encoding: .utf8)! }
+    }
+}
+
+extension Double: HasExponentialFormatter {
+    public func decompose() -> (digits: ArraySlice<Int8>, decimalExponent: Int32) {
+        var decimalExponent = Int32(0)
+        var buffer = ContiguousArray<Int8>(repeating: 0, count: numericCast(DBL_DECIMAL_DIG))
+        let digitCount = buffer.withUnsafeMutableBufferPointer {
+            swift_decompose_double(self, $0.baseAddress, $0.count, &decimalExponent)
+        }
+        return (buffer.prefix(numericCast(digitCount)), decimalExponent)
+    }
+}
+
+extension Float: HasExponentialFormatter {
+    public func decompose() -> (digits: ArraySlice<Int8>, decimalExponent: Int32) {
+        var decimalExponent = Int32(0)
+        var buffer = ContiguousArray<Int8>(repeating: 0, count: numericCast(FLT_DECIMAL_DIG))
+        let digitCount = buffer.withUnsafeMutableBufferPointer {
+            swift_decompose_float(self, $0.baseAddress, $0.count, &decimalExponent)
+        }
+        return (buffer.prefix(numericCast(digitCount)), decimalExponent)
+    }
+}
+
+extension Float80: HasExponentialFormatter {
+    public func decompose() -> (digits: ArraySlice<Int8>, decimalExponent: Int32) {
+        var decimalExponent = Int32(0)
+        var buffer = ContiguousArray<Int8>(repeating: 0, count: numericCast(LDBL_DECIMAL_DIG))
+        let digitCount = buffer.withUnsafeMutableBufferPointer {
+            swift_decompose_float80(self, $0.baseAddress, $0.count, &decimalExponent)
+        }
+        return (buffer.prefix(numericCast(digitCount)), decimalExponent)
     }
 }
 

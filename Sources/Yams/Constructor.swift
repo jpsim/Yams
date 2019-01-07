@@ -222,6 +222,8 @@ extension Date: ScalarConstructible {
 extension Double: ScalarConstructible {}
 // MARK: - ScalarConstructible Float Conformance
 extension Float: ScalarConstructible {}
+// MARK: - ScalarConstructible Float80 Conformance
+extension Float80: ScalarConstructible {}
 
 // MARK: - ScalarConstructible FloatingPoint Conformance
 extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible {
@@ -559,6 +561,8 @@ extension SexagesimalConvertible where Self: FixedWidthInteger {
 extension Double: SexagesimalConvertible {}
 // MARK: - SexagesimalConvertible Float Conformance
 extension Float: SexagesimalConvertible {}
+// MARK: - SexagesimalConvertible Float80 Conformance
+extension Float80: SexagesimalConvertible {}
 // MARK: - SexagesimalConvertible Int Conformance
 extension Int: SexagesimalConvertible {}
 // MARK: - SexagesimalConvertible Int Conformance
