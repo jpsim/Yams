@@ -224,7 +224,7 @@ extension Double: ScalarConstructible {}
 extension Float: ScalarConstructible {}
 #if !swift(>=4.2)
 // `Float80` requires Swift 4.2 or later
-#else
+#elseif !os(Windows) && (arch(i386) || arch(x86_64))
 // MARK: - ScalarConstructible Float80 Conformance
 extension Float80: ScalarConstructible {}
 #endif
@@ -567,7 +567,7 @@ extension Double: SexagesimalConvertible {}
 extension Float: SexagesimalConvertible {}
 #if !swift(>=4.2)
 // `Float80` requires Swift 4.2 or later
-#else
+#elseif !os(Windows) && (arch(i386) || arch(x86_64))
 // MARK: - SexagesimalConvertible Float80 Conformance
 extension Float80: SexagesimalConvertible {}
 #endif
