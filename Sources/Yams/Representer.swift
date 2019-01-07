@@ -265,7 +265,9 @@ extension Float: YAMLEncodable {}
 // https://bugs.swift.org/browse/SR-9607
 //extension Float80: YAMLEncodable {}
 
+/// Supports Exponential Formatting
 public protocol HasExponentialFormatter: FloatingPoint {
+    /// Compute the optimal decimal digits and exponent
     func decompose() -> (digits: ArraySlice<Int8>, decimalExponent: Int32)
 }
 
@@ -287,7 +289,8 @@ extension HasExponentialFormatter {
         var buffer = ContiguousArray<Int8>(repeating: 0, count: 32)
         let length = buffer.withUnsafeMutableBufferPointer { dest in
             digits.withUnsafeBufferPointer { digits in
-                swift_format_exponential(dest.baseAddress, dest.count, sign == .minus, digits.baseAddress, numericCast(digits.count), decimalExponent)
+                swift_format_exponential(dest.baseAddress, dest.count, sign == .minus, digits.baseAddress,
+                                         numericCast(digits.count), decimalExponent)
             }
         }
         return buffer.prefix(length).withUnsafeBytes { String(bytes: $0, encoding: .utf8)! }
@@ -295,6 +298,7 @@ extension HasExponentialFormatter {
 }
 
 extension Double: HasExponentialFormatter {
+    /// Compute the optimal decimal digits and exponent for Double
     public func decompose() -> (digits: ArraySlice<Int8>, decimalExponent: Int32) {
         var decimalExponent = Int32(0)
         var buffer = ContiguousArray<Int8>(repeating: 0, count: numericCast(DBL_DECIMAL_DIG))
@@ -306,6 +310,7 @@ extension Double: HasExponentialFormatter {
 }
 
 extension Float: HasExponentialFormatter {
+    /// Compute the optimal decimal digits and exponent for Float
     public func decompose() -> (digits: ArraySlice<Int8>, decimalExponent: Int32) {
         var decimalExponent = Int32(0)
         var buffer = ContiguousArray<Int8>(repeating: 0, count: numericCast(FLT_DECIMAL_DIG))
@@ -320,6 +325,7 @@ extension Float: HasExponentialFormatter {
 // `swift_decompose_float80` exists on Swift 4.2 or later
 #else
 extension Float80: HasExponentialFormatter {
+    /// Compute the optimal decimal digits and exponent for Float80
     public func decompose() -> (digits: ArraySlice<Int8>, decimalExponent: Int32) {
         var decimalExponent = Int32(0)
         var buffer = ContiguousArray<Int8>(repeating: 0, count: numericCast(LDBL_DECIMAL_DIG))
