@@ -14,6 +14,8 @@
 		6C0488EE1E0CBD56006F9F80 /* ConstructorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0488ED1E0CBD56006F9F80 /* ConstructorTests.swift */; };
 		6C0A00D51E152D6200222704 /* EmitterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0A00D41E152D6200222704 /* EmitterTests.swift */; };
 		6C0D2A361E0A934B00C45545 /* Constructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0D2A351E0A934B00C45545 /* Constructor.swift */; };
+		6C1398E721E2C64200076C02 /* SwiftDtoa.h in Headers */ = {isa = PBXBuildFile; fileRef = 6C1398E421E2C64200076C02 /* SwiftDtoa.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6C1398E821E2C64200076C02 /* SwiftDtoa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C1398E621E2C64200076C02 /* SwiftDtoa.cpp */; };
 		6C1D5A99201B7E8E006395CF /* shim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C1D5A98201B7E8E006395CF /* shim.swift */; };
 		6C3C90B91E0FFB6B009DEFE8 /* NodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C3C90B81E0FFB6B009DEFE8 /* NodeTests.swift */; };
 		6C4A22071DF8553C002A0206 /* String+Yams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4A22061DF8553C002A0206 /* String+Yams.swift */; };
@@ -64,6 +66,8 @@
 		6C0488ED1E0CBD56006F9F80 /* ConstructorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstructorTests.swift; sourceTree = "<group>"; };
 		6C0A00D41E152D6200222704 /* EmitterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmitterTests.swift; sourceTree = "<group>"; };
 		6C0D2A351E0A934B00C45545 /* Constructor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constructor.swift; sourceTree = "<group>"; };
+		6C1398E421E2C64200076C02 /* SwiftDtoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftDtoa.h; sourceTree = "<group>"; };
+		6C1398E621E2C64200076C02 /* SwiftDtoa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SwiftDtoa.cpp; sourceTree = "<group>"; };
 		6C1D5A98201B7E8E006395CF /* shim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = shim.swift; sourceTree = "<group>"; };
 		6C3C90B81E0FFB6B009DEFE8 /* NodeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeTests.swift; sourceTree = "<group>"; };
 		6C48A76421D1B013007DB7B9 /* Package@swift-4.2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Package@swift-4.2.swift"; sourceTree = "<group>"; };
@@ -121,6 +125,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6C1398E221E2C64200076C02 /* SwiftDtoa */ = {
+			isa = PBXGroup;
+			children = (
+				6C1398E321E2C64200076C02 /* include */,
+				6C1398E621E2C64200076C02 /* SwiftDtoa.cpp */,
+			);
+			path = SwiftDtoa;
+			sourceTree = "<group>";
+		};
+		6C1398E321E2C64200076C02 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				6C1398E421E2C64200076C02 /* SwiftDtoa.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
 		OBJ_18 /* include */ = {
 			isa = PBXGroup;
 			children = (
@@ -209,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_8 /* CYaml */,
+				6C1398E221E2C64200076C02 /* SwiftDtoa */,
 				OBJ_21 /* Yams */,
 			);
 			path = Sources;
@@ -217,8 +239,8 @@
 		OBJ_8 /* CYaml */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_9 /* src */,
 				OBJ_18 /* include */,
+				OBJ_9 /* src */,
 			);
 			name = CYaml;
 			path = Sources/CYaml;
@@ -245,6 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8EDB88E1DE218420062268D /* yaml.h in Headers */,
+				6C1398E721E2C64200076C02 /* SwiftDtoa.h in Headers */,
 				6CBAEE1A1E3839500021BF87 /* Yams.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -364,6 +387,7 @@
 				OBJ_50 /* YamlError.swift in Sources */,
 				E8EDB88A1DE2181B0062268D /* reader.c in Sources */,
 				6C788A041EB89162005386F0 /* Encoder.swift in Sources */,
+				6C1398E821E2C64200076C02 /* SwiftDtoa.cpp in Sources */,
 				6C6834CD1E02847D0047B4D1 /* Tag.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

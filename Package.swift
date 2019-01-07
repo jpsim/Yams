@@ -4,11 +4,12 @@ import PackageDescription
 let package = Package(
     name: "Yams",
     products: [
-      .library(name: "Yams", targets: ["Yams"])
+        .library(name: "Yams", targets: ["Yams"])
     ],
     targets: [
         .target(name: "CYaml"),
-        .target(name: "Yams", dependencies: ["CYaml"]),
+        .target(name: "SwiftDtoa"),
+        .target(name: "Yams", dependencies: ["CYaml", "SwiftDtoa"]),
         .testTarget(name: "YamsTests", dependencies: ["Yams"])
     ]
 )

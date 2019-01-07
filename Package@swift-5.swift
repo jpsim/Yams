@@ -8,7 +8,8 @@ let package = Package(
     ],
     targets: [
         .target(name: "CYaml"),
-        .target(name: "Yams", dependencies: ["CYaml"]),
+        .target(name: "SwiftDtoa"),
+        .target(name: "Yams", dependencies: ["CYaml", "SwiftDtoa"]),
         .testTarget(name: "YamsTests", dependencies: ["Yams"])
     ],
     swiftLanguageVersions: [.v4, .v4_2, .v5]
