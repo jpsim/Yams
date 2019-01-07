@@ -63,6 +63,9 @@ class RepresenterTests: XCTestCase {
     }
 
     func testFloat80() throws {
+    #if !swift(>=4.2)
+        // `Float80` requires Swift 4.2 or later
+    #else
         XCTAssertEqual(try Node(Float80.infinity), ".inf")
         XCTAssertEqual(try Node(-Float80.infinity), "-.inf")
         XCTAssertEqual(try Node(Float80.nan), ".nan")
@@ -70,6 +73,7 @@ class RepresenterTests: XCTestCase {
         XCTAssertEqual(try Node(Float80(6.8523015e-5)), "6.852301500000000211e-5")
         XCTAssertEqual(try Node(Float80.greatestFiniteMagnitude), "1.189731495357231765e+4932")
         XCTAssertEqual(try Node(Float80.leastNormalMagnitude), "3.3621031431120935063e-4932")
+    #endif
     }
 
     func testInteger() throws {
