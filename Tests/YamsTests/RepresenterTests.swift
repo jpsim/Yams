@@ -69,8 +69,9 @@ class RepresenterTests: XCTestCase {
         XCTAssertEqual(try Node(Float80.infinity), ".inf")
         XCTAssertEqual(try Node(-Float80.infinity), "-.inf")
         XCTAssertEqual(try Node(Float80.nan), ".nan")
-        XCTAssertEqual(try Node(Float80(6.8523015e+5)), "6.852301500000000233e+5")
-        XCTAssertEqual(try Node(Float80(6.8523015e-5)), "6.852301500000000211e-5")
+        // https://bugs.swift.org/browse/SR-9609
+        XCTAssertEqual(try Node(6.8523015e+5 as Float80), "6.8523015e+5")
+        XCTAssertEqual(try Node(6.8523015e-5 as Float80), "6.8523015e-5")
         XCTAssertEqual(try Node(Float80.greatestFiniteMagnitude), "1.189731495357231765e+4932")
         XCTAssertEqual(try Node(Float80.leastNormalMagnitude), "3.3621031431120935063e-4932")
     #endif
