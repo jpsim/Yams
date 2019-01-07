@@ -268,12 +268,12 @@ typedef struct {uint64_t low, mid, high;} swift_uint192_t;
 // A 192-bit unsigned integer type stored as 6 32-bit words
 typedef struct {uint32_t low, b, c, d, e, high;} swift_uint192_t;
 #define initialize192WithHighMidLow64(dest, high64, mid64, low64) \
-    ((dest).low = (uint64_t)(low64),                              \
-     (dest).b = (uint64_t)(low64) >> 32,                          \
-     (dest).c = (uint64_t)(mid64),                                \
-     (dest).d = (uint64_t)(mid64) >> 32,                          \
-     (dest).e = (uint64_t)(high64),                               \
-     (dest).high = (uint64_t)(high64) >> 32)
+    ((dest).low = (uint32_t)((uint64_t)(low64)),                              \
+     (dest).b = (uint32_t)((uint64_t)(low64) >> 32),                          \
+     (dest).c = (uint32_t)((uint64_t)(mid64)),                                \
+     (dest).d = (uint32_t)((uint64_t)(mid64) >> 32),                          \
+     (dest).e = (uint32_t)((uint64_t)(high64)),                               \
+     (dest).high = (uint32_t)((uint64_t)(high64) >> 32))
 #endif
 static void multiply192x64RoundingDown(swift_uint192_t *lhs, uint64_t rhs);
 static void multiply192x64RoundingUp(swift_uint192_t *lhs, uint64_t rhs);
@@ -620,7 +620,7 @@ int swift_decompose_double(double d,
     *digit_p++ = nextDigit; // Store the final digit.
 
     *decimalExponent = exponent;
-    return digit_p - digits;
+    return (int)(digit_p - digits);
 }
 #endif
 
@@ -649,7 +649,7 @@ int swift_decompose_float(float f,
 
     // Step 0: Deconstruct the target number
     // Note: this strongly assumes IEEE 754 binary32 format
-    uint32_t raw = bitPatternForFloat(f);
+    uint32_t raw = (uint32_t)bitPatternForFloat(f);
     int exponentBitPattern = (raw >> significandBitCount) & exponentMask;
     uint32_t significandBitPattern = raw & significandMask;
 
@@ -781,7 +781,7 @@ int swift_decompose_float(float f,
     *digit_p++ = nextDigit;
 
     *decimalExponent = exponent;
-    return digit_p - digits;
+    return (int)(digit_p - digits);
 }
 #endif
 
@@ -840,7 +840,7 @@ int swift_decompose_float80(long double d,
     initialize128WithHighLow64(lowerMidpointExact, significand - 1, isBoundary ? threeQuarterUlp : halfUlp);
 
     // Step 3: Estimate the base 10 exponent
-    int base10Exponent = decimalExponentFor2ToThe(binaryExponent);
+    int base10Exponent = (int)decimalExponentFor2ToThe((int)binaryExponent);
 
     // Step 4: Compute a power-of-10 scale factor
     swift_uint192_t powerOfTenRoundedDown;
@@ -850,7 +850,7 @@ int swift_decompose_float80(long double d,
                                         &powerOfTenRoundedDown,
                                         &powerOfTenRoundedUp,
                                         &powerOfTenExponent);
-    const int extraBits = binaryExponent + powerOfTenExponent;
+    const int extraBits = (int)binaryExponent + powerOfTenExponent;
 
     // Step 5: Scale the interval (with rounding)
     static const int integerBits = 14;
@@ -969,7 +969,7 @@ int swift_decompose_float80(long double d,
     *digit_p++ = nextDigit;
 
     *decimalExponent = exponent;
-    return digit_p - digits;
+    return (int)(digit_p - digits);
 }
 #endif
 
@@ -1007,7 +1007,7 @@ size_t swift_format_float(float d, char *dest, size_t length)
         } else {
             // NaN
             static const int significandBitCount = 23;
-            uint32_t raw = bitPatternForFloat(d);
+            uint32_t raw = (uint32_t)bitPatternForFloat(d);
             const char *sign = signbit(d) ? "-" : "";
             const char *signaling = ((raw >> (significandBitCount - 1)) & 1) ? "" : "s";
             uint32_t payload = raw & ((1L << (significandBitCount - 2)) - 1);
@@ -1430,17 +1430,17 @@ static swift_uint128_t multiply128x64RoundingDown(swift_uint128_t lhs, uint64_t 
     a = lhs.c * rhs0;
     b = lhs.b * rhs1;
     t += (a & mask32) + (b & mask32);
-    result.low = t;
+    result.low = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     a = lhs.high * rhs0;
     b = lhs.c * rhs1;
     t += (a & mask32) + (b & mask32);
-    result.b = t;
+    result.b = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     t += lhs.high * rhs1;
-    result.c = t;
+    result.c = (uint32_t)t;
     result.high = t >> 32;
     return result;
 #endif
@@ -1470,17 +1470,17 @@ static swift_uint128_t multiply128x64RoundingUp(swift_uint128_t lhs, uint64_t rh
     a = lhs.c * rhs0;
     b = lhs.b * rhs1;
     t += (a & mask32) + (b & mask32);
-    result.low = t;
+    result.low = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     a = lhs.high * rhs0;
     b = lhs.c * rhs1;
     t += (a & mask32) + (b & mask32);
-    result.b = t;
+    result.b = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     t += lhs.high * rhs1;
-    result.c = t;
+    result.c = (uint32_t)t;
     result.high = t >> 32;
     return result;
 #endif
@@ -1534,15 +1534,15 @@ static swift_uint128_t shiftRightRoundingDown128(swift_uint128_t lhs, int shift)
     swift_uint128_t result;
     uint64_t t = (uint64_t)lhs.low >> shift;
     t += ((uint64_t)lhs.b << (32 - shift));
-    result.low = t;
+    result.low = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs.c << (32 - shift));
-    result.b = t;
+    result.b = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs.high << (32 - shift));
-    result.c = t;
+    result.c = (uint32_t)t;
     t >>= 32;
-    result.high = t;
+    result.high = (uint32_t)t;
     return result;
 #endif
 }
@@ -1557,15 +1557,15 @@ static swift_uint128_t shiftRightRoundingUp128(swift_uint128_t lhs, int shift) {
     const uint64_t bias = (1 << shift) - 1;
     uint64_t t = ((uint64_t)lhs.low + bias) >> shift;
     t += ((uint64_t)lhs.b << (32 - shift));
-    result.low = t;
+    result.low = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs.c << (32 - shift));
-    result.b = t;
+    result.b = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs.high << (32 - shift));
-    result.c = t;
+    result.c = (uint32_t)t;
     t >>= 32;
-    result.high = t;
+    result.high = (uint32_t)t;
     return result;
 #endif
 }
@@ -1600,29 +1600,29 @@ static void multiply192x64RoundingDown(swift_uint192_t *lhs, uint64_t rhs) {
     a = lhs->b * rhs1;
     b = lhs->c * rhs0;
     t += (a & mask32) + (b & mask32);
-    lhs->low = t;
+    lhs->low = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     a = lhs->c * rhs1;
     b = lhs->d * rhs0;
     t += (a & mask32) + (b & mask32);
-    lhs->b = t;
+    lhs->b = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     a = lhs->d * rhs1;
     b = lhs->e * rhs0;
     t += (a & mask32) + (b & mask32);
-    lhs->c = t;
+    lhs->c = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     a = lhs->e * rhs1;
     b = lhs->high * rhs0;
     t += (a & mask32) + (b & mask32);
-    lhs->d = t;
+    lhs->d = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     t += lhs->high * rhs1;
-    lhs->e = t;
+    lhs->e = (uint32_t)t;
     lhs->high = t >> 32;
 #endif
 }
@@ -1656,29 +1656,29 @@ static void multiply192x64RoundingUp(swift_uint192_t *lhs, uint64_t rhs) {
     a = lhs->b * rhs1;
     b = lhs->c * rhs0;
     t += (a & mask32) + (b & mask32);
-    lhs->low = t;
+    lhs->low = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     a = lhs->c * rhs1;
     b = lhs->d * rhs0;
     t += (a & mask32) + (b & mask32);
-    lhs->b = t;
+    lhs->b = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     a = lhs->d * rhs1;
     b = lhs->e * rhs0;
     t += (a & mask32) + (b & mask32);
-    lhs->c = t;
+    lhs->c = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     a = lhs->e * rhs1;
     b = lhs->high * rhs0;
     t += (a & mask32) + (b & mask32);
-    lhs->d = t;
+    lhs->d = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     t += lhs->high * rhs1;
-    lhs->e = t;
+    lhs->e = (uint32_t)t;
     lhs->high = t >> 32;
 #endif
 }
@@ -1697,17 +1697,17 @@ static void multiply192xi32(swift_uint192_t *lhs, uint32_t rhs) {
     lhs->high = (uint64_t)t;
 #else
     uint64_t t = (uint64_t)lhs->low * rhs;
-    lhs->low = t;
+    lhs->low = (uint32_t)t;
     t = (t >> 32) + (uint64_t)lhs->b * rhs;
-    lhs->b = t;
+    lhs->b = (uint32_t)t;
     t = (t >> 32) + (uint64_t)lhs->c * rhs;
-    lhs->c = t;
+    lhs->c = (uint32_t)t;
     t = (t >> 32) + (uint64_t)lhs->d * rhs;
-    lhs->d = t;
+    lhs->d = (uint32_t)t;
     t = (t >> 32) + (uint64_t)lhs->e * rhs;
-    lhs->e = t;
+    lhs->e = (uint32_t)t;
     t = (t >> 32) + (uint64_t)lhs->high * rhs;
-    lhs->high = t;
+    lhs->high = (uint32_t)t;
 #endif
 }
 
@@ -1770,7 +1770,7 @@ static void multiply192x128RoundingDown(swift_uint192_t *lhs, swift_uint128_t rh
     c = (uint64_t)lhs->d * rhs.b;
     d = (uint64_t)lhs->e * rhs.low;
     t += (a & mask32) + (b & mask32) + (c & mask32) + (d & mask32);
-    lhs->low = t;
+    lhs->low = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32) + (c >> 32) + (d >> 32);
     a = (uint64_t)lhs->c * rhs.high;
@@ -1778,24 +1778,24 @@ static void multiply192x128RoundingDown(swift_uint192_t *lhs, swift_uint128_t rh
     c = (uint64_t)lhs->e * rhs.b;
     d = (uint64_t)lhs->high * rhs.low;
     t += (a & mask32) + (b & mask32) + (c & mask32) + (d & mask32);
-    lhs->b = t;
+    lhs->b = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32) + (c >> 32) + (d >> 32);
     a = (uint64_t)lhs->d * rhs.high;
     b = (uint64_t)lhs->e * rhs.c;
     c = (uint64_t)lhs->high * rhs.b;
     t += (a & mask32) + (b & mask32) + (c & mask32);
-    lhs->c = t;
+    lhs->c = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32) + (c >> 32);
     a = (uint64_t)lhs->e * rhs.high;
     b = (uint64_t)lhs->high * rhs.c;
     t += (a & mask32) + (b & mask32);
-    lhs->d = t;
+    lhs->d = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     t += (uint64_t)lhs->high * rhs.high;
-    lhs->e = t;
+    lhs->e = (uint32_t)t;
     lhs->high = t >> 32;
 #endif
 }
@@ -1862,7 +1862,7 @@ static void multiply192x128RoundingUp(swift_uint192_t *lhs, swift_uint128_t rhs)
     c = (uint64_t)lhs->d * rhs.b;
     d = (uint64_t)lhs->e * rhs.low;
     t += (a & mask32) + (b & mask32) + (c & mask32) + (d & mask32);
-    lhs->low = t;
+    lhs->low = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32) + (c >> 32) + (d >> 32);
     a = (uint64_t)lhs->c * rhs.high;
@@ -1870,24 +1870,24 @@ static void multiply192x128RoundingUp(swift_uint192_t *lhs, swift_uint128_t rhs)
     c = (uint64_t)lhs->e * rhs.b;
     d = (uint64_t)lhs->high * rhs.low;
     t += (a & mask32) + (b & mask32) + (c & mask32) + (d & mask32);
-    lhs->b = t;
+    lhs->b = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32) + (c >> 32) + (d >> 32);
     a = (uint64_t)lhs->d * rhs.high;
     b = (uint64_t)lhs->e * rhs.c;
     c = (uint64_t)lhs->high * rhs.b;
     t += (a & mask32) + (b & mask32) + (c & mask32);
-    lhs->c = t;
+    lhs->c = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32) + (c >> 32);
     a = (uint64_t)lhs->e * rhs.high;
     b = (uint64_t)lhs->high * rhs.c;
     t += (a & mask32) + (b & mask32);
-    lhs->d = t;
+    lhs->d = (uint32_t)t;
     t >>= 32;
     t += (a >> 32) + (b >> 32);
     t += (uint64_t)lhs->high * rhs.high;
-    lhs->e = t;
+    lhs->e = (uint32_t)t;
     lhs->high = t >> 32;
 #endif
 }
@@ -1902,15 +1902,15 @@ static void subtract192x192(swift_uint192_t *lhs, swift_uint192_t rhs) {
     lhs->high += (t >> 64) + (~rhs.high);
 #else
     uint64_t t = (uint64_t)lhs->low + (~rhs.low) + 1;
-    lhs->low = t;
+    lhs->low = (uint32_t)t;
     t = (t >> 32) + lhs->b + (~rhs.b);
-    lhs->b = t;
+    lhs->b = (uint32_t)t;
     t = (t >> 32) + lhs->c + (~rhs.c);
-    lhs->c = t;
+    lhs->c = (uint32_t)t;
     t = (t >> 32) + lhs->d + (~rhs.d);
-    lhs->d = t;
+    lhs->d = (uint32_t)t;
     t = (t >> 32) + lhs->e + (~rhs.e);
-    lhs->e = t;
+    lhs->e = (uint32_t)t;
     lhs->high += (t >> 32) + (~rhs.high);
 #endif
 }
@@ -1952,21 +1952,21 @@ static void shiftRightRoundingDown192(swift_uint192_t *lhs, int shift) {
 #else
     uint64_t t = (uint64_t)lhs->low >> shift;
     t += ((uint64_t)lhs->b << (32 - shift));
-    lhs->low = t;
+    lhs->low = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs->c << (32 - shift));
-    lhs->b = t;
+    lhs->b = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs->d << (32 - shift));
-    lhs->c = t;
+    lhs->c = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs->e << (32 - shift));
-    lhs->d = t;
+    lhs->d = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs->high << (32 - shift));
-    lhs->e = t;
+    lhs->e = (uint32_t)t;
     t >>= 32;
-    lhs->high = t;
+    lhs->high = (uint32_t)t;
 #endif
 }
 
@@ -1988,21 +1988,21 @@ static void shiftRightRoundingUp192(swift_uint192_t *lhs, int shift) {
     const uint64_t bias = (1 << shift) - 1;
     uint64_t t = ((uint64_t)lhs->low + bias) >> shift;
     t += ((uint64_t)lhs->b << (32 - shift));
-    lhs->low = t;
+    lhs->low = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs->c << (32 - shift));
-    lhs->b = t;
+    lhs->b = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs->d << (32 - shift));
-    lhs->c = t;
+    lhs->c = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs->e << (32 - shift));
-    lhs->d = t;
+    lhs->d = (uint32_t)t;
     t >>= 32;
     t += ((uint64_t)lhs->high << (32 - shift));
-    lhs->e = t;
+    lhs->e = (uint32_t)t;
     t >>= 32;
-    lhs->high = t;
+    lhs->high = (uint32_t)t;
 #endif
 }
 #endif
