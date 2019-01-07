@@ -16,4 +16,5 @@ FOUNDATION_EXPORT const unsigned char YamsVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <Yams/PublicHeader.h>
 
+#import <Yams/SwiftDtoa.h>
 #import <Yams/yaml.h>
