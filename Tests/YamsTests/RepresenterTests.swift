@@ -48,6 +48,8 @@ class RepresenterTests: XCTestCase {
         XCTAssertEqual(try Node(Double.nan), ".nan")
         XCTAssertEqual(try Node(Double(6.8523015e+5)), "6.8523015e+5")
         XCTAssertEqual(try Node(Double(6.8523015e-5)), "6.8523015e-5")
+        XCTAssertEqual(try Node(Double.greatestFiniteMagnitude), "1.7976931348623157e+308")
+        XCTAssertEqual(try Node(Double.leastNormalMagnitude), "2.2250738585072014e-308")
     }
 
     func testFloat() throws {
@@ -56,6 +58,18 @@ class RepresenterTests: XCTestCase {
         XCTAssertEqual(try Node(Float.nan), ".nan")
         XCTAssertEqual(try Node(Float(6.852301e+5)), "6.852301e+5")
         XCTAssertEqual(try Node(Float(6.852301e-5)), "6.852301e-5")
+        XCTAssertEqual(try Node(Float.greatestFiniteMagnitude), "3.4028235e+38")
+        XCTAssertEqual(try Node(Float.leastNormalMagnitude), "1.1754944e-38")
+    }
+
+    func testFloat80() throws {
+        XCTAssertEqual(try Node(Float80.infinity), ".inf")
+        XCTAssertEqual(try Node(-Float80.infinity), "-.inf")
+        XCTAssertEqual(try Node(Float80.nan), ".nan")
+        XCTAssertEqual(try Node(Float80(6.8523015e+5)), "6.852301500000000233e+5")
+        XCTAssertEqual(try Node(Float80(6.8523015e-5)), "6.852301500000000211e-5")
+        XCTAssertEqual(try Node(Float80.greatestFiniteMagnitude), "1.189731495357231765e+4932")
+        XCTAssertEqual(try Node(Float80.leastNormalMagnitude), "3.3621031431120935063e-4932")
     }
 
     func testInteger() throws {
@@ -126,6 +140,7 @@ extension RepresenterTests {
             ("testDate", testDate),
             ("testDouble", testDouble),
             ("testFloat", testFloat),
+            ("testFloat80", testFloat80),
             ("testInteger", testInteger),
             ("testString", testString),
             ("testOptional", testOptional),
