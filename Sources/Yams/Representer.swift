@@ -164,7 +164,11 @@ extension FloatingPoint where Self: HasExponentialFormatter {
 
 extension Double: ScalarRepresentable {}
 extension Float: ScalarRepresentable {}
+#if !swift(>=4.2)
+// `Float80` requires Swift 4.2 or later
+#else
 extension Float80: ScalarRepresentable {}
+#endif
 
 extension BinaryInteger {
     /// This value's `Node.scalar` representation.
@@ -312,6 +316,9 @@ extension Float: HasExponentialFormatter {
     }
 }
 
+#if !swift(>=4.2)
+// `swift_decompose_float80` exists on Swift 4.2 or later
+#else
 extension Float80: HasExponentialFormatter {
     public func decompose() -> (digits: ArraySlice<Int8>, decimalExponent: Int32) {
         var decimalExponent = Int32(0)
@@ -322,6 +329,7 @@ extension Float80: HasExponentialFormatter {
         return (buffer.prefix(numericCast(digitCount)), decimalExponent)
     }
 }
+#endif
 
 @available(*, unavailable, renamed: "YAMLEncodable")
 typealias ScalarRepresentableCustomizedForCodable = YAMLEncodable

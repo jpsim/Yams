@@ -222,8 +222,12 @@ extension Date: ScalarConstructible {
 extension Double: ScalarConstructible {}
 // MARK: - ScalarConstructible Float Conformance
 extension Float: ScalarConstructible {}
+#if !swift(>=4.2)
+// `Float80` requires Swift 4.2 or later
+#else
 // MARK: - ScalarConstructible Float80 Conformance
 extension Float80: ScalarConstructible {}
+#endif
 
 // MARK: - ScalarConstructible FloatingPoint Conformance
 extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible {
@@ -561,8 +565,12 @@ extension SexagesimalConvertible where Self: FixedWidthInteger {
 extension Double: SexagesimalConvertible {}
 // MARK: - SexagesimalConvertible Float Conformance
 extension Float: SexagesimalConvertible {}
+#if !swift(>=4.2)
+// `Float80` requires Swift 4.2 or later
+#else
 // MARK: - SexagesimalConvertible Float80 Conformance
 extension Float80: SexagesimalConvertible {}
+#endif
 // MARK: - SexagesimalConvertible Int Conformance
 extension Int: SexagesimalConvertible {}
 // MARK: - SexagesimalConvertible Int Conformance
