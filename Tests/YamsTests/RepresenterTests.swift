@@ -48,6 +48,8 @@ class RepresenterTests: XCTestCase {
         XCTAssertEqual(try Node(Double.nan), ".nan")
         XCTAssertEqual(try Node(Double(6.8523015e+5)), "6.8523015e+5")
         XCTAssertEqual(try Node(Double(6.8523015e-5)), "6.8523015e-5")
+        XCTAssertEqual(try Node(Double.greatestFiniteMagnitude), "1.79769313486232e+308")
+        XCTAssertEqual(try Node(Double.leastNormalMagnitude), "2.2250738585072e-308")
     }
 
     func testFloat() throws {
@@ -56,6 +58,8 @@ class RepresenterTests: XCTestCase {
         XCTAssertEqual(try Node(Float.nan), ".nan")
         XCTAssertEqual(try Node(Float(6.852301e+5)), "6.852301e+5")
         XCTAssertEqual(try Node(Float(6.852301e-5)), "6.852301e-5")
+        XCTAssertEqual(try Node(Float.greatestFiniteMagnitude), "3.402823e+38")
+        XCTAssertEqual(try Node(Float.leastNormalMagnitude), "1.175494e-38")
     }
 
     func testInteger() throws {
