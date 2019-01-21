@@ -6,7 +6,7 @@ jobs:
   pool:
     vmImage: VS2017-Win2016
   variables:
-    PATH: C:\Swift\toolchain\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin
+    PATH: 'C:\Swift\toolchain\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin:$(PATH)'
   steps:
     - powershell: Invoke-WebRequest 'https://compnerd.visualstudio.com/3133d6ab-80a8-4996-ac4f-03df25cd3224/_apis/build/builds/109/artifacts?artifactName=toolchain&api-version=5.0&%24format=zip' -outfile .\toolchain.zip
       displayName: Download Swift toolchain for Windows
