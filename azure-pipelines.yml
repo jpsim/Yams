@@ -10,11 +10,9 @@ jobs:
       displayName: Download Swift toolchain for Windows
     - powershell: Expand-Archive toolchain.zip -DestinationPath C:\Swift
       displayName: Install Swift
-    - powershell: Get-ChildItem -Path C:\Swift
-      displayName: Print contents of C:\Swift
-    - powershell: C:\Swift\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\swift.exe --version
+    - powershell: C:\Swift\toolchain\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\swift.exe --version
       displayName: Print Swift Version
-    - powershell: C:\Swift\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\swift.exe build
+    - powershell: C:\Swift\toolchain\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\swift.exe build
       displayName: Swift Build
-    - powershell: C:\Swift\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\swift.exe test
+    - powershell: C:\Swift\toolchain\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin\swift.exe test
       displayName: Swift Test
