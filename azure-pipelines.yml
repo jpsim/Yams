@@ -10,7 +10,7 @@ jobs:
       displayName: Download Swift toolchain for Windows
     - powershell: Expand-Archive toolchain.zip -DestinationPath C:\Swift
       displayName: Install Swift
-    - powershell: Write-Host "##vso[task.setvariable variable=PATH]$PATH;C:\Swift\toolchain\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin"
+    - powershell: Write-Host "##vso[task.setvariable variable=PATH]$PATH;C:\\Swift\\toolchain\\Developer\\Toolchains\\unknown-Asserts-development.xctoolchain\\usr\\bin"
       displayName: Add Swift to PATH
     - powershell: swift.exe --version
       displayName: Print Swift Version
