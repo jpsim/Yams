@@ -142,7 +142,7 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     // MARK: - Data Tests
     func testEncodingBase64Data() {
-        _testRoundTrip(of: Data(bytes: [0xDE, 0xAD, 0xBE, 0xEF]), expectedYAML: "3q2+7w==\n")
+        _testRoundTrip(of: Data([0xDE, 0xAD, 0xBE, 0xEF]), expectedYAML: "3q2+7w==\n")
     }
 
     // MARK: - Encoder Features
