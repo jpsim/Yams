@@ -6,7 +6,8 @@
 
 ##### Enhancements
 
-* None.
+* Update LibYAML sources to latest versions as of January 6 2018.  
+  [JP Simard](https://github.com/jpsim)
 
 ##### Bug Fixes
 
