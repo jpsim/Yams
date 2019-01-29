@@ -116,7 +116,7 @@ private struct _KeyedDecodingContainer<Key: CodingKey> : KeyedDecodingContainerP
     func contains(_ key: Key) -> Bool { return mapping[key.stringValue] != nil }
 
     func decodeNil(forKey key: Key) throws -> Bool {
-        return try node(for: key) == Node("null", Tag(.null))
+        return try decoder(for: key).decodeNil()
     }
 
     func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable & ScalarConstructible {
@@ -173,12 +173,7 @@ private struct _UnkeyedDecodingContainer: UnkeyedDecodingContainer {
 
     mutating func decodeNil() throws -> Bool {
         try throwErrorIfAtEnd(Any?.self)
-        if currentNode == Node("null", Tag(.null)) {
-            currentIndex += 1
-            return true
-        } else {
-            return false
-        }
+        return try currentDecoder { $0.decodeNil() }
     }
 
     mutating func decode<T>(_ type: T.Type) throws -> T where T: Decodable & ScalarConstructible {
