@@ -316,6 +316,29 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
         expectEqual(type(of: decoded), Employee.self, "Expected decoded value to be of type Employee; got \(type(of: decoded)) instead.")
     }
 
+    func test_null_yml() throws {
+        let s = """
+              n1: ~
+              n2: null
+              n3: NULL
+              n4: Null
+              n5:
+            """
+        struct Test: Decodable {
+            let n1: String?
+            let n2: String?
+            let n3: String?
+            let n4: String?
+            let n5: String?
+        }
+        let t = try YAMLDecoder().decode(Test.self, from: s)
+        XCTAssertNil(t.n1)
+        XCTAssertNil(t.n2)
+        XCTAssertNil(t.n3)
+        XCTAssertNil(t.n4)
+        XCTAssertNil(t.n5)
+    }
+
     // MARK: - Helper Functions
 
     private func _testRoundTrip<T>(of value: T,
@@ -1089,7 +1112,8 @@ extension EncoderTests {
             ("testValuesInUnkeyedContainer", testValuesInUnkeyedContainer),
             ("testDictionary", testDictionary),
             ("testNodeTypeMismatch", testNodeTypeMismatch),
-            ("testDecodingConcreteTypeParameter", testDecodingConcreteTypeParameter)
+            ("testDecodingConcreteTypeParameter", testDecodingConcreteTypeParameter),
+            ("test_null_yml", test_null_yml)
         ]
     }
 }
