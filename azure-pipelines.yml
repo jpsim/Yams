@@ -23,6 +23,7 @@ resources:
 
 trigger:
 - master
+- yams-1.0-branch
 
 jobs:
 - job: linux
