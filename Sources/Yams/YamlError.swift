@@ -9,10 +9,9 @@
 #if SWIFT_PACKAGE
 import CYaml
 #endif
-import Foundation
 
 /// Errors thrown by Yams APIs.
-public enum YamlError: Swift.Error {
+public enum YamlError: Error {
     // Used in `yaml_emitter_t` and `yaml_parser_t`
     /// `YAML_NO_ERROR`. No error is produced.
     case no

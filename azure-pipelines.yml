@@ -150,6 +150,19 @@ jobs:
     - script: pod lib lint
       displayName: pod lib lint
 
+- job: Analyze
+  pool:
+    vmImage: 'macOS 10.13'
+  steps:
+    - script: sudo xcode-select -s /Applications/Xcode_10.1.app
+      displayName: xcode-select
+    - script: xcodebuild -scheme Yams clean build-for-testing > xcodebuild.log
+      displayName: Generate xcodebuild.log
+    - script: HOMEBREW_NO_AUTO_UPDATE=1 brew install --HEAD https://raw.github.com/Homebrew/homebrew-core/master/Formula/swiftlint.rb
+      displayName: Install SwiftLint
+    - script: swiftlint analyze --strict --compiler-log-path xcodebuild.log
+      displayName: Run SwiftLint Analyze
+
 - job: jazzy
   pool:
     vmImage: 'Ubuntu 16.04'
