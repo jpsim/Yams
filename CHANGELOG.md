@@ -20,6 +20,10 @@
   [Norio Nomura](https://github.com/norio-nomura)
   [#146](https://github.com/jpsim/Yams/pull/146)
 
+* Fix null/~/NULL/Null were parsed as strings, not nil by `YAMLDecoder`.  
+  [Norio Nomura](https://github.com/norio-nomura)
+  [#157](https://github.com/jpsim/Yams/issues/157)
+
 ## 1.0.1
 
 ##### Breaking
