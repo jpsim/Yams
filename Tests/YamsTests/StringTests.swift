@@ -18,8 +18,6 @@ class StringTests: XCTestCase {
 
     // Confirm behavior of Standard Library API
     func testConfirmBehaviorOfStandardLibraryAPI() {
-        guard !doesSR9454Affect() else { return }
-
         let rangeOfFirstLine = string.lineRange(for: string.startIndex..<string.startIndex)
         let firstLine = string[rangeOfFirstLine]
         XCTAssertEqual(firstLine, "LINE1_67あ\n")
@@ -27,8 +25,6 @@ class StringTests: XCTestCase {
 
     // `String.utf8LineNumberColumnAndContents(at:)`
     func testUTF8LineNumberColumnAndContentsAtOffset() {
-        guard !doesSR9454Affect() else { return }
-
         // offset     0 1 2 3 4 5 6 7 8 9 10 11
         // line 1     L I N E 1 _ 6 7 あ     \n
         // line 2     L I N E 2 _ 7 8 9 0 \n
@@ -55,8 +51,6 @@ class StringTests: XCTestCase {
 
     // `String.utf16LineNumberColumnAndContents(at:)`
     func testUTF16LineNumberColumnAndContentsAtOffset() {
-        guard !doesSR9454Affect() else { return }
-
         // offset     0 1 2 3 4 5 6 7 8 9 10
         // line 1     L I N E 1 _ 6 7 あ \n
         // line 2     L I N E 2 _ 7 8 9 0 \n
@@ -83,8 +77,6 @@ class StringTests: XCTestCase {
 
     // `String.substring(at:)`
     func testSubstringAtLine() {
-        guard !doesSR9454Affect() else { return }
-
         let scecondLine = string.substring(at: 1)
         XCTAssertEqual(scecondLine, "LINE2_7890\n")
     }
