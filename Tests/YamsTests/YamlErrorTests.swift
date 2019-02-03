@@ -18,8 +18,6 @@ class YamlErrorTests: XCTestCase {
     }
 
     func testYamlErrorReader() throws {
-        guard !doesSR9454Affect() else { return }
-
         // reader
         let yaml = "test: 'テスト\u{12}'"
         XCTAssertThrowsError(_ = try Parser(yaml: yaml).nextRoot()) { error in
@@ -34,8 +32,6 @@ class YamlErrorTests: XCTestCase {
     }
 
     func testYamlErrorScanner() throws {
-        guard !doesSR9454Affect() else { return }
-
         let yaml = "test: 'テスト"
         XCTAssertThrowsError(_ = try Parser(yaml: yaml).nextRoot()) { error in
             XCTAssertTrue(error is YamlError)
@@ -50,8 +46,6 @@ class YamlErrorTests: XCTestCase {
     }
 
     func testYamlErrorParser() throws {
-        guard !doesSR9454Affect() else { return }
-
         let yaml = "- [キー1: 値1]\n- [key1: value1, key2: ,"
         XCTAssertThrowsError(_ = try Parser(yaml: yaml).nextRoot()) { error in
             XCTAssertTrue(error is YamlError)
