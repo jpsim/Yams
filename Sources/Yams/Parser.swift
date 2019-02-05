@@ -353,7 +353,7 @@ private func string(from pointer: UnsafePointer<UInt8>!) -> String? {
 }
 
 #if swift(>=4.2)
-#if !compiler(>=5) || (canImport(Darwin) && !canImport(SwiftLang)) // missing on Xcode 10.2 beta 1
+#if !compiler(>=5)
 private extension Data {
     func withUnsafeBytes<Result>(_ apply: (UnsafeRawBufferPointer) throws -> Result) rethrows -> Result {
         return try withUnsafeBytes {
