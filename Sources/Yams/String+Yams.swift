@@ -78,4 +78,8 @@ extension String {
             return self + "\n"
         }
     }
+    
+    var canBecomeNumber: Bool {
+        return Double(self) != nil
+    }
 }

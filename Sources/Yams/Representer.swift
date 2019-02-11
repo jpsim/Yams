@@ -57,6 +57,9 @@ extension Dictionary: NodeRepresentable {
 
 private func represent(_ value: Any) throws -> Node {
     if let string = value as? String {
+        if value is String && string.canBecomeNumber {
+            return Node(string, .implicit, .singleQuoted)
+        }
         return Node(string)
     } else if let representable = value as? NodeRepresentable {
         return try representable.represented()
