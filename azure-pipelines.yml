@@ -109,6 +109,12 @@ jobs:
       condition: succeededOrFailed()
     - script: >
         set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test -sdk iphonesimulator -destination "name=iPhone 5" |
+        xcpretty -r junit -o build/reports/xcodebuild-iOS.xml
+      displayName: tests on iOS (32-bit)
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
         xcodebuild $XCODE_FLAGS test -sdk appletvsimulator -destination "name=Apple TV 4K" |
         xcpretty -r junit -o build/reports/xcodebuild-tvOS.xml
       displayName: tests on tvOS
