@@ -63,17 +63,15 @@ class RepresenterTests: XCTestCase {
     }
 
     func testInteger() throws {
-        #if arch(i386) || arch(arm)
+        if MemoryLayout<Int>.size == 4 {
             XCTAssertEqual(try Node(Int.max), "2147483647")
             XCTAssertEqual(try Node(Int.min), "-2147483648")
             XCTAssertEqual(try Node(UInt.max), "4294967295")
-        #elseif arch(x86_64) || arch(arm64) || arch(powerpc64) || arch(powerpc64le) || arch(s390x)
+        } else if MemoryLayout<Int>.size == 8 {
             XCTAssertEqual(try Node(Int.max), "9223372036854775807")
             XCTAssertEqual(try Node(Int.min), "-9223372036854775808")
             XCTAssertEqual(try Node(UInt.max), "18446744073709551615")
-        #else
-            XCTFail("Unknown architecture")
-        #endif
+        }
         XCTAssertEqual(try Node(Int(0)), "0")
         XCTAssertEqual(try Node(UInt(0)), "0")
 
