@@ -110,6 +110,8 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
 
             """
         let objects = try Yams.load(yaml: example)
+        /// returns value as Int64, if arch is 32 bits. Otherwise it returns Int.
+        let int64IfArchIs32Bit: (_ value: Int64) -> Any = { MemoryLayout<Int>.size == 8 ? Int($0) : $0 }
         let expected: [String: Any] = [
             "canonical": 685230,
             "decimal": 685230,
@@ -123,8 +125,8 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             "negativeHexadecimal": -685230,
             "negativeBinary": -685230,
             "negativeSexagesimal": -685230,
-            "canonicalMin": -9223372036854775808,
-            "canonicalMax": 9223372036854775807
+            "canonicalMin": int64IfArchIs32Bit(-9223372036854775808),
+            "canonicalMax": int64IfArchIs32Bit(9223372036854775807)
         ]
         YamsAssertEqual(objects, expected)
     }
