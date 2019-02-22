@@ -76,7 +76,7 @@ extension Constructor {
         .bool: Bool.construct,
         .float: Double.construct,
         .null: NSNull.construct,
-        .int: Int.construct,
+        .int: MemoryLayout<Int>.size == 8 ? Int.construct : { Int.construct(from: $0) ?? Int64.construct(from: $0) },
         // http://yaml.org/type/index.html
         .binary: Data.construct,
         .timestamp: Date.construct
