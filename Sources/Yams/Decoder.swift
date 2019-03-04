@@ -269,7 +269,7 @@ extension FixedWidthInteger where Self: SignedInteger {
     ///
     /// - returns: An instance of `Self`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> Self? {
-        return Int.construct(from: scalar).flatMap(Self.init(exactly:))
+        return Int64.construct(from: scalar).flatMap(Self.init(exactly:))
     }
 }
 
@@ -282,7 +282,7 @@ extension FixedWidthInteger where Self: UnsignedInteger {
     ///
     /// - returns: An instance of `Self`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> Self? {
-        return UInt.construct(from: scalar).flatMap(Self.init(exactly:))
+        return UInt64.construct(from: scalar).flatMap(Self.init(exactly:))
     }
 }
 
@@ -292,16 +292,12 @@ extension Int8: ScalarConstructible {}
 extension Int16: ScalarConstructible {}
 // MARK: - ScalarConstructible Int32 Conformance
 extension Int32: ScalarConstructible {}
-// MARK: - ScalarConstructible Int64 Conformance
-extension Int64: ScalarConstructible {}
 // MARK: - ScalarConstructible UInt8 Conformance
 extension UInt8: ScalarConstructible {}
 // MARK: - ScalarConstructible UInt16 Conformance
 extension UInt16: ScalarConstructible {}
 // MARK: - ScalarConstructible UInt32 Conformance
 extension UInt32: ScalarConstructible {}
-// MARK: - ScalarConstructible UInt64 Conformance
-extension UInt64: ScalarConstructible {}
 
 // MARK: - ScalarConstructible Decimal Conformance
 
