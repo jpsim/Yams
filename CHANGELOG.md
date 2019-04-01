@@ -14,6 +14,18 @@
   the String type's native encoding.  
   [Norio Nomura](https://github.com/norio-nomura)
 
+##### Bug Fixes
+
+* None.
+
+## 1.0.2
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
 * Update LibYAML sources to latest versions as of January 6 2018.  
   [JP Simard](https://github.com/jpsim)
 
