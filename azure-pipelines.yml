@@ -46,8 +46,8 @@ jobs:
 
 - job: linux_swift50
   pool:
-    vmImage: 'Ubuntu 16.04'
-  container: norionomura/swift:swift-5.0-branch
+    vmImage: 'Ubuntu 18.04'
+  container: swift:5.0
   steps:
     - script: swift test --parallel
       displayName: swift test with UTF16
@@ -148,7 +148,7 @@ jobs:
   pool:
     vmImage: 'macOS 10.13'
   variables:
-    DEVELOPER_DIR: /Applications/Xcode_9.4.1.app
+    DEVELOPER_DIR: /Applications/Xcode_10.1.app
   steps:
     - script: pod lib lint
       displayName: pod lib lint
@@ -169,7 +169,7 @@ jobs:
 - job: jazzy
   pool:
     vmImage: 'Ubuntu 16.04'
-  container: norionomura/jazzy:0.9.4_swift-4.2.1
+  container: norionomura/jazzy:0.9.6_swift-4.2.4
   steps:
     - script: bundle install --path vendor/bundle
       displayName: bundle install
