@@ -171,6 +171,8 @@ jobs:
     vmImage: 'Ubuntu 16.04'
   container: norionomura/jazzy:0.9.6_swift-4.2.4
   steps:
+    - script: bundle update --bundler
+      displayName: Update bundler
     - script: bundle install --path vendor/bundle
       displayName: bundle install
     - script: swift build
