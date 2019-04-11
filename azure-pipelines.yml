@@ -24,6 +24,8 @@ jobs:
         containerImage: norionomura/swiftlint:swift-4.2.0
       swift421:
         containerImage: norionomura/swiftlint:swift-4.2.1
+      swift50:
+        containerImage: swift:5.0
   container: $[ variables['containerImage'] ]
   steps:
     - script: swift test --parallel
@@ -39,28 +41,15 @@ jobs:
         mkdir -p build/reports/
         swiftlint lint --reporter junit > build/reports/swiftlint.xml
       displayName: swiftlint
+      condition: contains(variables['containerImage'], 'swiftlint')
     - task: PublishTestResults@2
       inputs:
         testRunner: JUnit
         testResultsFiles: build/reports/**
 
-- job: linux_swift50
-  pool:
-    vmImage: 'Ubuntu 16.04'
-  container: swift:5.0
-  steps:
-    - script: swift test --parallel
-      displayName: swift test with UTF16
-      env:
-        YAMS_DEFAULT_ENCODING: UTF16
-    - script: swift test --parallel
-      displayName: swift test with UTF8
-      env:
-        YAMS_DEFAULT_ENCODING: UTF8
-
 - job: macOS
   pool:
-    vmImage: 'macOS 10.13'
+    vmImage: 'macOS 10.14'
   strategy:
     maxParallel: 10
     matrix:
@@ -79,6 +68,9 @@ jobs:
         XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
       xcode101:
         DEVELOPER_DIR: /Applications/Xcode_10.1.app
+        XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
+      xcode102:
+        DEVELOPER_DIR: /Applications/Xcode_10.2.app
         XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
   steps:
     - script: |
@@ -146,18 +138,18 @@ jobs:
 
 - job: CocoaPods
   pool:
-    vmImage: 'macOS 10.13'
+    vmImage: 'macOS 10.14'
   variables:
-    DEVELOPER_DIR: /Applications/Xcode_10.1.app
+    DEVELOPER_DIR: /Applications/Xcode_10.2.app
   steps:
     - script: pod lib lint
       displayName: pod lib lint
 
 - job: Analyze
   pool:
-    vmImage: 'macOS 10.13'
+    vmImage: 'macOS 10.14'
   variables:
-    DEVELOPER_DIR: /Applications/Xcode_10.1.app
+    DEVELOPER_DIR: /Applications/Xcode_10.2.app
   steps:
     - script: xcodebuild -scheme Yams clean build-for-testing > xcodebuild.log
       displayName: Generate xcodebuild.log
