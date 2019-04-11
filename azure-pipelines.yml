@@ -47,9 +47,9 @@ jobs:
         testRunner: JUnit
         testResultsFiles: build/reports/**
 
-- job: macOS
+- job: Xcode9
   pool:
-    vmImage: 'macOS 10.14'
+    vmImage: 'macOS 10.13'
   strategy:
     maxParallel: 10
     matrix:
@@ -63,6 +63,76 @@ jobs:
         DEVELOPER_DIR: /Applications/Xcode_9.3.1.app
       xcode941:
         DEVELOPER_DIR: /Applications/Xcode_9.4.1.app
+  steps:
+    - script: |
+        xcodebuild -version
+        echo "##vso[task.setvariable variable=XCODE_FLAGS]-scheme Yams $XCODE_FLAGS_FOR_TEST"
+      displayName: xcodebuild -version & set XCODE_FLAGS
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test |
+        xcpretty -r junit -o build/reports/xcodebuild-macos.xml
+      displayName: tests on macOS with UTF16
+      condition: succeededOrFailed()
+      env:
+        YAMS_DEFAULT_ENCODING: UTF16
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test |
+        xcpretty -r junit -o build/reports/xcodebuild-macos-utf8.xml
+      displayName: tests on macOS with UTF8
+      condition: succeededOrFailed()
+      env:
+        YAMS_DEFAULT_ENCODING: UTF8
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test -sdk iphonesimulator -destination "name=iPhone 8" |
+        xcpretty -r junit -o build/reports/xcodebuild-iOS.xml
+      displayName: tests on iOS
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test -sdk iphonesimulator -destination "name=iPhone 5" |
+        xcpretty -r junit -o build/reports/xcodebuild-iOS.xml
+      displayName: tests on iOS (32-bit)
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS test -sdk appletvsimulator -destination "name=Apple TV 4K" |
+        xcpretty -r junit -o build/reports/xcodebuild-tvOS.xml
+      displayName: tests on tvOS
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
+        xcodebuild $XCODE_FLAGS build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
+      displayName: build on watchOS
+      condition: succeededOrFailed()
+    - script: >
+        set -o pipefail &&
+        swift test --parallel
+      displayName: swift test with UTF16
+      condition: succeededOrFailed()
+      env:
+        YAMS_DEFAULT_ENCODING: UTF16
+    - script: >
+        set -o pipefail &&
+        swift test --parallel
+      displayName: swift test with UTF8
+      condition: succeededOrFailed()
+      env:
+        YAMS_DEFAULT_ENCODING: UTF8
+    - task: PublishTestResults@2
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: build/reports/**
+      condition: succeededOrFailed()
+
+- job: Xcode10
+  pool:
+    vmImage: 'macOS 10.14'
+  strategy:
+    maxParallel: 10
+    matrix:
       xcode10:
         DEVELOPER_DIR: /Applications/Xcode_10.app
         XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
