@@ -75,6 +75,7 @@ jobs:
         DEVELOPER_DIR: /Applications/Xcode_10.2.app
         VM_IMAGE: 'macOS 10.14'
         XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
+        SKIP_32_BIT_TESTS: true
   steps:
     - script: |
         xcodebuild -version
@@ -107,7 +108,7 @@ jobs:
         xcodebuild $XCODE_FLAGS test -sdk iphonesimulator -destination "name=iPhone 5" |
         xcpretty -r junit -o build/reports/xcodebuild-iOS.xml
       displayName: tests on iOS (32-bit)
-      condition: succeededOrFailed()
+      condition: and(succeededOrFailed(), ne(variables['SKIP_32_BIT_TESTS'], 'true'))
     - script: >
         set -o pipefail &&
         xcodebuild $XCODE_FLAGS test -sdk appletvsimulator -destination "name=Apple TV 4K" |
