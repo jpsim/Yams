@@ -8,22 +8,12 @@ jobs:
   strategy:
     maxParallel: 10
     matrix:
-      swift402:
-        containerImage: norionomura/swiftlint:swift-4.0.2
-      swift403:
-        containerImage: norionomura/swiftlint:swift-4.0.3
-      swift410:
-        containerImage: norionomura/swiftlint:swift-4.1.0
-      swift411:
-        containerImage: norionomura/swiftlint:swift-4.1.1
-      swift412:
-        containerImage: norionomura/swiftlint:swift-4.1.2
-      swift413:
-        containerImage: norionomura/swiftlint:swift-4.1.3
-      swift420:
-        containerImage: norionomura/swiftlint:swift-4.2.0
-      swift421:
-        containerImage: norionomura/swiftlint:swift-4.2.1
+      swift40:
+        containerImage: norionomura/swiftlint:swift-4.0
+      swift41:
+        containerImage: norionomura/swiftlint:swift-4.1
+      swift42:
+        containerImage: norionomura/swiftlint:swift-4.2
       swift50:
         containerImage: swift:5.0
   container: $[ variables['containerImage'] ]
