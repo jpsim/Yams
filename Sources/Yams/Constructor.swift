@@ -450,7 +450,7 @@ extension Set {
         // TODO: YAML supports Hashable elements other than str.
         return Set<AnyHashable>(mapping.map({ String.construct(from: $0.key)! as AnyHashable }))
         // Explicitly declaring the generic parameter as `<AnyHashable>` above is required,
-        // because this is inside extension of `Set` and Swift 3.0.2 to 4.1.0 can't infer the type without
+        // because this is inside extension of `Set` and Swift 4.0.x can't infer the type without
         // that.
     }
 }
