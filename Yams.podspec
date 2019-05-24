@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
   s.authors                   = { 'JP Simard' => 'jp@jpsim.com',
                                   'Norio Nomura' => 'norio.nomura@gmail.com' }
   s.source_files              = 'Sources/**/*.{h,c,swift}'
+  s.swift_versions            = ['4.0', '4.1', '4.2', '5.0']
   s.pod_target_xcconfig       = { 'APPLICATION_EXTENSION_API_ONLY' => 'YES' }
   s.ios.deployment_target     = '8.0'
   s.osx.deployment_target     = '10.9'
