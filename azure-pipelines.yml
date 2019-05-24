@@ -138,7 +138,9 @@ jobs:
   variables:
     DEVELOPER_DIR: /Applications/Xcode_10.2.app
   steps:
-    - script: pod lib lint
+    - script: bundle install --path vendor/bundle
+      displayName: bundle install
+    - script: bundle exec pod lib lint --verbose
       displayName: pod lib lint
 
 - job: Analyze
