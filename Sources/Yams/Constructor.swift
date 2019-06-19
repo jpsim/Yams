@@ -115,6 +115,19 @@ public protocol ScalarConstructible {
     static func construct(from scalar: Node.Scalar) -> Self?
 }
 
+// MARK: - ScalarConstructible UUID Conformance
+
+extension UUID: ScalarConstructible {
+    /// Construct an instance of `UUID`, if possible, from the specified scalar.
+    ///
+    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `UUID`, if possible.
+    ///
+    /// - returns: An instance of `UUID`, if one was successfully extracted from the scalar.
+    public static func construct(from scalar: Node.Scalar) -> UUID? {
+        return UUID(uuidString: scalar.string)
+    }
+}
+
 // MARK: - ScalarConstructible Bool Conformance
 
 extension Bool: ScalarConstructible {

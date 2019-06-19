@@ -230,6 +230,13 @@ extension String: ScalarRepresentable {
     }
 }
 
+extension UUID: ScalarRepresentable {
+    /// This value's `Node.scalar` representation.
+    public func represented() -> Node.Scalar {
+        return .init(uuidString)
+    }
+}
+
 /// MARK: - ScalarRepresentableCustomizedForCodable
 
 /// Types conforming to this protocol can be encoded by `YamlEncoder`.
@@ -260,6 +267,7 @@ extension UInt32: YAMLEncodable {}
 extension UInt64: YAMLEncodable {}
 extension URL: YAMLEncodable {}
 extension String: YAMLEncodable {}
+extension UUID: YAMLEncodable {}
 
 extension Date: YAMLEncodable {
     /// Returns this value wrapped in a `Node.scalar`.

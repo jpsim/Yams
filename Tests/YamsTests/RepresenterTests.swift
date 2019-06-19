@@ -97,7 +97,11 @@ class RepresenterTests: XCTestCase {
     func testString() throws {
         XCTAssertEqual(Node("test"), "test")
     }
-
+    
+    func testUUID() throws {
+        try XCTAssertEqual(Node(UUID(uuidString: "B5C6C790-BC0A-4781-9AFF-F9896E0C030C")), "B5C6C790-BC0A-4781-9AFF-F9896E0C030C")
+    }
+    
     func testOptional() throws {
         XCTAssertEqual(try Node(Int?.none), "null")
     }
