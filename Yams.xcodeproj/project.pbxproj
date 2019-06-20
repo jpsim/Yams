@@ -296,10 +296,10 @@
 				LastUpgradeCheck = 1100;
 				TargetAttributes = {
 					OBJ_45 = {
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1100;
 					};
 					OBJ_54 = {
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1100;
 					};
 				};
 			};
