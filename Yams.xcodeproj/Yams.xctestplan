@@ -1,0 +1,40 @@
+{
+  "configurations" : [
+    {
+      "name" : "UTF16",
+      "options" : {
+        "environmentVariableEntries" : [
+          {
+            "key" : "YAMS_DEFAULT_ENCODING",
+            "value" : "UTF16"
+          }
+        ]
+      }
+    },
+    {
+      "name" : "UTF8",
+      "options" : {
+        "environmentVariableEntries" : [
+          {
+            "key" : "YAMS_DEFAULT_ENCODING",
+            "value" : "UTF8"
+          }
+        ]
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Yams.xcodeproj",
+        "identifier" : "OBJ_54",
+        "name" : "YamsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

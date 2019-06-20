@@ -81,6 +81,7 @@
 		6C788A001EB87232005386F0 /* EncoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncoderTests.swift; sourceTree = "<group>"; };
 		6C788A021EB876C4005386F0 /* Encoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Encoder.swift; sourceTree = "<group>"; };
 		6C78C5631E29B1CE0096215F /* RepresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepresenterTests.swift; sourceTree = "<group>"; };
+		6C9B503E22B6362B00D82F94 /* Yams.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = Yams.xctestplan; path = Yams.xcodeproj/Yams.xctestplan; sourceTree = "<group>"; };
 		6CBAEE191E3839500021BF87 /* Yams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Yams.h; sourceTree = "<group>"; };
 		6CC2E33E1E22347B00F62269 /* Representer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Representer.swift; sourceTree = "<group>"; };
 		6CE603971E13502E00A13D8D /* Emitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Emitter.swift; sourceTree = "<group>"; };
@@ -196,6 +197,7 @@
 		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
+				6C9B503E22B6362B00D82F94 /* Yams.xctestplan */,
 				OBJ_6 /* Package.swift */,
 				6C48A76421D1B013007DB7B9 /* Package@swift-4.2.swift */,
 				6C48A76521D1B013007DB7B9 /* Package@swift-5.swift */,
