@@ -8,8 +8,6 @@ jobs:
   strategy:
     maxParallel: 10
     matrix:
-      swift40:
-        containerImage: norionomura/swiftlint:swift-4.0
       swift41:
         containerImage: norionomura/swiftlint:swift-4.1
       swift42:
@@ -45,12 +43,6 @@ jobs:
   strategy:
     maxParallel: 10
     matrix:
-      xcode901:
-        DEVELOPER_DIR: /Applications/Xcode_9.0.1.app
-      xcode91:
-        DEVELOPER_DIR: /Applications/Xcode_9.1.app
-      xcode92:
-        DEVELOPER_DIR: /Applications/Xcode_9.2.app
       xcode931:
         DEVELOPER_DIR: /Applications/Xcode_9.3.1.app
       xcode941:
