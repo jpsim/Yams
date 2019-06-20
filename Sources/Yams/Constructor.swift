@@ -399,15 +399,15 @@ extension Dictionary {
 private extension Dictionary {
     static func _construct_mapping(from mapping: Node.Mapping) -> [AnyHashable: Any] {
         let mapping = flatten_mapping(mapping)
+        // TODO: YAML supports keys other than str.
 #if compiler(>=5.0)
-        return [AnyHashable: Any](uniqueKeysWithValues: mapping.map {
-            // TODO: YAML supports keys other than str.
-            (String.construct(from: $0.key)!, mapping.tag.constructor.any(from: $0.value))
-        })
+        return [AnyHashable: Any](
+            mapping.map { (String.construct(from: $0.key)!, mapping.tag.constructor.any(from: $0.value)) },
+            uniquingKeysWith: { _, second in second }
+        )
 #else
         var dictionary = [AnyHashable: Any](minimumCapacity: mapping.count)
         mapping.forEach {
-            // TODO: YAML supports keys other than str.
             dictionary[String.construct(from: $0.key)!] = mapping.tag.constructor.any(from: $0.value)
         }
         return dictionary
