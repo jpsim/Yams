@@ -2,7 +2,8 @@
 
 ##### Breaking
 
-* None.
+* Swift 4.1 or later is now required to build Yams.  
+  [Norio Nomura](https://github.com/norio-nomura)
 
 ##### Enhancements
 
