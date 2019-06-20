@@ -199,8 +199,7 @@ extension Date: ScalarConstructible {
             }
             return TimeZone(secondsFromGMT: seconds)
         }()
-        // Using `DateComponents.date` causes `NSUnimplemented()` crash on Linux at swift-3.0.2-RELEASE
-        return NSCalendar(identifier: .gregorian)?.date(from: datecomponents)
+        return datecomponents.date
     }
 
     private static let timestampPattern: NSRegularExpression = pattern([
