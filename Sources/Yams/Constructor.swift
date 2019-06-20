@@ -400,7 +400,7 @@ private extension Dictionary {
     static func _construct_mapping(from mapping: Node.Mapping) -> [AnyHashable: Any] {
         let mapping = flatten_mapping(mapping)
         // TODO: YAML supports keys other than str.
-#if compiler(>=5.0)
+#if swift(>=5.0)
         return [AnyHashable: Any](
             mapping.map { (String.construct(from: $0.key)!, mapping.tag.constructor.any(from: $0.value)) },
             uniquingKeysWith: { _, second in second }
