@@ -1,8 +1,16 @@
 trigger:
 - master
 
+schedules:
+- cron: "0 4 * * *"
+  displayName: 
+  branches:
+    include: 
+    - master
+
 jobs:
 - job: linux
+  condition: ne(variables['Build.Reason'], 'Schedule')
   pool:
     vmImage: 'Ubuntu 16.04'
   strategy:
@@ -38,6 +46,7 @@ jobs:
         testResultsFiles: build/reports/**
 
 - job: macOS
+  condition: ne(variables['Build.Reason'], 'Schedule')
   pool:
     vmImage: $[ coalesce(variables['VM_IMAGE'], 'macOS 10.13') ]
   strategy:
@@ -125,6 +134,7 @@ jobs:
       condition: succeededOrFailed()
 
 - job: CocoaPods
+  condition: ne(variables['Build.Reason'], 'Schedule')
   pool:
     vmImage: 'macOS 10.14'
   variables:
@@ -149,6 +159,7 @@ jobs:
       displayName: Run SwiftLint Analyze
 
 - job: jazzy
+  condition: ne(variables['Build.Reason'], 'Schedule')
   pool:
     vmImage: 'Ubuntu 16.04'
   container: norionomura/jazzy:0.9.6_swift-4.2.4
@@ -172,3 +183,25 @@ jobs:
       inputs:
         artifactName: 'API Docs'
         targetPath: 'docs'
+
+- job: Nightly
+  condition: eq(variables['Build.Reason'], 'Schedule')
+  pool:
+    vmImage: 'Ubuntu 16.04'
+  strategy:
+    maxParallel: 10
+    matrix:
+      swift51:
+        containerImage: norionomura/swift:swift-5.1-branch
+      master:
+        containerImage: norionomura/swift:nightly
+  container: $[ variables['containerImage'] ]
+  steps:
+    - script: swift test --parallel
+      displayName: swift test with UTF16
+      env:
+        YAMS_DEFAULT_ENCODING: UTF16
+    - script: swift test --parallel
+      displayName: swift test with UTF8
+      env:
+        YAMS_DEFAULT_ENCODING: UTF8
