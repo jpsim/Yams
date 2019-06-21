@@ -9,7 +9,7 @@ A sweet and swifty [YAML](http://yaml.org/) parser built on
 
 ## Installation
 
-Building Yams requires Xcode 10.x or a Swift 4.x/5.x toolchain with the
+Building Yams requires Xcode 10.x or a Swift 4.1+/5.x toolchain with the
 Swift Package Manager.
 
 ### Swift Package Manager
