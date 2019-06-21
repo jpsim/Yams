@@ -22,8 +22,6 @@ jobs:
         containerImage: norionomura/swiftlint:swift-4.2
       swift50:
         containerImage: swift:5.0
-      swift51:
-        containerImage: norionomura/swift:swift-5.1-branch
   container: $[ variables['containerImage'] ]
   steps:
     - script: swift test --parallel
@@ -185,18 +183,11 @@ jobs:
         artifactName: 'API Docs'
         targetPath: 'docs'
 
-- job: Nightly
-  condition: eq(variables['Build.Reason'], 'Schedule')
+- job: linux_swift51
+  displayName: linux swift51
   pool:
     vmImage: 'Ubuntu 16.04'
-  strategy:
-    maxParallel: 10
-    matrix:
-      swift51:
-        containerImage: norionomura/swift:swift-5.1-branch
-      master:
-        containerImage: norionomura/swift:nightly
-  container: $[ variables['containerImage'] ]
+  container: norionomura/swift:swift-5.1-branch
   steps:
     - script: swift test --parallel
       displayName: swift test with UTF16
