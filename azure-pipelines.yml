@@ -3,7 +3,7 @@ trigger:
 
 schedules:
 - cron: "0 4 * * *"
-  displayName: 
+  displayName: Nightly build with latest snapshots
   branches:
     include: 
     - master
