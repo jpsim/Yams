@@ -116,6 +116,17 @@ class PerformanceTests: XCTestCase {
         }
     }
 
+#if canImport(Combine)
+    override func measure(_ block: () -> Void) {
+        if #available(macOS 10.15, iOS 13, tvOS 13, *) {
+            let metrics: [XCTMetric] = [XCTClockMetric(), XCTCPUMetric(), XCTMemoryMetric(), XCTStorageMetric()]
+            super.measure(metrics: metrics, block: block)
+        } else {
+            super.measure(block)
+        }
+    }
+#endif
+
     func testUsingComposeWithUTF16() throws {
         let yaml = try loadYAML()
         self.measure {

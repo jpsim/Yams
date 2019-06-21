@@ -54,13 +54,3 @@ extension MarkTests {
         ]
     }
 }
-
-#if !swift(>=4.1)
-
-    extension Array {
-        public func compactMap(_ transform: (Element) throws -> String?) rethrows -> [String] {
-            return try flatMap(transform)
-        }
-    }
-
-#endif

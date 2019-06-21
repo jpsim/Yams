@@ -516,15 +516,9 @@ private extension String {
 }
 
 private extension StringProtocol {
-#if swift(>=4.1)
     func substring(from offset: Int) -> SubSequence {
         return self[index(startIndex, offsetBy: offset)...]
     }
-#else
-    func substring(from offset: IndexDistance) -> SubSequence {
-        return self[index(startIndex, offsetBy: offset)...]
-    }
-#endif
 }
 
 // MARK: - SexagesimalConvertible
