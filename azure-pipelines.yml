@@ -146,6 +146,7 @@ jobs:
       displayName: pod lib lint
 
 - job: Analyze
+  condition: ne(variables['Build.Reason'], 'Schedule')
   pool:
     vmImage: 'macOS 10.14'
   variables:
