@@ -322,6 +322,19 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
         XCTAssertNil(t.n5)
     }
 
+    func testEncodingDateWithNanosecondGreaterThan999499977() throws {
+    #if _runtime(_ObjC) || swift(>=5.0)
+        let gregorian = Calendar(identifier: .gregorian)
+        let utc = TimeZone(identifier: "UTC")!
+        var dateComponents = gregorian.dateComponents(in: utc, from: Date())
+        dateComponents.nanosecond = 999499977
+        let date = dateComponents.date!
+        _testRoundTrip(of: date)
+    #else
+        print("Decoding 'Date' has issue on Linux with nanoseconds. https://bugs.swift.org/browse/SR-6223")
+    #endif
+    }
+
     // MARK: - Helper Functions
 
     private func _testRoundTrip<T>(of value: T,
@@ -1096,7 +1109,8 @@ extension EncoderTests {
             ("testDictionary", testDictionary),
             ("testNodeTypeMismatch", testNodeTypeMismatch),
             ("testDecodingConcreteTypeParameter", testDecodingConcreteTypeParameter),
-            ("test_null_yml", test_null_yml)
+            ("test_null_yml", test_null_yml),
+            ("testEncodingDateWithNanosecondGreaterThan999499977", testEncodingDateWithNanosecondGreaterThan999499977)
         ]
     }
 }
