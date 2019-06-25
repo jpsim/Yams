@@ -145,7 +145,7 @@ extension Node.Mapping {
         return lazy.map { $0.key }
     }
 
-    /// This mapping's keys. Similar to `Dictionary.keys`.
+    /// This mapping's values. Similar to `Dictionary.values`.
     public var values: LazyMapCollection<Node.Mapping, Node> {
         return lazy.map { $0.value }
     }
