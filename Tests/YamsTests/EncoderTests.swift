@@ -441,7 +441,7 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
 
             let decodingResult = try decoder.decode(DecodeMe5.self, from: input)
             // There will be only one result for oneTwo (the second one in the yaml)
-//            expectEqual(1, decodingResult.numberOfKeys)
+            expectEqual(1, decodingResult.numberOfKeys)
 
             // Encoding
             let encoded = DecodeMe5()
@@ -642,6 +642,29 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
         XCTAssertNil(t.n3)
         XCTAssertNil(t.n4)
         XCTAssertNil(t.n5)
+    }
+
+    func testDecoderEliminatesDuplicateKeys() throws {
+        struct CodingKeys: CodingKey {
+            let stringValue: String
+            var intValue: Int? { return Int(stringValue) }
+            init?(stringValue: String) { self.stringValue = stringValue }
+            init?(intValue: Int) { self.stringValue = "\(intValue)" }
+        }
+
+        struct CheckCodingKeysCount: Decodable {
+            init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                XCTAssertEqual(container.allKeys.count, 1,
+                               "`KeyedDecodingContainer` eliminates duplicate keys")
+            }
+        }
+
+        let yamlWithDuplicateKeys = """
+            key: value1
+            key: value2
+        """
+        _ = try YAMLDecoder().decode(CheckCodingKeysCount.self, from: yamlWithDuplicateKeys)
     }
 
     func testEncodingDateWithNanosecondGreaterThan999499977() throws {
@@ -1443,6 +1466,7 @@ extension EncoderTests {
             ("testNodeTypeMismatch", testNodeTypeMismatch),
             ("testDecodingConcreteTypeParameter", testDecodingConcreteTypeParameter),
             ("test_null_yml", test_null_yml),
+            ("testDecoderEliminatesDuplicateKeys", testDecoderEliminatesDuplicateKeys),
             ("testEncodingDateWithNanosecondGreaterThan999499977", testEncodingDateWithNanosecondGreaterThan999499977)
         ]
     }
