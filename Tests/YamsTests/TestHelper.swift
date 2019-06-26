@@ -9,6 +9,8 @@
 import Foundation
 import XCTest
 
+let gregorianCalendar = Calendar(identifier: .gregorian)
+
 func timestamp(_ timeZoneHour: Int = 0,
                _ year: Int? = nil,
                _ month: Int? = nil,
@@ -17,9 +19,8 @@ func timestamp(_ timeZoneHour: Int = 0,
                _ minute: Int? = nil,
                _ second: Int? = nil,
                _ fraction: Double? = nil ) -> Date {
-    let calendar = Calendar(identifier: .gregorian)
     let timeZone = TimeZone(secondsFromGMT: timeZoneHour * 60 * 60)
-    let dateComponents = DateComponents(calendar: calendar, timeZone: timeZone,
+    let dateComponents = DateComponents(calendar: gregorianCalendar, timeZone: timeZone,
                                         year: year, month: month, day: day,
                                         hour: hour, minute: minute, second: second)
     guard let date = dateComponents.date else { fatalError("Never happen this") }

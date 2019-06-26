@@ -167,7 +167,7 @@ extension Date: ScalarConstructible {
         }
 
         var datecomponents = DateComponents()
-        datecomponents.calendar = Calendar(identifier: .gregorian)
+        datecomponents.calendar = gregorianCalendar
         datecomponents.year = components[0].flatMap { Int($0) }
         datecomponents.month = components[1].flatMap { Int($0) }
         datecomponents.day = components[2].flatMap { Int($0) }
@@ -204,6 +204,8 @@ extension Date: ScalarConstructible {
         let timeInterval = date.timeIntervalSinceReferenceDate + TimeInterval(nanosecond) / 1_000_000_000.0
         return Date(timeIntervalSinceReferenceDate: timeInterval)
     }
+
+    private static let gregorianCalendar = Calendar(identifier: .gregorian)
 
     private static let timestampPattern: NSRegularExpression = pattern([
         "^([0-9][0-9][0-9][0-9])",          // year
