@@ -99,35 +99,36 @@ extension Date: ScalarRepresentable {
     }
 
     private var iso8601String: String {
-#if !_runtime(_ObjC) && !swift(>=5.0)
-        // swift-corelibs-foundation has bug with nanosecond.
-        // https://bugs.swift.org/browse/SR-3158
-        return iso8601Formatter.string(from: self)
-#else
-        let calendar = Calendar(identifier: .gregorian)
-        let nanosecond = calendar.component(.nanosecond, from: self)
-        if nanosecond != 0 {
-            return iso8601WithFractionalSecondFormatter.string(from: self)
-                .trimmingCharacters(in: characterSetZero) + "Z"
-        } else {
-            return iso8601Formatter.string(from: self)
-        }
-#endif
+        let (integral, millisecond) = timeIntervalSinceReferenceDate.separateFractionalSecond(with: 3)
+        guard millisecond != 0 else { return iso8601Formatter.string(from: self) }
+
+        let dateWithoutMillisecond = Date(timeIntervalSinceReferenceDate: integral)
+        return iso8601WithoutZFormatter.string(from: dateWithoutMillisecond) +
+            String(format: ".%03d", millisecond).trimmingCharacters(in: characterSetZero) + "Z"
     }
 
     private var iso8601StringWithFullNanosecond: String {
-        let calendar = Calendar(identifier: .gregorian)
-        let nanosecond = calendar.component(.nanosecond, from: self)
-        if nanosecond != 0 {
-            return iso8601WithoutZFormatter.string(from: droppingNanosecond) +
-                String(format: ".%09d", nanosecond).trimmingCharacters(in: characterSetZero) + "Z"
-        } else {
-            return iso8601Formatter.string(from: self)
-        }
-    }
+        let (integral, nanosecond) = timeIntervalSinceReferenceDate.separateFractionalSecond(with: 9)
+        guard nanosecond != 0 else { return iso8601Formatter.string(from: self) }
 
-    private var droppingNanosecond: Date {
-        return Date(timeIntervalSinceReferenceDate: TimeInterval(Int64(timeIntervalSinceReferenceDate)))
+        let dateWithoutNanosecond = Date(timeIntervalSinceReferenceDate: integral)
+        return iso8601WithoutZFormatter.string(from: dateWithoutNanosecond) +
+            String(format: ".%09d", nanosecond).trimmingCharacters(in: characterSetZero) + "Z"
+    }
+}
+
+private extension TimeInterval {
+    /// Separates into integral and fractional, then round fractional to precision digits Int
+    /// - returns: Tuple of integral part and converted fractional part
+    func separateFractionalSecond(with precision: Int) -> (integral: TimeInterval, fractional: Int) {
+        var integral = 0.0
+        let fractional = modf(self, &integral)
+        let radix = pow(10.0, TimeInterval(precision))
+        let rounded = Int((fractional * radix).rounded())
+        let quotient = rounded / Int(radix)
+        return quotient != 0 ? // carry-up?
+            (integral + TimeInterval(quotient), rounded % Int(radix)) :
+            (integral, rounded)
     }
 }
 
@@ -145,15 +146,6 @@ private let iso8601WithoutZFormatter: DateFormatter = {
     var formatter = DateFormatter()
     formatter.locale = Locale(identifier: "en_US_POSIX")
     formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss"
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
-    return formatter
-}()
-
-// DateFormatter truncates Fractional Second to 10^-4
-private let iso8601WithFractionalSecondFormatter: DateFormatter = {
-    var formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.SSSS"
     formatter.timeZone = TimeZone(secondsFromGMT: 0)
     return formatter
 }()
