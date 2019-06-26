@@ -97,16 +97,9 @@ func YamsAssertEqual(_ lhs: Any?, _ rhs: Any?,
 private func dumped<T>(_ value: T) -> String {
     var output = ""
     dump(value, to: &output)
-    var count = 0
-    var firstLine = ""
-    output.enumerateLines { line, stop in
-        count += 1
-        if count > 1 {
-            stop = true
-        } else {
-            firstLine = line
-        }
-    }
+    let outputs = output.components(separatedBy: .newlines)
+    let firstLine = outputs.first ?? ""
+    let count = outputs.count
     if count == 1 {
         // remove `- ` prefix if
         let index = firstLine.index(firstLine.startIndex, offsetBy: 2)
