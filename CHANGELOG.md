@@ -7,11 +7,15 @@
 
 ##### Enhancements
 
-* None.
+* Support `Date` with `nanosecond` in Swift 4.x.  
+  [Norio Nomura](https://github.com/norio-nomura)
 
 ##### Bug Fixes
 
-* None.
+* Fix `YAMLEncoder` outputted a result that is delayed by 1 second when encoding
+  `Date` with `nanosecond` greater than 999499997.  
+  [Norio Nomura](https://github.com/norio-nomura)
+  [#192](https://github.com/jpsim/Yams/issues/192)
 
 ## 2.0.0
 
