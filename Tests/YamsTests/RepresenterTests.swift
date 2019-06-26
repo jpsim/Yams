@@ -33,12 +33,8 @@ class RepresenterTests: XCTestCase {
             XCTAssertEqual(try Node(date), "2001-12-15T02:59:43Z")
         }
         do { // fractional seconds
-            #if !_runtime(_ObjC) && !swift(>=5.0)
-                // https://bugs.swift.org/browse/SR-3158
-            #else
-                let date = timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.1)
-                XCTAssertEqual(try Node(date), "2001-12-15T02:59:43.1Z")
-            #endif
+            let date = timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.1)
+            XCTAssertEqual(try Node(date), "2001-12-15T02:59:43.1Z")
         }
     }
 
