@@ -6,9 +6,6 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
-#if !_runtime(_ObjC)
-import CDispatch
-#endif
 import Foundation
 import XCTest
 
@@ -22,15 +19,12 @@ func timestamp(_ timeZoneHour: Int = 0,
                _ fraction: Double? = nil ) -> Date {
     let calendar = Calendar(identifier: .gregorian)
     let timeZone = TimeZone(secondsFromGMT: timeZoneHour * 60 * 60)
-    let nanosecond = fraction.map { Int($0 * Double(NSEC_PER_SEC)) }
-    let datecomponents = DateComponents(calendar: calendar, timeZone: timeZone,
-                          year: year, month: month, day: day,
-                          hour: hour, minute: minute, second: second, nanosecond: nanosecond)
-    // Using `DateComponents.date` causes crash on Linux
-    guard let date = NSCalendar(identifier: .gregorian)?.date(from: datecomponents) else {
-        fatalError("Never happen this")
-    }
-    return date
+    let dateComponents = DateComponents(calendar: calendar, timeZone: timeZone,
+                                        year: year, month: month, day: day,
+                                        hour: hour, minute: minute, second: second)
+    guard let date = dateComponents.date else { fatalError("Never happen this") }
+    guard let fraction = fraction else { return date }
+    return Date(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate + fraction)
 }
 
 /// AssertEqual for Any
