@@ -324,11 +324,9 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     func testEncodingDateWithNanosecondGreaterThan999499977() throws {
     #if _runtime(_ObjC) || swift(>=5.0)
-        let gregorian = Calendar(identifier: .gregorian)
-        let utc = TimeZone(identifier: "UTC")!
-        var dateComponents = gregorian.dateComponents(in: utc, from: Date())
-        dateComponents.nanosecond = 999499977
-        let date = dateComponents.date!
+        var timeInterval = 0.0
+        _ = modf(Date().timeIntervalSinceReferenceDate, &timeInterval)
+        let date = Date(timeIntervalSinceReferenceDate: timeInterval + 0.999_499_977)
         _testRoundTrip(of: date)
     #else
         print("Decoding 'Date' has issue on Linux with nanoseconds. https://bugs.swift.org/browse/SR-6223")
