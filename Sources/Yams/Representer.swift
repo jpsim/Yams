@@ -119,18 +119,15 @@ extension Date: ScalarRepresentable {
         let calendar = Calendar(identifier: .gregorian)
         let nanosecond = calendar.component(.nanosecond, from: self)
         if nanosecond != 0 {
-            return iso8601WithoutZFormatter.string(from: dateDroppingNanosecond) +
+            return iso8601WithoutZFormatter.string(from: droppingNanosecond) +
                 String(format: ".%09d", nanosecond).trimmingCharacters(in: characterSetZero) + "Z"
         } else {
             return iso8601Formatter.string(from: self)
         }
     }
 
-    private var dateDroppingNanosecond: Date {
-        let calendar = Calendar(identifier: .gregorian)
-        var dateComponents = calendar.dateComponents(in: calendar.timeZone, from: self)
-        dateComponents.nanosecond = nil
-        return dateComponents.date!
+    private var droppingNanosecond: Date {
+        return Date(timeIntervalSinceReferenceDate: TimeInterval(Int64(timeIntervalSinceReferenceDate)))
     }
 }
 
