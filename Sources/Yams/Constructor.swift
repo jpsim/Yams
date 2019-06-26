@@ -174,7 +174,7 @@ extension Date: ScalarConstructible {
         datecomponents.hour = components[3].flatMap { Int($0) }
         datecomponents.minute = components[4].flatMap { Int($0) }
         datecomponents.second = components[5].flatMap { Int($0) }
-        datecomponents.nanosecond = components[6].flatMap { fraction in
+        let optionalNanosecond: Int? = components[6].flatMap { fraction in
             let length = fraction.count
             let nanosecond: Int?
             if length < 9 {
@@ -199,7 +199,10 @@ extension Date: ScalarConstructible {
             }
             return TimeZone(secondsFromGMT: seconds)
         }()
-        return datecomponents.date
+        guard let date = datecomponents.date else { return nil }
+        guard let nanosecond = optionalNanosecond else { return date }
+        let timeInterval = date.timeIntervalSinceReferenceDate + TimeInterval(nanosecond) / 1_000_000_000.0
+        return Date(timeIntervalSinceReferenceDate: timeInterval)
     }
 
     private static let timestampPattern: NSRegularExpression = pattern([
