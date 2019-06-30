@@ -13,7 +13,7 @@
 ##### Bug Fixes
 
 * Fix a bug where `YAMLEncoder` would delay `Date`s by 1 second when encoding
-  values with a `nanosecond` component greater than 999499997.    
+  values with a `nanosecond` component greater than 999499997.  
   [Norio Nomura](https://github.com/norio-nomura)
   [#192](https://github.com/jpsim/Yams/issues/192)
 
