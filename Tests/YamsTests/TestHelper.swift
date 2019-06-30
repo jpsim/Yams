@@ -23,7 +23,7 @@ func timestamp(_ timeZoneHour: Int = 0,
     let dateComponents = DateComponents(calendar: gregorianCalendar, timeZone: timeZone,
                                         year: year, month: month, day: day,
                                         hour: hour, minute: minute, second: second)
-    guard let date = dateComponents.date else { fatalError("Never happen this") }
+    guard let date = dateComponents.date else { fatalError("Tests shouldn't create timestamps for invalid dates") }
     guard let fraction = fraction else { return date }
     return Date(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate + fraction)
 }
