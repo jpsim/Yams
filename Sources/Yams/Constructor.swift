@@ -274,9 +274,9 @@ private extension FixedWidthInteger where Self: SexagesimalConvertible {
             ("0", 8)
         ]
 
-        let scalar = scalarWithSign.substring(from: hasSign ? 1 : 0)
+        let scalar = scalarWithSign.dropFirst(hasSign ? 1 : 0)
         for (prefix, radix) in prefixToRadix where scalar.hasPrefix(prefix) {
-            return Self(signPrefix + scalar.substring(from: prefix.count), radix: radix)
+            return Self(signPrefix + scalar.dropFirst(prefix.count), radix: radix)
         }
         if scalar.contains(":") {
             return Self(sexagesimal: scalarWithSign)
@@ -516,12 +516,6 @@ private extension String {
     }
 }
 
-private extension StringProtocol {
-    func substring(from offset: Int) -> SubSequence {
-        return self[index(startIndex, offsetBy: offset)...]
-    }
-}
-
 // MARK: - SexagesimalConvertible
 
 /// Confirming types are convertible to base 60 numeric values.
@@ -603,9 +597,9 @@ private extension String {
         let sign: T
         if scalar.hasPrefix("-") {
             sign = -1
-            scalar = String(scalar.substring(from: 1))
+            scalar = String(scalar.dropFirst())
         } else if scalar.hasPrefix("+") {
-            scalar = String(scalar.substring(from: 1))
+            scalar = String(scalar.dropFirst())
             sign = 1
         } else {
             sign = 1
