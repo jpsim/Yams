@@ -24,8 +24,7 @@ func timestamp(_ timeZoneHour: Int = 0,
                                         year: year, month: month, day: day,
                                         hour: hour, minute: minute, second: second)
     guard let date = dateComponents.date else { fatalError("Tests shouldn't create timestamps for invalid dates") }
-    guard let fraction = fraction else { return date }
-    return Date(timeIntervalSinceReferenceDate: date.timeIntervalSinceReferenceDate + fraction)
+    return fraction.map(date.addingTimeInterval) ?? date
 }
 
 /// AssertEqual for Any
