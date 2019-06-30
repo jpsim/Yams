@@ -7,7 +7,7 @@
 
 ##### Enhancements
 
-* Support `Date` with `nanosecond` in Swift 4.x.  
+* Accurately represent `Date`s with nanosecond components in Swift 4.x.  
   [Norio Nomura](https://github.com/norio-nomura)
 
 ##### Bug Fixes
