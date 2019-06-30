@@ -99,7 +99,7 @@ extension Date: ScalarRepresentable {
     }
 
     private var iso8601String: String {
-        let (integral, millisecond) = timeIntervalSinceReferenceDate.separateFractionalSecond(with: 3)
+        let (integral, millisecond) = timeIntervalSinceReferenceDate.separateFractionalSecond(withPrecision: 3)
         guard millisecond != 0 else { return iso8601Formatter.string(from: self) }
 
         let dateWithoutMillisecond = Date(timeIntervalSinceReferenceDate: integral)
@@ -108,7 +108,7 @@ extension Date: ScalarRepresentable {
     }
 
     private var iso8601StringWithFullNanosecond: String {
-        let (integral, nanosecond) = timeIntervalSinceReferenceDate.separateFractionalSecond(with: 9)
+        let (integral, nanosecond) = timeIntervalSinceReferenceDate.separateFractionalSecond(withPrecision: 9)
         guard nanosecond != 0 else { return iso8601Formatter.string(from: self) }
 
         let dateWithoutNanosecond = Date(timeIntervalSinceReferenceDate: integral)
@@ -120,7 +120,7 @@ extension Date: ScalarRepresentable {
 private extension TimeInterval {
     /// Separates the time interval into integral and fractional components, then rounds the `fractional` component to `precision` number of digits.
     /// - returns: Tuple of integral part and converted fractional part
-    func separateFractionalSecond(with precision: Int) -> (integral: TimeInterval, fractional: Int) {
+    func separateFractionalSecond(withPrecision precision: Int) -> (integral: TimeInterval, fractional: Int) {
         var integral = 0.0
         let fractional = modf(self, &integral)
         let radix = pow(10.0, Double(precision))
