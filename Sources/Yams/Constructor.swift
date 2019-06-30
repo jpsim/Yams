@@ -362,8 +362,7 @@ extension String: ScalarConstructible {
             }
         }
 
-        guard let string = node.scalar?.string else { return nil }
-        return string
+        return node.scalar?.string
     }
 }
 
