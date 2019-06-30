@@ -123,7 +123,7 @@ private extension TimeInterval {
     func separateFractionalSecond(with precision: Int) -> (integral: TimeInterval, fractional: Int) {
         var integral = 0.0
         let fractional = modf(self, &integral)
-        let radix = pow(10.0, TimeInterval(precision))
+        let radix = pow(10.0, Double(precision))
         let rounded = Int((fractional * radix).rounded())
         let quotient = rounded / Int(radix)
         return quotient != 0 ? // carry-up?
