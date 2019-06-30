@@ -108,25 +108,11 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     // MARK: - Date Strategy Tests
     func testEncodingDate() {
-    #if !_runtime(_ObjC) && !swift(>=5.0)
-        print("Decoding 'Date' has issue on Linux with nanoseconds. https://bugs.swift.org/browse/SR-6223")
-        XCTAssertNotEqual(timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.12345678).timeIntervalSinceReferenceDate,
-                          30077983.12345678,
-                          "https://bugs.swift.org/browse/SR-6223 seems to be fixed")
-    #else
         _testRoundTrip(of: Date())
-    #endif
     }
 
     func testEncodingDateMillisecondsSince1970() {
-    #if !_runtime(_ObjC) && !swift(>=5.0)
-        print("Decoding 'Date' has issue on Linux with nanoseconds. https://bugs.swift.org/browse/SR-6223")
-        XCTAssertNotEqual(timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.12345678).timeIntervalSinceReferenceDate,
-                          30077983.12345678,
-                          "https://bugs.swift.org/browse/SR-6223 seems to be fixed")
-    #else
         _testRoundTrip(of: Date(timeIntervalSince1970: 1000.0), expectedYAML: "1970-01-01T00:16:40Z\n")
-    #endif
     }
 
     // MARK: - Data Tests
@@ -320,6 +306,13 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
         XCTAssertNil(t.n3)
         XCTAssertNil(t.n4)
         XCTAssertNil(t.n5)
+    }
+
+    func testEncodingDateWithNanosecondGreaterThan999499977() throws {
+        var timeInterval = 0.0
+        _ = modf(Date().timeIntervalSinceReferenceDate, &timeInterval)
+        let date = Date(timeIntervalSinceReferenceDate: timeInterval + 0.999_499_977)
+        _testRoundTrip(of: date)
     }
 
     // MARK: - Helper Functions
@@ -1096,7 +1089,8 @@ extension EncoderTests {
             ("testDictionary", testDictionary),
             ("testNodeTypeMismatch", testNodeTypeMismatch),
             ("testDecodingConcreteTypeParameter", testDecodingConcreteTypeParameter),
-            ("test_null_yml", test_null_yml)
+            ("test_null_yml", test_null_yml),
+            ("testEncodingDateWithNanosecondGreaterThan999499977", testEncodingDateWithNanosecondGreaterThan999499977)
         ]
     }
 }

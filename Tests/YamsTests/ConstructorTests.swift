@@ -465,16 +465,12 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
     }
 
     func testTimestampWithNanosecond() throws {
-        #if !_runtime(_ObjC) && !swift(>=5.0)
-            // https://bugs.swift.org/browse/SR-3158
-        #else
-            let example = "nanosecond: 2001-12-15T02:59:43.123456789Z\n"
-            let objects = try Yams.load(yaml: example)
-            let expected: [String: Any] = [
-                "nanosecond": timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.123456789)
-            ]
-            YamsAssertEqual(objects, expected)
-        #endif
+        let example = "nanosecond: 2001-12-15T02:59:43.123456789Z\n"
+        let objects = try Yams.load(yaml: example)
+        let expected: [String: Any] = [
+            "nanosecond": timestamp( 0, 2001, 12, 15, 02, 59, 43, 0.123456789)
+        ]
+        YamsAssertEqual(objects, expected)
     }
 
     func testValue() throws {

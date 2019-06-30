@@ -6,11 +6,10 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
-#if !_runtime(_ObjC)
-import CDispatch
-#endif
 import Foundation
 import XCTest
+
+let gregorianCalendar = Calendar(identifier: .gregorian)
 
 func timestamp(_ timeZoneHour: Int = 0,
                _ year: Int? = nil,
@@ -20,17 +19,12 @@ func timestamp(_ timeZoneHour: Int = 0,
                _ minute: Int? = nil,
                _ second: Int? = nil,
                _ fraction: Double? = nil ) -> Date {
-    let calendar = Calendar(identifier: .gregorian)
     let timeZone = TimeZone(secondsFromGMT: timeZoneHour * 60 * 60)
-    let nanosecond = fraction.map { Int($0 * Double(NSEC_PER_SEC)) }
-    let datecomponents = DateComponents(calendar: calendar, timeZone: timeZone,
-                          year: year, month: month, day: day,
-                          hour: hour, minute: minute, second: second, nanosecond: nanosecond)
-    // Using `DateComponents.date` causes crash on Linux
-    guard let date = NSCalendar(identifier: .gregorian)?.date(from: datecomponents) else {
-        fatalError("Never happen this")
-    }
-    return date
+    let dateComponents = DateComponents(calendar: gregorianCalendar, timeZone: timeZone,
+                                        year: year, month: month, day: day,
+                                        hour: hour, minute: minute, second: second)
+    guard let date = dateComponents.date else { fatalError("Tests shouldn't create timestamps for invalid dates") }
+    return fraction.map(date.addingTimeInterval) ?? date
 }
 
 /// AssertEqual for Any
@@ -103,16 +97,9 @@ func YamsAssertEqual(_ lhs: Any?, _ rhs: Any?,
 private func dumped<T>(_ value: T) -> String {
     var output = ""
     dump(value, to: &output)
-    var count = 0
-    var firstLine = ""
-    output.enumerateLines { line, stop in
-        count += 1
-        if count > 1 {
-            stop = true
-        } else {
-            firstLine = line
-        }
-    }
+    let outputs = output.components(separatedBy: .newlines)
+    let firstLine = outputs.first ?? ""
+    let count = outputs.count
     if count == 1 {
         // remove `- ` prefix if
         let index = firstLine.index(firstLine.startIndex, offsetBy: 2)
