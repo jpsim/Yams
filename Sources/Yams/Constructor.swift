@@ -174,17 +174,17 @@ extension Date: ScalarConstructible {
         datecomponents.hour = components[3].flatMap { Int($0) }
         datecomponents.minute = components[4].flatMap { Int($0) }
         datecomponents.second = components[5].flatMap { Int($0) }
-        let optionalNanosecond: Int? = components[6].flatMap { fraction in
+        let nanoseconds: TimeInterval? = components[6].flatMap { fraction in
             let length = fraction.count
-            let nanosecond: Int?
+            let nanoseconds: Int?
             if length < 9 {
-                nanosecond = Int(fraction).map { number in
+                nanoseconds = Int(fraction).map { number in
                     repeatElement(10, count: 9 - length).reduce(number, *)
                 }
             } else {
-                nanosecond = Int(fraction[..<fraction.index(fraction.startIndex, offsetBy: 9)])
+                nanoseconds = Int(fraction.prefix(9))
             }
-            return nanosecond
+            return nanoseconds.map { Double($0) / 1_000_000_000.0 }
         }
         datecomponents.timeZone = {
             var seconds = 0
@@ -199,10 +199,7 @@ extension Date: ScalarConstructible {
             }
             return TimeZone(secondsFromGMT: seconds)
         }()
-        guard let date = datecomponents.date else { return nil }
-        guard let nanosecond = optionalNanosecond else { return date }
-        let timeInterval = date.timeIntervalSinceReferenceDate + TimeInterval(nanosecond) / 1_000_000_000.0
-        return Date(timeIntervalSinceReferenceDate: timeInterval)
+        return datecomponents.date.map { nanoseconds.map($0.addingTimeInterval) ?? $0 }
     }
 
     private static let gregorianCalendar = Calendar(identifier: .gregorian)
