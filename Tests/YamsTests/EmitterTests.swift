@@ -122,6 +122,24 @@ class EmitterTests: XCTestCase {
         let expectedSorted = "key1: value1\nkey2: value2\nkey3: value3\n"
         XCTAssertEqual(yamlSorted, expectedSorted)
     }
+
+    func testSmartQuotedString() throws {
+        let samples: [(string: String, tag: Tag.Name, expected: String, line: UInt)] = [
+            ("string", .str, "string", #line),
+            ("true", .bool, "'true'", #line),
+            ("1", .int, "'1'", #line),
+            ("1.0", .float, "'1.0'", #line),
+            ("null", .null, "'null'", #line),
+            ("2019-07-06", .timestamp, "'2019-07-06'", #line),
+        ]
+        let resolver = Resolver.default
+        for (string, tag, expected, line) in samples {
+            let resolvedTag = resolver.resolveTag(of: Node(string))
+            XCTAssertEqual(resolvedTag, tag, "Resolver resolves unexpected tag", line: line)
+            let yaml = try Yams.dump(object: string)
+            XCTAssertEqual(yaml, "\(expected)\n", line: line)
+        }
+    }
 }
 
 extension EmitterTests {
@@ -132,7 +150,8 @@ extension EmitterTests {
             ("testMapping", testMapping),
             ("testLineBreaks", testLineBreaks),
             ("testAllowUnicode", testAllowUnicode),
-            ("testSortKeys", testSortKeys)
+            ("testSortKeys", testSortKeys),
+            ("testSmartQuotedString", testSmartQuotedString)
         ]
     }
 }
