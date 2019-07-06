@@ -228,8 +228,8 @@ extension URL: ScalarRepresentable {
 extension String: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
-        let node = Node.Scalar.init(self, .init(.implicit, .default))
-        return node.resolvedTag.name == .str ? node : .init(self, .init(.str), .singleQuoted)
+        let scalar = Node.Scalar(self)
+        return scalar.resolvedTag.name == .str ? scalar : .init(self, Tag(.str), .singleQuoted)
     }
 }
 
