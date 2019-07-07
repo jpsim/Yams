@@ -11,6 +11,9 @@ import Foundation
 /// `Codable`-style `Decoder` that can be used to decode a `Decodable` type from a given `String` and optional
 /// user info mapping. Similar to `Foundation.JSONDecoder`.
 public class YAMLDecoder {
+    /// Options to use when decoding from YAML.
+    public var options = Options()
+
     /// Creates a `YAMLDecoder` instance.
     ///
     /// - parameter encoding: Encoding, `.default` if omitted.
@@ -46,8 +49,8 @@ public class YAMLDecoder {
 
     /// Encoding
     public var encoding: Parser.Encoding
-    public var options = Options()
 
+    /// Configuration options to use when decoding YAML.
     public struct Options {
         /// The strategy to use for decoding keys. Defaults to `.useDefaultKeys`.
         public var keyDecodingStrategy: KeyDecodingStrategy = .useDefaultKeys
