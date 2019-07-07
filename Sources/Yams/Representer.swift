@@ -56,9 +56,7 @@ extension Dictionary: NodeRepresentable {
 }
 
 private func represent(_ value: Any) throws -> Node {
-    if let string = value as? String {
-        return Node(string)
-    } else if let representable = value as? NodeRepresentable {
+    if let representable = value as? NodeRepresentable {
         return try representable.represented()
     }
     throw YamlError.representer(problem: "Failed to represent \(value)")
@@ -230,7 +228,8 @@ extension URL: ScalarRepresentable {
 extension String: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
-        return .init(self)
+        let scalar = Node.Scalar(self)
+        return scalar.resolvedTag.name == .str ? scalar : .init(self, Tag(.str), .singleQuoted)
     }
 }
 

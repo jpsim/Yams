@@ -703,7 +703,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
               different documents.
 
               '
-            not-date: 2002-04-28
+            not-date: '2002-04-28'
             picture: R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5OTk6enp56enmleECcgggoBADs=
 
             """

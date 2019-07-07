@@ -9,6 +9,11 @@
 * Accurately represent `Date`s with nanosecond components in Swift 4.x.  
   [Norio Nomura](https://github.com/norio-nomura)
 
+* Change to apply single quoted style to YAML representation of `String`, if 
+  that contents will be resolved to other than `.str` by default `Resolver`.  
+  [Norio Nomura](https://github.com/norio-nomura)
+  [#197](https://github.com/jpsim/Yams/issues/197)
+
 ##### Bug Fixes
 
 * Fix a bug where `YAMLEncoder` would delay `Date`s by 1 second when encoding
