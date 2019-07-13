@@ -6,10 +6,6 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
-#if SWIFT_PACKAGE
-import CYaml
-#endif
-
 /// Tags describe the the _type_ of a Node.
 public final class Tag {
     /// Tag name.

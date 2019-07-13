@@ -6,9 +6,6 @@
 //  Copyright (c) 2017 Yams. All rights reserved.
 //
 
-#if SWIFT_PACKAGE
-import CYaml
-#endif
 #if os(Linux)
 import CoreFoundation
 #endif
