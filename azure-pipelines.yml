@@ -68,6 +68,11 @@ jobs:
         VM_IMAGE: 'macOS 10.14'
         XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
         SKIP_32_BIT_TESTS: true
+      xcode11:
+        DEVELOPER_DIR: /Applications/Xcode_11.app
+        VM_IMAGE: 'macOS 10.14'
+        XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
+        SKIP_32_BIT_TESTS: true
   steps:
     - script: |
         xcodebuild -version
