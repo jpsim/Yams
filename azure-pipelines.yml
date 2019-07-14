@@ -193,7 +193,7 @@ jobs:
   displayName: linux swift51
   pool:
     vmImage: 'Ubuntu 16.04'
-  container: norionomura/swift:swift-5.1-branch
+  container: norionomura/swift:5120190709a # Change tag to swift-5.1-branch when https://bugs.swift.org/browse/SR-11124 is resolved
   steps:
     - script: swift test --parallel
       displayName: swift test with UTF16
