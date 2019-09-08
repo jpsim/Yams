@@ -114,7 +114,7 @@ jobs:
       condition: succeededOrFailed()
     - script: >
         set -o pipefail &&
-        xcodebuild $XCODE_FLAGS build -sdk watchsimulator -destination "name=Apple Watch Series 3 - 38mm"
+        xcodebuild $XCODE_FLAGS build -sdk watchsimulator
       displayName: build on watchOS
       condition: succeededOrFailed()
     - script: >
