@@ -1,0 +1,3 @@
+module CYaml {
+  header "yaml.h"
+}
