@@ -112,7 +112,7 @@ extension Node {
         return scalar.flatMap(Date.construct)
     }
     
-    /// This node as a `Date`, if convertible.
+    /// This node as a `UUID`, if convertible.
     public var uuid: UUID? {
         return scalar.flatMap(UUID.construct)
     }
