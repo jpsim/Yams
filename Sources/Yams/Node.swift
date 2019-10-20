@@ -112,6 +112,11 @@ extension Node {
         return scalar.flatMap(Date.construct)
     }
 
+    /// This node as a `UUID`, if convertible.
+    public var uuid: UUID? {
+        return scalar.flatMap(UUID.construct)
+    }
+
     // MARK: Typed accessor methods
 
     /// Returns this node mapped as an `Array<Node>`. If the node isn't a `Node.sequence`, the array will be

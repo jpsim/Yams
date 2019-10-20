@@ -15,6 +15,9 @@
   [Norio Nomura](https://github.com/norio-nomura)
   [#197](https://github.com/jpsim/Yams/issues/197)
 
+* Support `UUID` scalars.  
+  [Ondrej Rafaj](https://github.com/rafiki270)
+
 ##### Bug Fixes
 
 * Fix a bug where `YAMLEncoder` would delay `Date`s by 1 second when encoding

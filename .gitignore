@@ -68,3 +68,4 @@ fastlane/screenshots
 
 # Docs
 docs
+.swiftpm
