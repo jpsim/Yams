@@ -897,7 +897,7 @@ private struct _TestKey: CodingKey {
 }
 
 /// Wraps a type T so that it can be encoded at the top level of a payload.
-private struct TopLevelWrapper<T> : Codable, Equatable where T: Codable, T: Equatable {
+private struct TopLevelWrapper<T>: Codable, Equatable where T: Codable, T: Equatable {
     let value: T
 
     init(_ value: T) {
@@ -910,7 +910,7 @@ private struct TopLevelWrapper<T> : Codable, Equatable where T: Codable, T: Equa
 }
 
 /// Wraps a type T (as T?) so that it can be encoded at the top level of a payload.
-private struct OptionalTopLevelWrapper<T> : Codable, Equatable where T: Codable, T: Equatable {
+private struct OptionalTopLevelWrapper<T>: Codable, Equatable where T: Codable, T: Equatable {
     let value: T?
 
     init(_ value: T) {

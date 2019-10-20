@@ -130,7 +130,7 @@ class EmitterTests: XCTestCase {
             ("1", .int, "'1'", #line),
             ("1.0", .float, "'1.0'", #line),
             ("null", .null, "'null'", #line),
-            ("2019-07-06", .timestamp, "'2019-07-06'", #line),
+            ("2019-07-06", .timestamp, "'2019-07-06'", #line)
         ]
         let resolver = Resolver.default
         for (string, tag, expected, line) in samples {
