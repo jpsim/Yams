@@ -218,7 +218,7 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
         // https://github.com/jpsim/Yams/pull/95
         struct Sample: Decodable {
             // Used for its decodable behavior, even though it's not referenced directly.
-            // swiftlint:disable:next unused_private_declaration
+            // swiftlint:disable:next unused_declaration
             let values: [String]
         }
 
