@@ -64,10 +64,10 @@ class NodeTests: XCTestCase {
 
         let scalarInt: Node = "1"
         XCTAssertEqual(scalarInt.int, 1)
-        
+
         let scalarUUID: Node = "B5C6C790-BC0A-4781-9AFF-F9896E0C030C"
         XCTAssertEqual(scalarUUID.uuid, UUID(uuidString: "B5C6C790-BC0A-4781-9AFF-F9896E0C030C"))
-        
+
         let base64String = """
              R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5\
              OTk6enp56enmlpaWNjY6Ojo4SEhP/++f/++f/++f/++f/++f/++f/++f/++f/+\
