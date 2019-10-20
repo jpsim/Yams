@@ -113,7 +113,9 @@ extension Date: ScalarRepresentable {
 }
 
 private extension TimeInterval {
-    /// Separates the time interval into integral and fractional components, then rounds the `fractional` component to `precision` number of digits.
+    /// Separates the time interval into integral and fractional components, then rounds the `fractional`
+    /// component to `precision` number of digits.
+    ///
     /// - returns: Tuple of integral part and converted fractional part
     func separateFractionalSecond(withPrecision precision: Int) -> (integral: TimeInterval, fractional: Int) {
         var integral = 0.0
@@ -237,7 +239,7 @@ extension UUID: ScalarRepresentable {
     }
 }
 
-/// MARK: - ScalarRepresentableCustomizedForCodable
+// MARK: - ScalarRepresentableCustomizedForCodable
 
 /// Types conforming to this protocol can be encoded by `YamlEncoder`.
 public protocol YAMLEncodable: Encodable {

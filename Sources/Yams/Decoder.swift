@@ -99,7 +99,7 @@ private struct _Decoder: Decoder {
     }
 }
 
-private struct _KeyedDecodingContainer<Key: CodingKey> : KeyedDecodingContainerProtocol {
+private struct _KeyedDecodingContainer<Key: CodingKey>: KeyedDecodingContainerProtocol {
 
     private let decoder: _Decoder
     private let mapping: Node.Mapping
