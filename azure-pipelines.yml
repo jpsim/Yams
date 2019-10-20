@@ -22,7 +22,9 @@ jobs:
       swift42:
         containerImage: norionomura/swiftlint:swift-4.2
       swift50:
-        containerImage: swift:5.0
+        containerImage: norionomura/swiftlint:swift-5.0.1
+      swift51:
+        containerImage: swift:5.1.1
   container: $[ variables['containerImage'] ]
   steps:
     - script: swift test --parallel
@@ -65,6 +67,11 @@ jobs:
         XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
       xcode102:
         DEVELOPER_DIR: /Applications/Xcode_10.2.app
+        VM_IMAGE: 'macOS 10.14'
+        XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
+        SKIP_32_BIT_TESTS: true
+      xcode103:
+        DEVELOPER_DIR: /Applications/Xcode_10.3.app
         VM_IMAGE: 'macOS 10.14'
         XCODE_FLAGS_FOR_TEST: -parallel-testing-enabled NO
         SKIP_32_BIT_TESTS: true
@@ -142,7 +149,7 @@ jobs:
   pool:
     vmImage: 'macOS 10.14'
   variables:
-    DEVELOPER_DIR: /Applications/Xcode_10.2.app
+    DEVELOPER_DIR: /Applications/Xcode_11.app
   steps:
     - script: bundle install --path vendor/bundle
       displayName: bundle install
@@ -154,7 +161,7 @@ jobs:
   pool:
     vmImage: 'macOS 10.14'
   variables:
-    DEVELOPER_DIR: /Applications/Xcode_10.2.app
+    DEVELOPER_DIR: /Applications/Xcode_10.3.app # Update to Xcode 11 when SwiftLint 0.36.0 is out
   steps:
     - script: xcodebuild -scheme Yams clean build-for-testing > xcodebuild.log
       displayName: Generate xcodebuild.log
@@ -167,7 +174,7 @@ jobs:
   condition: ne(variables['Build.Reason'], 'Schedule')
   pool:
     vmImage: 'Ubuntu 16.04'
-  container: norionomura/jazzy:0.9.6_swift-4.2.4
+  container: norionomura/jazzy:0.11.2_swift-5.1.1
   steps:
     - script: bundle install --path vendor/bundle
       displayName: bundle install
