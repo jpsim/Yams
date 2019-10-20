@@ -302,12 +302,6 @@ extension Node: ExpressibleByStringLiteral {
 
 extension Node {
     // MARK: Internal convenience accessors
-    var isScalar: Bool {
-        if case .scalar = self {
-            return true
-        }
-        return false
-    }
 
     var isMapping: Bool {
         if case .mapping = self {
