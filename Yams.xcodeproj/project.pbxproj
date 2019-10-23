@@ -512,7 +512,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Yams.xcodeproj/Yams_Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = Yams;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jpsim.Yams;
 				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -533,7 +533,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = Yams.xcodeproj/Yams_Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = Yams;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jpsim.Yams;
 				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
