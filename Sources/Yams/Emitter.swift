@@ -6,9 +6,6 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
-#if SWIFT_PACKAGE
-import CYaml
-#endif
 import Foundation
 
 /// Produce a YAML string from objects.
