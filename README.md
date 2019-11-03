@@ -5,7 +5,11 @@
 A sweet and swifty [YAML](http://yaml.org/) parser built on
 [LibYAML](https://github.com/yaml/libyaml).
 
-[![Azure Pipelines](https://dev.azure.com/jpsim/Yams/_apis/build/status/jpsim.Yams)](https://dev.azure.com/jpsim/Yams/_build/latest?definitionId=1)
+[![SwiftPM](https://github.com/jpsim/Yams/workflows/SwiftPM/badge.svg)](https://github.com/jpsim/Yams/actions?query=workflow%3ASwiftPM)
+[![xcodebuild](https://github.com/jpsim/Yams/workflows/xcodebuild/badge.svg)](https://github.com/jpsim/Yams/actions?query=workflow%3Axcodebuild)
+[![pod lib lint](https://github.com/jpsim/Yams/workflows/pod%20lib%20lint/badge.svg)](https://github.com/jpsim/Yams/actions?query=workflow%3A%22pod+lib+lint%22)
+[![Nightly](https://github.com/jpsim/Yams/workflows/Nightly/badge.svg)](https://github.com/jpsim/Yams/actions?query=workflow%3ANightly)
+[![codecov](https://codecov.io/gh/jpsim/Yams/branch/master/graph/badge.svg)](https://codecov.io/gh/jpsim/Yams)
 
 ## Installation
 
