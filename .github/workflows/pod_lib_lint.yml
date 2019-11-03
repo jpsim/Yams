@@ -1,0 +1,33 @@
+name: pod lib lint
+
+on:
+  push:
+    branches: [master]
+    paths: 
+      - '.github/workflows/pod_lib_lint.yml'
+      - '*.podspec'
+      - 'Gemfile*'
+      - 'Yams.xcodeproj/**'
+      - 'Sources/**'
+      - 'Tests/**'
+      - '!Tests/LinuxMain.swift'
+  pull_request:
+    paths: 
+      - '.github/workflows/pod_lib_lint.yml'
+      - '*.podspec'
+      - 'Gemfile*'
+      - 'Yams.xcodeproj/**'
+      - 'Sources/**'
+      - 'Tests/**'
+      - '!Tests/LinuxMain.swift'
+
+jobs:
+  pod_lib_lint:
+    name: pod lib lint
+    runs-on: macOS-10.14
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_11.app
+    steps:
+      - uses: actions/checkout@v1
+      - run: bundle install --path vendor/bundle
+      - run: bundle exec pod lib lint --verbose
