@@ -114,11 +114,6 @@ extension Node.Sequence: MutableCollection {
     }
 
     /// :nodoc:
-    public func index(after index: Index) -> Index {
-        return nodes.index(after: index)
-    }
-
-    /// :nodoc:
     public subscript(index: Index) -> Node {
         get {
             return nodes[index]
@@ -146,24 +141,7 @@ extension Node.Sequence: MutableCollection {
     }
 }
 
-extension Node.Sequence: RandomAccessCollection {
-    // BidirectionalCollection
-    /// :nodoc:
-    public func index(before index: Index) -> Index {
-        return nodes.index(before: index)
-    }
-
-    // RandomAccessCollection
-    /// :nodoc:
-    public func index(_ index: Index, offsetBy num: Int) -> Index {
-        return nodes.index(index, offsetBy: num)
-    }
-
-    /// :nodoc:
-    public func distance(from start: Index, to end: Int) -> Index {
-        return nodes.distance(from: start, to: end)
-    }
-}
+extension Node.Sequence: RandomAccessCollection {}
 
 extension Node.Sequence: RangeReplaceableCollection {
     /// :nodoc:
