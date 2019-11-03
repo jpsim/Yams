@@ -1,0 +1,28 @@
+name: Nightly
+
+on:
+  push:
+    branches: [master]
+    paths: 
+      - '.github/workflows/nightly.yml'
+      - 'Package*'
+      - 'Sources/**'
+      - 'Tests/**'
+  pull_request:
+    paths: 
+      - '.github/workflows/nightly.yml'
+      - 'Package*'
+      - 'Sources/**'
+      - 'Tests/**'
+  schedule:
+    - cron: '0 4 * * *'
+
+jobs:
+  Nightly:
+    runs-on: ubuntu-latest
+    container:
+      image: norionomura/swift:nightly
+    steps:
+      - uses: actions/checkout@v1
+      - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
+      - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
