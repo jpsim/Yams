@@ -72,9 +72,6 @@ jobs:
         shell: bash
       - name: Codecov
         if: contains(matrix.xcode.flags_for_test, '-enableCodeCoverage YES')
-        run: |
-          if [[ -n "${CODECOV_TOKEN}" ]]; then
-            curl -s https://codecov.io/bash | bash -s
-          fi
+        run: curl -s https://codecov.io/bash | bash -s
         shell: bash
         env: { 'CODECOV_TOKEN': '${{ secrets.CODECOV_TOKEN }}' }
