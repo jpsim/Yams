@@ -4,7 +4,7 @@ included:
 analyzer_rules:
   - unused_import
   - unused_declaration
-line_length: 80
+line_length: 120
 identifier_name:
   excluded:
     - cr
