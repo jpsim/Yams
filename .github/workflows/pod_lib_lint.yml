@@ -24,7 +24,7 @@ jobs:
     name: pod lib lint
     runs-on: macOS-10.14
     env:
-      DEVELOPER_DIR: /Applications/Xcode_11.app
+      DEVELOPER_DIR: /Applications/Xcode_11.2.app
     steps:
       - uses: actions/checkout@v1
       - run: bundle install --path vendor/bundle
