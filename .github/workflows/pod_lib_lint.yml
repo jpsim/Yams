@@ -8,16 +8,12 @@ on:
       - '*.podspec'
       - 'Gemfile*'
       - 'Sources/**'
-      - 'Tests/**'
-      - '!Tests/LinuxMain.swift'
   pull_request:
     paths: 
       - '.github/workflows/pod_lib_lint.yml'
       - '*.podspec'
       - 'Gemfile*'
       - 'Sources/**'
-      - 'Tests/**'
-      - '!Tests/LinuxMain.swift'
 
 jobs:
   pod_lib_lint:
