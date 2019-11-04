@@ -65,3 +65,5 @@ jobs:
           git commit -m "Automated deployment to GitHub Pages: ${GITHUB_SHA}" --allow-empty
 
           git push origin gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
