@@ -6,6 +6,8 @@ on:
     paths: 
       - '.github/workflows/jazzy.yml'
       - '.jazzy.yaml'
+      - '**/*.md'
+      - '**/*.jpg'
       - 'Gemfile*'
       - 'Package*'
       - 'Sources/**'
@@ -13,6 +15,8 @@ on:
     paths: 
       - '.github/workflows/jazzy.yml'
       - '.jazzy.yaml'
+      - '**/*.md'
+      - '**/*.jpg'
       - 'Gemfile*'
       - 'Package*'
       - 'Sources/**'
