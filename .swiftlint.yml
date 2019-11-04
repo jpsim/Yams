@@ -4,7 +4,7 @@ included:
 analyzer_rules:
   - unused_import
   - unused_declaration
-line_length: 120
+line_length: 80
 identifier_name:
   excluded:
     - cr
@@ -12,3 +12,6 @@ identifier_name:
     - no
 nesting:
   type_level: 2
+type_body_length:
+  warning: 100
+  error: 120
