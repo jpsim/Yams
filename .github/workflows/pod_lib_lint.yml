@@ -7,18 +7,20 @@ on:
       - '.github/workflows/pod_lib_lint.yml'
       - '*.podspec'
       - 'Gemfile*'
-      - 'Sources/**'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
   pull_request:
     paths: 
       - '.github/workflows/pod_lib_lint.yml'
       - '*.podspec'
       - 'Gemfile*'
-      - 'Sources/**'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
 
 jobs:
   pod_lib_lint:
     name: pod lib lint
-    runs-on: macOS-10.14
+    runs-on: macos-latest
     env:
       DEVELOPER_DIR: /Applications/Xcode_11.2.app
     steps:

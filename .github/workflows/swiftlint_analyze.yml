@@ -6,20 +6,22 @@ on:
     paths: 
       - '.github/workflows/swiftlint_analyze.yml'
       - 'Yams.xcodeproj/**'
-      - 'Sources/**'
-      - 'Tests/**'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
       - '!Tests/LinuxMain.swift'
   pull_request:
     paths:
       - '.github/workflows/swiftlint_analyze.yml'
       - 'Yams.xcodeproj/**'
-      - 'Sources/**'
-      - 'Tests/**'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
       - '!Tests/LinuxMain.swift'
 
 jobs:
   Analyze:
-    runs-on: macOS-10.14
+    runs-on: macos-latest
     env:
       DEVELOPER_DIR: /Applications/Xcode_11.2.app
     steps:
@@ -30,4 +32,4 @@ jobs:
       - name: Install SwiftLint
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install https://raw.github.com/Homebrew/homebrew-core/master/Formula/swiftlint.rb
       - name: Run SwiftLint Analyze
-        run: swiftlint analyze --strict --compiler-log-path xcodebuild.log
+        run: swiftlint analyze --strict --compiler-log-path xcodebuild.log --reporter github-actions-logging

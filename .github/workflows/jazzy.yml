@@ -10,7 +10,7 @@ on:
       - '**/*.jpg'
       - 'Gemfile*'
       - 'Package*'
-      - 'Sources/**'
+      - 'Sources/**/*.swift'
   pull_request:
     paths: 
       - '.github/workflows/jazzy.yml'
@@ -19,7 +19,7 @@ on:
       - '**/*.jpg'
       - 'Gemfile*'
       - 'Package*'
-      - 'Sources/**'
+      - 'Sources/**/*.swift'
 
 jobs:
   Jazzy:

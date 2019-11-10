@@ -6,15 +6,19 @@ on:
     paths: 
       - '.github/workflows/xcodebuild.yml'
       - 'Yams.xcodeproj/**'
-      - 'Sources/**'
-      - 'Tests/**'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
+      - 'Tests/**/*.ya?ml'
       - '!Tests/LinuxMain.swift'
   pull_request:
     paths:
       - '.github/workflows/xcodebuild.yml'
       - 'Yams.xcodeproj/**'
-      - 'Sources/**'
-      - 'Tests/**'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
+      - 'Tests/**/*.ya?ml'
       - '!Tests/LinuxMain.swift'
 
 jobs:
@@ -22,17 +26,6 @@ jobs:
     strategy:
       matrix:
         xcode:
-          - version: '9.4.1'
-          - version: '10'
-            flags_for_test: -parallel-testing-enabled NO
-          - version: '10.1'
-            flags_for_test: -parallel-testing-enabled NO
-          - version: '10.2'
-            flags_for_test: -parallel-testing-enabled NO
-          - version: '10.2.1'
-            flags_for_test: -parallel-testing-enabled NO
-          - version: '10.3'
-            flags_for_test: -parallel-testing-enabled NO
           - version: '11'
             flags_for_test: -parallel-testing-enabled NO
           - version: '11.1'
@@ -40,7 +33,7 @@ jobs:
           - version: '11.2'
             flags_for_test: -parallel-testing-enabled NO -enableCodeCoverage YES 
         xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
-    runs-on: macOS-10.14
+    runs-on: macos-latest
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
     steps:
@@ -57,10 +50,6 @@ jobs:
       - name: iPhone Simulator
         if: always()
         run: xcodebuild ${{ matrix.xcode_flags }} ${{ matrix.xcode.flags_for_test }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcpretty
-        shell: bash
-      - name: iPhone Simulator (32-bit)
-        if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} ${{ matrix.xcode.flags_for_test }} test -sdk iphonesimulator -destination "name=iPhone 5" | xcpretty
         shell: bash
       - name: Apple TV Simulator
         if: always()
