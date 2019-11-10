@@ -22,17 +22,6 @@ jobs:
     strategy:
       matrix:
         xcode:
-          - version: '9.4.1'
-          - version: '10'
-            flags_for_test: -parallel-testing-enabled NO
-          - version: '10.1'
-            flags_for_test: -parallel-testing-enabled NO
-          - version: '10.2'
-            flags_for_test: -parallel-testing-enabled NO
-          - version: '10.2.1'
-            flags_for_test: -parallel-testing-enabled NO
-          - version: '10.3'
-            flags_for_test: -parallel-testing-enabled NO
           - version: '11'
             flags_for_test: -parallel-testing-enabled NO
           - version: '11.1'
@@ -40,7 +29,7 @@ jobs:
           - version: '11.2'
             flags_for_test: -parallel-testing-enabled NO -enableCodeCoverage YES 
         xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
-    runs-on: macOS-10.14
+    runs-on: macos-latest
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
     steps:
