@@ -7,13 +7,15 @@ on:
       - '.github/workflows/pod_lib_lint.yml'
       - '*.podspec'
       - 'Gemfile*'
-      - 'Sources/**'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
   pull_request:
     paths: 
       - '.github/workflows/pod_lib_lint.yml'
       - '*.podspec'
       - 'Gemfile*'
-      - 'Sources/**'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
 
 jobs:
   pod_lib_lint:

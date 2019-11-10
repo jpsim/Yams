@@ -6,15 +6,19 @@ on:
     paths: 
       - '.github/workflows/xcodebuild.yml'
       - 'Yams.xcodeproj/**'
-      - 'Sources/**'
-      - 'Tests/**'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
+      - 'Tests/**/*.ya?ml'
       - '!Tests/LinuxMain.swift'
   pull_request:
     paths:
       - '.github/workflows/xcodebuild.yml'
       - 'Yams.xcodeproj/**'
-      - 'Sources/**'
-      - 'Tests/**'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
+      - 'Tests/**/*.ya?ml'
       - '!Tests/LinuxMain.swift'
 
 jobs:
