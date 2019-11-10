@@ -30,4 +30,4 @@ jobs:
       - name: Install SwiftLint
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install https://raw.github.com/Homebrew/homebrew-core/master/Formula/swiftlint.rb
       - name: Run SwiftLint Analyze
-        run: swiftlint analyze --strict --compiler-log-path xcodebuild.log
+        run: swiftlint analyze --strict --compiler-log-path xcodebuild.log --reporter github-actions-logging
