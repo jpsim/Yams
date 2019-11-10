@@ -47,10 +47,6 @@ jobs:
         if: always()
         run: xcodebuild ${{ matrix.xcode_flags }} ${{ matrix.xcode.flags_for_test }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcpretty
         shell: bash
-      - name: iPhone Simulator (32-bit)
-        if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} ${{ matrix.xcode.flags_for_test }} test -sdk iphonesimulator -destination "name=iPhone 5" | xcpretty
-        shell: bash
       - name: Apple TV Simulator
         if: always()
         run: xcodebuild ${{ matrix.xcode_flags }} ${{ matrix.xcode.flags_for_test }} test -sdk appletvsimulator -destination "name=Apple TV 4K" | xcpretty
