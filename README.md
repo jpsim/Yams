@@ -14,7 +14,21 @@ A sweet and swifty [YAML](http://yaml.org/) parser built on
 ## Installation
 
 Building Yams requires Xcode 10.x or a Swift 4.1+/5.x toolchain with the
-Swift Package Manager.
+Swift Package Manager or CMake and Ninja.
+
+### CMake
+
+CMake 3.15.1 or newer is required.
+
+```
+cmake -H /path/to/build -G Ninja -S /path/to/yams -DCMAKE_BUILD_TYPE=Release -DFoundation_DIR=/path/to/foundation/build/cmake/modules
+cmake --build /path/to/build
+```
+
+To build for macOS, iOS, tvOS, watchOS, additional flags specifying the SDK need
+to be passed to the compiler.  You can do that by adding the
+`-DCMAKE_Swift_FLAGS="-sdk $(xcrun --sdk macosx --show-sdk-path)"` to the CMake
+invocation when configuring.
 
 ### Swift Package Manager
 
