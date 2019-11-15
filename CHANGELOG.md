@@ -18,6 +18,12 @@
 * Support `UUID` scalars.  
   [Ondrej Rafaj](https://github.com/rafiki270)
 
+* Get Yams building for Windows.
+  [Saleem Abdulrasool](https://github.com/compnerd)
+
+* Add support for CMake based builds.
+  [Saleem Abdulrasool](https://github.com/compnerd)
+
 ##### Bug Fixes
 
 * Fix a bug where `YAMLEncoder` would delay `Date`s by 1 second when encoding

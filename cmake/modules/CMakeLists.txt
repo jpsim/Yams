@@ -1,0 +1,9 @@
+
+set(YAMS_EXPORTS_FILE ${CMAKE_CURRENT_BINARY_DIR}/YamsExports.cmake)
+
+configure_file(YamsConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/YamsConfig.cmake)
+
+get_property(YAMS_EXPORTS GLOBAL PROPERTY YAMS_EXPORTS)
+export(TARGETS ${YAMS_EXPORTS}
+  FILE ${YAMS_EXPORTS_FILE})
