@@ -202,10 +202,10 @@ extension Optional: NodeRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() throws -> Node {
         switch self {
+        case .none, .some(nil):
+            return Node("null", Tag(.null))
         case let .some(wrapped):
             return try represent(wrapped)
-        case .none:
-            return Node("null", Tag(.null))
         }
     }
 }
