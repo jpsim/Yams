@@ -48,6 +48,28 @@ class EmitterTests: XCTestCase {
         XCTAssertEqual(try Yams.serialize(node: node), "[a, b, c]\n")
     }
 
+    func testIndentation() throws {
+        // Arrays are not indented
+        let node: Node = ["key1": ["key2": ["a", "b"]]]
+        func expected(_ indentationCount: Int) -> String {
+            let indentation = Array(repeating: " ", count: indentationCount).joined()
+            return """
+            key1:
+            \(indentation)key2:
+            \(indentation)- a
+            \(indentation)- b
+
+            """
+        }
+        XCTAssertEqual(try Yams.serialize(node: node), expected(2))
+        XCTAssertEqual(try Yams.serialize(node: node, indent: -2), expected(2))
+        XCTAssertEqual(try Yams.serialize(node: node, indent: -1), expected(2))
+        XCTAssertEqual(try Yams.serialize(node: node, indent: 0), expected(2))
+        XCTAssertEqual(try Yams.serialize(node: node, indent: 4), expected(4))
+        XCTAssertEqual(try Yams.serialize(node: node, indent: 9), expected(9))
+        XCTAssertEqual(try Yams.serialize(node: node, indent: 10), expected(2))
+    }
+
     func testMapping() throws {
         var node: Node = ["key1": "value1", "key2": "value2"]
 
