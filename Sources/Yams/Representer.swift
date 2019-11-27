@@ -73,6 +73,13 @@ extension ScalarRepresentable {
     }
 }
 
+extension NSNull: ScalarRepresentable {
+    /// This value's `Node.scalar` representation.
+    public func represented() -> Node.Scalar {
+        return .init("null", Tag(.null))
+    }
+}
+
 extension Bool: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
