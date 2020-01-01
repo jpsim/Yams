@@ -10,7 +10,7 @@ import Foundation
 import XCTest
 import Yams
 
-let fixturesDirectory = URL(fileURLWithPath: #file).deletingLastPathComponent().path + "/Fixtures/"
+private let fixturesDirectory = URL(fileURLWithPath: #file).deletingLastPathComponent().path + "/Fixtures/"
 
 class PerformanceTests: XCTestCase {
     let filename = fixturesDirectory + "SourceKitten#289/debug.yaml"
@@ -189,11 +189,11 @@ extension PerformanceTests {
 }
 
 // Models for parsing Build File of llbuild
-struct Manifest: Decodable {
+private struct Manifest: Decodable {
     let commands: [String: Command]
 }
 
-struct Command: Decodable {
+private struct Command: Decodable {
     let moduleName: String?
     let importPaths: [String]?
     let otherArguments: [String]?

@@ -53,7 +53,7 @@ public final class Tag {
     let constructor: Constructor
     var name: Name
 
-    func resolved<T>(with value: T) -> Tag where T: TagResolvable {
+    fileprivate func resolved<T>(with value: T) -> Tag where T: TagResolvable {
         if name == .implicit {
             name = resolver.resolveTag(of: value)
         } else if name == .nonSpecific {
