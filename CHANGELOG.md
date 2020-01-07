@@ -31,6 +31,10 @@
   [Norio Nomura](https://github.com/norio-nomura)
   [#192](https://github.com/jpsim/Yams/issues/192)
 
+* Fix `YAMLDecoder` to support merging anchors.
+  [Brentley Jones](https://github.com/brentleyjones)
+  [#238](https://github.com/jpsim/Yams/issues/238)
+
 ## 2.0.0
 
 ##### Breaking

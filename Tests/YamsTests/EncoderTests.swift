@@ -284,6 +284,28 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
 
         expectEqual(type(of: decoded), Employee.self, "Expected decoded value to be of type Employee; got \(type(of: decoded)) instead.")
     }
+    
+    func testDecodingAnchors() throws {
+        struct AnchorSample: Decodable {
+            struct Host: Decodable {
+                let here: Bool
+            }
+            
+            let host: Host
+        }
+        
+        let yaml = """
+            z: &anchor
+              here: true
+            host:
+              <<: *anchor
+            """
+        
+        let decoder = YAMLDecoder()
+        let decoded = try decoder.decode(AnchorSample.self, from: yaml)
+        
+        XCTAssertTrue(decoded.host.here)
+    }
 
     func test_null_yml() throws {
         let s = """

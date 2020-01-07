@@ -412,7 +412,7 @@ extension Dictionary {
 
 private extension Dictionary {
     static func _construct_mapping(from mapping: Node.Mapping) -> [AnyHashable: Any] {
-        let mapping = flatten_mapping(mapping)
+        let mapping = mapping.flatten()
         // TODO: YAML supports keys other than str.
 #if swift(>=5.0)
         return [AnyHashable: Any](
@@ -426,37 +426,6 @@ private extension Dictionary {
         }
         return dictionary
 #endif
-    }
-
-    private static func flatten_mapping(_ mapping: Node.Mapping) -> Node.Mapping {
-        var pairs = Array(mapping)
-        var merge = [(key: Node, value: Node)]()
-        var index = pairs.startIndex
-        while index < pairs.count {
-            let pair = pairs[index]
-            if pair.key.tag.name == .merge {
-                pairs.remove(at: index)
-                switch pair.value {
-                case .mapping(let mapping):
-                    merge.append(contentsOf: flatten_mapping(mapping))
-                case let .sequence(sequence):
-                    let submerge = sequence
-                        .compactMap { $0.mapping.map(flatten_mapping) }
-                        .reversed()
-                    submerge.forEach {
-                        merge.append(contentsOf: $0)
-                    }
-                default:
-                    break // TODO: Should raise error on other than mapping or sequence
-                }
-            } else if pair.key.tag.name == .value {
-                pair.key.tag.name = .str
-                index += 1
-            } else {
-                index += 1
-            }
-        }
-        return Node.Mapping(merge + pairs, mapping.tag, mapping.style)
     }
 }
 
