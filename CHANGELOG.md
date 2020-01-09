@@ -24,16 +24,16 @@
 * Add support for CMake based builds.
   [Saleem Abdulrasool](https://github.com/compnerd)
 
+* Merge anchors in `YAMLDecoder` by default.  
+  [Brentley Jones](https://github.com/brentleyjones)
+  [#238](https://github.com/jpsim/Yams/issues/238)
+
 ##### Bug Fixes
 
 * Fix a bug where `YAMLEncoder` would delay `Date`s by 1 second when encoding
   values with a `nanosecond` component greater than 999499997.  
   [Norio Nomura](https://github.com/norio-nomura)
   [#192](https://github.com/jpsim/Yams/issues/192)
-
-* Fix `YAMLDecoder` to support merging anchors.
-  [Brentley Jones](https://github.com/brentleyjones)
-  [#238](https://github.com/jpsim/Yams/issues/238)
 
 ## 2.0.0
 
