@@ -24,6 +24,10 @@
 * Add support for CMake based builds.
   [Saleem Abdulrasool](https://github.com/compnerd)
 
+* Merge anchors in `YAMLDecoder` by default.  
+  [Brentley Jones](https://github.com/brentleyjones)
+  [#238](https://github.com/jpsim/Yams/issues/238)
+
 ##### Bug Fixes
 
 * Fix a bug where `YAMLEncoder` would delay `Date`s by 1 second when encoding
