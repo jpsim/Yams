@@ -9,7 +9,7 @@
 import Foundation
 import XCTest
 
-let gregorianCalendar = Calendar(identifier: .gregorian)
+private let gregorianCalendar = Calendar(identifier: .gregorian)
 
 func timestamp(_ timeZoneHour: Int = 0,
                _ year: Int? = nil,

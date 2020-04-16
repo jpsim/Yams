@@ -392,7 +392,7 @@ public func expectUnreachable(
     XCTFail("this code should not be executed: \(message())", file: file, line: line)
 }
 
-func expectEqualPaths(
+private func expectEqualPaths(
     _ lhs: [CodingKey],
     _ rhs: [CodingKey],
     _ prefix: String,
@@ -669,7 +669,7 @@ private enum EnhancedBool: Codable {
 }
 
 /// A type which encodes as an array directly through a single value container.
-struct Numbers: Codable, Equatable {
+private struct Numbers: Codable, Equatable {
     let values = [4, 8, 15, 16, 23, 42]
 
     init() {}
@@ -724,7 +724,7 @@ private final class Mapping: Codable, Equatable {
     }
 }
 
-struct NestedContainersTestType: Codable, Equatable {
+private struct NestedContainersTestType: Codable, Equatable {
     let testSuperCoder: Bool
 
     static func == (lhs: NestedContainersTestType, rhs: NestedContainersTestType) -> Bool {
@@ -735,14 +735,14 @@ struct NestedContainersTestType: Codable, Equatable {
         self.testSuperCoder = testSuperCoder
     }
 
-    enum TopLevelCodingKeys: Int, CodingKey {
+    private enum TopLevelCodingKeys: Int, CodingKey {
         case testSuperCoder
         case a
         case b
         case c
     }
 
-    enum IntermediateCodingKeys: Int, CodingKey {
+    private enum IntermediateCodingKeys: Int, CodingKey {
         case one
         case two
     }
@@ -960,7 +960,7 @@ private struct OptionalTopLevelWrapper<T>: Codable, Equatable where T: Codable, 
 }
 
 /// Coder supported types in KeyedContainer
-struct KeyedSynthesized: Codable, Equatable {
+private struct KeyedSynthesized: Codable, Equatable {
     static func == (lhs: KeyedSynthesized, rhs: KeyedSynthesized) -> Bool {
         return lhs.bool == rhs.bool &&
             lhs.int == rhs.int && lhs.int8 == rhs.int8 &&  lhs.int16 == rhs.int16 &&
@@ -991,7 +991,7 @@ struct KeyedSynthesized: Codable, Equatable {
 }
 
 /// Coder supported types in UnkeyedContainer
-struct Unkeyed: Codable, Equatable {
+private struct Unkeyed: Codable, Equatable {
     static func == (lhs: Unkeyed, rhs: Unkeyed) -> Bool {
         return lhs.bool == rhs.bool &&
             lhs.int == rhs.int && lhs.int8 == rhs.int8 &&  lhs.int16 == rhs.int16 &&
