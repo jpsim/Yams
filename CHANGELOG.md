@@ -18,10 +18,10 @@
 * Support `UUID` scalars.  
   [Ondrej Rafaj](https://github.com/rafiki270)
 
-* Get Yams building for Windows.
+* Get Yams building for Windows.  
   [Saleem Abdulrasool](https://github.com/compnerd)
 
-* Add support for CMake based builds.
+* Add support for CMake based builds.  
   [Saleem Abdulrasool](https://github.com/compnerd)
 
 * Merge anchors in `YAMLDecoder` by default.  
@@ -34,6 +34,9 @@
   values with a `nanosecond` component greater than 999499997.  
   [Norio Nomura](https://github.com/norio-nomura)
   [#192](https://github.com/jpsim/Yams/issues/192)
+
+* Fix dangling pointer warning with Swift 5.2.  
+  [JP Simard](https://github.com/jpsim)
 
 ## 2.0.0
 
