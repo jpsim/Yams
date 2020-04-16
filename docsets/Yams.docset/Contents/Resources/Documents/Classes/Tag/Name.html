@@ -157,7 +157,16 @@
                 <a class="nav-group-task-link" href="../../Extensions/Int.html">Int</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions.html#/s:s5Int16V">Int16</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions.html#/s:s5Int32V">Int32</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../../Extensions/Int64.html">Int64</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions.html#/s:s4Int8V">Int8</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../../Extensions/NSNull.html">NSNull</a>
@@ -175,7 +184,16 @@
                 <a class="nav-group-task-link" href="../../Extensions/UInt.html">UInt</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions.html#/s:s6UInt16V">UInt16</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions.html#/s:s6UInt32V">UInt32</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../../Extensions/UInt64.html">UInt64</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions.html#/s:s5UInt8V">UInt8</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../../Extensions/URL.html">URL</a>
@@ -250,11 +268,13 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>Name</h1>
               <div class="declaration">
                 <div class="language">
                   <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Name</span> <span class="p">:</span> <span class="kt">RawRepresentable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../../Classes/Tag.html">Tag</a></span><span class="o">.</span><span class="kt">Name</span><span class="p">:</span> <span class="kt">ExpressibleByStringLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../../Classes/Tag.html">Tag</a></span><span class="o">.</span><span class="kt">Name</span><span class="p">:</span> <span class="kt">Hashable</span></code></pre>
 
                 </div>
               </div>
@@ -302,7 +322,7 @@
                     <code>
                     <a name="/s:4Yams3TagC4NameV8rawValueAESS_tcfc"></a>
                     <a name="//apple_ref/swift/Method/init(rawValue:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams3TagC4NameV8rawValueAESS_tcfc">init(rawValue:)</a>
+                    <a class="token" href="#/s:4Yams3TagC4NameV8rawValueAESS_tcfc">init(rawValue:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -327,10 +347,6 @@
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -404,7 +420,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:str</q> <a href="http://yaml.org/type/str.html">http://yaml.org/type/str.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:str&rdquo; <a href="http://yaml.org/type/str.html">http://yaml.org/type/str.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -434,7 +450,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:seq</q> <a href="http://yaml.org/type/seq.html">http://yaml.org/type/seq.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:seq&rdquo; <a href="http://yaml.org/type/seq.html">http://yaml.org/type/seq.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -464,7 +480,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:map</q> <a href="http://yaml.org/type/map.html">http://yaml.org/type/map.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:map&rdquo; <a href="http://yaml.org/type/map.html">http://yaml.org/type/map.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -494,7 +510,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:bool</q> <a href="http://yaml.org/type/bool.html">http://yaml.org/type/bool.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:bool&rdquo; <a href="http://yaml.org/type/bool.html">http://yaml.org/type/bool.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -524,7 +540,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:float</q> <a href="http://yaml.org/type/float.html">http://yaml.org/type/float.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:float&rdquo; <a href="http://yaml.org/type/float.html">http://yaml.org/type/float.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -554,7 +570,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:null</q> <a href="http://yaml.org/type/null.html">http://yaml.org/type/null.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:null&rdquo; <a href="http://yaml.org/type/null.html">http://yaml.org/type/null.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -584,7 +600,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:int</q> <a href="http://yaml.org/type/int.html">http://yaml.org/type/int.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:int&rdquo; <a href="http://yaml.org/type/int.html">http://yaml.org/type/int.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -614,7 +630,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:binary</q> <a href="http://yaml.org/type/binary.html">http://yaml.org/type/binary.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:binary&rdquo; <a href="http://yaml.org/type/binary.html">http://yaml.org/type/binary.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -644,7 +660,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:merge</q> <a href="http://yaml.org/type/merge.html">http://yaml.org/type/merge.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:merge&rdquo; <a href="http://yaml.org/type/merge.html">http://yaml.org/type/merge.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -674,7 +690,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:omap</q> <a href="http://yaml.org/type/omap.html">http://yaml.org/type/omap.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:omap&rdquo; <a href="http://yaml.org/type/omap.html">http://yaml.org/type/omap.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -704,7 +720,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:pairs</q> <a href="http://yaml.org/type/pairs.html">http://yaml.org/type/pairs.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:pairs&rdquo; <a href="http://yaml.org/type/pairs.html">http://yaml.org/type/pairs.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -734,7 +750,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:set</q>. <a href="http://yaml.org/type/set.html">http://yaml.org/type/set.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:set&rdquo;. <a href="http://yaml.org/type/set.html">http://yaml.org/type/set.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -764,7 +780,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:timestamp</q> <a href="http://yaml.org/type/timestamp.html">http://yaml.org/type/timestamp.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:timestamp&rdquo; <a href="http://yaml.org/type/timestamp.html">http://yaml.org/type/timestamp.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -794,7 +810,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:value</q> <a href="http://yaml.org/type/value.html">http://yaml.org/type/value.html</a></p>
+                        <p>&ldquo;tag:yaml.org,2002:value&rdquo; <a href="http://yaml.org/type/value.html">http://yaml.org/type/value.html</a></p>
 
                       </div>
                       <div class="declaration">
@@ -824,7 +840,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p><q>tag:yaml.org,2002:yaml</q> <a href="http://yaml.org/type/yaml.html">http://yaml.org/type/yaml.html</a> We don&rsquo;t support this.</p>
+                        <p>&ldquo;tag:yaml.org,2002:yaml&rdquo; <a href="http://yaml.org/type/yaml.html">http://yaml.org/type/yaml.html</a> We don&rsquo;t support this.</p>
 
                       </div>
                       <div class="declaration">
@@ -850,7 +866,7 @@
     </div>
     <section class="footer">
       <p>© 2018 <a class="link" href="https://jpsim.com" target="_blank" rel="external">JP Simard</a> under MIT.</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

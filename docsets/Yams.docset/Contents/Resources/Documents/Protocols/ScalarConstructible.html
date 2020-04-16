@@ -157,7 +157,16 @@
                 <a class="nav-group-task-link" href="../Extensions/Int.html">Int</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s5Int16V">Int16</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s5Int32V">Int32</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Extensions/Int64.html">Int64</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s4Int8V">Int8</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Extensions/NSNull.html">NSNull</a>
@@ -175,7 +184,16 @@
                 <a class="nav-group-task-link" href="../Extensions/UInt.html">UInt</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s6UInt16V">UInt16</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s6UInt32V">UInt32</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Extensions/UInt64.html">UInt64</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s5UInt8V">UInt8</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Extensions/URL.html">URL</a>
@@ -250,7 +268,7 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>ScalarConstructible</h1>
               <div class="declaration">
                 <div class="language">
@@ -272,11 +290,8 @@
                     <code>
                     <a name="/s:4Yams19ScalarConstructibleP9construct4fromxSgAA4NodeO0B0V_tFZ"></a>
                     <a name="//apple_ref/swift/Method/construct(from:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams19ScalarConstructibleP9construct4fromxSgAA4NodeO0B0V_tFZ">construct(from:)</a>
+                    <a class="token" href="#/s:4Yams19ScalarConstructibleP9construct4fromxSgAA4NodeO0B0V_tFZ">construct(from:<wbr>)</a>
                     </code>
-                      <span class="declaration-note">
-                        Default implementation
-                      </span>
                   </div>
                   <div class="height-container">
                     <div class="pointer-container"></div>
@@ -290,12 +305,6 @@
     cause callsite ambiguities when using <code>init</code> as closure.</p>
 
 </div>
-
-                      </div>
-                      <h4>Default Implementation</h4>
-                      <div class="default_impl abstract">
-                        <p>Construct an instance of <code>FloatingPoint &amp; SexagesimalConvertible</code>, if possible, from the specified
-scalar.</p>
 
                       </div>
                       <div class="declaration">
@@ -337,6 +346,82 @@ scalar.</p>
                 </li>
               </ul>
             </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Available%20where%20%60Self%60:%20%60FloatingPoint%60%20&amp;%20%60SexagesimalConvertible%60"></a>
+                <a name="//apple_ref/swift/Section/Available where `Self`: `FloatingPoint` &amp; `SexagesimalConvertible`" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Available%20where%20%60Self%60:%20%60FloatingPoint%60%20&amp;%20%60SexagesimalConvertible%60"></a>
+                  <h3 class="section-name"><p>Available where <code>Self</code>: <code>FloatingPoint</code> &amp; <code><a href="../Protocols/SexagesimalConvertible.html">SexagesimalConvertible</a></code></p>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams19ScalarConstructiblePAASFRzAA22SexagesimalConvertibleRzrlE9construct4fromxSgAA4NodeO0B0V_tFZ"></a>
+                    <a name="//apple_ref/swift/Method/construct(from:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams19ScalarConstructiblePAASFRzAA22SexagesimalConvertibleRzrlE9construct4fromxSgAA4NodeO0B0V_tFZ">construct(from:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Default implementation
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <h4>Default Implementation</h4>
+                      <div class="default_impl abstract">
+                        <p>Construct an instance of <code>FloatingPoint &amp; SexagesimalConvertible</code>, if possible, from the specified
+scalar.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">construct</span><span class="p">(</span><span class="n">from</span> <span class="nv">scalar</span><span class="p">:</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Scalar</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>scalar</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code><a href="../Enums/Node/Scalar.html">Node.Scalar</a></code> from which to extract a value of type
+                <code>FloatingPoint &amp; SexagesimalConvertible</code>, if possible.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An instance of <code>FloatingPoint &amp; SexagesimalConvertible</code>, if one was successfully extracted
+       from the scalar.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Constructor.swift#L250-L265">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -344,7 +429,7 @@ scalar.</p>
     </div>
     <section class="footer">
       <p>© 2018 <a class="link" href="https://jpsim.com" target="_blank" rel="external">JP Simard</a> under MIT.</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>

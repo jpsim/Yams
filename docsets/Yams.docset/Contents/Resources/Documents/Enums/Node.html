@@ -157,7 +157,16 @@
                 <a class="nav-group-task-link" href="../Extensions/Int.html">Int</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s5Int16V">Int16</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s5Int32V">Int32</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Extensions/Int64.html">Int64</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s4Int8V">Int8</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Extensions/NSNull.html">NSNull</a>
@@ -175,7 +184,16 @@
                 <a class="nav-group-task-link" href="../Extensions/UInt.html">UInt</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s6UInt16V">UInt16</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s6UInt32V">UInt32</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Extensions/UInt64.html">UInt64</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions.html#/s:s5UInt8V">UInt8</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Extensions/URL.html">URL</a>
@@ -250,11 +268,19 @@
       <article class="main-content">
 
         <section class="section">
-          <div class="section-content">
+          <div class="section-content top-matter">
             <h1>Node</h1>
               <div class="declaration">
                 <div class="language">
                   <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Node</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Node</span><span class="p">:</span> <span class="kt">Hashable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Node</span><span class="p">:</span> <span class="kt">Comparable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Node</span><span class="p">:</span> <span class="kt">ExpressibleByArrayLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Node</span><span class="p">:</span> <span class="kt">ExpressibleByDictionaryLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Node</span><span class="p">:</span> <span class="kt">ExpressibleByFloatLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Node</span><span class="p">:</span> <span class="kt">ExpressibleByIntegerLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Node</span><span class="p">:</span> <span class="kt">ExpressibleByStringLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Node</span><span class="p">:</span> <span class="kt"><a href="../Protocols/NodeRepresentable.html">NodeRepresentable</a></span></code></pre>
 
                 </div>
               </div>
@@ -272,7 +298,7 @@
                     <code>
                     <a name="/s:4Yams4NodeO6scalaryA2C6ScalarVcACmF"></a>
                     <a name="//apple_ref/swift/Element/scalar(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeO6scalaryA2C6ScalarVcACmF">scalar(_:)</a>
+                    <a class="token" href="#/s:4Yams4NodeO6scalaryA2C6ScalarVcACmF">scalar(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -302,7 +328,7 @@
                     <code>
                     <a name="/s:4Yams4NodeO7mappingyA2C7MappingVcACmF"></a>
                     <a name="//apple_ref/swift/Element/mapping(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeO7mappingyA2C7MappingVcACmF">mapping(_:)</a>
+                    <a class="token" href="#/s:4Yams4NodeO7mappingyA2C7MappingVcACmF">mapping(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -332,7 +358,7 @@
                     <code>
                     <a name="/s:4Yams4NodeO8sequenceyA2C8SequenceVcACmF"></a>
                     <a name="//apple_ref/swift/Element/sequence(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeO8sequenceyA2C8SequenceVcACmF">sequence(_:)</a>
+                    <a class="token" href="#/s:4Yams4NodeO8sequenceyA2C8SequenceVcACmF">sequence(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -357,10 +383,6 @@
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -383,6 +405,11 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Mapping</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Mapping</span><span class="p">:</span> <span class="kt">Comparable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Mapping</span><span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Mapping</span><span class="p">:</span> <span class="kt">Hashable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Mapping</span><span class="p">:</span> <span class="kt">ExpressibleByDictionaryLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Mapping</span><span class="p">:</span> <span class="kt">MutableCollection</span></code></pre>
 
                         </div>
                       </div>
@@ -428,9 +455,11 @@
               <div class="task-name-container">
                 <a name="/Node+Scalar"></a>
                 <a name="//apple_ref/swift/Section/Node+Scalar" class="dashAnchor"></a>
-                <a href="#/Node+Scalar">
-                  <h3 class="section-name">Node+Scalar</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Node+Scalar"></a>
+                  <h3 class="section-name"><p>Node+Scalar</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -455,6 +484,9 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Scalar</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Scalar</span><span class="p">:</span> <span class="kt">Comparable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Scalar</span><span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Scalar</span><span class="p">:</span> <span class="kt">Hashable</span></code></pre>
 
                         </div>
                       </div>
@@ -500,9 +532,11 @@
               <div class="task-name-container">
                 <a name="/Node+Sequence"></a>
                 <a name="//apple_ref/swift/Section/Node+Sequence" class="dashAnchor"></a>
-                <a href="#/Node+Sequence">
-                  <h3 class="section-name">Node+Sequence</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Node+Sequence"></a>
+                  <h3 class="section-name"><p>Node+Sequence</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -527,6 +561,13 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Sequence</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Sequence</span><span class="p">:</span> <span class="kt">Comparable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Sequence</span><span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Sequence</span><span class="p">:</span> <span class="kt">Hashable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Sequence</span><span class="p">:</span> <span class="kt">ExpressibleByArrayLiteral</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Sequence</span><span class="p">:</span> <span class="kt">MutableCollection</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Sequence</span><span class="p">:</span> <span class="kt">RandomAccessCollection</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="o">.</span><span class="kt">Sequence</span><span class="p">:</span> <span class="kt">RangeReplaceableCollection</span></code></pre>
 
                         </div>
                       </div>
@@ -566,16 +607,12 @@
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
                     <a name="/s:4Yams4NodeOyACSS_AA3TagCAC6ScalarV5StyleOtcfc"></a>
                     <a name="//apple_ref/swift/Method/init(_:_:_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeOyACSS_AA3TagCAC6ScalarV5StyleOtcfc">init(_:_:_:)</a>
+                    <a class="token" href="#/s:4Yams4NodeOyACSS_AA3TagCAC6ScalarV5StyleOtcfc">init(_:<wbr>_:<wbr>_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -648,7 +685,7 @@
                     <code>
                     <a name="/s:4Yams4NodeOyACSayAC_ACtG_AA3TagCAC7MappingV5StyleOtcfc"></a>
                     <a name="//apple_ref/swift/Method/init(_:_:_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeOyACSayAC_ACtG_AA3TagCAC7MappingV5StyleOtcfc">init(_:_:_:)</a>
+                    <a class="token" href="#/s:4Yams4NodeOyACSayAC_ACtG_AA3TagCAC7MappingV5StyleOtcfc">init(_:<wbr>_:<wbr>_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -721,7 +758,7 @@
                     <code>
                     <a name="/s:4Yams4NodeOyACSayACG_AA3TagCAC8SequenceV5StyleOtcfc"></a>
                     <a name="//apple_ref/swift/Method/init(_:_:_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeOyACSayACG_AA3TagCAC8SequenceV5StyleOtcfc">init(_:_:_:)</a>
+                    <a class="token" href="#/s:4Yams4NodeOyACSayACG_AA3TagCAC8SequenceV5StyleOtcfc">init(_:<wbr>_:<wbr>_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -795,9 +832,11 @@
               <div class="task-name-container">
                 <a name="/Public%20Node%20Members"></a>
                 <a name="//apple_ref/swift/Section/Public Node Members" class="dashAnchor"></a>
-                <a href="#/Public%20Node%20Members">
-                  <h3 class="section-name">Public Node Members</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Node%20Members"></a>
+                  <h3 class="section-name"><p>Public Node Members</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -871,9 +910,11 @@
               <div class="task-name-container">
                 <a name="/Typed%20accessor%20properties"></a>
                 <a name="//apple_ref/swift/Section/Typed accessor properties" class="dashAnchor"></a>
-                <a href="#/Typed%20accessor%20properties">
-                  <h3 class="section-name">Typed accessor properties</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Typed%20accessor%20properties"></a>
+                  <h3 class="section-name"><p>Typed accessor properties</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1152,9 +1193,11 @@
               <div class="task-name-container">
                 <a name="/Typed%20accessor%20methods"></a>
                 <a name="//apple_ref/swift/Section/Typed accessor methods" class="dashAnchor"></a>
-                <a href="#/Typed%20accessor%20methods">
-                  <h3 class="section-name">Typed accessor methods</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Typed%20accessor%20methods"></a>
+                  <h3 class="section-name"><p>Typed accessor methods</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1193,7 +1236,7 @@ empty.</p>
                     <code>
                     <a name="/s:4Yams4NodeO5array2ofSayxGxm_tAA19ScalarConstructibleRzlF"></a>
                     <a name="//apple_ref/swift/Method/array(of:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeO5array2ofSayxGxm_tAA19ScalarConstructibleRzlF">array(of:)</a>
+                    <a class="token" href="#/s:4Yams4NodeO5array2ofSayxGxm_tAA19ScalarConstructibleRzlF">array(of:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1246,7 +1289,7 @@ empty.</p>
                     <code>
                     <a name="/s:4Yams4NodeOyACSgACcip"></a>
                     <a name="//apple_ref/swift/Method/subscript(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeOyACSgACcip">subscript(_:)</a>
+                    <a class="token" href="#/s:4Yams4NodeOyACSgACcip">subscript(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1277,7 +1320,7 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
                     <code>
                     <a name="/s:4Yams4NodeOyACSgAA0B13Representable_pcip"></a>
                     <a name="//apple_ref/swift/Method/subscript(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeOyACSgAA0B13Representable_pcip">subscript(_:)</a>
+                    <a class="token" href="#/s:4Yams4NodeOyACSgAA0B13Representable_pcip">subscript(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1309,7 +1352,7 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
                     <code>
                     <a name="/s:4Yams4NodeOyACSgSScip"></a>
                     <a name="//apple_ref/swift/Method/subscript(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeOyACSgSScip">subscript(_:)</a>
+                    <a class="token" href="#/s:4Yams4NodeOyACSgSScip">subscript(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1341,9 +1384,11 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
               <div class="task-name-container">
                 <a name="/Hashable"></a>
                 <a name="//apple_ref/swift/Section/Hashable" class="dashAnchor"></a>
-                <a href="#/Hashable">
-                  <h3 class="section-name">Hashable</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Hashable"></a>
+                  <h3 class="section-name"><p>Hashable</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1370,7 +1415,7 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
                     <code>
                     <a name="/"></a>
                     <a name="//apple_ref/swift/Method/==(_:_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/">==(_:_:)</a>
+                    <a class="token" href="#/">==(_:<wbr>_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1390,9 +1435,11 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
               <div class="task-name-container">
                 <a name="/Comparable"></a>
                 <a name="//apple_ref/swift/Section/Comparable" class="dashAnchor"></a>
-                <a href="#/Comparable">
-                  <h3 class="section-name">Comparable</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Comparable"></a>
+                  <h3 class="section-name"><p>Comparable</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1400,7 +1447,7 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
                     <code>
                     <a name="/s:4Yams4NodeO1loiySbAC_ACtFZ"></a>
                     <a name="//apple_ref/swift/Method/&lt;(_:_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeO1loiySbAC_ACtFZ">&lt;(_:_:)</a>
+                    <a class="token" href="#/s:4Yams4NodeO1loiySbAC_ACtFZ"><(_:<wbr>_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1466,9 +1513,11 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
               <div class="task-name-container">
                 <a name="/ExpressibleBy*Literal"></a>
                 <a name="//apple_ref/swift/Section/ExpressibleBy*Literal" class="dashAnchor"></a>
-                <a href="#/ExpressibleBy*Literal">
-                  <h3 class="section-name">ExpressibleBy*Literal</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ExpressibleBy*Literal"></a>
+                  <h3 class="section-name"><p>ExpressibleBy*Literal</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1476,7 +1525,7 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
                     <code>
                     <a name="/s:4Yams4NodeO12arrayLiteralA2Cd_tcfc"></a>
                     <a name="//apple_ref/swift/Method/init(arrayLiteral:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeO12arrayLiteralA2Cd_tcfc">init(arrayLiteral:)</a>
+                    <a class="token" href="#/s:4Yams4NodeO12arrayLiteralA2Cd_tcfc">init(arrayLiteral:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1501,23 +1550,12 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/ExpressibleBy*Literal2"></a>
-                <a name="//apple_ref/swift/Section/ExpressibleBy*Literal" class="dashAnchor"></a>
-                <a href="#/ExpressibleBy*Literal2">
-                  <h3 class="section-name">ExpressibleBy*Literal</h3>
-                </a>
-              </div>
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
                     <a name="/s:4Yams4NodeO17dictionaryLiteralA2C_ACtd_tcfc"></a>
                     <a name="//apple_ref/swift/Method/init(dictionaryLiteral:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeO17dictionaryLiteralA2C_ACtd_tcfc">init(dictionaryLiteral:)</a>
+                    <a class="token" href="#/s:4Yams4NodeO17dictionaryLiteralA2C_ACtd_tcfc">init(dictionaryLiteral:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1542,23 +1580,12 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/ExpressibleBy*Literal3"></a>
-                <a name="//apple_ref/swift/Section/ExpressibleBy*Literal" class="dashAnchor"></a>
-                <a href="#/ExpressibleBy*Literal3">
-                  <h3 class="section-name">ExpressibleBy*Literal</h3>
-                </a>
-              </div>
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
                     <a name="/s:4Yams4NodeO12floatLiteralACSd_tcfc"></a>
                     <a name="//apple_ref/swift/Method/init(floatLiteral:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeO12floatLiteralACSd_tcfc">init(floatLiteral:)</a>
+                    <a class="token" href="#/s:4Yams4NodeO12floatLiteralACSd_tcfc">init(floatLiteral:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1583,23 +1610,12 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/ExpressibleBy*Literal4"></a>
-                <a name="//apple_ref/swift/Section/ExpressibleBy*Literal" class="dashAnchor"></a>
-                <a href="#/ExpressibleBy*Literal4">
-                  <h3 class="section-name">ExpressibleBy*Literal</h3>
-                </a>
-              </div>
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
                     <a name="/s:4Yams4NodeO14integerLiteralACSi_tcfc"></a>
                     <a name="//apple_ref/swift/Method/init(integerLiteral:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeO14integerLiteralACSi_tcfc">init(integerLiteral:)</a>
+                    <a class="token" href="#/s:4Yams4NodeO14integerLiteralACSi_tcfc">init(integerLiteral:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1624,23 +1640,12 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/ExpressibleBy*Literal5"></a>
-                <a name="//apple_ref/swift/Section/ExpressibleBy*Literal" class="dashAnchor"></a>
-                <a href="#/ExpressibleBy*Literal5">
-                  <h3 class="section-name">ExpressibleBy*Literal</h3>
-                </a>
-              </div>
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
                     <a name="/s:4Yams4NodeO13stringLiteralACSS_tcfc"></a>
                     <a name="//apple_ref/swift/Method/init(stringLiteral:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeO13stringLiteralACSS_tcfc">init(stringLiteral:)</a>
+                    <a class="token" href="#/s:4Yams4NodeO13stringLiteralACSS_tcfc">init(stringLiteral:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1665,16 +1670,12 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
                     <a name="/s:4Yams4NodeOyACxKcAA0B13RepresentableRzlufc"></a>
                     <a name="//apple_ref/swift/Method/init(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams4NodeOyACxKcAA0B13RepresentableRzlufc">init(_:)</a>
+                    <a class="token" href="#/s:4Yams4NodeOyACxKcAA0B13RepresentableRzlufc">init(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1729,9 +1730,11 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
               <div class="task-name-container">
                 <a name="/NodeRepresentable"></a>
                 <a name="//apple_ref/swift/Section/NodeRepresentable" class="dashAnchor"></a>
-                <a href="#/NodeRepresentable">
-                  <h3 class="section-name">NodeRepresentable</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/NodeRepresentable"></a>
+                  <h3 class="section-name"><p>NodeRepresentable</p>
+</h3>
+                </div>
               </div>
               <ul class="item-container">
                 <li class="item">
@@ -1773,7 +1776,7 @@ If the node is a <code><a href="../Enums/Node.html#/s:4Yams4NodeO6scalarAC6Scala
     </div>
     <section class="footer">
       <p>© 2018 <a class="link" href="https://jpsim.com" target="_blank" rel="external">JP Simard</a> under MIT.</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.10.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
 </div>
