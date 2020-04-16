@@ -1,3 +1,2 @@
-ignore:
-  - Sources/CYaml
-  - Tests
+paths:
+  - Sources/Yams
