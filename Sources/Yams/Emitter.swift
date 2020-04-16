@@ -330,15 +330,15 @@ public final class Emitter {
             throw YamlError.emitter(problem: "serializer is closed")
         }
         var event = yaml_event_t()
-        var versionDirective: UnsafeMutablePointer<yaml_version_directive_t>?
-        var versionDirectiveValue = yaml_version_directive_t()
         if let (major, minor) = options.version {
-            versionDirectiveValue.major = Int32(major)
-            versionDirectiveValue.minor = Int32(minor)
-            versionDirective = UnsafeMutablePointer(&versionDirectiveValue)
+            var versionDirective = yaml_version_directive_t(major: Int32(major), minor: Int32(minor))
+            // TODO: Support tags
+            yaml_document_start_event_initialize(&event, &versionDirective, nil, nil, options.explicitStart ? 0 : 1)
+        } else {
+            // TODO: Support tags
+            yaml_document_start_event_initialize(&event, nil, nil, nil, options.explicitStart ? 0 : 1)
         }
-        // TODO: Support tags
-        yaml_document_start_event_initialize(&event, versionDirective, nil, nil, options.explicitStart ? 0 : 1)
+
         try emit(&event)
         try serializeNode(node)
         yaml_document_end_event_initialize(&event, options.explicitEnd ? 0 : 1)
