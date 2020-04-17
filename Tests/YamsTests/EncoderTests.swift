@@ -1111,6 +1111,7 @@ extension EncoderTests {
             ("testDictionary", testDictionary),
             ("testNodeTypeMismatch", testNodeTypeMismatch),
             ("testDecodingConcreteTypeParameter", testDecodingConcreteTypeParameter),
+            ("testDecodingAnchors", testDecodingAnchors),
             ("test_null_yml", test_null_yml),
             ("testEncodingDateWithNanosecondGreaterThan999499977", testEncodingDateWithNanosecondGreaterThan999499977)
         ]
