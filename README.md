@@ -32,7 +32,7 @@ invocation when configuring.
 
 ### Swift Package Manager
 
-Add `.package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0")` to your
+Add `.package(url: "https://github.com/jpsim/Yams.git", from: "3.0.0")` to your
 `Package.swift` file's `dependencies`.
 
 ### CocoaPods
