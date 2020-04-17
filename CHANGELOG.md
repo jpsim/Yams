@@ -30,6 +30,10 @@
 
 ##### Bug Fixes
 
+* Fix `Yams.dump` when object contains a keyed null value.  
+  [JP Simard](https://github.com/jpsim)
+  [#232](https://github.com/jpsim/Yams/issues/232)
+
 * Fix a bug where `YAMLEncoder` would delay `Date`s by 1 second when encoding
   values with a `nanosecond` component greater than 999499997.  
   [Norio Nomura](https://github.com/norio-nomura)

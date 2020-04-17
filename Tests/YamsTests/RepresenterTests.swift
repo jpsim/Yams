@@ -106,7 +106,20 @@ class RepresenterTests: XCTestCase {
     }
 
     func testOptional() throws {
+        // Optional.none
         XCTAssertEqual(try Node(Int?.none), "null")
+
+        // Optional.some(.none)
+        XCTAssertEqual(try Node(Int??.some(nil)), "null")
+
+        // Keyed null - https://github.com/jpsim/Yams/issues/232
+        let keyedNullString = """
+            A: null
+
+            """
+        let keyedNullObject = try Yams.load(yaml: keyedNullString)
+        let keyedNullDump = try Yams.dump(object: keyedNullObject)
+        XCTAssertEqual(keyedNullDump, keyedNullString)
     }
 
     func testArray() throws {
