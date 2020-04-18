@@ -418,39 +418,3 @@ private class Event {
 private func string(from pointer: UnsafePointer<UInt8>!) -> String? {
     return String.decodeCString(pointer, as: UTF8.self, repairingInvalidCodeUnits: true)?.result
 }
-
-#if swift(>=4.2)
-#if !compiler(>=5)
-private extension Data {
-    func withUnsafeBytes<Result>(_ apply: (UnsafeRawBufferPointer) throws -> Result) rethrows -> Result {
-        return try withUnsafeBytes {
-            try apply(UnsafeRawBufferPointer(start: $0, count: count))
-        }
-    }
-}
-#endif
-#else
-private extension Data {
-    func withUnsafeBytes<Result>(_ apply: (UnsafeRawBufferPointer) throws -> Result) rethrows -> Result {
-        return try withUnsafeBytes {
-            try apply(UnsafeRawBufferPointer(start: $0, count: count))
-        }
-    }
-}
-#endif
-
-#if swift(>=4.2)
-#if !compiler(>=5)
-private extension String.UTF8View {
-    func withContiguousStorageIfAvailable<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R? {
-        return nil
-    }
-}
-#endif
-#else
-private extension String.UTF8View {
-    func withContiguousStorageIfAvailable<R>(_ body: (UnsafeBufferPointer<Element>) throws -> R) rethrows -> R? {
-        return nil
-    }
-}
-#endif

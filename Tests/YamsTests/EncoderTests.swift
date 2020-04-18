@@ -548,28 +548,6 @@ private class Person: Codable, Equatable {
         self.website = website
     }
 
-#if !swift(>=4.1.50)
-    private enum CodingKeys: String, CodingKey {
-        case name
-        case email
-        case website
-    }
-
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        name = try container.decode(String.self, forKey: .name)
-        email = try container.decode(String.self, forKey: .email)
-        website = try container.decodeIfPresent(URL.self, forKey: .website)
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(name, forKey: .name)
-        try container.encode(email, forKey: .email)
-        try container.encodeIfPresent(website, forKey: .website)
-    }
-#endif
-
     func isEqual(_ other: Person) -> Bool {
         return self.name == other.name &&
             self.email == other.email &&
