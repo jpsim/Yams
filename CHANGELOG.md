@@ -11,7 +11,8 @@
 
 ##### Bug Fixes
 
-* None.
+* Fix CMake support.  
+  [JP Simard](https://github.com/jpsim)
 
 ## 3.0.0
 
