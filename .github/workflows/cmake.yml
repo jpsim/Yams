@@ -31,7 +31,6 @@ jobs:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
       - uses: actions/checkout@v1
-      - run: brew install cmake ninja realpath
       - run: swift -version
-      - run: cmake -B `realpath .`/build -G Ninja -S `realpath .` -DCMAKE_BUILD_TYPE=Release
-      - run: cmake --build `realpath .`/build
+      - run: cmake -B build -G Ninja -S . -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build build
