@@ -12,15 +12,15 @@ add_library(Yams
   Parser.swift
   Representer.swift
   Resolver.swift
-  shim.swift
   String+Yams.swift
   Tag.swift
   YamlError.swift)
 target_compile_definitions(Yams PRIVATE
   SWIFT_PACKAGE)
+
 target_link_libraries(Yams PRIVATE
   CYaml
-  Foundation)
+  ${CORELIBS_FOUNDATION})
 set_target_properties(Yams PROPERTIES
   Swift_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/swift
   INTERFACE_COMPILE_OPTIONS "SHELL:-Xcc -I$<TARGET_PROPERTY:CYaml,INCLUDE_DIRECTORIES>"
