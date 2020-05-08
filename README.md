@@ -18,17 +18,23 @@ Swift Package Manager or CMake and Ninja.
 
 ### CMake
 
-CMake 3.15.1 or newer is required.
+CMake 3.17.2 or newer is required, along with Ninja 1.9.0 or newer.
+
+When building for non-Apple platforms:
 
 ```
-cmake -H /path/to/build -G Ninja -S /path/to/yams -DCMAKE_BUILD_TYPE=Release -DFoundation_DIR=/path/to/foundation/build/cmake/modules
+cmake -B /path/to/build -G Ninja -S /path/to/yams -DCMAKE_BUILD_TYPE=Release -DFoundation_DIR=/path/to/foundation/build/cmake/modules
 cmake --build /path/to/build
 ```
 
-To build for macOS, iOS, tvOS, watchOS, additional flags specifying the SDK need
-to be passed to the compiler.  You can do that by adding the
-`-DCMAKE_Swift_FLAGS="-sdk $(xcrun --sdk macosx --show-sdk-path)"` to the CMake
-invocation when configuring.
+To build for Apple platforms (macOS, iOS, tvOS, watchOS), there is no
+need to spearately build Foundation because it is included as part of
+the SDK:
+
+```
+cmake -B /path/to/build -G Ninja -S /path/to/yams -DCMAKE_BUILD_TYPE=Release
+cmake --build /path/to/build
+```
 
 ### Swift Package Manager
 

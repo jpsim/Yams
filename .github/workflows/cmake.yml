@@ -1,0 +1,37 @@
+name: CMake
+
+on:
+  push:
+    branches: [master]
+    paths: 
+      - '.github/workflows/cmake.yml'
+      - '**/CMakeLists.txt'
+      - '**/*.cmake'
+      - '**/*.cmake.in'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Sources/**/module.modulemap'
+  pull_request:
+    paths: 
+      - '.github/workflows/cmake.yml'
+      - '**/CMakeLists.txt'
+      - '**/*.cmake'
+      - '**/*.cmake.in'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Sources/**/module.modulemap'
+
+jobs:
+  Xcode:
+    strategy:
+      matrix:
+        xcode_version: ['11', '11.1', '11.2', '11.3', '11.4']
+    runs-on: macos-latest
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
+    steps:
+      - uses: actions/checkout@v1
+      - run: brew install cmake ninja
+      - run: swift -version
+      - run: cmake -B build -G Ninja -S . -DCMAKE_BUILD_TYPE=Release
+      - run: cmake --build build

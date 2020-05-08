@@ -1,3 +1,18 @@
+## Swift-3-branch
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* None.
+
+##### Bug Fixes
+
+* Fix CMake support.  
+  [JP Simard](https://github.com/jpsim)
+
 ## 3.0.0
 
 ##### Breaking
