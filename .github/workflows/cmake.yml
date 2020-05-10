@@ -35,3 +35,4 @@ jobs:
       - run: swift -version
       - run: cmake -B build -G Ninja -S . -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build
+      - run: file build/lib/libYams.dylib | grep "Mach-O 64-bit dynamically linked shared library x86_64"
