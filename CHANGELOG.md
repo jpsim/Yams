@@ -11,6 +11,20 @@
 
 ##### Bug Fixes
 
+* None.
+
+## 3.0.1
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* None.
+
+##### Bug Fixes
+
 * Fix CMake support.  
   [JP Simard](https://github.com/jpsim)
 
