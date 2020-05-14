@@ -7,6 +7,11 @@ project(Yams
   LANGUAGES C Swift)
 
 option(BUILD_SHARED_LIBS "build shared libraries" ON)
+if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
+  option(BUILD_TESTING "build tests by default" NO)
+else()
+  option(BUILD_TESTING "build tests by default" YES)
+endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   set(USE_CORELIBS_FOUNDATION FALSE)
@@ -32,6 +37,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_Swift_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/swift)
 
 include(SwiftSupport)
+include(CTest)
 
 add_subdirectory(Sources)
+if(BUILD_TESTING)
+  add_subdirectory(Tests)
+endif()
 add_subdirectory(cmake/modules)
