@@ -8,18 +8,8 @@ project(Yams
 
 option(BUILD_SHARED_LIBS "build shared libraries" ON)
 
-if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  set(USE_CORELIBS_FOUNDATION FALSE)
-else()
-  set(USE_CORELIBS_FOUNDATION TRUE)
-endif()
-
-if(USE_CORELIBS_FOUNDATION)
-  find_package(Foundation CONFIG REQUIRED)
-  set(CORELIBS_FOUNDATION "Foundation")
-else()
-  set(CORELIBS_FOUNDATION "")
-endif()
+find_package(dispatch CONFIG QUIET)
+find_package(Foundation CONFIG QUIET)
 
 if(CMAKE_VERSION VERSION_LESS 3.16 AND CMAKE_SYSTEM_NAME STREQUAL Windows)
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
