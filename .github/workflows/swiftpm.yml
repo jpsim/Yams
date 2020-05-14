@@ -30,7 +30,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - run: swift -version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
@@ -43,6 +43,6 @@ jobs:
     container:
       image: swift:${{ matrix.tag }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
