@@ -17,6 +17,8 @@ add_library(Yams
   YamlError.swift)
 target_compile_definitions(Yams PRIVATE
   SWIFT_PACKAGE)
+target_compile_options(Yams PRIVATE
+  $<$<BOOL:${BUILD_TESTING}>:-enable-testing>)
 
 target_link_libraries(Yams PRIVATE
   CYaml
