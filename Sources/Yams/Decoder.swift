@@ -333,7 +333,7 @@ import protocol Combine.TopLevelDecoder
 extension YAMLDecoder: TopLevelDecoder {
     public typealias Input = String
 
-    public func decode<T>(_ type: T.Type, from: String) throws -> T where T : Decodable {
+    public func decode<T>(_ type: T.Type, from: String) throws -> T where T: Decodable {
         try self.decode(type, from: from, userInfo: [:])
     }
 }
