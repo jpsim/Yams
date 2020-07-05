@@ -13,6 +13,8 @@ XCTMain([
     testCase(ResolverTests.allTests),
     testCase(SpecTests.allTests),
     testCase(StringTests.allTests),
+#if canImport(Combine)
     testCase(TopLevelDecoderTests.allTests),
+#endif
     testCase(YamlErrorTests.allTests)
 ])
