@@ -11,6 +11,7 @@ import Combine
 import XCTest
 import Yams
 
+@available(iOS 13.0, macOS 10.15.0, tvOS 13.0, watchOS 6.0, *)
 class TopLevelDecoderTests: XCTestCase {
     func testDecodeFromYAMLDecoder() throws {
         let yaml = """
@@ -33,6 +34,7 @@ class TopLevelDecoderTests: XCTestCase {
     }
 }
 
+@available(iOS 13.0, macOS 10.15.0, tvOS 13.0, watchOS 6.0, *)
 extension TopLevelDecoderTests {
     static var allTests: [(String, (TopLevelDecoderTests) -> () throws -> Void)] {
         return [
