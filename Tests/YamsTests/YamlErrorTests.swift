@@ -140,8 +140,9 @@ class YamlErrorTests: XCTestCase {
         let yamlString = """
             emoji: 🙃
         """
-        let utf16Data = try XCTUnwrap(yamlString.data(using: .utf16))
-        XCTAssertThrowsError(try Parser(yaml: utf16Data, encoding: .utf8)) { error in
+        let utf16Data = yamlString.data(using: .utf16)!
+        let parser = try Parser(yaml: utf16Data, encoding: .utf8)
+        XCTAssertThrowsError(parser) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", """
                 String could not be decoded from data using 'Unicode (UTF-8)' encoding
