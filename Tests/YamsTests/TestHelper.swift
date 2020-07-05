@@ -68,18 +68,18 @@ func YamsAssertEqual(_ lhs: Any?, _ rhs: Any?,
             return true
         case let (lhs?, nil):
             let message = { "(\"\(type(of: lhs))(\(dumped(lhs)))\") is not equal to (\"nil\")" }
-            XCTFail(joined(message(), context()), file: file, line: line)
+            XCTFail(joined(message(), context()), file: (file), line: line)
             return false
         case let (nil, rhs?):
             let message = { "(\"nil\") is not equal to (\"\(type(of: rhs))(\(dumped(rhs)))\")" }
-            XCTFail(joined(message(), context()), file: file, line: line)
+            XCTFail(joined(message(), context()), file: (file), line: line)
             return false
         case let (lhs as Double, rhs as Double):
             if lhs.isNaN && rhs.isNaN { return true } // NaN is not equal to any value, including NaN
-            XCTAssertEqual(lhs, rhs, context(), file: file, line: line)
+            XCTAssertEqual(lhs, rhs, context(), file: (file), line: line)
             return lhs == rhs
         case let (lhs as AnyHashable, rhs as AnyHashable):
-            XCTAssertEqual(lhs, rhs, context(), file: file, line: line)
+            XCTAssertEqual(lhs, rhs, context(), file: (file), line: line)
             return lhs == rhs
         case let (lhs as (Any, Any), rhs as (Any, Any)):
             return equal(lhs.0, rhs.0) && equal(lhs.1, rhs.1)
@@ -87,7 +87,7 @@ func YamsAssertEqual(_ lhs: Any?, _ rhs: Any?,
             return lhs == rhs
         default:
             let message = { "Can't compare \(type(of: lhs))(\(dumped(lhs))) to \(type(of: rhs))(\(dumped(rhs)))" }
-            XCTFail(joined(message(), context()), file: file, line: line)
+            XCTFail(joined(message(), context()), file: (file), line: line)
             return false
         }
     }

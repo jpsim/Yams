@@ -13,5 +13,6 @@ XCTMain([
     testCase(ResolverTests.allTests),
     testCase(SpecTests.allTests),
     testCase(StringTests.allTests),
+    testCase(TopLevelDecoderTests.allTests),
     testCase(YamlErrorTests.allTests)
 ])

@@ -69,6 +69,11 @@ public enum YamlError: Error {
     /// - parameter problem: Error description.
     case representer(problem: String)
 
+    /// String data could not be decoded with the specified encoding.
+    ///
+    /// - parameter encoding: The string encoding used to decode the string data.
+    case dataCouldNotBeDecoded(encoding: String.Encoding)
+
     /// The error context.
     public struct Context: CustomStringConvertible {
         /// Context text.
@@ -167,6 +172,8 @@ extension YamlError: CustomStringConvertible {
             return "\(mark): error: composer: \(context?.description ?? "")\(problem):\n" + mark.snippet(from: yaml)
         case let .writer(problem), let .emitter(problem), let .representer(problem):
             return problem
+        case .dataCouldNotBeDecoded(encoding: let encoding):
+            return "String could not be decoded from data using '\(encoding)' encoding"
         }
     }
 }

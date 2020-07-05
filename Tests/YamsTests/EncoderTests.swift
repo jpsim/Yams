@@ -284,26 +284,26 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
 
         expectEqual(type(of: decoded), Employee.self, "Expected decoded value to be of type Employee; got \(type(of: decoded)) instead.")
     }
-    
+
     func testDecodingAnchors() throws {
         struct AnchorSample: Decodable {
             struct Host: Decodable {
                 let here: Bool
             }
-            
+
             let host: Host
         }
-        
+
         let yaml = """
             z: &anchor
               here: true
             host:
               <<: *anchor
             """
-        
+
         let decoder = YAMLDecoder()
         let decoded = try decoder.decode(AnchorSample.self, from: yaml)
-        
+
         XCTAssertTrue(decoded.host.here)
     }
 
@@ -351,20 +351,20 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
 
             if let expectedYAML = yamlString {
                 XCTAssertEqual(producedYAML, expectedYAML, "Produced YAML not identical to expected YAML.",
-                               file: file, line: line)
+                               file: (file), line: line)
             }
 
             let decoder = YAMLDecoder()
             let decoded = try decoder.decode(T.self, from: producedYAML)
             XCTAssertEqual(decoded, value, "\(T.self) did not round-trip to an equal value.",
-                file: file, line: line)
+                           file: (file), line: line)
 
         } catch let error as EncodingError {
-            XCTFail("Failed to encode \(T.self) from YAML by error: \(error)", file: file, line: line)
+            XCTFail("Failed to encode \(T.self) from YAML by error: \(error)", file: (file), line: line)
         } catch let error as DecodingError {
-            XCTFail("Failed to decode \(T.self) from YAML by error: \(error)", file: file, line: line)
+            XCTFail("Failed to decode \(T.self) from YAML by error: \(error)", file: (file), line: line)
         } catch {
-            XCTFail("Rout trip test of \(T.self) failed with error: \(error)", file: file, line: line)
+            XCTFail("Rout trip test of \(T.self) failed with error: \(error)", file: (file), line: line)
         }
     }
 }
@@ -375,7 +375,7 @@ public func expectEqual<T: Equatable>(
     _ message: @autoclosure () -> String = "",
     file: StaticString = #file, line: UInt = #line
     ) {
-    XCTAssertEqual(expected, actual, message(), file: file, line: line)
+    XCTAssertEqual(expected, actual, message(), file: (file), line: line)
 }
 
 public func expectEqual(
@@ -383,13 +383,13 @@ public func expectEqual(
     _ message: @autoclosure () -> String = "",
     file: StaticString = #file, line: UInt = #line
     ) {
-    XCTAssertTrue(expected == actual, message(), file: file, line: line)
+    XCTAssertTrue(expected == actual, message(), file: (file), line: line)
 }
 
 public func expectUnreachable(
     _ message: @autoclosure () -> String = "",
     file: StaticString = #file, line: UInt = #line) {
-    XCTFail("this code should not be executed: \(message())", file: file, line: line)
+    XCTFail("this code should not be executed: \(message())", file: (file), line: line)
 }
 
 private func expectEqualPaths(
