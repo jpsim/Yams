@@ -10,6 +10,7 @@ add_library(YamsTests
   SpecTests.swift
   StringTests.swift
   TestHelper.swift
+  TopLevelDecoderTests.swift
   YamlErrorTests.swift)
 set_target_properties(YamsTests PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_Swift_MODULE_DIRECTORY})
