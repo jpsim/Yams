@@ -6,7 +6,7 @@
 //  Copyright (c) 2020 Yams. All rights reserved.
 //
 
-#if canImport(Combine)
+#if canImport(Combine) && compiler(>=5.3)
 import Combine
 import XCTest
 import Yams
@@ -21,7 +21,6 @@ class TopLevelDecoderTests: XCTestCase {
     }
 
     func testDecodeFromYAMLDecoder() throws {
-#if compiler(>=5.3)
         let yaml = """
             name: Bird
             """
@@ -39,16 +38,6 @@ class TopLevelDecoderTests: XCTestCase {
                 receiveValue: { foo = $0 }
             )
         XCTAssertEqual(foo?.name, "Bird")
-#endif
-    }
-}
-
-@available(iOS 13.0, macOS 10.15.0, tvOS 13.0, watchOS 6.0, *)
-extension TopLevelDecoderTests {
-    static var allTests: [(String, (TopLevelDecoderTests) -> () throws -> Void)] {
-        return [
-            ("testDecodeFromYAMLDecoder", testDecodeFromYAMLDecoder)
-        ]
     }
 }
 #endif
