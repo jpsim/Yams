@@ -13,13 +13,6 @@ import XCTest
 
 @available(iOS 13.0, macOS 10.15.0, tvOS 13.0, watchOS 6.0, *)
 class TopLevelDecoderTests: XCTestCase {
-    private var cancellable: AnyCancellable?
-
-    override func setUp() {
-        super.setUp()
-        cancellable = nil
-    }
-
     func testDecodeFromYAMLDecoder() throws {
         let yaml = """
             name: Bird
@@ -31,7 +24,7 @@ class TopLevelDecoderTests: XCTestCase {
         }
 
         var foo: Foo?
-        cancellable = Just(data)
+        _ = Just(data)
             .decode(type: Foo.self, decoder: YAMLDecoder())
             .sink(
                 receiveCompletion: { _ in },
