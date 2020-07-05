@@ -136,7 +136,7 @@ class YamlErrorTests: XCTestCase {
         }
     }
 
-    func testYamlErrorDataCouldNotBeDecoded() throws {
+    func testYamlErrorDataCouldNotBeDecoded() {
         let yamlString = """
             emoji: 🙃
         """

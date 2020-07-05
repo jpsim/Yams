@@ -6,7 +6,7 @@
 //  Copyright (c) 2020 Yams. All rights reserved.
 //
 
-#if canImport(Combine) && compiler(>=5.3)
+#if canImport(Combine) && compiler(>=5.2)
 import Combine
 import XCTest
 @testable import Yams
