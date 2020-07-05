@@ -9,7 +9,7 @@
 #if canImport(Combine) && compiler(>=5.3)
 import Combine
 import XCTest
-import Yams
+@testable import Yams
 
 @available(iOS 13.0, macOS 10.15.0, tvOS 13.0, watchOS 6.0, *)
 class TopLevelDecoderTests: XCTestCase {
@@ -24,7 +24,7 @@ class TopLevelDecoderTests: XCTestCase {
         let yaml = """
             name: Bird
             """
-        let data = try XCTUnwrap(yaml.data(using: .utf8))
+        let data = try XCTUnwrap(yaml.data(using: Parser.Encoding.default.swiftStringEncoding))
 
         struct Foo: Decodable {
             var name: String
