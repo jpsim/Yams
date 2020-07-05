@@ -21,6 +21,7 @@ class TopLevelDecoderTests: XCTestCase {
     }
 
     func testDecodeFromYAMLDecoder() throws {
+#if compiler(>=5.3)
         let yaml = """
             name: Bird
             """
@@ -38,6 +39,7 @@ class TopLevelDecoderTests: XCTestCase {
                 receiveValue: { foo = $0 }
             )
         XCTAssertEqual(foo?.name, "Bird")
+#endif
     }
 }
 
