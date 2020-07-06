@@ -7,7 +7,14 @@
 
 ##### Enhancements
 
-* None.
+* `YAMLDecoder` now conforms to the `TopLevelDecoder` protocol when
+  Apple's Combine framework is available.  
+  [JP Simard](https://github.com/jpsim)
+  [#261](https://github.com/jpsim/Yams/issues/261)
+
+* Add `YAMLDecoder.decode(...)` overload tha takes a YAML string encoded
+  as `Data` using UTF8 or UTF16.  
+  [JP Simard](https://github.com/jpsim)
 
 ##### Bug Fixes
 
