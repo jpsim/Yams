@@ -201,6 +201,9 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Extensions/UUID.html">UUID</a>
               </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/YAMLDecoder.html">YAMLDecoder</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -401,7 +404,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Parser.swift#L120-L139">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Parser.swift#L120-L149">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -431,7 +434,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Parser.swift#L141">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Parser.swift#L151">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -449,7 +452,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Set up Parser.</p>
+                        <p>Set up a <code>Parser</code> with a <code>String</code> value as input.</p>
 <div class="aside aside-throws">
     <p class="aside-title">Throws</p>
     <p><code><a href="../Enums/YamlError.html">YamlError</a></code>.</p>
@@ -524,7 +527,100 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Parser.swift#L151-L183">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Parser.swift#L161-L193">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams6ParserC4yaml8resolver11constructor8encodingAC10Foundation4DataV_AA8ResolverCAA11ConstructorCAC8EncodingOtKcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(yaml:resolver:constructor:encoding:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams6ParserC4yaml8resolver11constructor8encodingAC10Foundation4DataV_AA8ResolverCAA11ConstructorCAC8EncodingOtKcfc">init(yaml:<wbr>resolver:<wbr>constructor:<wbr>encoding:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set up a <code>Parser</code> with a <code>Data</code> value as input.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code><a href="../Enums/YamlError.html">YamlError</a></code>.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="n"><a href="../Classes/Parser.html#/s:4Yams6ParserC4yamlSSvp">yaml</a></span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span>
+                        <span class="nv">resolver</span><span class="p">:</span> <span class="kt"><a href="../Classes/Resolver.html">Resolver</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span>
+                        <span class="nv">constructor</span><span class="p">:</span> <span class="kt"><a href="../Classes/Constructor.html">Constructor</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span>
+                        <span class="nv">encoding</span><span class="p">:</span> <span class="kt"><a href="../Classes/Parser/Encoding.html">Encoding</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>string</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>YAML Data encoded using the <code><a href="../Classes/Parser.html#/s:4Yams6ParserC8encodingAC8EncodingOvp">encoding</a></code> encoding.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>resolver</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Resolver, <code>.default</code> if omitted.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>constructor</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Constructor, <code>.default</code> if omitted.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>encoding</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Encoding, <code>.default</code> if omitted.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Parser.swift#L203-L217">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -563,7 +659,7 @@
                         <p>next Node.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Parser.swift#L194-L197">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Parser.swift#L228-L231">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -602,7 +698,7 @@
                         <p>Single root Node.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Parser.swift#L204-L217">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/master/Sources/Yams/Parser.swift#L238-L251">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
