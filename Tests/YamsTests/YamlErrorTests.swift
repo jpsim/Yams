@@ -135,6 +135,20 @@ class YamlErrorTests: XCTestCase {
             )
         }
     }
+
+    func testYamlErrorDataCouldNotBeDecoded() {
+        let yamlString = """
+            emoji: 🙃
+        """
+        let utf16Data = yamlString.data(using: .utf16)!
+        XCTAssertThrowsError(try Parser(yaml: utf16Data, encoding: .utf8)) { error in
+            XCTAssertTrue(error is YamlError)
+            XCTAssertEqual("\(error)", """
+                String could not be decoded from data using 'Unicode (UTF-8)' encoding
+                """
+            )
+        }
+    }
 }
 
 extension YamlErrorTests {
@@ -147,7 +161,8 @@ extension YamlErrorTests {
             ("testSingleRootThrowsOnInvalidYaml", testSingleRootThrowsOnInvalidYaml),
             ("testSingleRootThrowsOnMultipleDocuments", testSingleRootThrowsOnMultipleDocuments),
             ("testUndefinedAliasCausesError", testUndefinedAliasCausesError),
-            ("testScannerErrorMayHaveNullContext", testScannerErrorMayHaveNullContext)
+            ("testScannerErrorMayHaveNullContext", testScannerErrorMayHaveNullContext),
+            ("testYamlErrorDataCouldNotBeDecoded", testYamlErrorDataCouldNotBeDecoded)
         ]
     }
 }

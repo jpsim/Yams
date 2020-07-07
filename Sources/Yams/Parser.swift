@@ -136,11 +136,21 @@ public final class Parser {
             }
             return key.utf8.withContiguousStorageIfAvailable({ _ in true }) != nil ? .utf8 : .utf16
         }()
+
+        /// The equivalent `Swift.Encoding` value for `self`.
+        internal var swiftStringEncoding: String.Encoding {
+            switch self {
+            case .utf8:
+                return .utf8
+            case .utf16:
+                return .utf16
+            }
+        }
     }
     /// Encoding
     public let encoding: Encoding
 
-    /// Set up Parser.
+    /// Set up a `Parser` with a `String` value as input.
     ///
     /// - parameter string: YAML string.
     /// - parameter resolver: Resolver, `.default` if omitted.
@@ -180,6 +190,30 @@ public final class Parser {
             buffer = .utf16(data)
             try data.withUnsafeBytes(startParse(with:))
         }
+    }
+
+    /// Set up a `Parser` with a `Data` value as input.
+    ///
+    /// - parameter string: YAML Data encoded using the `encoding` encoding.
+    /// - parameter resolver: Resolver, `.default` if omitted.
+    /// - parameter constructor: Constructor, `.default` if omitted.
+    /// - parameter encoding: Encoding, `.default` if omitted.
+    ///
+    /// - throws: `YamlError`.
+    public convenience init(yaml data: Data,
+                            resolver: Resolver = .default,
+                            constructor: Constructor = .default,
+                            encoding: Encoding = .default) throws {
+        guard let yamlString = String(data: data, encoding: encoding.swiftStringEncoding) else {
+            throw YamlError.dataCouldNotBeDecoded(encoding: encoding.swiftStringEncoding)
+        }
+
+        try self.init(
+            yaml: yamlString,
+            resolver: resolver,
+            constructor: constructor,
+            encoding: encoding
+        )
     }
 
     deinit {
