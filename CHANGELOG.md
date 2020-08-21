@@ -18,7 +18,8 @@
 
 ##### Bug Fixes
 
-* None.
+* Fix CMake installation issues.  
+  [Saleem Abdulrasool](https://github.com/compnerd)
 
 ## 3.0.1
 
