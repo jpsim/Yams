@@ -10,6 +10,9 @@
 import CoreFoundation
 #endif
 import Foundation
+#if os(Windows)
+import MSVCRT
+#endif
 
 public extension Node {
     /// Initialize a `Node` with a value of `NodeRepresentable`.
