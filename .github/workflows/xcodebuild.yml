@@ -35,6 +35,10 @@ jobs:
           - version: '11.3'
             flags_for_test: -parallel-testing-enabled NO
           - version: '11.4'
+            flags_for_test: -parallel-testing-enabled NO
+          - version: '11.5'
+            flags_for_test: -parallel-testing-enabled NO
+          - version: '11.6'
             flags_for_test: -parallel-testing-enabled NO -enableCodeCoverage YES
         xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
     runs-on: macos-latest
