@@ -130,7 +130,13 @@ private extension TimeInterval {
     func separateFractionalSecond(withPrecision precision: Int) -> (integral: TimeInterval, fractional: Int) {
         var integral = 0.0
         let fractional = modf(self, &integral)
+        // Can't use `pow` free function due to https://bugs.swift.org/browse/TF-1203.
+        // TODO: Remove condition after that bug is fixed.
+        #if canImport(TensorFlow)
+        let radix = Double.pow(10.0, Double(precision))
+        #else
         let radix = pow(10.0, Double(precision))
+        #endif
         let rounded = Int((fractional * radix).rounded())
         let quotient = rounded / Int(radix)
         return quotient != 0 ? // carry-up?
