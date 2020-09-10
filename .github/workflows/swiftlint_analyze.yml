@@ -23,7 +23,7 @@ jobs:
   Analyze:
     runs-on: macos-latest
     env:
-      DEVELOPER_DIR: /Applications/Xcode_11.4.app
+      DEVELOPER_DIR: /Applications/Xcode_11.6.app
     steps:
       - uses: actions/checkout@v2
       - name: Generate xcodebuild.log

@@ -2,6 +2,22 @@
 
 ##### Breaking
 
+* None.
+
+##### Enhancements
+
+* None.
+
+##### Bug Fixes
+
+* String scalars containing numbers are no longer decoded as numbers.  
+  [Matt Polzin](https://github.com/mattpolzin)
+  [#263](https://github.com/jpsim/Yams/issues/263)
+
+## 4.0.0
+
+##### Breaking
+
 * Swift 5.1 or later is now required to build Yams.  
   [JP Simard](https://github.com/jpsim)
 
@@ -18,9 +34,8 @@
 
 ##### Bug Fixes
 
-* String scalars containing numbers are no longer decoded as numbers.
-  [Matt Polzin](https://github.com/mattpolzin)
-  [#263](https://github.com/jpsim/Yams/issues/263)
+* Fix CMake installation issues.  
+  [Saleem Abdulrasool](https://github.com/compnerd)
 
 ## 3.0.1
 

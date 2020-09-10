@@ -25,7 +25,7 @@ jobs:
   Xcode:
     strategy:
       matrix:
-        xcode_version: ['11', '11.1', '11.2', '11.3', '11.4']
+        xcode_version: ['11', '11.1', '11.2', '11.3', '11.4', '11.5', '11.6']
     runs-on: macos-latest
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
@@ -35,4 +35,5 @@ jobs:
       - run: swift -version
       - run: cmake -B build -G Ninja -S . -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build
-      - run: file build/lib/libYams.dylib | grep "Mach-O 64-bit dynamically linked shared library x86_64"
+      - run: cmake --build build --target install
+      - run: file /usr/local/lib/swift/macosx/libYams.dylib | grep "Mach-O 64-bit dynamically linked shared library x86_64"

@@ -29,13 +29,5 @@ set_target_properties(Yams PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_Swift_MODULE_DIRECTORY})
 
 set_property(GLOBAL APPEND PROPERTY YAMS_EXPORTS Yams)
-get_swift_host_arch(swift_arch)
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/swift/Yams.swiftmodule
-  ${CMAKE_CURRENT_BINARY_DIR}/swift/Yams.swiftdoc
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/${swift_arch})
-install(TARGETS Yams
-  EXPORT YamsExports
-  RUNTIME DESTINATION bin
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+swift_install(TARGETS Yams
+  EXPORT YamsExports)
