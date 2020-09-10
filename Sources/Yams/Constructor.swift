@@ -248,6 +248,10 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
     /// - returns: An instance of `FloatingPoint & SexagesimalConvertible`, if one was successfully extracted
     ///            from the scalar.
     public static func construct(from scalar: Node.Scalar) -> Self? {
+        guard scalar.style == .any || scalar.style == .plain else {
+            return nil
+        }
+
         switch scalar.string {
         case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
             return .infinity
@@ -267,6 +271,10 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
 
 private extension FixedWidthInteger where Self: SexagesimalConvertible {
     static func _construct(from scalar: Node.Scalar) -> Self? {
+        guard scalar.style == .any || scalar.style == .plain else {
+            return nil
+        }
+
         let scalarWithSign = scalar.string.replacingOccurrences(of: "_", with: "")
 
         if scalarWithSign == "0" {

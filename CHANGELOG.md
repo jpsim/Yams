@@ -10,7 +10,9 @@
 
 ##### Bug Fixes
 
-* None.
+* String scalars containing numbers are no longer decoded as numbers.  
+  [Matt Polzin](https://github.com/mattpolzin)
+  [#263](https://github.com/jpsim/Yams/issues/263)
 
 ## 4.0.0
 

@@ -151,6 +151,17 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
         _testRoundTrip(of: OptionalTopLevelWrapper(url), expectedYAML: expectedYAML)
     }
 
+    func testNumberInString() throws {
+        _testDecode(of: String.self, from: "'10'", expectedValue: "10")
+        _testDecode(of: String.self, from: "'10.5'", expectedValue: "10.5")
+
+        _testDecode(of: Int.self, from: "10", expectedValue: 10)
+        _testDecode(of: Double.self, from: "10.5", expectedValue: 10.5)
+
+        _testDecodeShouldFail(of: Int.self, from: "'10'")
+        _testDecodeShouldFail(of: Double.self, from: "'10.5'")
+    }
+
     func testValuesInSingleValueContainer() throws {
         _testRoundTrip(of: true)
         _testRoundTrip(of: false)
@@ -366,6 +377,39 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
         } catch {
             XCTFail("Rout trip test of \(T.self) failed with error: \(error)", file: (file), line: line)
         }
+    }
+
+    private func _testDecode<T>(of type: T.Type,
+                                from string: String,
+                                expectedValue value: T?,
+                                file: StaticString = #file,
+                                line: UInt = #line) where T: Codable, T: Equatable {
+        do {
+            let decoder = YAMLDecoder()
+            let decoded = try decoder.decode(T.self, from: string)
+            XCTAssertEqual(decoded, value, "\(T.self) did not decode properly from expected value.",
+                file: (file), line: line)
+
+        } catch let error as DecodingError {
+            XCTFail("Failed to decode \(T.self) from YAML by error: \(error)", file: (file), line: line)
+        } catch {
+            XCTFail("Decode test of \(T.self) failed with error: \(error)", file: (file), line: line)
+        }
+    }
+
+    private func _testDecodeShouldFail<T>(of type: T.Type,
+                                       from string: String,
+                                       file: StaticString = #file,
+                                       line: UInt = #line) where T: Codable {
+        do {
+            let decoder = YAMLDecoder()
+            _ = try decoder.decode(T.self, from: string)
+        } catch _ as DecodingError {
+            return
+        } catch {
+            XCTFail("Decode test of \(T.self) failed in unexpected way with error: \(error)", file: (file), line: line)
+        }
+        XCTFail("Decode test of \(T.self) did not fail as expected.")
     }
 }
 
