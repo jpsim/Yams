@@ -321,11 +321,3 @@ private extension FloatingPoint where Self: CVarArg {
         return string
     }
 }
-
-@available(*, unavailable, renamed: "YAMLEncodable")
-typealias ScalarRepresentableCustomizedForCodable = YAMLEncodable
-
-extension YAMLEncodable {
-    @available(*, unavailable, renamed: "box()")
-    func representedForCodable() -> Node { fatalError("unreachable") }
-}
