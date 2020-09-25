@@ -595,19 +595,4 @@ private extension String {
     }
 }
 
-// MARK: - Unavailable
-
-extension Constructor {
-    @available(*, unavailable, message: "Use `Constructor.ScalarMap` instead")
-    public typealias Map = [Tag.Name: (Node) -> Any?]
-
-    @available(*, unavailable, message: "Use `Constructor.defaultScalarMap` instead")
-    public static let defaultMap: ScalarMap = [:]
-}
-
-extension ScalarConstructible {
-    @available(*, unavailable, message: "Use `construct(from scalar: Node.Scalar)` instead")
-    static func construct(from scalar: Node) -> Self? { return nil }
-}
-
 // swiftlint:disable:this file_length
