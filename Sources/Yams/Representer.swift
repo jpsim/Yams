@@ -11,7 +11,7 @@ import CoreFoundation
 #endif
 import Foundation
 #if os(Windows)
-import MSVCRT
+import ucrt
 #endif
 
 public extension Node {
