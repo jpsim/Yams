@@ -72,5 +72,5 @@ jobs:
       - name: Build
         run: swift build -v
       - name: Test
-        # TODO: Run all tests when this test runner crash is fixed: https://github.com/jpsim/Yams/pull/282/checks?check_run_id=1348491744
+        # TODO: Run all tests when this test runner crash is fixed: https://bugs.swift.org/browse/SR-13819
         run: swift test -v --filter testBinary
