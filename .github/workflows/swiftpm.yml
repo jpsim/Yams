@@ -59,7 +59,6 @@ jobs:
         run: |
           echo "::set-env name=SDKROOT::C:\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk"
           echo "::set-env name=DEVELOPER_DIR::C:\Library\Developer"
-          echo "::set-env name=UserName::yams"
       - name: Adjust Paths
         run: |
           echo "::add-path::C:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin;C:\Library\Swift-development\bin;C:\Library\icu-67\usr\bin"
@@ -72,11 +71,6 @@ jobs:
           copy "%SDKROOT%\usr\share\winsdk.modulemap" "%UniversalCRTSdkDir%\Include\%UCRTVersion%\um\module.modulemap"
       - name: Build
         run: swift build -v
-      - name: Start SSH session
-        uses: luchihoratiu/debug-via-ssh@main
-        with:
-          NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-          SSH_PASS: ${{ secrets.SSH_PASS }}
       - name: Test
         # TODO: Run all tests when this test runner crash is fixed: https://github.com/jpsim/Yams/pull/282/checks?check_run_id=1348491744
         run: swift test -v --filter testBinary
