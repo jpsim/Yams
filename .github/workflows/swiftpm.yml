@@ -59,6 +59,7 @@ jobs:
         run: |
           echo "::set-env name=SDKROOT::C:\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk"
           echo "::set-env name=DEVELOPER_DIR::C:\Library\Developer"
+          echo "::set-env name=UserName::yams"
       - name: Adjust Paths
         run: |
           echo "::add-path::C:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin;C:\Library\Swift-development\bin;C:\Library\icu-67\usr\bin"
