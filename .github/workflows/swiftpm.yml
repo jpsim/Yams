@@ -47,21 +47,21 @@ jobs:
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
 
-  Windows:
+  Windows-Setup:
+    # Appending a system path prepends a directory to the system `PATH` variable for all subsequent actions in the current job.
+    # The currently running action cannot access the new path variable.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#adding-a-system-path
     runs-on: windows-latest
-    steps:
       - uses: actions/checkout@v2
       - uses: seanmiddleditch/gha-setup-vsdevenv@master
       - name: Install swift-DEVELOPMENT-SNAPSHOT-2020-10-29-a
-        run: |
-          Install-Binary -Url "https://swift.org/builds/development/windows10/swift-DEVELOPMENT-SNAPSHOT-2020-10-29-a/swift-DEVELOPMENT-SNAPSHOT-2020-10-29-a-windows10.exe" -Name "installer.exe" -ArgumentList ("-q")
+        run: Install-Binary -Url "https://swift.org/builds/development/windows10/swift-DEVELOPMENT-SNAPSHOT-2020-10-29-a/swift-DEVELOPMENT-SNAPSHOT-2020-10-29-a-windows10.exe" -Name "installer.exe" -ArgumentList ("-q")
       - name: Set Environment Variables
         run: |
-          echo "::set-env name=SDKROOT::C:\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk"
-          echo "::set-env name=DEVELOPER_DIR::C:\Library\Developer"
+          echo "C:\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk" | Out-File -FilePath $env:SDKROOT -Encoding utf8
+          echo "C:\Library\Developer" | Out-File -FilePath $env:DEVELOPER_DIR -Encoding utf8
       - name: Adjust Paths
-        run: |
-          echo "::add-path::C:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin;C:\Library\Swift-development\bin;C:\Library\icu-67\usr\bin"
+        run: echo "C:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin;C:\Library\Swift-development\bin;C:\Library\icu-67\usr\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - name: Install Supporting Files
         shell: cmd
         run: |
@@ -69,6 +69,11 @@ jobs:
           copy "%SDKROOT%\usr\share\visualc.modulemap" "%VCToolsInstallDir%\include\module.modulemap"
           copy "%SDKROOT%\usr\share\visualc.apinotes" "%VCToolsInstallDir%\include\visualc.apinotes"
           copy "%SDKROOT%\usr\share\winsdk.modulemap" "%UniversalCRTSdkDir%\Include\%UCRTVersion%\um\module.modulemap"
+
+  Windows:
+    needs: Windows-Setup
+    runs-on: windows-latest
+    steps:
       - name: Build
         run: swift build -v
       - name: Test
