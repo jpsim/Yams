@@ -47,10 +47,7 @@ jobs:
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
 
-  Windows-Setup:
-    # Appending a system path prepends a directory to the system `PATH` variable for all subsequent actions in the current job.
-    # The currently running action cannot access the new path variable.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#adding-a-system-path
+  Windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -70,11 +67,6 @@ jobs:
           copy "%SDKROOT%\usr\share\visualc.modulemap" "%VCToolsInstallDir%\include\module.modulemap"
           copy "%SDKROOT%\usr\share\visualc.apinotes" "%VCToolsInstallDir%\include\visualc.apinotes"
           copy "%SDKROOT%\usr\share\winsdk.modulemap" "%UniversalCRTSdkDir%\Include\%UCRTVersion%\um\module.modulemap"
-
-  Windows:
-    needs: Windows-Setup
-    runs-on: windows-latest
-    steps:
       - name: Build
         run: swift build -v
       - name: Test
