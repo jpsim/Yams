@@ -52,6 +52,7 @@ jobs:
     # The currently running action cannot access the new path variable.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#adding-a-system-path
     runs-on: windows-latest
+    steps:
       - uses: actions/checkout@v2
       - uses: seanmiddleditch/gha-setup-vsdevenv@master
       - name: Install swift-DEVELOPMENT-SNAPSHOT-2020-10-29-a
