@@ -208,7 +208,21 @@ extension NodeTests {
     static var allTests: [(String, (NodeTests) -> () throws -> Void)] {
 #if os(Windows)
         // TODO: Fix these tests on Windows
-        return []
+        return [
+            ("testExpressibleByArrayLiteral", testExpressibleByArrayLiteral),
+            ("testExpressibleByDictionaryLiteral", testExpressibleByDictionaryLiteral),
+            ("testExpressibleByFloatLiteral", testExpressibleByFloatLiteral),
+            ("testExpressibleByIntegerLiteral", testExpressibleByIntegerLiteral),
+            ("testExpressibleByStringLiteral", testExpressibleByStringLiteral),
+            ("testTypedAccessorProperties", testTypedAccessorProperties),
+            ("testArray", testArray),
+            ("testSubscriptMapping", testSubscriptMapping),
+            ("testSubscriptSequence", testSubscriptSequence),
+            ("testSubscriptWithNonDefaultResolver", testSubscriptWithNonDefaultResolver),
+            ("testMappingBehavesLikeADictionary", testMappingBehavesLikeADictionary),
+            ("testSequenceBehavesLikeAnArray", testSequenceBehavesLikeAnArray),
+            ("testScalar", testScalar)
+        ]
 #else
         return [
             ("testExpressibleByArrayLiteral", testExpressibleByArrayLiteral),
