@@ -1107,10 +1107,6 @@ private struct Unkeyed: Codable, Equatable {
 
 extension EncoderTests {
     static var allTests: [(String, (EncoderTests) -> () throws -> Void)] {
-#if os(Windows)
-        // TODO: Fix these tests on Windows
-        return []
-#else
         return [
             ("testEncodingTopLevelEmptyStruct", testEncodingTopLevelEmptyStruct),
             ("testEncodingTopLevelEmptyClass", testEncodingTopLevelEmptyClass),
@@ -1141,6 +1137,5 @@ extension EncoderTests {
             ("test_null_yml", test_null_yml),
             ("testEncodingDateWithNanosecondGreaterThan999499977", testEncodingDateWithNanosecondGreaterThan999499977)
         ]
-#endif
     }
 } // swiftlint:disable:this file_length
