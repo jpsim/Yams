@@ -69,6 +69,11 @@ jobs:
           copy "%SDKROOT%\usr\share\winsdk.modulemap" "%UniversalCRTSdkDir%\Include\%UCRTVersion%\um\module.modulemap"
       - name: Build
         run: swift build -v
+      - name: Start SSH session
+        uses: luchihoratiu/debug-via-ssh@main
+        with:
+          NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+          SSH_PASS: ${{ secrets.SSH_PASS }}
       - name: Test
         # TODO: Run all tests when this test runner crash is fixed: https://bugs.swift.org/browse/SR-13819
         run: swift test -v --filter testBinary
