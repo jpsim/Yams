@@ -1107,8 +1107,8 @@ private struct Unkeyed: Codable, Equatable {
 
 extension EncoderTests {
     static var allTests: [(String, (EncoderTests) -> () throws -> Void)] {
-// TODO: Fix these tests on Windows
 #if os(Windows)
+        // TODO: Fix these tests on Windows
         return []
 #else
         return [
