@@ -921,19 +921,19 @@ extension SpecTests {
         return [
             ("testEmptyString", testEmptyString),
             ("testMultibyteCharacters", testMultibyteCharacters),
-            ("testSpecExample2_1_SequenceOfScalars", testSpecExample2_1_SequenceOfScalars),
-            ("testSpecExample2_2_MappingScalarsToScalars", testSpecExample2_2_MappingScalarsToScalars),
+            // ("testSpecExample2_1_SequenceOfScalars", testSpecExample2_1_SequenceOfScalars),
+            // ("testSpecExample2_2_MappingScalarsToScalars", testSpecExample2_2_MappingScalarsToScalars),
             ("testSpecExample2_3_MappingScalarsToSequences", testSpecExample2_3_MappingScalarsToSequences),
-            ("testSpecExample2_4_SequenceOfMappings", testSpecExample2_4_SequenceOfMappings),
-            ("testSpecExample2_5_SequenceOfSequences", testSpecExample2_5_SequenceOfSequences),
-            ("testSpecExample2_6_MappingOfMappings", testSpecExample2_6_MappingOfMappings),
+            // ("testSpecExample2_4_SequenceOfMappings", testSpecExample2_4_SequenceOfMappings),
+            // ("testSpecExample2_5_SequenceOfSequences", testSpecExample2_5_SequenceOfSequences),
+            // ("testSpecExample2_6_MappingOfMappings", testSpecExample2_6_MappingOfMappings),
             ("testSpecExample2_7_TwoDocumentsInAStream", testSpecExample2_7_TwoDocumentsInAStream),
-            ("testSpecExample2_8_PlayByPlayFeedFromAGame", testSpecExample2_8_PlayByPlayFeedFromAGame),
+            // ("testSpecExample2_8_PlayByPlayFeedFromAGame", testSpecExample2_8_PlayByPlayFeedFromAGame),
             ("testSpecExample2_9_SingleDocumentWithTwoComments", testSpecExample2_9_SingleDocumentWithTwoComments),
             ("testSpecExample2_10_NodeForSammySosaAppearsTwiceInThisDocument",
              testSpecExample2_10_NodeForSammySosaAppearsTwiceInThisDocument),
             ("testSpecExample2_11_MappingBetweenSequences", testSpecExample2_11_MappingBetweenSequences),
-            ("testSpecExample2_12_CompactNestedMapping", testSpecExample2_12_CompactNestedMapping),
+            // ("testSpecExample2_12_CompactNestedMapping", testSpecExample2_12_CompactNestedMapping),
             ("testSpecExample2_13_Inliterals_NewlinesArePreserved",
              testSpecExample2_13_Inliterals_NewlinesArePreserved),
             ("testSpecExample2_14_InTheFoldedScalars_NewlinesBecomeSpaces",
@@ -943,11 +943,11 @@ extension SpecTests {
             ("testSpecExample2_16_IndentationDeterminesScope", testSpecExample2_16_IndentationDeterminesScope),
             ("testSpecExample2_17_QuotedScalars", testSpecExample2_17_QuotedScalars),
             ("testSpecExample2_18_MultiLineFlowScalars", testSpecExample2_18_MultiLineFlowScalars),
-            ("testSpecExample2_19_Integers", testSpecExample2_19_Integers),
+            // ("testSpecExample2_19_Integers", testSpecExample2_19_Integers),
             ("testSpecExample2_20_FloatingPoint", testSpecExample2_20_FloatingPoint),
-            ("testSpecExample2_23_VariousExplicitTags", testSpecExample2_23_VariousExplicitTags),
-            ("testSpecExample2_27_Invoice", testSpecExample2_27_Invoice),
-            ("testSpecExample2_28_LogFile", testSpecExample2_28_LogFile)
+            ("testSpecExample2_23_VariousExplicitTags", testSpecExample2_23_VariousExplicitTags)
+            // ("testSpecExample2_27_Invoice", testSpecExample2_27_Invoice),
+            // ("testSpecExample2_28_LogFile", testSpecExample2_28_LogFile)
         ]
 #else
         return [
