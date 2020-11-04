@@ -69,8 +69,6 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         YamsAssertEqual(objects, expected)
     }
 
-// TODO: Fix these tests on Windows
-#if !os(Windows)
     func testFloat() throws {
         let example = """
             canonical: 6.8523015e+5
@@ -132,7 +130,6 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         ]
         YamsAssertEqual(objects, expected)
     }
-#endif
 
     func testMap() throws {
         let example = """
