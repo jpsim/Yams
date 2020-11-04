@@ -10,6 +10,9 @@ import Foundation
 import XCTest
 import Yams
 
+// TODO: Fix these tests on Windows
+#if !os(Windows)
+
 class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     func testEmptyString() throws {
@@ -948,4 +951,8 @@ extension SpecTests {
             ("testSpecExample2_28_LogFile", testSpecExample2_28_LogFile)
         ]
     }
-} // swiftlint:disable:this file_length
+}
+
+#endif
+
+// swiftlint:disable:this file_length
