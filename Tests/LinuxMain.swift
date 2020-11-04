@@ -2,6 +2,9 @@ import XCTest
 
 @testable import YamsTests
 
+// This file is compiled but does not appear to be actually used on Windows.
+#if os(Linux)
+
 XCTMain([
     testCase(ConstructorTests.allTests),
     testCase(EmitterTests.allTests),
@@ -15,3 +18,5 @@ XCTMain([
     testCase(StringTests.allTests),
     testCase(YamlErrorTests.allTests)
 ])
+
+#endif
