@@ -153,8 +153,6 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         YamsAssertEqual(objects, expected)
     }
 
-// TODO: Fix these tests on Windows
-#if !os(Windows)
     func testMerge() throws { // swiftlint:disable:this function_body_length
         let example = """
             ---
@@ -199,7 +197,6 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         ]
         YamsAssertEqual(objects, expected)
     }
-#endif
 
     func testNull() throws {
         let example = """
@@ -244,8 +241,6 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         YamsAssertEqual(objects, expected)
     }
 
-// TODO: Fix these tests on Windows
-#if !os(Windows)
     func testOmap() throws {
         let example = """
             # Explicitly typed ordered map (dictionary).
@@ -269,7 +264,6 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         ]
         YamsAssertEqual(objects, expected)
     }
-#endif
 
     func testPairs() throws {
         let example = """
@@ -479,8 +473,6 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         YamsAssertEqual(objects, expected)
     }
 
-// TODO: Fix these tests on Windows
-#if !os(Windows)
     func testValue() throws {
         let example = """
             ---     # Old schema
@@ -518,12 +510,30 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         XCTAssertEqual(nodes[1]["link with"]?[1]?["="], "library2.dll")
         XCTAssertEqual(nodes[1]["link with"]?[1]?["version"], "2.3")
     }
-#endif
 }
 
-#if os(Linux)
 extension ConstructorTests {
     static var allTests: [(String, (ConstructorTests) -> () throws -> Void)] {
+#if os(Windows)
+        // TODO: Fix these tests on Windows
+        return [
+            ("testBinary", testBinary),
+            ("testBool", testBool),
+            // ("testFloat", testFloat),
+            // ("testInt", testInt),
+            ("testMap", testMap),
+            // ("testMerge", testMerge),
+            ("testNull", testNull),
+            // ("testOmap", testOmap),
+            ("testPairs", testPairs),
+            ("testQuotationMark", testQuotationMark),
+            ("testSet", testSet),
+            ("testSeq", testSeq),
+            ("testTimestamp", testTimestamp),
+            ("testTimestampWithNanosecond", testTimestampWithNanosecond)
+            // ("testValue", testValue)
+        ]
+#else
         return [
             ("testBinary", testBinary),
             ("testBool", testBool),
@@ -541,8 +551,6 @@ extension ConstructorTests {
             ("testTimestampWithNanosecond", testTimestampWithNanosecond),
             ("testValue", testValue)
         ]
-    }
-}
 #endif
-
-// swiftlint:disable:this file_length
+    }
+} // swiftlint:disable:this file_length

@@ -10,9 +10,6 @@ import Foundation
 import XCTest
 import Yams
 
-// TODO: Fix these tests on Windows
-#if !os(Windows)
-
 class NodeTests: XCTestCase {
 
     func testExpressibleByArrayLiteral() {
@@ -209,6 +206,10 @@ class NodeTests: XCTestCase {
 
 extension NodeTests {
     static var allTests: [(String, (NodeTests) -> () throws -> Void)] {
+#if os(Windows)
+        // TODO: Fix these tests on Windows
+        return []
+#else
         return [
             ("testExpressibleByArrayLiteral", testExpressibleByArrayLiteral),
             ("testExpressibleByDictionaryLiteral", testExpressibleByDictionaryLiteral),
@@ -224,7 +225,6 @@ extension NodeTests {
             ("testSequenceBehavesLikeAnArray", testSequenceBehavesLikeAnArray),
             ("testScalar", testScalar)
         ]
+#endif
     }
 }
-
-#endif

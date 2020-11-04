@@ -12,9 +12,6 @@ import Yams
 
 // swiftlint:disable identifier_name line_length
 
-// TODO: Fix these tests on Windows
-#if !os(Windows)
-
 /// Tests are copied from https://github.com/apple/swift/blob/master/test/stdlib/TestJSONEncoder.swift
 class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
     // MARK: - Encoding Top-Level Empty Types
@@ -1110,6 +1107,10 @@ private struct Unkeyed: Codable, Equatable {
 
 extension EncoderTests {
     static var allTests: [(String, (EncoderTests) -> () throws -> Void)] {
+// TODO: Fix these tests on Windows
+#if os(Windows)
+        return []
+#else
         return [
             ("testEncodingTopLevelEmptyStruct", testEncodingTopLevelEmptyStruct),
             ("testEncodingTopLevelEmptyClass", testEncodingTopLevelEmptyClass),
@@ -1140,9 +1141,6 @@ extension EncoderTests {
             ("test_null_yml", test_null_yml),
             ("testEncodingDateWithNanosecondGreaterThan999499977", testEncodingDateWithNanosecondGreaterThan999499977)
         ]
-    }
-}
-
 #endif
-
-// swiftlint:disable:this file_length
+    }
+} // swiftlint:disable:this file_length
