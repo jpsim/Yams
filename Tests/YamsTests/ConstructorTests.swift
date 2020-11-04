@@ -524,6 +524,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
 #endif
 }
 
+#if os(Linux)
 extension ConstructorTests {
     static var allTests: [(String, (ConstructorTests) -> () throws -> Void)] {
         return [
@@ -544,4 +545,7 @@ extension ConstructorTests {
             ("testValue", testValue)
         ]
     }
-} // swiftlint:disable:this file_length
+}
+#endif
+
+// swiftlint:disable:this file_length
