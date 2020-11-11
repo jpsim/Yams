@@ -10,14 +10,14 @@ import Foundation
 
 #if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
 import Darwin
-fileprivate let cpow: (_: Double, _: Double) -> Double = Darwin.pow
+private let cpow: (_: Double, _: Double) -> Double = Darwin.pow
 #elseif os(Windows)
 import ucrt
-fileprivate let cpow: (_: Double, _: Double) -> Double = ucrt.pow
+private let cpow: (_: Double, _: Double) -> Double = ucrt.pow
 #else
 import CoreFoundation
 import Glibc
-fileprivate let cpow: (_: Double, _: Double) -> Double = Glibc.pow
+private let cpow: (_: Double, _: Double) -> Double = Glibc.pow
 #endif
 
 public extension Node {
