@@ -6,13 +6,7 @@
 //  Copyright (c) 2017 Yams. All rights reserved.
 //
 
-#if os(Linux)
-import CoreFoundation
-#endif
 import Foundation
-#if os(Windows)
-import ucrt
-#endif
 
 #if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
 import Darwin
@@ -21,6 +15,7 @@ fileprivate let cpow: (_: Double, _: Double) -> Double = Darwin.pow
 import ucrt
 fileprivate let cpow: (_: Double, _: Double) -> Double = ucrt.pow
 #else
+import CoreFoundation
 import Glibc
 fileprivate let cpow: (_: Double, _: Double) -> Double = Glibc.pow
 #endif
