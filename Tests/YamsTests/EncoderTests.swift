@@ -398,9 +398,9 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
     }
 
     private func _testDecodeShouldFail<T>(of type: T.Type,
-                                       from string: String,
-                                       file: StaticString = #file,
-                                       line: UInt = #line) where T: Codable {
+                                          from string: String,
+                                          file: StaticString = #file,
+                                          line: UInt = #line) where T: Codable {
         do {
             let decoder = YAMLDecoder()
             _ = try decoder.decode(T.self, from: string)
