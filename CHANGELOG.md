@@ -14,6 +14,10 @@
   [Matt Polzin](https://github.com/mattpolzin)
   [#263](https://github.com/jpsim/Yams/issues/263)
 
+* Fix compilation errors when compiling using Swift For TensorFlow or
+  Windows.  
+  [Saleem Abdulrasool](https://github.com/compnerd)
+
 ## 4.0.0
 
 ##### Breaking
