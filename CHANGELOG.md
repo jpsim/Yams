@@ -1,4 +1,4 @@
-## Master
+## 4.0.2
 
 ##### Breaking
 
@@ -6,7 +6,8 @@
 
 ##### Enhancements
 
-* None.
+* Add support for Apple Silicon in `SwiftSupport.cmake`.  
+  [Max Desiatov](https://github.com/MaxDesiatov)
 
 ##### Bug Fixes
 
