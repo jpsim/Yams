@@ -6,7 +6,8 @@
 
 ##### Enhancements
 
-* None.
+* Update Xcode project from Swift 4.2 to 5.0.
+* Enable `CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER`
 
 ##### Bug Fixes
 
