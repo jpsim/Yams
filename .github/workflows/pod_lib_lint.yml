@@ -2,7 +2,7 @@ name: pod lib lint
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths: 
       - '.github/workflows/pod_lib_lint.yml'
       - '*.podspec'

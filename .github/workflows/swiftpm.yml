@@ -2,7 +2,7 @@ name: SwiftPM
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths: 
       - '.github/workflows/swiftpm.yml'
       - 'Package*'

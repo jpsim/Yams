@@ -2,7 +2,7 @@ name: xcodebuild
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths: 
       - '.github/workflows/xcodebuild.yml'
       - 'Yams.xcodeproj/**'

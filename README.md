@@ -1,6 +1,6 @@
 # Yams
 
-![Yams](https://raw.githubusercontent.com/jpsim/Yams/master/yams.jpg)
+![Yams](https://raw.githubusercontent.com/jpsim/Yams/main/yams.jpg)
 
 A sweet and swifty [YAML](http://yaml.org/) parser built on
 [LibYAML](https://github.com/yaml/libyaml).
@@ -9,7 +9,7 @@ A sweet and swifty [YAML](http://yaml.org/) parser built on
 [![xcodebuild](https://github.com/jpsim/Yams/workflows/xcodebuild/badge.svg)](https://github.com/jpsim/Yams/actions?query=workflow%3Axcodebuild)
 [![pod lib lint](https://github.com/jpsim/Yams/workflows/pod%20lib%20lint/badge.svg)](https://github.com/jpsim/Yams/actions?query=workflow%3A%22pod+lib+lint%22)
 [![Nightly](https://github.com/jpsim/Yams/workflows/Nightly/badge.svg)](https://github.com/jpsim/Yams/actions?query=workflow%3ANightly)
-[![codecov](https://codecov.io/gh/jpsim/Yams/branch/master/graph/badge.svg)](https://codecov.io/gh/jpsim/Yams)
+[![codecov](https://codecov.io/gh/jpsim/Yams/branch/main/graph/badge.svg)](https://codecov.io/gh/jpsim/Yams)
 
 ## Installation
 

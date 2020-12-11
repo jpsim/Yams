@@ -2,7 +2,7 @@ name: SwiftLint Analyze
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths: 
       - '.github/workflows/swiftlint_analyze.yml'
       - 'Yams.xcodeproj/**'
