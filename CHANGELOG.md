@@ -1,4 +1,4 @@
-## Master
+## 4.0.3
 
 ##### Breaking
 
@@ -6,8 +6,11 @@
 
 ##### Enhancements
 
-* Update Xcode project from Swift 4.2 to 5.0.
-* Enable `CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER`
+* Update Xcode project from Swift 4.2 to 5.0.  
+  [Brennan Stehling](https://github.com/brennanMKE)
+
+* Enable `CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER`.  
+  [Brennan Stehling](https://github.com/brennanMKE)
 
 ##### Bug Fixes
 
