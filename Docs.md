@@ -82,16 +82,15 @@ import Yams
 
 extension Constructor {
   public static func withBoolAsTrueFalse() -> Constructor {
-    var map = defaultMap
+    var map = defaultScalarMap
     map[.bool] = Bool.constructUsingOnlyTrueAndFalse
     return Constructor(map)
   }
 }
 
 private extension Bool {
-  static func constructUsingOnlyTrueAndFalse(from node: Node) -> Bool? {
-    assert(node.isScalar)
-    switch node.scalar!.string.lowercased() {
+  static func constructUsingOnlyTrueAndFalse(from scalar: Node.Scalar) -> Bool? {
+    switch scalar.string.lowercased() {
     case "true":
       return true
     case "false":
@@ -99,15 +98,6 @@ private extension Bool {
     default:
       return nil
     }
-  }
-}
-
-private extension Node {
-  var isScalar: Bool {
-    if case .scalar = self {
-      return true
-    }
-    return false
   }
 }
 
@@ -136,17 +126,16 @@ import Yams
 
 extension Constructor {
   public static func withEnv(_ env: [String: String]) -> Constructor {
-    var map = defaultMap
+    var map = defaultScalarMap
     map[.str] = String.constructExpandingEnvVars(env: env)
     return Constructor(map)
   }
 }
 
 private extension String {
-  static func constructExpandingEnvVars(env: [String: String]) -> (_ node: Node) -> String? {
-    return { (node: Node) -> String? in
-      assert(node.isScalar)
-      return node.scalar!.string.expandingEnvVars(env: env)
+  static func constructExpandingEnvVars(env: [String: String]) -> (_ scalar: Node.Scalar) -> String? {
+    return { (scalar: Node.Scalar) -> String? in
+      return node.string.expandingEnvVars(env: env)
     }
   }
 
