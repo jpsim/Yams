@@ -256,7 +256,7 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
         case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
             return .infinity
         case "-.inf", "-.Inf", "-.INF":
-            return -Self.infinity
+            return -.infinity
         case ".nan", ".NaN", ".NAN":
             return .nan
         default:
