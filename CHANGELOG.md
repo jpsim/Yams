@@ -6,7 +6,8 @@
 
 ##### Enhancements
 
-* None.
+* Expose the underlying `Node`'s `Mark` on `Decoder`.  
+  [Brentley Jones](https://github.com/brentleyjones)
 
 ##### Bug Fixes
 

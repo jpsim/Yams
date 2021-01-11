@@ -69,7 +69,7 @@ public class YAMLDecoder {
 
 private struct _Decoder: Decoder {
 
-    private let node: Node
+    fileprivate let node: Node
 
     init(referencing node: Node, userInfo: [CodingUserInfoKey: Any], codingPath: [CodingKey] = []) {
         self.node = node
@@ -341,6 +341,15 @@ extension URL: ScalarConstructible {
     /// - returns: An instance of `URL`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> URL? {
         return URL(string: scalar.string)
+    }
+}
+
+// MARK: Decoder.mark
+
+extension Decoder {
+    /// The `Mark` for the underlying `Node` that has been decoded.
+    public var mark: Mark? {
+        return (self as? _Decoder)?.node.mark
     }
 }
 

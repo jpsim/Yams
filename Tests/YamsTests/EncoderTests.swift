@@ -348,6 +348,41 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
         _testRoundTrip(of: date)
     }
 
+    func testDecoderMark() throws {
+        let s = """
+            map:
+              a: Hello
+              b: World
+            """
+
+        struct Locatable<Value: Decodable>: Decodable {
+            let value: Value
+            let location: String
+
+            init(from decoder: Decoder) throws {
+                let container = try decoder.singleValueContainer()
+
+                self.value = try container.decode(Value.self)
+                self.location = decoder.mark?.description ?? ""
+            }
+        }
+
+        struct Root: Decodable {
+            let map: Locatable<Map>
+
+            struct Map: Decodable {
+                let a: Locatable<String>
+                let b: String
+            }
+        }
+
+        let root = try YAMLDecoder().decode(Locatable<Root>.self, from: s)
+
+        XCTAssertEqual(root.location, "1:1")
+        XCTAssertEqual(root.value.map.location, "2:3")
+        XCTAssertEqual(root.value.map.value.a.location, "2:6")
+    }
+
     // MARK: - Helper Functions
 
     private func _testRoundTrip<T>(of value: T,
@@ -1168,7 +1203,8 @@ extension EncoderTests {
             ("testDecodingConcreteTypeParameter", testDecodingConcreteTypeParameter),
             ("testDecodingAnchors", testDecodingAnchors),
             ("test_null_yml", test_null_yml),
-            ("testEncodingDateWithNanosecondGreaterThan999499977", testEncodingDateWithNanosecondGreaterThan999499977)
+            ("testEncodingDateWithNanosecondGreaterThan999499977", testEncodingDateWithNanosecondGreaterThan999499977),
+            ("testDecoderMark", testDecoderMark),
         ]
 #endif
     }
