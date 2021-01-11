@@ -10,7 +10,8 @@
 
 ##### Bug Fixes
 
-* None.
+* Fix mark for sequences and mappings.
+  [Brentley Jones](https://github.com/brentleyjones)
 
 ## 4.0.3
 

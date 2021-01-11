@@ -39,12 +39,31 @@ class MarkTests: XCTestCase {
                 "'identifier_name' and will be completely removed in a future release."
             ])
     }
+
+    func testMappingMarkIsCorrect() throws {
+        let yaml = """
+            values:
+              sequence:
+                - Hello
+                - World
+            """
+        let root = try Yams.compose(yaml: yaml)
+        let values = root?.mapping?["values"]
+        let sequence = values?.mapping?["sequence"]
+        let firstElement = sequence?.sequence?[0]
+
+        XCTAssertEqual(root?.mark?.description, "1:1")
+        XCTAssertEqual(values?.mark?.description, "2:3")
+        XCTAssertEqual(sequence?.mark?.description, "3:5")
+        XCTAssertEqual(firstElement?.mark?.description, "3:7")
+    }
 }
 
 extension MarkTests {
     static var allTests: [(String, (MarkTests) -> () throws -> Void)] {
         return [
-            ("testLocatableDeprecationMessageForSwiftLint", testLocatableDeprecationMessageForSwiftLint)
+            ("testLocatableDeprecationMessageForSwiftLint", testLocatableDeprecationMessageForSwiftLint),
+            ("testMappingMarkIsCorrect", testMappingMarkIsCorrect),
         ]
     }
 }
