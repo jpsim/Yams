@@ -336,7 +336,7 @@ private extension Parser {
             array.append(try loadNode(from: event))
             event = try parse()
         }
-        let node = Node.sequence(.init(array, tag(firstEvent.sequenceTag), event.sequenceStyle, event.startMark))
+        let node = Node.sequence(.init(array, tag(firstEvent.sequenceTag), event.sequenceStyle, firstEvent.startMark))
         if let anchor = firstEvent.sequenceAnchor {
             anchors[anchor] = node
         }
@@ -353,7 +353,7 @@ private extension Parser {
             pairs.append((key, value))
             event = try parse()
         }
-        let node = Node.mapping(.init(pairs, tag(firstEvent.mappingTag), event.mappingStyle, event.startMark))
+        let node = Node.mapping(.init(pairs, tag(firstEvent.mappingTag), event.mappingStyle, firstEvent.startMark))
         if let anchor = firstEvent.mappingAnchor {
             anchors[anchor] = node
         }
