@@ -1,4 +1,4 @@
-## Main
+## 4.0.4
 
 ##### Breaking
 
@@ -11,7 +11,7 @@
 
 ##### Bug Fixes
 
-* Fix mark for sequences and mappings.
+* Fix mark for sequences and mappings.  
   [Brentley Jones](https://github.com/brentleyjones)
 
 ## 4.0.3
