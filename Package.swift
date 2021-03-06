@@ -4,7 +4,8 @@ import PackageDescription
 let package = Package(
     name: "Yams",
     products: [
-        .library(name: "Yams", targets: ["Yams"])
+        .library(name: "Yams", targets: ["Yams"]),
+        .library(name: "CYaml", targets: ["CYaml"])
     ],
     targets: [
         .target(name: "CYaml"),
