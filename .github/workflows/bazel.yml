@@ -1,0 +1,52 @@
+name: bazel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
+      - 'Tests/**/*.ya?ml'
+      - '!Tests/LinuxMain.swift'
+      - '**/BUILD'
+      - 'WORKSPACE'
+  pull_request:
+    paths:
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Tests/**/*.swift'
+      - 'Tests/**/*.ya?ml'
+      - '!Tests/LinuxMain.swift'
+      - '**/BUILD'
+      - 'WORKSPACE'
+
+jobs:
+  bazel:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Bazel
+        if: always()
+        run: go get github.com/bazelbuild/bazelisk
+        shell: bash
+      - name: MacOS build test
+        if: always()
+        run: bazelisk test //Tests:MacOSBuildTest
+        shell: bash
+      - name: WatchOS build test
+        if: always()
+        run: bazelisk test //Tests:WatchOSBuildTest
+        shell: bash
+      - name: iOS build test
+        if: always()
+        run: bazelisk test //Tests:iOSBuildTest
+        shell: bash
+      - name: tvOS build test
+        if: always()
+        run: bazelisk test //Tests:tvOSBuildTest
+        shell: bash
+      - name: Yams tests
+        if: always()
+        run: bazelisk test //Tests/YamsTests:YamsTests --macos_minimum_os=10.9
+        shell: bash
