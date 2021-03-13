@@ -5,12 +5,9 @@ load(
 
 objc_library(
     name = "CYaml",
-    srcs = glob(["src/*"]),
-    hdrs = glob(["include/*"]),
-    copts = [
-        "-iquote",
-        "external/Yams/Sources/CYaml/include",
-    ],
+    srcs = glob(["src/*.c", "src/*.h"]),
+    hdrs = ["include/yaml.h"],
+    includes = ["include"],
     visibility = [
       "//Sources/Yams:__pkg__",
       "//Tests:__subpackages__"
