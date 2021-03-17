@@ -60,7 +60,7 @@ http_archive(
     urls = [
         "https://github.com/jpsim/Yams/archive/%s.zip" % YAMS_GIT_SHA
     ],
-    strip_prefix = "yams-%s" % YAMS_GIT_SHA
+    strip_prefix = "yams-%s" % YAMS_GIT_SHA,
 )
 ```
 
