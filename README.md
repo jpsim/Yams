@@ -58,7 +58,7 @@ YAMS_GIT_SHA = "SOME_SHA"
 http_archive(
     name = "yams",
     urls = [
-        "https://github.com/jpsim/Yams/archive/%s.zip" % GTM_GIT_SHA
+        "https://github.com/jpsim/Yams/archive/%s.zip" % YAMS_GIT_SHA
     ],
     strip_prefix = "yams-%s" % YAMS_GIT_SHA
 )
