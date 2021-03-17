@@ -7,5 +7,5 @@ swift_test(
     data = glob(["Fixtures/**/*.*"]),
     deps = [
         "//Sources/Yams:Yams",
-    ]
+    ],
 )
