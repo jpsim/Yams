@@ -22,7 +22,7 @@ on:
       - 'WORKSPACE'
 
 jobs:
-  Bazel:
+  MacOS:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
