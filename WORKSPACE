@@ -7,6 +7,7 @@ http_archive(
     sha256 = "09423d57ace0fca1b84e19326dc9aadd42f2be52f1b5a15bc652d18c2c1dee71",
     url = "https://github.com/bazelbuild/rules_apple/releases/download/0.30.0/rules_apple.0.30.0.tar.gz",
 )
+
 load(
     "@build_bazel_rules_apple//apple:repositories.bzl",
     "apple_rules_dependencies",
