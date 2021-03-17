@@ -1,13 +1,6 @@
 workspace(name = "yams")
 
 load(
-    "@yams//bazel:repositories.bzl",
-    "yams_rules_dependencies",
-)
-
-yams_rules_dependencies()
-
-load(
     "@build_bazel_rules_apple//apple:repositories.bzl",
     "apple_rules_dependencies",
 )
