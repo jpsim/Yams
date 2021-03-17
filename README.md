@@ -62,13 +62,6 @@ http_archive(
     ],
     strip_prefix = "yams-%s" % YAMS_GIT_SHA
 )
-
-load(
-    "@yams//bazel:repositories.bzl",
-    "yams_rules_dependencies",
-)
-
-yams_rules_dependencies()
 ```
 
 ## Usage
