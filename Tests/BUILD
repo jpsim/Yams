@@ -4,7 +4,7 @@ load("@build_bazel_rules_apple//apple:tvos.bzl", "tvos_build_test")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_build_test")
 
 macos_build_test(
-    name = "MacOSBuildTest",
+    name = "macOSBuildTest",
     minimum_os_version = "10.9",
     targets = [
         "//Sources/Yams:Yams",
