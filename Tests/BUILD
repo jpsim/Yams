@@ -27,7 +27,7 @@ tvos_build_test(
     targets = [
         "//Sources/Yams:Yams",
         "//Sources/CYaml:CYaml",
-    ]
+    ],
 )
 
 ios_build_test(
