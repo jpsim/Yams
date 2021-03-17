@@ -18,7 +18,7 @@ watchos_build_test(
     targets = [
         "//Sources/Yams:Yams",
         "//Sources/CYaml:CYaml",
-    ]
+    ],
 )
 
 tvos_build_test(
