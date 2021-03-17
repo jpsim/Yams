@@ -13,7 +13,7 @@ macos_build_test(
 )
 
 watchos_build_test(
-    name = "WatchOSBuildTest",
+    name = "watchOSBuildTest",
     minimum_os_version = "2.0",
     targets = [
         "//Sources/Yams:Yams",
@@ -38,4 +38,3 @@ ios_build_test(
         "//Sources/CYaml:CYaml",
     ]
 )
-
