@@ -1,4 +1,4 @@
-name: bazel
+name: Bazel
 
 on:
   push:
@@ -22,7 +22,7 @@ on:
       - 'WORKSPACE'
 
 jobs:
-  bazel:
+  Bazel:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -46,3 +46,13 @@ jobs:
         if: always()
         run: bazelisk test //Tests/YamsTests:YamsTests
         shell: bash
+  Linux:
+    strategy:
+      matrix:
+        tag: ['5.1', '5.2', '5.3']
+    runs-on: ubuntu-latest
+    container:
+      image: swift:${{ matrix.tag }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: bazelisk test //Tests/YamsTests:YamsTests
