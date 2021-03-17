@@ -6,6 +6,6 @@ swift_test(
     srcs = glob(["*.swift"]),
     data = glob(["Fixtures/**/*.*"]),
     deps = [
-        "//Sources/Yams:Yams"
+        "//Sources/Yams:Yams",
     ]
 )
