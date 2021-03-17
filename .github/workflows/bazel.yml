@@ -26,10 +26,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Bazel
-        if: always()
-        run: go get github.com/bazelbuild/bazelisk
-        shell: bash
       - name: MacOS build test
         if: always()
         run: bazelisk test //Tests:MacOSBuildTest
