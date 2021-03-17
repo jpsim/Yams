@@ -32,7 +32,7 @@ jobs:
         shell: bash
       - name: WatchOS build test
         if: always()
-        run: bazelisk test //Tests:WatchOSBuildTest
+        run: bazelisk test //Tests:watchOSBuildTest
         shell: bash
       - name: iOS build test
         if: always()
