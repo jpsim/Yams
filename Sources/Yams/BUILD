@@ -5,7 +5,6 @@ swift_library(
     module_name = "Yams",
     srcs = glob(["*.swift"]),
     copts = [
-        "-suppress-warnings",
         "-DSWIFT_PACKAGE",
     ],
     visibility = ["//visibility:public"],

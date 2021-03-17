@@ -56,7 +56,7 @@ In your WORKSPACE file
 ```WORKSPACE
 YAMS_GIT_SHA = "SOME_SHA"
 http_archive(
-    name = "yams",
+    name = "com_github_jpsim_yams",
     urls = [
         "https://github.com/jpsim/Yams/archive/%s.zip" % YAMS_GIT_SHA
     ],
