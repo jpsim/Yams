@@ -9,7 +9,7 @@ macos_build_test(
     targets = [
         "//Sources/Yams:Yams",
         "//Sources/CYaml:CYaml",
-    ]
+    ],
 )
 
 watchos_build_test(
