@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: MacOS build test
         if: always()
-        run: bazelisk test //Tests:MacOSBuildTest
+        run: bazelisk test //Tests:macOSBuildTest
         shell: bash
       - name: WatchOS build test
         if: always()
