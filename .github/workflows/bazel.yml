@@ -56,9 +56,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Bazel
-         if: always()
-         run: go get github.com/bazelbuild/bazelisk
-         shell: bash
+        if: always()
+        run: go get github.com/bazelbuild/bazelisk
+        shell: bash
       - name: Yams tests
         if: always()
         run: bazelisk test //Tests/YamsTests:YamsTests
