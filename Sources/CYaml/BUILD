@@ -1,9 +1,9 @@
 load(
     "@rules_cc//cc:defs.bzl",
-    "objc_library"
+    "cc_library"
 )
 
-objc_library(
+cc_library(
     name = "CYaml",
     srcs = glob(["src/*.c", "src/*.h"]),
     hdrs = ["include/yaml.h"],
@@ -12,5 +12,4 @@ objc_library(
         "//Sources/Yams:__pkg__",
         "//Tests:__subpackages__",
     ],
-    module_map = "include/module.modulemap",
 )
