@@ -2,6 +2,25 @@ load("@build_bazel_rules_apple//apple:macos.bzl", "macos_build_test")
 load("@build_bazel_rules_apple//apple:watchos.bzl", "watchos_build_test")
 load("@build_bazel_rules_apple//apple:tvos.bzl", "tvos_build_test")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_build_test")
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_test")
+
+config_setting(
+    name = "linux",
+    values = {"define": "platform=linux"},
+)
+
+swift_test(
+    name = "YamsTests",
+    module_name = "YamsTests",
+    srcs = select({
+        ":linux": glob(["YamsTests/*.swift", "*.swift"]),
+        "//conditions:default": glob(["YamsTests/*.swift"]),
+    }),
+    data = glob(["YamsTests/Fixtures/**/*.*"]),
+    deps = [
+        "//Sources/Yams:Yams",
+    ],
+)
 
 macos_build_test(
     name = "macOSBuildTest",

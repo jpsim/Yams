@@ -44,7 +44,7 @@ jobs:
         shell: bash
       - name: Yams tests
         if: always()
-        run: bazelisk test //Tests/YamsTests:YamsTests
+        run: bazelisk test //Tests:YamsTests
         shell: bash
   Linux:
     strategy:
@@ -64,5 +64,5 @@ jobs:
         shell: bash
       - name: Yams tests
         if: always()
-        run: CC=clang bazelisk test //Tests/YamsTests:YamsTests
+        run: CC=clang bazelisk test //Tests:YamsTests --define platform=linux
         shell: bash
