@@ -1,4 +1,3 @@
-#if os(Linux)
 import XCTest
 
 @testable import YamsTests
@@ -16,4 +15,3 @@ XCTMain([
     testCase(StringTests.allTests),
     testCase(YamlErrorTests.allTests)
 ])
-#endif
