@@ -6,7 +6,7 @@ load("@build_bazel_rules_swift//swift:swift.bzl", "swift_test")
 
 config_setting(
     name = "linux",
-    values = {"define": "platform=linux"},
+    constraint_values = ["@platforms//os:linux"],
 )
 
 swift_test(
