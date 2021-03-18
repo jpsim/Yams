@@ -64,5 +64,5 @@ jobs:
         shell: bash
       - name: Yams tests
         if: always()
-        run: CC=clang bazelisk test //Tests:YamsTests --define platform=linux
+        run: CC=clang bazelisk test //Tests:YamsTests --define platform=linux --action_env=PATH
         shell: bash
