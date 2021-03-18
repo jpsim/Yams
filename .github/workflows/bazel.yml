@@ -66,3 +66,7 @@ jobs:
         if: always()
         run: CC=clang bazelisk test //Tests:YamsTests --action_env=PATH
         shell: bash
+      - name: Yams tests logs
+        if: always()
+        run: cat bazel-out/k8-fastbuild/testlogs/Tests/YamsTests/test.log
+        shell: bash
