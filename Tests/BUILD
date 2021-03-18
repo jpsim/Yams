@@ -17,6 +17,7 @@ swift_test(
         "//conditions:default": glob(["YamsTests/*.swift"]),
     }),
     data = glob(["YamsTests/Fixtures/**/*.*"]),
+    defines = ["BAZEL"],
     deps = [
         "//Sources/Yams:Yams",
     ],

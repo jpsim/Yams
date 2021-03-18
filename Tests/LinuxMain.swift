@@ -1,6 +1,10 @@
+#if os(Linux)
 import XCTest
 
+#if BAZEL
+#else
 @testable import YamsTests
+#endif
 
 XCTMain([
     testCase(ConstructorTests.allTests),
@@ -15,3 +19,4 @@ XCTMain([
     testCase(StringTests.allTests),
     testCase(YamlErrorTests.allTests)
 ])
+#endif
