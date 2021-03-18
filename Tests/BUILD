@@ -13,7 +13,7 @@ swift_test(
     name = "YamsTests",
     module_name = "YamsTests",
     srcs = glob(["YamsTests/*.swift"]) + select({
-        ":linux": ["LinuxMain.swift"],
+        ":linux": ["main.swift"],
         "//conditions:default": [],
     }),
     data = glob(["YamsTests/Fixtures/**/*.*"]),
