@@ -1,6 +1,8 @@
 #if os(Linux)
 import XCTest
 
+@testable import YamsTests
+
 XCTMain([
     testCase(ConstructorTests.allTests),
     testCase(EmitterTests.allTests),
