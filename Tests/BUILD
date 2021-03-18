@@ -16,7 +16,7 @@ swift_test(
         ":linux": ["main.swift"],
         "//conditions:default": [],
     }),
-    data = ["//Tests/YamsTests/Fixtures:YamsTestFixtures"],
+    data = glob(["YamsTests/Fixtures/**/*.*"]),
     deps = [
         "//Sources/Yams:Yams",
     ],
