@@ -12,9 +12,9 @@ config_setting(
 swift_test(
     name = "YamsTests",
     module_name = "YamsTests",
-    srcs = select({
-        ":linux": glob(["YamsTests/*.swift", "main.swift"]),
-        "//conditions:default": glob(["YamsTests/*.swift"]),
+    srcs = glob(["YamsTests/*.swift"]) + select({
+        ":linux": ["main.swift"],
+        "//conditions:default": [],
     }),
     data = glob(["YamsTests/Fixtures/**/*.*"]),
     deps = [
