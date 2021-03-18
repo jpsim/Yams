@@ -64,5 +64,5 @@ jobs:
         shell: bash
       - name: Yams tests
         if: always()
-        run: bazelisk test //Tests/YamsTests:YamsTests
+        run: CC=clang bazelisk test //Tests/YamsTests:YamsTests
         shell: bash
