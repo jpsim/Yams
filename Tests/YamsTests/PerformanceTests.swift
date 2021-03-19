@@ -64,6 +64,9 @@ class PerformanceTests: XCTestCase {
     ]
 
     func loadYAML() throws -> String {
+        if let directory = ProcessInfo.processInfo.environment["BUILD_WORKSPACE_DIRECTORY"] {
+            FileManager.default.changeCurrentDirectoryPath(directory)
+        }
         let data = try Data(contentsOf: URL(fileURLWithPath: filename))
         return String(data: data, encoding: .utf8)!
     }
