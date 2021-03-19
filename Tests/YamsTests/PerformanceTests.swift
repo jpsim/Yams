@@ -10,16 +10,10 @@ import Foundation
 import XCTest
 import Yams
 
-private let fixturesDirectory = URL(fileURLWithPath: #file).deletingLastPathComponent().path + "/Fixtures/"
+private let fixturesDirectory = URL(fileURLWithPath: ProcessInfo.processInfo.environment["BUILD_WORKSPACE_DIRECTORY"] ?? #file).deletingLastPathComponent().path + "/Fixtures/"
 
 class PerformanceTests: XCTestCase {
-    #if BAZEL
-    #if os(Linux)
-    let filename = "debug.yaml"
-    #endif
-    #else
     let filename = fixturesDirectory + "SourceKitten#289/debug.yaml"
-    #endif
     let expectedImports = ["/SourceKitten/.build/debug"]
     let expectedOtherArguments = [
         "-j8", "-D", "SWIFT_PACKAGE", "-Onone", "-g", "-enable-testing",
