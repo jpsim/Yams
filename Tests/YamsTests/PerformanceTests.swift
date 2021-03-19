@@ -58,6 +58,7 @@ class PerformanceTests: XCTestCase {
     ]
 
     func loadYAML() throws -> String {
+        print("DIRECTORY: \(ProcessInfo.processInfo.environment["BUILD_WORKSPACE_DIRECTORY"] ?? "")")
         if let directory = ProcessInfo.processInfo.environment["BUILD_WORKSPACE_DIRECTORY"] {
             FileManager.default.changeCurrentDirectoryPath(directory)
         }
