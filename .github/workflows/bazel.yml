@@ -64,9 +64,7 @@ jobs:
         shell: bash
       - name: Yams tests
         if: always()
-        run: |
-             build_workspace_directory=$(git rev-parse --show-toplevel)
-             CC=clang bazelisk test //Tests:YamsTests --action_env=PATH --test_env=BUILD_WORKSPACE_DIRECTORY=$build_workspace_directory
+        run: CC=clang bazelisk test //Tests:YamsTests --action_env=PATH --test_env=BUILD_WORKSPACE_DIRECTORY=$PWD
         shell: bash
       - name: Yams tests logs
         if: always()
