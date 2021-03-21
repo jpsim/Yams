@@ -9,6 +9,13 @@ config_setting(
     constraint_values = ["@platforms//os:linux"],
 )
 
+genrule(
+    name = "LinuxMain",
+    srcs = ["LinuxMain.swift"],
+    outs = ["main.swift"],
+    cmd = "cp $< $@"
+)
+
 swift_test(
     name = "YamsTests",
     module_name = "YamsTests",
