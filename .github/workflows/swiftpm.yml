@@ -3,7 +3,8 @@ name: SwiftPM
 on:
   push:
     branches: [main]
-    paths: 
+    paths:
+      - '.codecov.yml'
       - '.github/workflows/swiftpm.yml'
       - 'Package*'
       - 'Sources/**/*.[ch]'
@@ -12,7 +13,8 @@ on:
       - 'Tests/**/*.swift'
       - 'Tests/**/*.ya?ml'
   pull_request:
-    paths: 
+    paths:
+      - '.codecov.yml'
       - '.github/workflows/swiftpm.yml'
       - 'Package*'
       - 'Sources/**/*.[ch]'
@@ -25,7 +27,7 @@ jobs:
   Xcode:
     strategy:
       matrix:
-        xcode_version: ['11.2.1', '11.3.1', '11.4.1', '11.5', '11.6', '11.7', '12.0.1', '12.1', '12.2']
+        xcode_version: ['11.2.1', '11.3.1', '11.4.1', '11.5', '11.6', '11.7', '12.0.1', '12.1', '12.2', '12.4']
     runs-on: macos-latest
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
@@ -34,6 +36,15 @@ jobs:
       - run: swift -version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
+      - name: Code Coverage
+        if: matrix.xcode_version == '12.4'
+        run: |
+          swift test --enable-code-coverage
+          xcrun llvm-cov export -format="lcov" .build/debug/YamsPackageTests.xctest/Contents/MacOS/YamsPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
+          if [[ -n "${CODECOV_TOKEN}" ]]; then
+            bash <(curl -s https://codecov.io/bash) -f coverage.lcov
+          fi
+        env: { 'CODECOV_TOKEN': '${{ secrets.CODECOV_TOKEN }}' }
 
   Linux:
     strategy:
