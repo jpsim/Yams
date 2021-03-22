@@ -8,7 +8,6 @@ on:
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
       - 'Tests/**/*.ya?ml'
-      - '!Tests/LinuxMain.swift'
       - '**/BUILD'
       - 'WORKSPACE'
   pull_request:
@@ -17,7 +16,6 @@ on:
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
       - 'Tests/**/*.ya?ml'
-      - '!Tests/LinuxMain.swift'
       - '**/BUILD'
       - 'WORKSPACE'
 
