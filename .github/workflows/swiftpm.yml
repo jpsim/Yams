@@ -48,7 +48,7 @@ jobs:
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
 
   Windows:
-    runs-on: windows-latest
+    runs-on: windows-latest # Touch
     steps:
       - uses: actions/checkout@v2
       - uses: seanmiddleditch/gha-setup-vsdevenv@master
