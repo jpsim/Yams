@@ -316,6 +316,18 @@ cmake --build /path/to/build
 <h3 id='carthage' class='heading'>Carthage</h3>
 
 <p>Add <code>github &quot;jpsim/Yams&quot;</code> to your <code>Cartfile</code>.</p>
+<h3 id='bazel' class='heading'>Bazel</h3>
+
+<p>In your WORKSPACE file</p>
+<pre class="highlight plaintext"><code>YAMS_GIT_SHA = "SOME_SHA"
+http_archive(
+    name = "com_github_jpsim_yams",
+    urls = [
+        "https://github.com/jpsim/Yams/archive/%s.zip" % YAMS_GIT_SHA,
+    ],
+    strip_prefix = "yams-%s" % YAMS_GIT_SHA,
+)
+</code></pre>
 <h2 id='usage' class='heading'>Usage</h2>
 
 <p>Yams has three groups of conversion APIs:
