@@ -48,12 +48,12 @@ jobs:
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
 
   Windows:
-    runs-on: windows-latest # Touch
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - uses: seanmiddleditch/gha-setup-vsdevenv@master
-      - name: Install swift-DEVELOPMENT-SNAPSHOT-2020-10-29-a
-        run: Install-Binary -Url "https://swift.org/builds/development/windows10/swift-DEVELOPMENT-SNAPSHOT-2020-10-29-a/swift-DEVELOPMENT-SNAPSHOT-2020-10-29-a-windows10.exe" -Name "installer.exe" -ArgumentList ("-q")
+      - name: Install Swift 5.3
+        run: Install-Binary -Url "https://swift.org/builds/swift-5.3.3-release/windows10/swift-5.3.3-RELEASE/swift-5.3.3-RELEASE-windows10.exe" -Name "installer.exe" -ArgumentList ("-q")
       - name: Set Environment Variables
         run: |
           echo "SDKROOT=C:\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
