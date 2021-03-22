@@ -1228,7 +1228,10 @@ yaml_parser_roll_indent(yaml_parser_t *parser, ptrdiff_t column,
             return 0;
         }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
         parser->indent = column;
+#pragma clang diagnostic pop
 
         /* Create a token and insert it into the queue. */
 
