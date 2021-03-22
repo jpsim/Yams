@@ -85,5 +85,7 @@ jobs:
       #   with:
       #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
       #     SSH_PASS: ${{ secrets.SSH_PASS }}
+      - name: Build
+        run: swift build -v
       # - name: Test
       #   run: swift test -v
