@@ -11,7 +11,7 @@ import Yams
 
 class YamlErrorTests: XCTestCase {
     func testYamlErrorEmitter() throws {
-        XCTAssertThrowsError(try Yams.serialize(node: "test", version: (1, 2))) { error in
+        XCTAssertThrowsError(try Yams.serialize(node: "test", version: (1, 3))) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", "incompatible %YAML directive")
         }

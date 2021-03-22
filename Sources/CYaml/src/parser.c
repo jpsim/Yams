@@ -551,7 +551,7 @@ yaml_parser_parse_node(yaml_parser_t *parser, yaml_event_t *event,
 
     else
     {
-        start_mark = end_mark = tag_mark = token->start_mark;
+        start_mark = end_mark = token->start_mark;
 
         if (token->type == YAML_ANCHOR_TOKEN)
         {
@@ -1261,7 +1261,10 @@ yaml_parser_process_directives(yaml_parser_t *parser,
                 goto error;
             }
             if (token->data.version_directive.major != 1
-                    || token->data.version_directive.minor != 1) {
+                    || (
+                        token->data.version_directive.minor != 1
+                        && token->data.version_directive.minor != 2
+                    )) {
                 yaml_parser_set_parser_error(parser,
                         "found incompatible YAML document", token->start_mark);
                 goto error;
