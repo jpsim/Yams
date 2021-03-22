@@ -13,8 +13,7 @@ import Yams
 private let fixturesDirectory = URL(fileURLWithPath: #file).deletingLastPathComponent().path + "/Fixtures/"
 
 class PerformanceTests: XCTestCase {
-    let debugYamlPath = "SourceKitten#289/debug.yaml"
-    let filename = fixturesDirectory + debugYamlPath
+    let filename = fixturesDirectory + "SourceKitten#289/debug.yaml"
     let expectedImports = ["/SourceKitten/.build/debug"]
     let expectedOtherArguments = [
         "-j8", "-D", "SWIFT_PACKAGE", "-Onone", "-g", "-enable-testing",
@@ -63,7 +62,7 @@ class PerformanceTests: XCTestCase {
         if let buildWorkspace: String = ProcessInfo.processInfo.environment["BUILD_WORKSPACE_DIRECTORY"] {
             FileManager.default.changeCurrentDirectoryPath(buildWorkspace)
             let absoluteDirectory = URL(fileURLWithPath: buildWorkspace).path + "/Tests/YamsTests/Fixtures"
-            data = try Data(contentsOf: URL(fileURLWithPath: absoluteDirectory + "/\(debugYamlPath)"))
+            data = try Data(contentsOf: URL(fileURLWithPath: absoluteDirectory + "/SourceKitten#289/debug.yaml"))
         } else {
             data = try Data(contentsOf: URL(fileURLWithPath: filename))
         }
