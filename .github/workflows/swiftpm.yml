@@ -49,10 +49,11 @@ jobs:
 
   Windows:
     runs-on: windows-latest
+    environment: Windows CI
     steps:
       - uses: actions/checkout@v2
       - uses: seanmiddleditch/gha-setup-vsdevenv@master
-      - name: Install Swift 5.3
+      - name: Install Swift
         run: Install-Binary -Url "https://swift.org/builds/swift-5.3.3-release/windows10/swift-5.3.3-RELEASE/swift-5.3.3-RELEASE-windows10.exe" -Name "installer.exe" -ArgumentList ("-q")
       - name: Set Environment Variables
         run: |
