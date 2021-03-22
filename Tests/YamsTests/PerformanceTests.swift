@@ -10,7 +10,11 @@ import Foundation
 import XCTest
 import Yams
 
+private let fixturesDirectory = URL(fileURLWithPath: #file).deletingLastPathComponent().path + "/Fixtures/"
+
 class PerformanceTests: XCTestCase {
+    let debugYamlPath = "SourceKitten#289/debug.yaml"
+    let filename = fixturesDirectory + debugYamlPath
     let expectedImports = ["/SourceKitten/.build/debug"]
     let expectedOtherArguments = [
         "-j8", "-D", "SWIFT_PACKAGE", "-Onone", "-g", "-enable-testing",
@@ -55,14 +59,14 @@ class PerformanceTests: XCTestCase {
     ]
 
     func loadYAML() throws -> String {
-        let fixturesDirectory: String
+        let data: Data
         if let buildWorkspace: String = ProcessInfo.processInfo.environment["BUILD_WORKSPACE_DIRECTORY"] {
             FileManager.default.changeCurrentDirectoryPath(buildWorkspace)
-            fixturesDirectory = URL(fileURLWithPath: buildWorkspace).path + "/Tests/YamsTests/Fixtures"
+            let absoluteDirectory = URL(fileURLWithPath: buildWorkspace).path + "/Tests/YamsTests/Fixtures"
+            data = try Data(contentsOf: URL(fileURLWithPath: absoluteDirectory + "/\(debugYamlPath)"))
         } else {
-            fixturesDirectory = URL(fileURLWithPath: #file).deletingLastPathComponent().path + "/Fixtures/"
+            data = try Data(contentsOf: URL(fileURLWithPath: filename))
         }
-        let data = try Data(contentsOf: URL(fileURLWithPath: fixturesDirectory + "/SourceKitten#289/debug.yaml"))
         return String(data: data, encoding: .utf8)!
     }
 
