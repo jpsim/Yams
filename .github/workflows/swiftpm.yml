@@ -67,8 +67,9 @@ jobs:
           copy "%SDKROOT%\usr\share\visualc.modulemap" "%VCToolsInstallDir%\include\module.modulemap"
           copy "%SDKROOT%\usr\share\visualc.apinotes" "%VCToolsInstallDir%\include\visualc.apinotes"
           copy "%SDKROOT%\usr\share\winsdk.modulemap" "%UniversalCRTSdkDir%\Include\%UCRTVersion%\um\module.modulemap"
-      - name: Build
-        run: swift build -v
+      # Broken. Re-enable when fixed. See https://github.com/jpsim/Yams/pull/304 for details and attempts to fix.
+      # - name: Build
+      #   run: swift build -v
       # Commands to run once connected via SSH:
       #
       # >d:
@@ -83,5 +84,5 @@ jobs:
       #   with:
       #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
       #     SSH_PASS: ${{ secrets.SSH_PASS }}
-      - name: Test
-        run: swift test -v
+      # - name: Test
+      #   run: swift test -v
