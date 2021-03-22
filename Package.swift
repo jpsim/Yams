@@ -7,7 +7,7 @@ let package = Package(
         .library(name: "Yams", targets: ["Yams"])
     ],
     targets: [
-        .target(name: "CYaml"),
+        .target(name: "CYaml", cSettings: [.define("YAML_DECLARE_EXPORT")]),
         .target(name: "Yams", dependencies: ["CYaml"]),
         .testTarget(name: "YamsTests", dependencies: ["Yams"])
     ]
