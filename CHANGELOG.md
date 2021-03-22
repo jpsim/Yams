@@ -9,6 +9,10 @@
 * Adds the ability to build Yams for Linux and MacOS via Bazel.  
   [Maxwell Elliott](https://github.com/maxwellE)
 
+* Updated libYAML. See changes here:
+  https://github.com/yaml/libyaml/compare/53f5b86...acd6f6f  
+  [JP Simard](https://github.com/jpsim)
+
 ##### Bug Fixes
 
 * None.  

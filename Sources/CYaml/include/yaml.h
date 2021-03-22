@@ -937,7 +937,7 @@ yaml_document_add_mapping(yaml_document_t *document,
  * @param[in,out]   document    A document object.
  * @param[in]       sequence    The sequence node id.
  * @param[in]       item        The item node id.
-*
+ *
  * @returns @c 1 if the function succeeded, @c 0 on error.
  */
 
@@ -952,7 +952,7 @@ yaml_document_append_sequence_item(yaml_document_t *document,
  * @param[in]       mapping     The mapping node id.
  * @param[in]       key         The key node id.
  * @param[in]       value       The value node id.
-*
+ *
  * @returns @c 1 if the function succeeded, @c 0 on error.
  */
 
@@ -1020,6 +1020,7 @@ typedef enum yaml_parser_state_e {
     YAML_PARSE_DOCUMENT_CONTENT_STATE,
     /** Expect DOCUMENT-END. */
     YAML_PARSE_DOCUMENT_END_STATE,
+
     /** Expect a block node. */
     YAML_PARSE_BLOCK_NODE_STATE,
     /** Expect a block node or indentless sequence. */
@@ -1030,6 +1031,7 @@ typedef enum yaml_parser_state_e {
     YAML_PARSE_BLOCK_SEQUENCE_FIRST_ENTRY_STATE,
     /** Expect an entry of a block sequence. */
     YAML_PARSE_BLOCK_SEQUENCE_ENTRY_STATE,
+
     /** Expect an entry of an indentless sequence. */
     YAML_PARSE_INDENTLESS_SEQUENCE_ENTRY_STATE,
     /** Expect the first key of a block mapping. */
@@ -1040,6 +1042,7 @@ typedef enum yaml_parser_state_e {
     YAML_PARSE_BLOCK_MAPPING_VALUE_STATE,
     /** Expect the first entry of a flow sequence. */
     YAML_PARSE_FLOW_SEQUENCE_FIRST_ENTRY_STATE,
+
     /** Expect an entry of a flow sequence. */
     YAML_PARSE_FLOW_SEQUENCE_ENTRY_STATE,
     /** Expect a key of an ordered mapping. */
@@ -1051,6 +1054,7 @@ typedef enum yaml_parser_state_e {
     /** Expect the first key of a flow mapping. */
     YAML_PARSE_FLOW_MAPPING_FIRST_KEY_STATE,
     /** Expect a key of a flow mapping. */
+
     YAML_PARSE_FLOW_MAPPING_KEY_STATE,
     /** Expect a value of a flow mapping. */
     YAML_PARSE_FLOW_MAPPING_VALUE_STATE,
@@ -1205,7 +1209,7 @@ typedef struct yaml_parser_s {
     /** The number of tokens fetched from the queue. */
     size_t tokens_parsed;
 
-    /* Does the tokens queue contain a token ready for dequeueing. */
+    /** Does the tokens queue contain a token ready for dequeueing. */
     int token_available;
 
     /** The indentation levels stack. */
@@ -1446,7 +1450,7 @@ yaml_parser_parse(yaml_parser_t *parser, yaml_event_t *event);
  * @param[in,out]   parser      A parser object.
  * @param[out]      document    An empty document object.
  *
- * @return @c 1 if the function succeeded, @c 0 on error.
+ * @returns @c 1 if the function succeeded, @c 0 on error.
  */
 
 YAML_DECLARE(int)
@@ -1489,6 +1493,7 @@ typedef enum yaml_emitter_state_e {
     YAML_EMIT_DOCUMENT_CONTENT_STATE,
     /** Expect DOCUMENT-END. */
     YAML_EMIT_DOCUMENT_END_STATE,
+
     /** Expect the first item of a flow sequence. */
     YAML_EMIT_FLOW_SEQUENCE_FIRST_ITEM_STATE,
     /** Expect an item of a flow sequence. */
@@ -1499,6 +1504,7 @@ typedef enum yaml_emitter_state_e {
     YAML_EMIT_FLOW_MAPPING_KEY_STATE,
     /** Expect a value for a simple key of a flow mapping. */
     YAML_EMIT_FLOW_MAPPING_SIMPLE_VALUE_STATE,
+
     /** Expect a value of a flow mapping. */
     YAML_EMIT_FLOW_MAPPING_VALUE_STATE,
     /** Expect the first item of a block sequence. */
@@ -1509,6 +1515,7 @@ typedef enum yaml_emitter_state_e {
     YAML_EMIT_BLOCK_MAPPING_FIRST_KEY_STATE,
     /** Expect the key of a block mapping. */
     YAML_EMIT_BLOCK_MAPPING_KEY_STATE,
+
     /** Expect a value for a simple key of a block mapping. */
     YAML_EMIT_BLOCK_MAPPING_SIMPLE_VALUE_STATE,
     /** Expect a value of a block mapping. */
@@ -1560,7 +1567,7 @@ typedef struct yaml_emitter_s {
     /** Write handler. */
     yaml_write_handler_t *write_handler;
 
-    /** A pointer for passing to the white handler. */
+    /** A pointer for passing to the write handler. */
     void *write_handler_data;
 
     /** Standard (string or file) output data. */
