@@ -49,6 +49,21 @@ Add `pod 'Yams'` to your `Podfile`.
 
 Add `github "jpsim/Yams"` to your `Cartfile`.
 
+### Bazel
+
+In your WORKSPACE file
+
+```WORKSPACE
+YAMS_GIT_SHA = "SOME_SHA"
+http_archive(
+    name = "com_github_jpsim_yams",
+    urls = [
+        "https://github.com/jpsim/Yams/archive/%s.zip" % YAMS_GIT_SHA,
+    ],
+    strip_prefix = "yams-%s" % YAMS_GIT_SHA,
+)
+```
+
 ## Usage
 
 Yams has three groups of conversion APIs:

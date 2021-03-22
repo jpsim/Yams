@@ -1,0 +1,4 @@
+# Force the tests to not run in sandboxed mode, since it can introduce
+# errors and flakes.
+test --spawn_strategy=local
+build --macos_minimum_os=10.9

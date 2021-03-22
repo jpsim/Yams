@@ -6,11 +6,12 @@
 
 ##### Enhancements
 
-* None.
+* Adds the ability to build Yams for Linux and MacOS via Bazel.  
+  [Maxwell Elliott](https://github.com/maxwellE)
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 ## 4.0.4
 
