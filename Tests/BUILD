@@ -9,11 +9,18 @@ config_setting(
     constraint_values = ["@platforms//os:linux"],
 )
 
+genrule(
+    name = "LinuxMain",
+    srcs = ["LinuxMain.swift"],
+    outs = ["main.swift"],
+    cmd = "cp $< $@"
+)
+
 swift_test(
     name = "YamsTests",
     module_name = "YamsTests",
     srcs = glob(["YamsTests/*.swift"]) + select({
-        ":linux": ["LinuxMain.swift"],
+        ":linux": ["main.swift"],
         "//conditions:default": [],
     }),
     data = glob(["YamsTests/Fixtures/**/*.*"]),
