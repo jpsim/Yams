@@ -36,7 +36,7 @@ watchos_build_test(
     minimum_os_version = "2.0",
     targets = [
         "//:Yams",
-        "//S:CYaml",
+        "//:CYaml",
     ],
 )
 
