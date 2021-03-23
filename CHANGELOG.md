@@ -6,7 +6,7 @@
 
 ##### Enhancements
 
-* Update Bazel config to allow targets to be directly consumed. 
+* Update Bazel config to allow targets to be directly consumed.  
   [Maxwell Elliott](https://github.com/maxwellE)
 
 ##### Bug Fixes

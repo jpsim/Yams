@@ -13,7 +13,7 @@ cc_library(
     hdrs = ["Sources/CYaml/include/yaml.h"],
     includes = ["Sources/CYaml/include"],
     visibility = [
-        "//visibility:public",
+        "//Tests:__subpackages__",
     ],
 )
 
