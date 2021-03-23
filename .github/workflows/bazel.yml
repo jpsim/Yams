@@ -40,6 +40,10 @@ jobs:
         if: always()
         run: bazelisk test //Tests:tvOSBuildTest
         shell: bash
+      - name: swift_binary build test
+        if: always()
+        run: bazelisk test //Tests:SwiftBinaryBuildTest
+        shell: bash
       - name: Yams tests
         if: always()
         run: bazelisk test //Tests:YamsTests
@@ -64,7 +68,7 @@ jobs:
         if: always()
         run: |
              build_workspace_directory=$(bazelisk info workspace)
-             CC=clang bazelisk test //Tests:YamsTests --action_env=PATH --test_env=BUILD_WORKSPACE_DIRECTORY=$build_workspace_directory
+             CC=clang bazelisk test //Tests:SwiftBinaryBuildTest //Tests:YamsTests --action_env=PATH --test_env=BUILD_WORKSPACE_DIRECTORY=$build_workspace_directory
         shell: bash
       - name: Yams tests logs
         if: always()

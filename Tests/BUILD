@@ -2,7 +2,7 @@ load("@build_bazel_rules_apple//apple:macos.bzl", "macos_build_test")
 load("@build_bazel_rules_apple//apple:watchos.bzl", "watchos_build_test")
 load("@build_bazel_rules_apple//apple:tvos.bzl", "tvos_build_test")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_build_test")
-load("@build_bazel_rules_swift//swift:swift.bzl", "swift_test")
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_binary", "swift_test")
 
 config_setting(
     name = "linux",
@@ -63,4 +63,16 @@ ios_build_test(
         "//:Yams",
         "//:CYaml",
     ],
+)
+
+genrule(
+    name = "EmptyMain",
+    outs = ["EmptyMain.swift"],
+    cmd = "touch $(OUTS)",
+)
+
+swift_binary(
+    name = "SwiftBinaryBuildTest",
+    srcs = [":EmptyMain"],
+    deps = ["//:Yams"],
 )
