@@ -13,17 +13,17 @@ genrule(
     name = "LinuxMain",
     srcs = ["LinuxMain.swift"],
     outs = ["main.swift"],
-    cmd = "cp $< $@"
+    cmd = "cp $< $@",
 )
 
 swift_test(
-    name = "YamsTests",
-    module_name = "YamsTests",
+    name = "UnitTests",
     srcs = glob(["YamsTests/*.swift"]) + select({
         ":linux": ["main.swift"],
         "//conditions:default": [],
     }),
     data = glob(["YamsTests/Fixtures/**/*.*"]),
+    module_name = "YamsTests",
     deps = [
         "//:Yams",
     ],

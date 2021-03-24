@@ -12,8 +12,8 @@ import Yams
 
 class PerformanceTests: XCTestCase {
     private let fixturesDirectory: String = {
-        if let buildWorkspace = ProcessInfo.processInfo.environment["BUILD_WORKSPACE_DIRECTORY"] {
-            return "\(buildWorkspace)/Tests/YamsTests/Fixtures/"
+        if ProcessInfo.processInfo.environment["TEST_WORKSPACE"] != nil {
+            return "Tests/YamsTests/Fixtures/"
         }
         return URL(fileURLWithPath: #file).deletingLastPathComponent().path + "/Fixtures/"
     }()
