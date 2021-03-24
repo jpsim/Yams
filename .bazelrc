@@ -1,3 +1,1 @@
-# Force the tests to not run in sandboxed mode, since it can introduce
-# errors and flakes.
 build --macos_minimum_os=10.9
