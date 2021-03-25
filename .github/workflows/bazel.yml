@@ -42,7 +42,7 @@ jobs:
         shell: bash
       - name: Yams tests
         if: always()
-        run: bazelisk test //Tests:YamsTests
+        run: bazelisk test //Tests:UnitTests
         shell: bash
   Linux:
     strategy:
@@ -62,11 +62,9 @@ jobs:
         shell: bash
       - name: Yams tests
         if: always()
-        run: |
-             build_workspace_directory=$(bazelisk info workspace)
-             CC=clang bazelisk test //Tests:YamsTests --action_env=PATH --test_env=BUILD_WORKSPACE_DIRECTORY=$build_workspace_directory
+        run: bazelisk test //Tests:UnitTests
         shell: bash
       - name: Yams tests logs
         if: always()
-        run: cat bazel-out/k8-fastbuild/testlogs/Tests/YamsTests/test.log
+        run: cat bazel-out/k8-fastbuild/testlogs/Tests/UnitTests/test.log
         shell: bash
