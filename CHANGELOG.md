@@ -1,3 +1,18 @@
+## Main
+
+##### Breaking
+
+* Change the `sortKeys` options to a `keySort` function.
+  [Kevin Barrett](https://github.com/kevboh)
+
+##### Enhancements
+
+* None.
+
+##### Bug Fixes
+
+* None.
+
 ## 4.0.6
 
 ##### Breaking
