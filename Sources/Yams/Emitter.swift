@@ -11,6 +11,8 @@ import CYaml
 #endif
 import Foundation
 
+/// A sort predicate applied to two `Node`s. Return `true` when the first node should be ordered
+/// before the second.
 public typealias NodeSort = (Node, Node) throws -> Bool
 
 /// Produce a YAML string from objects.
