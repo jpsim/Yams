@@ -140,7 +140,7 @@ class EmitterTests: XCTestCase {
         let yaml = try Yams.serialize(node: node)
         let expected = "key3: value3\nkey2: value2\nkey1: value1\n"
         XCTAssertEqual(yaml, expected)
-        let yamlSorted = try Yams.serialize(node: node, sortKeys: true)
+        let yamlSorted = try Yams.serialize(node: node, keySort: <)
         let expectedSorted = "key1: value1\nkey2: value2\nkey3: value3\n"
         XCTAssertEqual(yamlSorted, expectedSorted)
     }

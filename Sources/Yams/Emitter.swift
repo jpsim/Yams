@@ -11,6 +11,8 @@ import CYaml
 #endif
 import Foundation
 
+public typealias NodeSort = (Node, Node) throws -> Bool
+
 /// Produce a YAML string from objects.
 ///
 /// - parameter objects:       Sequence of Objects.
@@ -22,7 +24,7 @@ import Foundation
 /// - parameter explicitStart: Explicit document start `---`.
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
-/// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
+/// - parameter keySort:       Sort function to apply to Mapping keys, or `nil` to not sort.
 ///
 /// - returns: YAML string.
 ///
@@ -37,7 +39,7 @@ public func dump<Objects>(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String
+    keySort: NodeSort? = nil) throws -> String
     where Objects: Sequence {
     func representable(from object: Any) throws -> NodeRepresentable {
         if let representable = object as? NodeRepresentable {
@@ -56,7 +58,7 @@ public func dump<Objects>(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortKeys: sortKeys
+        keySort: keySort
     )
 }
 
@@ -71,7 +73,7 @@ public func dump<Objects>(
 /// - parameter explicitStart: Explicit document start `---`.
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
-/// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
+/// - parameter keySort:       Sort function to apply to Mapping keys, or `nil` to not sort.
 ///
 /// - returns: YAML string.
 ///
@@ -86,7 +88,7 @@ public func dump(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String {
+    keySort: NodeSort? = nil) throws -> String {
     return try serialize(
         node: object.represented(),
         canonical: canonical,
@@ -97,7 +99,7 @@ public func dump(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortKeys: sortKeys
+        keySort: keySort
     )
 }
 
@@ -112,7 +114,7 @@ public func dump(
 /// - parameter explicitStart: Explicit document start `---`.
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
-/// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
+/// - parameter keySort:       Sort function to apply to Mapping keys, or `nil` to not sort.
 ///
 /// - returns: YAML string.
 ///
@@ -127,7 +129,7 @@ public func serialize<Nodes>(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String
+    keySort: NodeSort? = nil) throws -> String
     where Nodes: Sequence, Nodes.Iterator.Element == Node {
     let emitter = Emitter(
         canonical: canonical,
@@ -138,7 +140,7 @@ public func serialize<Nodes>(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortKeys: sortKeys
+        keySort: keySort
     )
     try emitter.open()
     try nodes.forEach(emitter.serialize)
@@ -157,7 +159,7 @@ public func serialize<Nodes>(
 /// - parameter explicitStart: Explicit document start `---`.
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
-/// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
+/// - parameter keySort:       Sort function to apply to Mapping keys, or `nil` to not sort.
 ///
 /// - returns: YAML string.
 ///
@@ -172,7 +174,7 @@ public func serialize(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String {
+    keySort: NodeSort? = nil) throws -> String {
     return try serialize(
         nodes: [node],
         canonical: canonical,
@@ -183,7 +185,7 @@ public func serialize(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortKeys: sortKeys
+        keySort: keySort
     )
 }
 
@@ -223,7 +225,7 @@ public final class Emitter {
         public var version: (major: Int, minor: Int)?
 
         /// Set if emitter should sort keys in lexicographic order.
-        public var sortKeys: Bool = false
+        public var keySort: NodeSort? = nil
     }
 
     /// Configuration options to use when emitting YAML.
@@ -244,7 +246,7 @@ public final class Emitter {
     /// - parameter explicitStart: Explicit document start `---`.
     /// - parameter explicitEnd:   Explicit document end `...`.
     /// - parameter version:       The `%YAML` directive value or nil.
-    /// - parameter sortKeys:      Set if emitter should sort keys in lexicographic order.
+    /// - parameter keySort:       Sort function to apply to Mapping keys, or `nil` to not sort.
     public init(canonical: Bool = false,
                 indent: Int = 0,
                 width: Int = 0,
@@ -253,7 +255,7 @@ public final class Emitter {
                 explicitStart: Bool = false,
                 explicitEnd: Bool = false,
                 version: (major: Int, minor: Int)? = nil,
-                sortKeys: Bool = false) {
+                keySort: NodeSort? = nil) {
         options = Options(canonical: canonical,
                           indent: indent,
                           width: width,
@@ -262,7 +264,7 @@ public final class Emitter {
                           explicitStart: explicitStart,
                           explicitEnd: explicitEnd,
                           version: version,
-                          sortKeys: sortKeys)
+                          keySort: keySort)
         // configure emitter
         yaml_emitter_initialize(&emitter)
         yaml_emitter_set_output(&self.emitter, { pointer, buffer, size in
@@ -378,17 +380,17 @@ extension Emitter.Options {
     /// - parameter explicitStart: Explicit document start `---`.
     /// - parameter explicitEnd:   Explicit document end `...`.
     /// - parameter version:       The `%YAML` directive value or nil.
-    /// - parameter sortKeys:      Set if emitter should sort keys in lexicographic order.
+    /// - parameter keySort:       Sort function to apply to Mapping keys, or `nil` to not sort.
     public init(canonical: Bool = false, indent: Int = 0, width: Int = 0, allowUnicode: Bool = false,
                 lineBreak: Emitter.LineBreak = .ln, version: (major: Int, minor: Int)? = nil,
-                sortKeys: Bool = false) {
+                keySort: NodeSort? = nil) {
         self.canonical = canonical
         self.indent = indent
         self.width = width
         self.allowUnicode = allowUnicode
         self.lineBreak = lineBreak
         self.version = version
-        self.sortKeys = sortKeys
+        self.keySort = keySort
     }
 }
 
@@ -462,8 +464,8 @@ extension Emitter {
                 mappingStyle)
         }
         try emit(&event)
-        if options.sortKeys {
-            try mapping.keys.sorted().forEach {
+        if let sort = options.keySort {
+            try mapping.keys.sorted(by: sort).forEach {
                 try self.serializeNode($0)
                 try self.serializeNode(mapping[$0]!) // swiftlint:disable:this force_unwrapping
             }
