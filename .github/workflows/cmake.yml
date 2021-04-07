@@ -33,6 +33,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: brew install cmake ninja
       - run: swift -version
+      - run: rm -rf build
       - run: cmake -B build -G Ninja -S . -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build
       - run: cmake --build build --target install
