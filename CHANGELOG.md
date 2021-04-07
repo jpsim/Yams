@@ -8,12 +8,14 @@
 
 * Update Bazel config to allow targets to be directly consumed.  
   [Maxwell Elliott](https://github.com/maxwellE)
+
 * Fix some Bazel integration issues
   [Keith Smiley](https://github.com/keith)
 
 ##### Bug Fixes
 
-* None.
+* Fix build error when integrating Yams using CocoaPods.  
+  [JP Simard](https://github.com/jpsim)
 
 ## 4.0.5
 
