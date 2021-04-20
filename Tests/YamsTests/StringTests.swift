@@ -10,7 +10,7 @@ import XCTest
 @testable import Yams
 
 class StringTests: XCTestCase {
-    func setUp() {
+    override func setUp() {
         super.setUp()
         installBacktrace()
     }

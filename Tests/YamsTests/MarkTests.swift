@@ -10,7 +10,7 @@ import XCTest
 import Yams
 
 class MarkTests: XCTestCase {
-    func setUp() {
+    override func setUp() {
         super.setUp()
         installBacktrace()
     }

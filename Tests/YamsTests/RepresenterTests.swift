@@ -11,7 +11,7 @@ import XCTest
 import Yams
 
 class RepresenterTests: XCTestCase {
-    func setUp() {
+    override func setUp() {
         super.setUp()
         installBacktrace()
     }

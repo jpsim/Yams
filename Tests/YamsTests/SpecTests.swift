@@ -11,7 +11,7 @@ import XCTest
 import Yams
 
 class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
-    func setUp() {
+    override func setUp() {
         super.setUp()
         installBacktrace()
     }

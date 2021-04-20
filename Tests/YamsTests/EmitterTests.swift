@@ -10,7 +10,7 @@ import XCTest
 import Yams
 
 class EmitterTests: XCTestCase {
-    func setUp() {
+    override func setUp() {
         super.setUp()
         installBacktrace()
     }

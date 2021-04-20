@@ -18,7 +18,7 @@ private let installBacktraceImpl = {
 func installBacktrace() { installBacktraceImpl }
 
 class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
-    func setUp() {
+    override func setUp() {
         super.setUp()
         installBacktrace()
     }

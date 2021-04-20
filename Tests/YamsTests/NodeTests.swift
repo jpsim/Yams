@@ -11,7 +11,7 @@ import XCTest
 import Yams
 
 class NodeTests: XCTestCase {
-    func setUp() {
+    override func setUp() {
         super.setUp()
         installBacktrace()
     }

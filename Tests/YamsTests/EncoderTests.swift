@@ -14,7 +14,7 @@ import Yams
 
 /// Tests are copied from https://github.com/apple/swift/blob/main/test/stdlib/TestJSONEncoder.swift
 class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
-    func setUp() {
+    override func setUp() {
         super.setUp()
         installBacktrace()
     }
