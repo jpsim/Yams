@@ -10,6 +10,11 @@ import XCTest
 import Yams
 
 class MarkTests: XCTestCase {
+    func setUp() {
+        super.setUp()
+        installBacktrace()
+    }
+
     func testLocatableDeprecationMessageForSwiftLint() throws {
         let deprecatedRulesIdentifiers = [("variable_name", "identifier_name")].map { (Node($0.0), $0.1) }
         func deprecatedMessage(from rule: Node) -> String? {

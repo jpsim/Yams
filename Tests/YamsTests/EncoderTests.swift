@@ -14,6 +14,11 @@ import Yams
 
 /// Tests are copied from https://github.com/apple/swift/blob/main/test/stdlib/TestJSONEncoder.swift
 class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
+    func setUp() {
+        super.setUp()
+        installBacktrace()
+    }
+
     // MARK: - Encoding Top-Level Empty Types
     func testEncodingTopLevelEmptyStruct() {
         let empty = EmptyStruct()

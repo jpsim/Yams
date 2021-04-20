@@ -11,6 +11,11 @@ import XCTest
 import Yams
 
 class PerformanceTests: XCTestCase {
+    func setUp() {
+        super.setUp()
+        installBacktrace()
+    }
+
     private let fixturesDirectory: String = {
         if ProcessInfo.processInfo.environment["TEST_WORKSPACE"] != nil {
             return "Tests/YamsTests/Fixtures/"

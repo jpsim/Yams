@@ -10,6 +10,11 @@ import XCTest
 @testable import Yams
 
 class StringTests: XCTestCase {
+    func setUp() {
+        super.setUp()
+        installBacktrace()
+    }
+
     // column     1 2 3 4 5 6 7 8 9  10 11
     // line 1     L I N E 1 _ 6 7 あ \n
     // line 2     L I N E 2 _ 7 8 9  0 \n

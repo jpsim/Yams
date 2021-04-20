@@ -10,6 +10,10 @@ import XCTest
 import Yams
 
 class ResolverTests: XCTestCase {
+    func setUp() {
+        super.setUp()
+        installBacktrace()
+    }
 
     func testBasic() {
         let resolver = Resolver.basic

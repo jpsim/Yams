@@ -6,11 +6,23 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
+import Backtrace
 import Foundation
 import XCTest
 import Yams
 
+private let installBacktraceImpl = {
+    Backtrace.install()
+}()
+
+func installBacktrace() { installBacktraceImpl }
+
 class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
+    func setUp() {
+        super.setUp()
+        installBacktrace()
+    }
+
     // Samples come from PyYAML.
 
     func testBinary() throws {

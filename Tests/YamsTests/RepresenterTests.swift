@@ -11,6 +11,11 @@ import XCTest
 import Yams
 
 class RepresenterTests: XCTestCase {
+    func setUp() {
+        super.setUp()
+        installBacktrace()
+    }
+
     func testBool() throws {
         XCTAssertEqual(try Node(true), "true")
         XCTAssertEqual(try Node(false), "false")

@@ -11,6 +11,10 @@ import XCTest
 import Yams
 
 class NodeTests: XCTestCase {
+    func setUp() {
+        super.setUp()
+        installBacktrace()
+    }
 
     func testExpressibleByArrayLiteral() {
         let sequence: Node = [

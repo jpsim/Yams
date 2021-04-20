@@ -10,6 +10,10 @@ import XCTest
 import Yams
 
 class EmitterTests: XCTestCase {
+    func setUp() {
+        super.setUp()
+        installBacktrace()
+    }
 
     func testScalar() throws {
         var node: Node = "key"

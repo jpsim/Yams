@@ -11,6 +11,10 @@ import XCTest
 import Yams
 
 class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
+    func setUp() {
+        super.setUp()
+        installBacktrace()
+    }
 
     func testEmptyString() throws {
         XCTAssertNil(try Yams.load(yaml: ""))
