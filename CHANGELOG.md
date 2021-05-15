@@ -1,3 +1,8 @@
+## 4.0.7
+
+##### Breaking
+- The `dump` functions now requires `NodeRepresentable` values rather than `Any?` (or any `Sequence`) [#299]
+
 ## 4.0.6
 
 ##### Breaking
