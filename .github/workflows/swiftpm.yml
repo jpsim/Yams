@@ -46,19 +46,6 @@ jobs:
           fi
         env: { 'CODECOV_TOKEN': '${{ secrets.CODECOV_TOKEN }}' }
 
-  Xcode_Big_Sur:
-    strategy:
-      matrix:
-        xcode_version: ['12.5']
-    runs-on: macos-11
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
-    steps:
-      - uses: actions/checkout@v2
-      - run: swift -version
-      - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
-      - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
-
   Linux:
     strategy:
       matrix:
