@@ -27,7 +27,7 @@ jobs:
   Xcode:
     strategy:
       matrix:
-        xcode_version: ['11.2.1', '11.3.1', '11.4.1', '11.5', '11.6', '11.7', '12.0.1', '12.1', '12.2', '12.4']
+        xcode_version: ['11.2.1', '11.3.1', '11.4.1', '11.5', '11.6', '12.0.1', '12.1']
     runs-on: macos-latest
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
@@ -36,8 +36,21 @@ jobs:
       - run: swift -version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
+
+  Xcode_Big_Sur:
+    strategy:
+      matrix:
+        xcode_version: ['11.7', '12.2', '12.4', '12.5']
+    runs-on: macos-11
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
+    steps:
+      - uses: actions/checkout@v2
+      - run: swift -version
+      - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
+      - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
       - name: Code Coverage
-        if: matrix.xcode_version == '12.4'
+        if: matrix.xcode_version == '12.5'
         run: |
           swift test --enable-code-coverage
           xcrun llvm-cov export -format="lcov" .build/debug/YamsPackageTests.xctest/Contents/MacOS/YamsPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
