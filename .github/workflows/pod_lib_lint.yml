@@ -20,9 +20,9 @@ on:
 jobs:
   pod_lib_lint:
     name: pod lib lint
-    runs-on: macos-latest
+    runs-on: macos-11
     env:
-      DEVELOPER_DIR: /Applications/Xcode_12.4.app
+      DEVELOPER_DIR: /Applications/Xcode_12.5.app
     steps:
       - uses: actions/checkout@v2
       - run: bundle install --path vendor/bundle
