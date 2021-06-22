@@ -15,7 +15,7 @@ import Foundation
 ///
 /// - parameter objects:       Sequence of Objects.
 /// - parameter canonical:     Output should be the "canonical" format as in the YAML specification.
-/// - parameter indent:        The intendation increment.
+/// - parameter indent:        The indentation increment.
 /// - parameter width:         The preferred line width. @c -1 means unlimited.
 /// - parameter allowUnicode:  Unescaped non-ASCII characters are allowed if true.
 /// - parameter lineBreak:     Preferred line break.
@@ -64,7 +64,7 @@ public func dump<Objects>(
 ///
 /// - parameter object:        Object.
 /// - parameter canonical:     Output should be the "canonical" format as in the YAML specification.
-/// - parameter indent:        The intendation increment.
+/// - parameter indent:        The indentation increment.
 /// - parameter width:         The preferred line width. @c -1 means unlimited.
 /// - parameter allowUnicode:  Unescaped non-ASCII characters are allowed if true.
 /// - parameter lineBreak:     Preferred line break.
@@ -105,7 +105,7 @@ public func dump(
 ///
 /// - parameter nodes:         Sequence of `Node`s.
 /// - parameter canonical:     Output should be the "canonical" format as in the YAML specification.
-/// - parameter indent:        The intendation increment.
+/// - parameter indent:        The indentation increment.
 /// - parameter width:         The preferred line width. @c -1 means unlimited.
 /// - parameter allowUnicode:  Unescaped non-ASCII characters are allowed if true.
 /// - parameter lineBreak:     Preferred line break.
@@ -150,7 +150,7 @@ public func serialize<Nodes>(
 ///
 /// - parameter node:          `Node`.
 /// - parameter canonical:     Output should be the "canonical" format as in the YAML specification.
-/// - parameter indent:        The intendation increment.
+/// - parameter indent:        The indentation increment.
 /// - parameter width:         The preferred line width. @c -1 means unlimited.
 /// - parameter allowUnicode:  Unescaped non-ASCII characters are allowed if true.
 /// - parameter lineBreak:     Preferred line break.
