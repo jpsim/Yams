@@ -281,7 +281,7 @@ public final class Emitter {
         yaml_emitter_delete(&emitter)
     }
 
-    /// Open & initialize the emmitter.
+    /// Open & initialize the emitter.
     ///
     /// - throws: `YamlError` if the `Emitter` was already opened or closed.
     public func open() throws {
