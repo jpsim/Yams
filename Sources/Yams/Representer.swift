@@ -53,7 +53,25 @@ extension Array: NodeRepresentable {
     }
 }
 
+/// Useful when dealing with data serialized with JSONSerialization or PropertyListSerialization
+extension NSArray: NodeRepresentable {
+    /// This value's `Node` representation.
+    public func represented() throws -> Node {
+        let nodes = try map(represent)
+        return Node(nodes, Tag(.seq))
+    }
+}
+
 extension Dictionary: NodeRepresentable {
+    /// This value's `Node` representation.
+    public func represented() throws -> Node {
+        let pairs = try map { (key: try represent($0.0), value: try represent($0.1)) }
+        return Node(pairs.sorted { $0.key < $1.key }, Tag(.map))
+    }
+}
+
+/// Useful when dealing with data serialized with JSONSerialization or PropertyListSerialization
+extension NSDictionary: NodeRepresentable {
     /// This value's `Node` representation.
     public func represented() throws -> Node {
         let pairs = try map { (key: try represent($0.0), value: try represent($0.1)) }
