@@ -284,5 +284,5 @@ private func serialize(node: Node, options: Emitter.Options) throws -> String {
         explicitStart: options.explicitStart,
         explicitEnd: options.explicitEnd,
         version: options.version,
-        sortKeys: options.sortKeys)
+        keySort: options.keySort)
 }

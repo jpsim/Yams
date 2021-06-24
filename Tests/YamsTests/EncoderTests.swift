@@ -68,7 +68,7 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
     func testEncodingTopLevelStructuredSingleClass() {
         // Mapping is a class which encodes as a dictionary through a single value container.
         let mapping = Mapping.testValue
-        _testRoundTrip(of: mapping, with: YAMLEncoder.Options(sortKeys: true), expectedYAML: """
+        _testRoundTrip(of: mapping, with: YAMLEncoder.Options(keySort: <), expectedYAML: """
             Apple: http://apple.com
             localhost: http://127.0.0.1
 
