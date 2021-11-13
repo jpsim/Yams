@@ -75,7 +75,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: compnerd/gha-swift-setup@main
+      - uses: compnerd/gha-setup-swift@main
         with:
           branch: swift-5.4.3-release
           tag: 5.4.3-RELEASE
