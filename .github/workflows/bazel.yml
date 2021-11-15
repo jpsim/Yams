@@ -21,7 +21,7 @@ on:
 
 jobs:
   MacOS:
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
       - uses: actions/checkout@v2
       - name: MacOS build test
@@ -47,7 +47,7 @@ jobs:
   Linux:
     strategy:
       matrix:
-        tag: ['5.1', '5.2', '5.3', '5.4']
+        tag: ['5.1', '5.2', '5.3', '5.4', '5.5']
     runs-on: ubuntu-latest
     container:
       image: swift:${{ matrix.tag }}

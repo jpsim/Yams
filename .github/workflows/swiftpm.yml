@@ -28,7 +28,7 @@ jobs:
     strategy:
       matrix:
         xcode_version: ['11.2.1', '11.3.1', '11.4.1', '11.5', '11.6', '12.0.1', '12.1']
-    runs-on: macos-latest
+    runs-on: macOS-10.15
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
@@ -40,7 +40,7 @@ jobs:
   Xcode_Big_Sur:
     strategy:
       matrix:
-        xcode_version: ['11.7', '12.2', '12.4', '12.5', '13.0']
+        xcode_version: ['11.7', '12.4', '12.5.1', '13.0', '13.1']
     runs-on: macos-11
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
@@ -50,7 +50,7 @@ jobs:
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
       - name: Code Coverage
-        if: matrix.xcode_version == '12.5'
+        if: matrix.xcode_version == '13.1'
         run: |
           swift test --enable-code-coverage
           xcrun llvm-cov export -format="lcov" .build/debug/YamsPackageTests.xctest/Contents/MacOS/YamsPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
@@ -62,7 +62,7 @@ jobs:
   Linux:
     strategy:
       matrix:
-        tag: ['5.1', '5.2', '5.3', '5.4']
+        tag: ['5.1', '5.2', '5.3', '5.4', '5.5']
     runs-on: ubuntu-latest
     container:
       image: swift:${{ matrix.tag }}
