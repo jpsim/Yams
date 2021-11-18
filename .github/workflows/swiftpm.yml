@@ -1,0 +1,99 @@
+name: SwiftPM
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.codecov.yml'
+      - '.github/workflows/swiftpm.yml'
+      - 'Package*'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Sources/**/module.modulemap'
+      - 'Tests/**/*.swift'
+      - 'Tests/**/*.ya?ml'
+  pull_request:
+    paths:
+      - '.codecov.yml'
+      - '.github/workflows/swiftpm.yml'
+      - 'Package*'
+      - 'Sources/**/*.[ch]'
+      - 'Sources/**/*.swift'
+      - 'Sources/**/module.modulemap'
+      - 'Tests/**/*.swift'
+      - 'Tests/**/*.ya?ml'
+
+jobs:
+  Xcode:
+    strategy:
+      matrix:
+        xcode_version: ['11.2.1', '11.3.1', '11.4.1', '11.5', '11.6', '12.0.1', '12.1']
+    runs-on: macOS-10.15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
+    steps:
+      - uses: actions/checkout@v2
+      - run: swift -version
+      - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
+      - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
+
+  Xcode_Big_Sur:
+    strategy:
+      matrix:
+        xcode_version: ['11.7', '12.4', '12.5.1', '13.0', '13.1']
+    runs-on: macos-11
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
+    steps:
+      - uses: actions/checkout@v2
+      - run: swift -version
+      - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
+      - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
+      - name: Code Coverage
+        if: matrix.xcode_version == '13.1'
+        run: |
+          swift test --enable-code-coverage
+          xcrun llvm-cov export -format="lcov" .build/debug/YamsPackageTests.xctest/Contents/MacOS/YamsPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
+          if [[ -n "${CODECOV_TOKEN}" ]]; then
+            bash <(curl -s https://codecov.io/bash) -f coverage.lcov
+          fi
+        env: { 'CODECOV_TOKEN': '${{ secrets.CODECOV_TOKEN }}' }
+
+  Linux:
+    strategy:
+      matrix:
+        tag: ['5.1', '5.2', '5.3', '5.4', '5.5']
+    runs-on: ubuntu-latest
+    container:
+      image: swift:${{ matrix.tag }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
+      - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
+
+  Windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: compnerd/gha-setup-swift@main
+        with:
+          branch: swift-5.4.3-release
+          tag: 5.4.3-RELEASE
+      # Commands to run once connected via SSH:
+      #
+      # >d:
+      # >cd a\Yams\Yams
+      # >setx SDKROOT C:\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk
+      # >setx DEVELOPER_DIR C:\Library\Developer
+      # >swift build -v
+      # >swift test -v
+      # >swift test -v --filter testBinary
+      # - name: Start SSH session
+      #   uses: luchihoratiu/debug-via-ssh@main
+      #   with:
+      #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+      #     SSH_PASS: ${{ secrets.SSH_PASS }}
+      - name: Build
+        run: swift build -v
+      - name: Test
+        run: swift test -v
