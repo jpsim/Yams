@@ -9,8 +9,6 @@ on:
       - 'Sources/**/*.[ch]'
       - 'Sources/**/*.swift'
       - 'Sources/**/module.modulemap'
-      - 'Tests/**/*.swift'
-      - 'Tests/**/*.ya?ml'
   pull_request:
     paths:
       - '.github/workflows/fuzzer.yml'
@@ -18,8 +16,6 @@ on:
       - 'Sources/**/*.[ch]'
       - 'Sources/**/*.swift'
       - 'Sources/**/module.modulemap'
-      - 'Tests/**/*.swift'
-      - 'Tests/**/*.ya?ml'
 
 jobs:
   Fuzzer:
