@@ -506,7 +506,7 @@ private extension String {
 
 // MARK: - SexagesimalConvertible
 
-/// Confirming types are convertible to base 60 numeric values.
+/// Conforming types are convertible to base 60 numeric values.
 public protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
     /// Creates a sexagesimal numeric value from the given string.
     ///
@@ -523,6 +523,14 @@ public protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
     /// - returns: The result of the multiplication.
     static func * (lhs: Self, rhs: Self) -> Self
 
+    /// Multiplies two sexagesimal numeric values ignoring any arithmetic overflow errors.
+    ///
+    /// - parameter lhs: Left hand side multiplier.
+    /// - parameter rhs: Right hand side multiplier.
+    ///
+    /// - returns: The result of the multiplication.
+    static func &* (lhs: Self, rhs: Self) -> Self
+
     /// Adds two sexagesimal numeric values.
     ///
     /// - parameter lhs: Left hand side adder.
@@ -530,6 +538,14 @@ public protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
     ///
     /// - returns: The result of the addition.
     static func + (lhs: Self, rhs: Self) -> Self
+
+    /// Adds two sexagesimal numeric values ignoring any arithmetic overflow errors.
+    ///
+    /// - parameter lhs: Left hand side adder.
+    /// - parameter rhs: Right hand side adder.
+    ///
+    /// - returns: The result of the addition.
+    static func &+ (lhs: Self, rhs: Self) -> Self
 }
 
 private extension SexagesimalConvertible {
@@ -565,9 +581,25 @@ extension SexagesimalConvertible where Self: FixedWidthInteger {
 }
 
 // MARK: - SexagesimalConvertible Double Conformance
-extension Double: SexagesimalConvertible {}
+extension Double: SexagesimalConvertible {
+    public static func &* (lhs: Self, rhs: Self) -> Self {
+        return lhs * rhs
+    }
+
+    public static func &+ (lhs: Self, rhs: Self) -> Self {
+        return lhs + rhs
+    }
+}
 // MARK: - SexagesimalConvertible Float Conformance
-extension Float: SexagesimalConvertible {}
+extension Float: SexagesimalConvertible {
+    public static func &* (lhs: Self, rhs: Self) -> Self {
+        return lhs * rhs
+    }
+
+    public static func &+ (lhs: Self, rhs: Self) -> Self {
+        return lhs + rhs
+    }
+}
 // MARK: - SexagesimalConvertible Int Conformance
 extension Int: SexagesimalConvertible {}
 // MARK: - SexagesimalConvertible UInt Conformance
@@ -594,8 +626,8 @@ private extension String {
         }
         let digits = scalar.components(separatedBy: ":").compactMap(T.create).reversed()
         let (_, value) = digits.reduce((1, 0) as (T, T)) { baseAndValue, digit in
-            let value = baseAndValue.1 + (digit * baseAndValue.0)
-            let base = baseAndValue.0 * 60
+            let value = baseAndValue.1 &+ (digit &* baseAndValue.0)
+            let base = baseAndValue.0 &* 60
             return (base, value)
         }
         return sign * value
