@@ -32,10 +32,5 @@ jobs:
         name: 'Download fuzzer corpus'
       - run: swift build -c release -Xswiftc -sanitize=fuzzer -Xswiftc -parse-as-library
         name: 'Build fuzzer'
-      - run: .build/release/yams-fuzzer yaml-test-suite &> /tmp/fuzzer.log &
+      - run: .build/release/yams-fuzzer yaml-test-suite -runs=1048576
         name: 'Run fuzzer'
-      - run: "sed '/1048576/q' <(touch /tmp/fuzzer.log && tail -F /tmp/fuzzer.log)"
-        name: 'Check fuzzer made it to pulse #1048576'
-      - run: cat /tmp/fuzzer.log
-        if: ${{ failure() || cancelled() }}
-        name: 'Print fuzzer logs'
