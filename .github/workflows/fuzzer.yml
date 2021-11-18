@@ -28,5 +28,5 @@ jobs:
         name: 'Download fuzzer corpus'
       - run: swift build -c release -Xswiftc -sanitize=fuzzer -Xswiftc -parse-as-library
         name: 'Build fuzzer'
-      - run: .build/release/yams-fuzzer yaml-test-suite -runs=2097152
+      - run: .build/release/yams-fuzzer yaml-test-suite -runs=10000000
         name: 'Run fuzzer'
