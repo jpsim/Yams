@@ -115,7 +115,13 @@ extension YamlError {
                     .index(yaml.utf16.startIndex, offsetBy: parser.problem_offset / 2, limitedBy: yaml.utf16.endIndex)?
                     .samePosition(in: yaml)
             }
-            let offset = index.map { yaml.distance(from: yaml.startIndex, to: $0) }
+            let offset = index.flatMap { offsetIndex -> Int? in
+                if !yaml.isEmpty, offsetIndex < yaml.index(before: yaml.endIndex) {
+                    return yaml.distance(from: yaml.startIndex, to: offsetIndex)
+                } else {
+                    return nil
+                }
+            }
             self = .reader(problem: String(cString: parser.problem),
                            offset: offset,
                            value: parser.problem_value,
