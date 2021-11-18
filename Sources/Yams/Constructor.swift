@@ -422,8 +422,15 @@ private extension Dictionary {
     static func _construct_mapping(from mapping: Node.Mapping) -> [AnyHashable: Any] {
         let mapping = mapping.flatten()
         // TODO: YAML supports keys other than str.
-        return [AnyHashable: Any](
-            mapping.map { (String.construct(from: $0.key)!, mapping.tag.constructor.any(from: $0.value)) },
+        return .init(
+            mapping.compactMap { keyValue in
+                guard let key = String.construct(from: keyValue.key) else {
+                    // TODO: Throw an error
+                    return nil
+                }
+
+                return (key, mapping.tag.constructor.any(from: keyValue.value))
+            },
             uniquingKeysWith: { _, second in second }
         )
     }
