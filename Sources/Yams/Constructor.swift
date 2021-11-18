@@ -444,7 +444,7 @@ extension Set {
     /// - returns: An instance of `Set<AnyHashable>`, if one was successfully extracted from the mapping.
     public static func construct_set(from mapping: Node.Mapping) -> Set<AnyHashable>? {
         // TODO: YAML supports Hashable elements other than str.
-        return Set<AnyHashable>(mapping.map({ String.construct(from: $0.key)! as AnyHashable }))
+        return Set<AnyHashable>(mapping.compactMap({ String.construct(from: $0.key) as AnyHashable? }))
         // Explicitly declaring the generic parameter as `<AnyHashable>` above is required,
         // because this is inside extension of `Set` and Swift can't infer the type without that.
     }
