@@ -22,7 +22,7 @@ on:
       - 'Tests/**/*.ya?ml'
 
 jobs:
-  Linux:
+  Fuzzer:
     runs-on: ubuntu-latest
     container:
       image: swift:5.5
@@ -34,7 +34,7 @@ jobs:
         name: 'Build fuzzer'
       - run: .build/release/yams-fuzzer yaml-test-suite &> /tmp/fuzzer.log &
         name: 'Run fuzzer'
-      - run: sed '/#1048576/q' <(touch /tmp/fuzzer.log && tail -F /tmp/fuzzer.log)
+      - run: sed '/1048576/q' <(touch /tmp/fuzzer.log && tail -F /tmp/fuzzer.log)
         name: 'Check fuzzer made it to pulse #1048576'
       - run: cat /tmp/fuzzer.log
         if: ${{ failure() || cancelled() }}
