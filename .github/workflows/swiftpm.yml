@@ -73,12 +73,25 @@ jobs:
 
   Windows:
     runs-on: windows-latest
+
+    strategy:
+      matrix:
+        include:
+          - branch: swift-5.4.3-release
+            tag: 5.4.3-RELEASE
+
+          - branch: swift-5.5.1-release
+            tag: 5.5.1-RELEASE
+
+          - branch: development
+            tag: DEVELOPMENT-SNAPSHOT-2021-06-12-a
+
     steps:
       - uses: actions/checkout@v2
       - uses: compnerd/gha-setup-swift@main
         with:
-          branch: swift-5.4.3-release
-          tag: 5.4.3-RELEASE
+          branch: ${{ matrix.branch }}
+          tag: ${{ matrix.tag }}
       # Commands to run once connected via SSH:
       #
       # >d:
