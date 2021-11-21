@@ -206,7 +206,7 @@ class NodeTests: XCTestCase {
 
 extension NodeTests {
     static var allTests: [(String, (NodeTests) -> () throws -> Void)] {
-#if os(Windows)
+#if os(Windows) && swift(<5.6)
         // TODO: Fix these tests on Windows
         return [
             ("testExpressibleByArrayLiteral", testExpressibleByArrayLiteral),

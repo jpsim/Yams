@@ -84,7 +84,7 @@ jobs:
             tag: 5.5.1-RELEASE
 
           - branch: development
-            tag: DEVELOPMENT-SNAPSHOT-2021-06-12-a
+            tag: DEVELOPMENT-SNAPSHOT-2021-11-20-a
 
     steps:
       - uses: actions/checkout@v2
