@@ -1142,8 +1142,7 @@ private struct Unkeyed: Codable, Equatable {
 
 extension EncoderTests {
     static var allTests: [(String, (EncoderTests) -> () throws -> Void)] {
-#if os(Windows)
-        // TODO: Fix these tests on Windows
+#if os(Windows) && swift(<5.6)
         return [
             ("testEncodingTopLevelEmptyStruct", testEncodingTopLevelEmptyStruct),
             ("testEncodingTopLevelEmptyClass", testEncodingTopLevelEmptyClass),

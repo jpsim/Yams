@@ -514,8 +514,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
 
 extension ConstructorTests {
     static var allTests: [(String, (ConstructorTests) -> () throws -> Void)] {
-#if os(Windows)
-        // TODO: Fix these tests on Windows
+#if os(Windows) && swift(<5.6)
         return [
             ("testBinary", testBinary),
             ("testBool", testBool),

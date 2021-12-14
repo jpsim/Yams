@@ -916,8 +916,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
 
 extension SpecTests {
     static var allTests: [(String, (SpecTests) -> () throws -> Void)] {
-#if os(Windows)
-        // TODO: Fix these tests on Windows
+#if os(Windows) && swift(<5.6)
         return [
             ("testEmptyString", testEmptyString),
             ("testMultibyteCharacters", testMultibyteCharacters),
