@@ -13,7 +13,7 @@ import Foundation
 
 /// Produce a YAML string from objects.
 ///
-/// - parameter objects:       Sequence of Objects.
+/// - parameter objects:       Sequence of `NodeRepresentable` values.
 /// - parameter canonical:     Output should be the "canonical" format as in the YAML specification.
 /// - parameter indent:        The indentation increment.
 /// - parameter width:         The preferred line width. @c -1 means unlimited.
@@ -38,14 +38,8 @@ public func dump<Objects>(
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
     sortKeys: Bool = false) throws -> String
-    where Objects: Sequence {
-    func representable(from object: Any) throws -> NodeRepresentable {
-        if let representable = object as? NodeRepresentable {
-            return representable
-        }
-        throw YamlError.emitter(problem: "\(object) does not conform to NodeRepresentable!")
-    }
-    let nodes = try objects.map(representable(from:)).map { try $0.represented() }
+where Objects: Sequence, Objects.Element: NodeRepresentable {
+    let nodes = try objects.map { try $0.represented() }
     return try serialize(
         nodes: nodes,
         canonical: canonical,
@@ -62,7 +56,7 @@ public func dump<Objects>(
 
 /// Produce a YAML string from an object.
 ///
-/// - parameter object:        Object.
+/// - parameter object:        The object to dump. Should conform to `NodeRepresentable`
 /// - parameter canonical:     Output should be the "canonical" format as in the YAML specification.
 /// - parameter indent:        The indentation increment.
 /// - parameter width:         The preferred line width. @c -1 means unlimited.
@@ -77,7 +71,7 @@ public func dump<Objects>(
 ///
 /// - throws: `YamlError`.
 public func dump(
-    object: Any?,
+    object: NodeRepresentable,
     canonical: Bool = false,
     indent: Int = 0,
     width: Int = 0,
