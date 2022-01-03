@@ -231,6 +231,10 @@ extension Node: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: Node...) {
         self = .sequence(.init(elements))
     }
+
+    public init(arrayLiteral elements: Node..., style: Sequence.Style) {
+        self = .sequence(.init(elements, .implicit, style))
+    }
 }
 
 extension Node: ExpressibleByDictionaryLiteral {

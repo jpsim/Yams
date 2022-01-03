@@ -23,6 +23,7 @@ import Foundation
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
 /// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
+/// - parameter sequenceStyle: The style for sequences (arrays / lists)
 ///
 /// - returns: YAML string.
 ///
@@ -37,7 +38,8 @@ public func dump<Objects>(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String
+    sortKeys: Bool = false,
+    sequenceStyle: Node.Sequence.Style = .any) throws -> String
     where Objects: Sequence {
     func representable(from object: Any) throws -> NodeRepresentable {
         if let representable = object as? NodeRepresentable {
@@ -56,7 +58,8 @@ public func dump<Objects>(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortKeys: sortKeys
+        sortKeys: sortKeys,
+        sequenceStyle: sequenceStyle
     )
 }
 
@@ -72,6 +75,7 @@ public func dump<Objects>(
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
 /// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
+/// - parameter sequenceStyle: The style for sequences (arrays / lists)
 ///
 /// - returns: YAML string.
 ///
@@ -86,7 +90,8 @@ public func dump(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String {
+    sortKeys: Bool = false,
+    sequenceStyle: Node.Sequence.Style = .any) throws -> String {
     return try serialize(
         node: object.represented(),
         canonical: canonical,
@@ -97,7 +102,8 @@ public func dump(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortKeys: sortKeys
+        sortKeys: sortKeys,
+        sequenceStyle: sequenceStyle
     )
 }
 
@@ -113,6 +119,7 @@ public func dump(
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
 /// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
+/// - parameter sequenceStyle: The style for sequences (arrays / lists)
 ///
 /// - returns: YAML string.
 ///
@@ -127,7 +134,8 @@ public func serialize<Nodes>(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String
+    sortKeys: Bool = false,
+    sequenceStyle: Node.Sequence.Style = .any) throws -> String
     where Nodes: Sequence, Nodes.Iterator.Element == Node {
     let emitter = Emitter(
         canonical: canonical,
@@ -138,7 +146,8 @@ public func serialize<Nodes>(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortKeys: sortKeys
+        sortKeys: sortKeys,
+        sequenceStyle: sequenceStyle
     )
     try emitter.open()
     try nodes.forEach(emitter.serialize)
@@ -158,6 +167,7 @@ public func serialize<Nodes>(
 /// - parameter explicitEnd:   Explicit document end `...`.
 /// - parameter version:       YAML version directive.
 /// - parameter sortKeys:      Whether or not to sort Mapping keys in lexicographic order.
+/// - parameter sequenceStyle: The style for sequences (arrays / lists)
 ///
 /// - returns: YAML string.
 ///
@@ -172,7 +182,8 @@ public func serialize(
     explicitStart: Bool = false,
     explicitEnd: Bool = false,
     version: (major: Int, minor: Int)? = nil,
-    sortKeys: Bool = false) throws -> String {
+    sortKeys: Bool = false,
+    sequenceStyle: Node.Sequence.Style = .any) throws -> String {
     return try serialize(
         nodes: [node],
         canonical: canonical,
@@ -183,7 +194,8 @@ public func serialize(
         explicitStart: explicitStart,
         explicitEnd: explicitEnd,
         version: version,
-        sortKeys: sortKeys
+        sortKeys: sortKeys,
+        sequenceStyle: sequenceStyle
     )
 }
 
@@ -224,6 +236,9 @@ public final class Emitter {
 
         /// Set if emitter should sort keys in lexicographic order.
         public var sortKeys: Bool = false
+
+        /// Set the style for sequences (arrays / lists)
+        public var sequenceStyle: Node.Sequence.Style = .any
     }
 
     /// Configuration options to use when emitting YAML.
@@ -245,6 +260,7 @@ public final class Emitter {
     /// - parameter explicitEnd:   Explicit document end `...`.
     /// - parameter version:       The `%YAML` directive value or nil.
     /// - parameter sortKeys:      Set if emitter should sort keys in lexicographic order.
+    /// - parameter sequenceStyle: Set the style for sequences (arrays / lists)
     public init(canonical: Bool = false,
                 indent: Int = 0,
                 width: Int = 0,
@@ -253,7 +269,8 @@ public final class Emitter {
                 explicitStart: Bool = false,
                 explicitEnd: Bool = false,
                 version: (major: Int, minor: Int)? = nil,
-                sortKeys: Bool = false) {
+                sortKeys: Bool = false,
+                sequenceStyle: Node.Sequence.Style = .any) {
         options = Options(canonical: canonical,
                           indent: indent,
                           width: width,
@@ -262,7 +279,8 @@ public final class Emitter {
                           explicitStart: explicitStart,
                           explicitEnd: explicitEnd,
                           version: version,
-                          sortKeys: sortKeys)
+                          sortKeys: sortKeys,
+                          sequenceStyle: sequenceStyle)
         // configure emitter
         yaml_emitter_initialize(&emitter)
         yaml_emitter_set_output(&self.emitter, { pointer, buffer, size in
@@ -379,9 +397,10 @@ extension Emitter.Options {
     /// - parameter explicitEnd:   Explicit document end `...`.
     /// - parameter version:       The `%YAML` directive value or nil.
     /// - parameter sortKeys:      Set if emitter should sort keys in lexicographic order.
+    /// - parameter sequenceStyle: Set the style for sequences (arrays / lists)
     public init(canonical: Bool = false, indent: Int = 0, width: Int = 0, allowUnicode: Bool = false,
                 lineBreak: Emitter.LineBreak = .ln, version: (major: Int, minor: Int)? = nil,
-                sortKeys: Bool = false) {
+                sortKeys: Bool = false, sequenceStyle: Node.Sequence.Style = .any) {
         self.canonical = canonical
         self.indent = indent
         self.width = width
@@ -389,6 +408,7 @@ extension Emitter.Options {
         self.lineBreak = lineBreak
         self.version = version
         self.sortKeys = sortKeys
+        self.sequenceStyle = sequenceStyle
     }
 }
 
