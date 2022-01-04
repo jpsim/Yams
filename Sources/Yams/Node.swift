@@ -242,6 +242,10 @@ extension Node: ExpressibleByDictionaryLiteral {
     public init(dictionaryLiteral elements: (Node, Node)...) {
         self = Node(elements)
     }
+
+    public init(dictionaryLiteral elements: (Node, Node)..., style: Mapping.Style) {
+        self = Node(elements, .implicit, style)
+    }
 }
 
 extension Node: ExpressibleByFloatLiteral {
