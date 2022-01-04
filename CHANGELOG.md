@@ -1,3 +1,18 @@
+## 4.0.7
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Adding `sequenceStyle` and `mappingStyle` to `Emitter.Options`
+  [Terence Grant](https://github.com/tatewake)
+
+##### Bug Fixes
+
+* None.
+
 ## 4.0.6
 
 ##### Breaking
