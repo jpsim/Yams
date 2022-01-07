@@ -232,6 +232,7 @@ extension Node: ExpressibleByArrayLiteral {
         self = .sequence(.init(elements))
     }
 
+    /// Create a `Node.sequence` from an array literal of `Node`s and a default `Style` to use for the array literal
     public init(arrayLiteral elements: Node..., style: Sequence.Style) {
         self = .sequence(.init(elements, .implicit, style))
     }
@@ -243,6 +244,7 @@ extension Node: ExpressibleByDictionaryLiteral {
         self = Node(elements)
     }
 
+    /// Create a `Node.mapping` from a dictionary literal of `Node`s and a default `Style` to use for the dictionary literal
     public init(dictionaryLiteral elements: (Node, Node)..., style: Mapping.Style) {
         self = Node(elements, .implicit, style)
     }
