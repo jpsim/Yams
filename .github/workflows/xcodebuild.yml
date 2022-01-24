@@ -73,6 +73,7 @@ jobs:
           - version: '12.5.1'
           - version: '13.0'
           - version: '13.1'
+          - version: '13.2.1'
         xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
     runs-on: macos-11
     env:
