@@ -25,7 +25,6 @@ target_link_libraries(Yams PRIVATE
   $<$<NOT:$<PLATFORM_ID:Darwin>>:dispatch>
   $<$<NOT:$<PLATFORM_ID:Darwin>>:Foundation>)
 set_target_properties(Yams PROPERTIES
-  INTERFACE_COMPILE_OPTIONS "SHELL:-Xcc -I$<TARGET_PROPERTY:CYaml,INCLUDE_DIRECTORIES>"
   INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_Swift_MODULE_DIRECTORY})
 
 set_property(GLOBAL APPEND PROPERTY YAMS_EXPORTS Yams)
