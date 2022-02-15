@@ -24,8 +24,6 @@ on:
 jobs:
   Jazzy:
     runs-on: ubuntu-latest
-    container:
-      image: swift:5.5
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
@@ -34,6 +32,9 @@ jobs:
           bundler-cache: true
         env:
           ImageOS: ubuntu18
+      - uses: fwal/setup-swift@v1
+        with:
+          swift-version: "5.5"
       - name: Install SourceKitten
         uses: fjcaetano/mint-action@v1.0.2
         with:
