@@ -41,7 +41,7 @@ jobs:
           package: jpsim/SourceKitten
       - run: swift build
       - name: Generate documentation json
-        run: /home/runner/.mint/bin/sourcekitten doc --spm-module Yams > yams.json
+        run: /home/runner/.mint/bin/sourcekitten doc --spm Yams > yams.json
       - name: Run jazzy
         run: bundle exec jazzy --clean --sourcekitten-sourcefile yams.json
       - name: Validate documentation coverage
