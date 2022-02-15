@@ -47,7 +47,7 @@ jobs:
   Linux:
     strategy:
       matrix:
-        tag: ['5.1', '5.2', '5.3', '5.4', '5.5']
+        tag: ['5.4', '5.5']
     runs-on: ubuntu-latest
     container:
       image: swift:${{ matrix.tag }}
