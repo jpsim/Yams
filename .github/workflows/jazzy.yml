@@ -25,22 +25,14 @@ jobs:
   Jazzy:
     runs-on: ubuntu-latest
     container:
-      image: swift:5.5
+      image: ruby:2.7.5
     steps:
       - uses: actions/checkout@v2
-      - name: Install Ruby & Bundler
-        run: |
-          apt update
-          apt install -y git curl libssl-dev libreadline-dev zlib1g-dev \
-            autoconf bison build-essential libyaml-dev libreadline-dev \
-            libncurses5-dev libffi-dev libgdbm-dev
-          curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
-          echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-          echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-          exec $SHELL
-          rbenv install 2.7.5
-          gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)"
-      - run: bundle install --path vendor/bundle
+      - uses: fwal/setup-swift@v1
+        with:
+          swift-version: "5.5"
+      - run: bundle config set path 'vendor/bundle'
+      - run: bundle install
       - run: swift build
       - name: Generate documentation json
         run: sourcekitten doc --spm-module Yams > yams.json
