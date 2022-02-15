@@ -13,7 +13,7 @@ A sweet and swifty [YAML](http://yaml.org/) parser built on
 
 ## Installation
 
-Building Yams requires Xcode 11.x or a Swift 5.1+ toolchain with the
+Building Yams requires Xcode 12.5+ or a Swift 5.4+ toolchain with the
 Swift Package Manager or CMake and Ninja.
 
 ### CMake

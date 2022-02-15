@@ -24,14 +24,24 @@ on:
 jobs:
   Jazzy:
     runs-on: ubuntu-latest
-    container:
-      image: norionomura/jazzy:0.13.6_swift-5.3.3
     steps:
       - uses: actions/checkout@v2
-      - run: bundle install --path vendor/bundle
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.5
+          bundler-cache: true
+        env:
+          ImageOS: ubuntu18
+      - uses: fwal/setup-swift@v1
+        with:
+          swift-version: "5.5"
+      - name: Install SourceKitten
+        uses: fjcaetano/mint-action@v1.0.2
+        with:
+          package: jpsim/SourceKitten
       - run: swift build
       - name: Generate documentation json
-        run: sourcekitten doc --spm-module Yams > yams.json
+        run: /home/runner/.mint/bin/sourcekitten doc --spm --module-name Yams > yams.json
       - name: Run jazzy
         run: bundle exec jazzy --clean --sourcekitten-sourcefile yams.json
       - name: Validate documentation coverage
