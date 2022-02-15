@@ -33,7 +33,7 @@ jobs:
           ruby-version: 2.7.5
           bundler-cache: true
       - name: Install SourceKitten
-        uses: fjcaetano/mint-action
+        uses: fjcaetano/mint-action@v1.0.2
         with:
           package: jpsim/SourceKitten
       - run: swift build
