@@ -32,6 +32,8 @@ jobs:
         with:
           ruby-version: 2.7.5
           bundler-cache: true
+        env:
+          ImageOS: ubuntu18
       - name: Install SourceKitten
         uses: fjcaetano/mint-action@v1.0.2
         with:
