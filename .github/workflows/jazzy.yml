@@ -39,6 +39,7 @@ jobs:
         uses: fjcaetano/mint-action@v1.0.2
         with:
           package: jpsim/SourceKitten
+        run: echo "/home/runner/.mint/bin" >> $GITHUB_PATH
       - run: swift build
       - name: Generate documentation json
         run: sourcekitten doc --spm-module Yams > yams.json
