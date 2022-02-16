@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.4
 import PackageDescription
 
 let package = Package(
@@ -7,8 +7,23 @@ let package = Package(
         .library(name: "Yams", targets: ["Yams"])
     ],
     targets: [
-        .target(name: "CYaml", cSettings: [.define("YAML_DECLARE_EXPORT")]),
-        .target(name: "Yams", dependencies: ["CYaml"]),
-        .testTarget(name: "YamsTests", dependencies: ["Yams"])
+        .target(
+            name: "CYaml",
+            exclude: ["CMakeLists.txt"],
+            cSettings: [.define("YAML_DECLARE_EXPORT")]
+        ),
+        .target(
+            name: "Yams",
+            dependencies: ["CYaml"],
+            exclude: ["CMakeLists.txt"]
+        ),
+        .testTarget(
+            name: "YamsTests",
+            dependencies: ["Yams"],
+            exclude: ["CMakeLists.txt"],
+            resources: [
+                .copy("Fixtures/SourceKitten#289/debug.yaml"),
+            ]
+        )
     ]
 )
