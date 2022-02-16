@@ -7,7 +7,7 @@
 //
 
 #if SWIFT_PACKAGE
-import CYaml
+@_implementationOnly import CYaml
 #endif
 import Foundation
 

@@ -7,8 +7,9 @@
 //
 
 #if SWIFT_PACKAGE
-import CYaml
+@_implementationOnly import CYaml
 #endif
+import Foundation
 
 /// Errors thrown by Yams APIs.
 public enum YamlError: Error {
