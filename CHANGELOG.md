@@ -1,23 +1,9 @@
-## Main
+## 5.0.0
 
 ##### Breaking
 
 * Swift 5.4 or later is now required to build Yams.  
   [JP Simard](https://github.com/jpsim)
-
-##### Enhancements
-
-* None.
-
-##### Bug Fixes
-
-* None.
-
-## 4.0.7
-
-##### Breaking
-
-* None.
 
 ##### Enhancements
 
