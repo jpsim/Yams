@@ -21,9 +21,11 @@ on:
 
 jobs:
   Analyze:
-    runs-on: macos-12
+    runs-on: macos-11
     env:
-      DEVELOPER_DIR: /Applications/Xcode_13.3.app
+      # TODO: Move to Xcode 13.3 when issues are addressed
+      # https://github.com/jpsim/Yams/runs/5649876813?check_suite_focus=true
+      DEVELOPER_DIR: /Applications/Xcode_13.2.1.app
     steps:
       - uses: actions/checkout@v2
       - name: Generate xcodebuild.log
