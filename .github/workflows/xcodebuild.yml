@@ -84,7 +84,7 @@ jobs:
         shell: bash
       - name: Apple TV Simulator
         if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K" | xcpretty
+        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (2nd generation)" | xcpretty
         shell: bash
       - name: watchOS Simulator
         if: always()
