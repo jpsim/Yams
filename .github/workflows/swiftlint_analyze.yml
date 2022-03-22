@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Generate xcodebuild.log
-        run: xcodebuild -scheme Yams -project Yams.xcodeproj clean build-for-testing > xcodebuild.log
+        run: xcodebuild -sdk macosx -scheme Yams -project Yams.xcodeproj clean build-for-testing > xcodebuild.log
         shell: bash
       - name: Install SwiftLint
         run: brew install swiftlint || brew upgrade swiftlint
