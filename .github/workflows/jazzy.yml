@@ -34,7 +34,7 @@ jobs:
           ImageOS: ubuntu18
       - uses: fwal/setup-swift@v1
         with:
-          swift-version: "5.5"
+          swift-version: "5.6"
       - name: Install SourceKitten
         uses: fjcaetano/mint-action@v1.0.2
         with:
