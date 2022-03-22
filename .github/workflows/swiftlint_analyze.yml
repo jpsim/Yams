@@ -23,11 +23,13 @@ jobs:
   Analyze:
     runs-on: macos-11
     env:
+      # TODO: Move to Xcode 13.3 when issues are addressed
+      # https://github.com/jpsim/Yams/runs/5649876813?check_suite_focus=true
       DEVELOPER_DIR: /Applications/Xcode_13.2.1.app
     steps:
       - uses: actions/checkout@v2
       - name: Generate xcodebuild.log
-        run: xcodebuild -scheme Yams -project Yams.xcodeproj clean build-for-testing > xcodebuild.log
+        run: xcodebuild -sdk macosx -scheme Yams -project Yams.xcodeproj clean build-for-testing > xcodebuild.log
         shell: bash
       - name: Install SwiftLint
         run: brew install swiftlint || brew upgrade swiftlint

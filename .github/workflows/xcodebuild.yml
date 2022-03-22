@@ -57,3 +57,36 @@ jobs:
         if: always()
         run: xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcpretty
         shell: bash
+
+  xcodebuild_Monterey:
+    strategy:
+      matrix:
+        xcode:
+          - version: '13.3'
+        xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
+    runs-on: macos-12
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
+    steps:
+      - uses: actions/checkout@v2
+      - run: xcodebuild -version
+      - name: macOS with UTF16
+        if: always()
+        run: YAMS_DEFAULT_ENCODING=UTF16 xcodebuild ${{ matrix.xcode_flags }} test | xcpretty
+        shell: bash
+      - name: macOS with UTF8
+        if: always()
+        run: YAMS_DEFAULT_ENCODING=UTF8 xcodebuild ${{ matrix.xcode_flags }} test | xcpretty
+        shell: bash
+      - name: iPhone Simulator
+        if: always()
+        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcpretty
+        shell: bash
+      - name: Apple TV Simulator
+        if: always()
+        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (2nd generation)" | xcpretty
+        shell: bash
+      - name: watchOS Simulator
+        if: always()
+        run: xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcpretty
+        shell: bash
