@@ -59,7 +59,7 @@ class NodeTests: XCTestCase {
         let scalarFloat: Node = "1.0"
         XCTAssertEqual(scalarFloat.float, 1.0)
 
-        let scalarNull: Node = "null"
+        let scalarNull = Node("null", .implicit, .plain)
         XCTAssertEqual(scalarNull.null, NSNull())
 
         let scalarInt: Node = "1"
