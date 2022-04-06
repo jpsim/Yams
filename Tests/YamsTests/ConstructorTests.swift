@@ -210,14 +210,16 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
             english: null
             ~: null key
             ---
-            # This sequence has five
-            # entries, two have values.
+            # This sequence has seven
+            # entries, four have values.
             sparse:
               - ~
               - 2nd entry
               -
               - 4th entry
               - Null
+              - 'null'
+              - ''
 
             """
         let objects = Array(try Yams.load_all(yaml: example))
@@ -234,7 +236,9 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
                     "2nd entry",
                     NSNull(),
                     "4th entry",
-                    NSNull()
+                    NSNull(),
+                    "null",
+                    ""
                 ]
             ]
         ]
