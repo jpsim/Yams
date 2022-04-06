@@ -2,7 +2,14 @@
 
 ##### Breaking
 
-* None.
+* Change how empty strings are decoded into nullable properties.
+  `key: ""` previously decoded into
+  `struct Value: Codable { let key: String? }` as `Value(key: nil)`
+  whereas after this change it decodes as `Value(key: "")`.
+  This could be a breaking change if you were relying on the previous
+  semantics.  
+  [Liam Nichols](https://github.com/liamnichols)
+  [#301](https://github.com/jpsim/Yams/issues/301)
 
 ##### Enhancements
 

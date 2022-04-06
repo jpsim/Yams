@@ -396,6 +396,10 @@ extension NSNull/*: ScalarConstructible*/ {
     ///
     /// - returns: An instance of `NSNull`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> NSNull? {
+        // When constructing from a Scalar, only plain style scalars should be recognized.
+        // For example #"key: 'null'"# or #"key: ''"# should not be considered as null.
+        guard case .plain = scalar.style else { return nil }
+
         switch scalar.string {
         case "", "~", "null", "Null", "NULL":
             return NSNull()
