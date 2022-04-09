@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name                      = 'Yams'
   s.version                   = '5.0.0'
   s.summary                   = 'A sweet and swifty YAML parser.'
-  s.homepage                  = 'https://github.com/jpsim/Yams'
+  s.homepage                  = 'https://github.com/crucible-ai/Yams'
   s.source                    = { :git => s.homepage + '.git', :tag => s.version }
   s.license                   = { :type => 'MIT', :file => 'LICENSE' }
   s.authors                   = { 'JP Simard' => 'jp@jpsim.com',
