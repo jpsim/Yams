@@ -351,6 +351,12 @@ extension Decoder {
     public var mark: Mark? {
         return (self as? _Decoder)?.node.mark
     }
+    
+    /// The `Tag`  for the underlying `Node` that has been decoded.
+    public var tag: Tag? {
+        return (self as? _Decoder)?.node.tag
+    }
+    
 }
 
 // MARK: TopLevelDecoder
