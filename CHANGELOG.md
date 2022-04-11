@@ -1,16 +1,8 @@
-## Main
-
-##### Breaking
-
-* None.
+## 5.0.1
 
 ##### Enhancements
 
-* None.
-
-##### Bug Fixes
-
-* None.
+* Adds the ability to access a Node's `tag` during decoding. [Santiago Gutierrez](https://github.com/ssgutierrez42)
 
 ## 5.0.0
 
