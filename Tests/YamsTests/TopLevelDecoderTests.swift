@@ -35,14 +35,14 @@ class TopLevelDecoderTests: XCTestCase {
 
     func testDecodeOptionalTypes() throws {
         let yaml = """
-        A: ''
-        B:
-        C: null
-        D: ~
-        E: ""
+        AAA: ''
+        BBB:
+        CCC: null
+        DDD: ~
+        EEE: ""
         json: {
-          "F": "",
-          "G": "null"
+          "FFF": "",
+          "GGG": "null"
         }
         array:
         - one
@@ -54,28 +54,28 @@ class TopLevelDecoderTests: XCTestCase {
 
         struct Container: Codable, Equatable {
             struct JSON: Codable, Equatable {
-                var F: String?
-                var G: String?
+                var FFF: String?
+                var GGG: String?
             }
 
-            var A: String?
-            var B: String?
-            var C: Int?
-            var D: String?
-            var E: String?
+            var AAA: String?
+            var BBB: String?
+            var CCC: Int?
+            var DDD: String?
+            var EEE: String?
             var json: JSON
             var array: [String?]
         }
 
         let container = try YAMLDecoder().decode(Container.self, from: yaml)
 
-        XCTAssertEqual(container.A, "")
-        XCTAssertEqual(container.B, nil)
-        XCTAssertEqual(container.C, nil)
-        XCTAssertEqual(container.D, nil)
-        XCTAssertEqual(container.E, "")
-        XCTAssertEqual(container.json.F, "")
-        XCTAssertEqual(container.json.G, "null")
+        XCTAssertEqual(container.AAA, "")
+        XCTAssertEqual(container.BBB, nil)
+        XCTAssertEqual(container.CCC, nil)
+        XCTAssertEqual(container.DDD, nil)
+        XCTAssertEqual(container.EEE, "")
+        XCTAssertEqual(container.json.FFF, "")
+        XCTAssertEqual(container.json.GGG, "null")
         XCTAssertEqual(container.array, ["one", "", nil, "null", "~"])
     }
 }
