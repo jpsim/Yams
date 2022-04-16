@@ -26,3 +26,15 @@ load(
 )
 
 swift_rules_extra_dependencies()
+
+local_repository(
+    name = "com_github_buildbuddy_io_rules_xcodeproj",
+    path = "../rules_xcodeproj",
+)
+
+load(
+    "@com_github_buildbuddy_io_rules_xcodeproj//xcodeproj:repositories.bzl",
+    "xcodeproj_rules_dependencies",
+)
+
+xcodeproj_rules_dependencies()

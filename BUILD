@@ -1,5 +1,6 @@
 load("@rules_cc//cc:defs.bzl", "cc_library")
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@com_github_buildbuddy_io_rules_xcodeproj//xcodeproj:xcodeproj.bzl", "xcodeproj")
 
 cc_library(
     name = "CYaml",
@@ -23,4 +24,14 @@ swift_library(
     module_name = "Yams",
     visibility = ["//visibility:public"],
     deps = ["//:CYaml"],
+)
+
+xcodeproj(
+    name = "xcodeproj",
+    project_name = "Yams-bazel",
+    targets = [
+        "CYaml",
+        "Yams",
+    ],
+    tags = ["manual"],
 )
