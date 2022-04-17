@@ -32,6 +32,12 @@ local_repository(
     path = "../rules_xcodeproj",
 )
 
+# http_archive(
+#     name = "com_github_buildbuddy_io_rules_xcodeproj",
+#     sha256 = "3a45e9e20bfb36c306ccc51407b97ff7d320c597d3c1c533cbdee9e66cff5cda",
+#     url = "https://github.com/buildbuddy-io/rules_xcodeproj/releases/download/0.2.0/release.tar.gz",
+# )
+
 load(
     "@com_github_buildbuddy_io_rules_xcodeproj//xcodeproj:repositories.bzl",
     "xcodeproj_rules_dependencies",
