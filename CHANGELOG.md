@@ -1,4 +1,4 @@
-## Main
+## 5.0.1
 
 ##### Breaking
 
@@ -10,7 +10,8 @@
 
 ##### Bug Fixes
 
-* None.
+* Build CYaml as PIC (Position Independent Code) when building with
+  CMake.
 
 ## 5.0.0
 
