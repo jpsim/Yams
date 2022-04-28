@@ -1,3 +1,17 @@
+## Main
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* None.
+
+##### Bug Fixes
+
+* None.
+
 ## 5.0.1
 
 ##### Breaking
@@ -11,7 +25,8 @@
 ##### Bug Fixes
 
 * Build CYaml as PIC (Position Independent Code) when building with
-  CMake.
+  CMake.  
+  [Yuta Saito](https://github.com/kateinoigakukun)
 
 ## 5.0.0
 
