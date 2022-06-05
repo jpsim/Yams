@@ -2,7 +2,7 @@
 import PackageDescription
 
 let dependencies: [Package.Dependency]
-#if swift(>=5.6)
+#if swift(>=5.6) && swift(<5.7) && os(macOS)
 dependencies = [.package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")]
 #else
 dependencies = []
