@@ -1,11 +1,19 @@
 // swift-tools-version:5.4
 import PackageDescription
 
+let dependencies: [Package.Dependency]
+#if swift(>=5.6)
+dependencies = [.package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")]
+#else
+dependencies = []
+#endif
+
 let package = Package(
     name: "Yams",
     products: [
         .library(name: "Yams", targets: ["Yams"])
     ],
+    dependencies: dependencies,
     targets: [
         .target(
             name: "CYaml",
