@@ -62,7 +62,8 @@ jobs:
     strategy:
       matrix:
         xcode:
-          - version: '13.3'
+          - version: '13.3.1'
+          - version: '13.4'
         xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
     runs-on: macos-12
     env:
