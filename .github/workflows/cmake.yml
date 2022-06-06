@@ -42,7 +42,7 @@ jobs:
   CMake_Monterey:
     strategy:
       matrix:
-        xcode_version: ['13.3']
+        xcode_version: ['13.3', '13.4']
     runs-on: macos-12
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
@@ -65,7 +65,7 @@ jobs:
       image: swift:${{ matrix.tag }}
     steps:
       - uses: actions/checkout@v2
-      - run: apt-get update && apt-get install ninja-build curl
+      - run: apt-get update && apt-get install -y ninja-build curl
       - run: curl -L https://github.com/Kitware/CMake/releases/download/v3.23.1/cmake-3.23.1-linux-x86_64.tar.gz | tar xz --strip-components=1 -C /usr
       - run: swift -version
       - run: rm -rf build
