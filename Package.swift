@@ -11,10 +11,15 @@ dependencies = []
 let package = Package(
     name: "Yams",
     products: [
-        .library(name: "Yams", targets: ["Yams"])
+        .library(name: "Yams", targets: ["Yams"]),
+        .executable(name: "yams-cli", targets: ["yams-cli"])
     ],
     dependencies: dependencies,
     targets: [
+        .executableTarget(
+            name: "yams-cli",
+            dependencies: ["Yams"]
+        ),
         .target(
             name: "CYaml",
             exclude: ["CMakeLists.txt"],

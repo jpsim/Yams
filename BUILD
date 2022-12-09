@@ -1,5 +1,5 @@
 load("@rules_cc//cc:defs.bzl", "cc_library")
-load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_binary", "swift_library")
 
 cc_library(
     name = "CYaml",
@@ -23,4 +23,13 @@ swift_library(
     module_name = "Yams",
     visibility = ["//visibility:public"],
     deps = ["//:CYaml"],
+)
+
+swift_binary(
+    name = "yams-cli",
+    srcs = glob(["Sources/yams-cli/*.swift"]),
+    copts = ["-DSWIFT_PACKAGE"],
+    module_name = "yams-cli",
+    visibility = ["//visibility:public"],
+    deps = ["//:Yams"],
 )
