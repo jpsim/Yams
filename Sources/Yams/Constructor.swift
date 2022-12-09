@@ -6,8 +6,6 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
-import Foundation
-
 /// Constructors are used to translate `Node`s to Swift values.
 public final class Constructor {
     /// Maps `Tag.Name`s to `Node.Scalar`s.
@@ -75,11 +73,7 @@ extension Constructor {
         // JSON Schema
         .bool: Bool.construct,
         .float: Double.construct,
-        .null: NSNull.construct,
-        .int: MemoryLayout<Int>.size == 8 ? Int.construct : { Int.construct(from: $0) ?? Int64.construct(from: $0) },
-        // http://yaml.org/type/index.html
-        .binary: Data.construct,
-        .timestamp: Date.construct
+        .int: MemoryLayout<Int>.size == 8 ? Int.construct : { Int.construct(from: $0) ?? Int64.construct(from: $0) }
     ]
 
     /// The default `Tag.Name` to `Node.Mapping` map.
@@ -115,19 +109,6 @@ public protocol ScalarConstructible {
     static func construct(from scalar: Node.Scalar) -> Self?
 }
 
-// MARK: - ScalarConstructible UUID Conformance
-
-extension UUID: ScalarConstructible {
-    /// Construct an instance of `UUID`, if possible, from the specified scalar.
-    ///
-    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `UUID`, if possible.
-    ///
-    /// - returns: An instance of `UUID`, if one was successfully extracted from the scalar.
-    public static func construct(from scalar: Node.Scalar) -> UUID? {
-        return UUID(uuidString: scalar.string)
-    }
-}
-
 // MARK: - ScalarConstructible Bool Conformance
 
 extension Bool: ScalarConstructible {
@@ -146,90 +127,6 @@ extension Bool: ScalarConstructible {
             return nil
         }
     }
-}
-
-// MARK: - ScalarConstructible Data Conformance
-
-extension Data: ScalarConstructible {
-    /// Construct an instance of `Data`, if possible, from the specified scalar.
-    ///
-    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `Data`, if possible.
-    ///
-    /// - returns: An instance of `Data`, if one was successfully extracted from the scalar.
-    public static func construct(from scalar: Node.Scalar) -> Data? {
-        return Data(base64Encoded: scalar.string, options: .ignoreUnknownCharacters)
-    }
-}
-
-// MARK: - ScalarConstructible Date Conformance
-
-extension Date: ScalarConstructible {
-    /// Construct an instance of `Date`, if possible, from the specified scalar.
-    ///
-    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `Date`, if possible.
-    ///
-    /// - returns: An instance of `Date`, if one was successfully extracted from the scalar.
-    public static func construct(from scalar: Node.Scalar) -> Date? {
-        let range = NSRange(location: 0, length: scalar.string.utf16.count)
-        guard let result = timestampPattern.firstMatch(in: scalar.string, options: [], range: range),
-            result.range.location != NSNotFound else {
-                return nil
-        }
-        let components = (1..<result.numberOfRanges).map {
-            scalar.string.substring(with: result.range(at: $0))
-        }
-
-        var datecomponents = DateComponents()
-        datecomponents.calendar = gregorianCalendar
-        datecomponents.year = components[0].flatMap { Int($0) }
-        datecomponents.month = components[1].flatMap { Int($0) }
-        datecomponents.day = components[2].flatMap { Int($0) }
-        datecomponents.hour = components[3].flatMap { Int($0) }
-        datecomponents.minute = components[4].flatMap { Int($0) }
-        datecomponents.second = components[5].flatMap { Int($0) }
-        let nanoseconds: TimeInterval? = components[6].flatMap { fraction in
-            let length = fraction.count
-            let nanoseconds: Int?
-            if length < 9 {
-                nanoseconds = Int(fraction).map { number in
-                    repeatElement(10, count: 9 - length).reduce(number, *)
-                }
-            } else {
-                nanoseconds = Int(fraction.prefix(9))
-            }
-            return nanoseconds.map { Double($0) / 1_000_000_000.0 }
-        }
-        datecomponents.timeZone = {
-            var seconds = 0
-            if let hourInSecond = components[9].flatMap({ Int($0) }).map({ $0 * 60 * 60 }) {
-                seconds += hourInSecond
-            }
-            if let minuteInSecond = components[10].flatMap({ Int($0) }).map({ $0 * 60 }) {
-                seconds += minuteInSecond
-            }
-            if components[8] == "-" { // sign
-                seconds *= -1
-            }
-            return TimeZone(secondsFromGMT: seconds)
-        }()
-        return datecomponents.date.map { nanoseconds.map($0.addingTimeInterval) ?? $0 }
-    }
-
-    private static let gregorianCalendar = Calendar(identifier: .gregorian)
-
-    private static let timestampPattern: NSRegularExpression = pattern([
-        "^([0-9][0-9][0-9][0-9])",          // year
-        "-([0-9][0-9]?)",                   // month
-        "-([0-9][0-9]?)",                   // day
-        "(?:(?:[Tt]|[ \\t]+)",
-        "([0-9][0-9]?)",                    // hour
-        ":([0-9][0-9])",                    // minute
-        ":([0-9][0-9])",                    // second
-        "(?:\\.([0-9]*))?",                 // fraction
-        "(?:[ \\t]*(Z|([-+])([0-9][0-9]?)", // tz_sign, tz_hour
-        "(?::([0-9][0-9]))?))?)?$"          // tz_minute
-        ].joined()
-    )
 }
 
 // MARK: - ScalarConstructible Double Conformance
@@ -260,7 +157,7 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
         case ".nan", ".NaN", ".NAN":
             return .nan
         default:
-            let string = scalar.string.replacingOccurrences(of: "_", with: "")
+            let string = scalar.string.replacing("_", with: "")
             if string.contains(":") {
                 return Self(sexagesimal: string)
             }
@@ -275,7 +172,7 @@ private extension FixedWidthInteger where Self: SexagesimalConvertible {
             return nil
         }
 
-        let scalarWithSign = scalar.string.replacingOccurrences(of: "_", with: "")
+        let scalarWithSign = scalar.string.replacing("_", with: "")
 
         if scalarWithSign == "0" {
             return 0
@@ -387,24 +284,6 @@ extension String: ScalarConstructible {
     }
 }
 
-// MARK: - Types that can't conform to ScalarConstructible
-
-extension NSNull/*: ScalarConstructible*/ {
-    /// Construct an instance of `NSNull`, if possible, from the specified scalar.
-    ///
-    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `NSNull`, if possible.
-    ///
-    /// - returns: An instance of `NSNull`, if one was successfully extracted from the scalar.
-    public static func construct(from scalar: Node.Scalar) -> NSNull? {
-        switch scalar.string {
-        case "", "~", "null", "Null", "NULL":
-            return NSNull()
-        default:
-            return nil
-        }
-    }
-}
-
 // MARK: Mapping
 
 extension Dictionary {
@@ -481,19 +360,6 @@ extension Array {
             guard let (key, value) = subnode.mapping?.first else { return nil }
             return (sequence.tag.constructor.any(from: key), sequence.tag.constructor.any(from: value))
         }
-    }
-}
-
-private extension String {
-    func substring(with range: NSRange) -> Substring? {
-        guard range.location != NSNotFound else { return nil }
-        let utf16lowerBound = utf16.index(utf16.startIndex, offsetBy: range.location)
-        let utf16upperBound = utf16.index(utf16lowerBound, offsetBy: range.length)
-        guard let lowerBound = utf16lowerBound.samePosition(in: self),
-            let upperBound = utf16upperBound.samePosition(in: self) else {
-                fatalError("unreachable")
-        }
-        return self[lowerBound..<upperBound]
     }
 }
 
@@ -585,7 +451,7 @@ private extension String {
         } else {
             sign = 1
         }
-        let digits = scalar.components(separatedBy: ":").compactMap(T.create).reversed()
+        let digits = scalar.split(separator: ":").map(String.init).compactMap(T.create).reversed()
         let (_, value) = digits.reduce((1, 0) as (T, T)) { baseAndValue, digit in
             let value = baseAndValue.1 + (digit * baseAndValue.0)
             let base = baseAndValue.0 * 60

@@ -6,8 +6,6 @@
 //  Copyright (c) 2017 Yams. All rights reserved.
 //
 
-import Foundation
-
 #if os(iOS) || os(macOS) || os(watchOS) || os(tvOS)
 import Darwin
 private let cpow: (_: Double, _: Double) -> Double = Darwin.pow
@@ -82,13 +80,6 @@ extension ScalarRepresentable {
     }
 }
 
-extension NSNull: ScalarRepresentable {
-    /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
-        return .init("null", Tag(.null))
-    }
-}
-
 extension Bool: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
@@ -96,106 +87,36 @@ extension Bool: ScalarRepresentable {
     }
 }
 
-extension Data: ScalarRepresentable {
-    /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
-        return .init(base64EncodedString(), Tag(.binary))
-    }
-}
-
-extension Date: ScalarRepresentable {
-    /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
-        return .init(iso8601String, Tag(.timestamp))
-    }
-
-    private var iso8601String: String {
-        let (integral, millisecond) = timeIntervalSinceReferenceDate.separateFractionalSecond(withPrecision: 3)
-        guard millisecond != 0 else { return iso8601Formatter.string(from: self) }
-
-        let dateWithoutMillisecond = Date(timeIntervalSinceReferenceDate: integral)
-        return iso8601WithoutZFormatter.string(from: dateWithoutMillisecond) +
-            String(format: ".%03d", millisecond).trimmingCharacters(in: characterSetZero) + "Z"
-    }
-
-    private var iso8601StringWithFullNanosecond: String {
-        let (integral, nanosecond) = timeIntervalSinceReferenceDate.separateFractionalSecond(withPrecision: 9)
-        guard nanosecond != 0 else { return iso8601Formatter.string(from: self) }
-
-        let dateWithoutNanosecond = Date(timeIntervalSinceReferenceDate: integral)
-        return iso8601WithoutZFormatter.string(from: dateWithoutNanosecond) +
-            String(format: ".%09d", nanosecond).trimmingCharacters(in: characterSetZero) + "Z"
-    }
-}
-
-private extension TimeInterval {
-    /// Separates the time interval into integral and fractional components, then rounds the `fractional`
-    /// component to `precision` number of digits.
-    ///
-    /// - returns: Tuple of integral part and converted fractional part
-    func separateFractionalSecond(withPrecision precision: Int) -> (integral: TimeInterval, fractional: Int) {
-        var integral = 0.0
-        let fractional = modf(self, &integral)
-
-        // TODO(TF-1203): Can't use `pow` free function due to
-        // https://bugs.swift.org/browse/TF-1203.
-        let radix = cpow(10.0, Double(precision))
-
-        let rounded = Int((fractional * radix).rounded())
-        let quotient = rounded / Int(radix)
-        return quotient != 0 ? // carry-up?
-            (integral + TimeInterval(quotient), rounded % Int(radix)) :
-            (integral, rounded)
-    }
-}
-
-private let characterSetZero = CharacterSet(charactersIn: "0")
-
-private let iso8601Formatter: DateFormatter = {
-    var formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
-    return formatter
-}()
-
-private let iso8601WithoutZFormatter: DateFormatter = {
-    var formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss"
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
-    return formatter
-}()
-
 extension Double: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
-        return .init(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+        if #available(macOS 13.0, *) {
+            return .init(doubleFormatter.string(for: self).replacing("+-", with: "-"), Tag(.float))
+        } else {
+            fatalError("Unimplemented")
+        }
     }
 }
 
 extension Float: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
-        return .init(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+        if #available(macOS 13.0, *) {
+            return .init(floatFormatter.string(for: self).replacing("+-", with: "-"), Tag(.float))
+        } else {
+            fatalError("Unimplemented")
+        }
     }
 }
 
-private func numberFormatter(with significantDigits: Int) -> NumberFormatter {
-    let formatter = NumberFormatter()
-    formatter.locale = Locale(identifier: "en_US")
-    formatter.numberStyle = .scientific
-    formatter.usesSignificantDigits = true
-    formatter.maximumSignificantDigits = significantDigits
-    formatter.positiveInfinitySymbol = ".inf"
-    formatter.negativeInfinitySymbol = "-.inf"
-    formatter.notANumberSymbol = ".nan"
-    formatter.exponentSymbol = "e+"
-    return formatter
-}
+private let doubleFormatter = YamsNumberFormatter()
+private let floatFormatter = YamsNumberFormatter()
 
-private let doubleFormatter = numberFormatter(with: 15)
-private let floatFormatter = numberFormatter(with: 7)
+private struct YamsNumberFormatter {
+    func string(for number: some FloatingPoint) -> String {
+        "\(number)"
+    }
+}
 
 // TODO: Support `Float80`
 //extension Float80: ScalarRepresentable {}
@@ -230,32 +151,11 @@ extension Optional: NodeRepresentable {
     }
 }
 
-extension Decimal: ScalarRepresentable {
-    /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
-        return .init(description)
-    }
-}
-
-extension URL: ScalarRepresentable {
-    /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
-        return .init(absoluteString)
-    }
-}
-
 extension String: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
         let scalar = Node.Scalar(self)
         return scalar.resolvedTag.name == .str ? scalar : .init(self, Tag(.str), .singleQuoted)
-    }
-}
-
-extension UUID: ScalarRepresentable {
-    /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
-        return .init(uuidString)
     }
 }
 
@@ -275,8 +175,6 @@ extension YAMLEncodable where Self: ScalarRepresentable {
 }
 
 extension Bool: YAMLEncodable {}
-extension Data: YAMLEncodable {}
-extension Decimal: YAMLEncodable {}
 extension Int: YAMLEncodable {}
 extension Int8: YAMLEncodable {}
 extension Int16: YAMLEncodable {}
@@ -287,41 +185,18 @@ extension UInt8: YAMLEncodable {}
 extension UInt16: YAMLEncodable {}
 extension UInt32: YAMLEncodable {}
 extension UInt64: YAMLEncodable {}
-extension URL: YAMLEncodable {}
 extension String: YAMLEncodable {}
-extension UUID: YAMLEncodable {}
-
-extension Date: YAMLEncodable {
-    /// Returns this value wrapped in a `Node.scalar`.
-    public func box() -> Node {
-        return Node(iso8601StringWithFullNanosecond, Tag(.timestamp))
-    }
-}
 
 extension Double: YAMLEncodable {
     /// Returns this value wrapped in a `Node.scalar`.
     public func box() -> Node {
-        return Node(formattedStringForCodable, Tag(.float))
+        return Node("\(self)", Tag(.float))
     }
 }
 
 extension Float: YAMLEncodable {
     /// Returns this value wrapped in a `Node.scalar`.
     public func box() -> Node {
-        return Node(formattedStringForCodable, Tag(.float))
-    }
-}
-
-private extension FloatingPoint where Self: CVarArg {
-    var formattedStringForCodable: String {
-        // Since `NumberFormatter` creates a string with insufficient precision for Decode,
-        // it uses with `String(format:...)`
-        let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
-        // "%*.g" does not use scientific notation if the exponent is less than –4.
-        // So fallback to using `NumberFormatter` if string does not uses scientific notation.
-        guard string.lazy.suffix(5).contains("e") else {
-            return doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
-        }
-        return string
+        return Node("\(self)", Tag(.float))
     }
 }

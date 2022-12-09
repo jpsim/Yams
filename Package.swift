@@ -1,4 +1,4 @@
-// swift-tools-version:5.4
+// swift-tools-version:5.7
 import PackageDescription
 
 let dependencies: [Package.Dependency]
@@ -10,6 +10,7 @@ dependencies = []
 
 let package = Package(
     name: "Yams",
+    platforms: [.macOS(.v13)],
     products: [
         .library(name: "Yams", targets: ["Yams"]),
         .executable(name: "yams-cli", targets: ["yams-cli"])
@@ -29,14 +30,6 @@ let package = Package(
             name: "Yams",
             dependencies: ["CYaml"],
             exclude: ["CMakeLists.txt"]
-        ),
-        .testTarget(
-            name: "YamsTests",
-            dependencies: ["Yams"],
-            exclude: ["CMakeLists.txt"],
-            resources: [
-                .copy("Fixtures/SourceKitten#289/debug.yaml"),
-            ]
         )
     ]
 )

@@ -9,7 +9,6 @@
 #if SWIFT_PACKAGE
 @_implementationOnly import CYaml
 #endif
-import Foundation
 
 /// Errors thrown by Yams APIs.
 public enum YamlError: Error {
@@ -71,9 +70,7 @@ public enum YamlError: Error {
     case representer(problem: String)
 
     /// String data could not be decoded with the specified encoding.
-    ///
-    /// - parameter encoding: The string encoding used to decode the string data.
-    case dataCouldNotBeDecoded(encoding: String.Encoding)
+    case dataCouldNotBeDecoded
 
     /// The error context.
     public struct Context: CustomStringConvertible {
@@ -158,13 +155,8 @@ extension YamlError: CustomStringConvertible {
             return "No error is produced"
         case .memory:
             return "Memory error"
-        case let .reader(problem, offset, value, yaml):
-            guard let (line, column, contents) = offset.flatMap(yaml.lineNumberColumnAndContents(at:)) else {
-                return "\(problem) at offset: \(String(describing: offset)), value: \(value)"
-            }
-            let mark = Mark(line: line + 1, column: column + 1)
-            return "\(mark): error: reader: \(problem):\n" + contents.endingWithNewLine
-                + String(repeating: " ", count: column) + "^"
+        case let .reader(problem, offset, value, _):
+            return "\(problem) at offset: \(String(describing: offset)), value: \(value)"
         case let .scanner(context, problem, mark, yaml):
             return "\(mark): error: scanner: \(context?.description ?? "")\(problem):\n" + mark.snippet(from: yaml)
         case let .parser(context, problem, mark, yaml):
@@ -173,8 +165,8 @@ extension YamlError: CustomStringConvertible {
             return "\(mark): error: composer: \(context?.description ?? "")\(problem):\n" + mark.snippet(from: yaml)
         case let .writer(problem), let .emitter(problem), let .representer(problem):
             return problem
-        case .dataCouldNotBeDecoded(encoding: let encoding):
-            return "String could not be decoded from data using '\(encoding)' encoding"
+        case .dataCouldNotBeDecoded:
+            return "String could not be decoded from data"
         }
     }
 }

@@ -6,8 +6,6 @@
 //  Copyright (c) 2017 Yams. All rights reserved.
 //
 
-import Foundation
-
 /// `Codable`-style `Decoder` that can be used to decode a `Decodable` type from a given `String` and optional
 /// user info mapping. Similar to `Foundation.JSONDecoder`.
 public class YAMLDecoder {
@@ -42,25 +40,6 @@ public class YAMLDecoder {
                                                     debugDescription: "The given data was not valid YAML.",
                                                     underlyingError: error))
         }
-    }
-
-    /// Decode a `Decodable` type from a given `Data` and optional user info mapping.
-    ///
-    /// - parameter type:    `Decodable` type to decode.
-    /// - parameter yaml:     YAML data to decode.
-    /// - parameter userInfo: Additional key/values which can be used when looking up keys to decode.
-    ///
-    /// - returns: Returns the decoded type `T`.
-    ///
-    /// - throws: `DecodingError` or `YamlError` if something went wrong while decoding.
-    public func decode<T>(_ type: T.Type = T.self,
-                          from yamlData: Data,
-                          userInfo: [CodingUserInfoKey: Any] = [:]) throws -> T where T: Swift.Decodable {
-        guard let yamlString = String(data: yamlData, encoding: encoding.swiftStringEncoding) else {
-            throw YamlError.dataCouldNotBeDecoded(encoding: encoding.swiftStringEncoding)
-        }
-
-        return try decode(type, from: yamlString, userInfo: userInfo)
     }
 
     /// Encoding
@@ -234,7 +213,7 @@ extension _Decoder: SingleValueDecodingContainer {
 
     // MARK: - Swift.SingleValueDecodingContainer Methods
 
-    func decodeNil() -> Bool { return node.null == NSNull() }
+    func decodeNil() -> Bool { return false }
     func decode<T>(_ type: T.Type) throws -> T where T: Decodable & ScalarConstructible { return try construct(type) }
     func decode<T>(_ type: T.Type) throws -> T where T: Decodable {return try construct(type) ?? type.init(from: self) }
 
@@ -318,32 +297,6 @@ extension UInt16: ScalarConstructible {}
 // MARK: - ScalarConstructible UInt32 Conformance
 extension UInt32: ScalarConstructible {}
 
-// MARK: - ScalarConstructible Decimal Conformance
-
-extension Decimal: ScalarConstructible {
-    /// Construct an instance of `Decimal`, if possible, from the specified scalar.
-    ///
-    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `Decimal`, if possible.
-    ///
-    /// - returns: An instance of `Decimal`, if one was successfully extracted from the scalar.
-    public static func construct(from scalar: Node.Scalar) -> Decimal? {
-        return Decimal(string: scalar.string)
-    }
-}
-
-// MARK: - ScalarConstructible URL Conformance
-
-extension URL: ScalarConstructible {
-    /// Construct an instance of `URL`, if possible, from the specified scalar.
-    ///
-    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `URL`, if possible.
-    ///
-    /// - returns: An instance of `URL`, if one was successfully extracted from the scalar.
-    public static func construct(from scalar: Node.Scalar) -> URL? {
-        return URL(string: scalar.string)
-    }
-}
-
 // MARK: Decoder.mark
 
 extension Decoder {
@@ -352,17 +305,3 @@ extension Decoder {
         return (self as? _Decoder)?.node.mark
     }
 }
-
-// MARK: TopLevelDecoder
-
-#if canImport(Combine)
-import protocol Combine.TopLevelDecoder
-
-extension YAMLDecoder: TopLevelDecoder {
-    public typealias Input = Data
-
-    public func decode<T>(_ type: T.Type, from: Data) throws -> T where T: Decodable {
-        try decode(type, from: from, userInfo: [:])
-    }
-}
-#endif

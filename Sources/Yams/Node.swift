@@ -6,8 +6,6 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
-import Foundation
-
 /// YAML Node.
 public enum Node: Hashable {
     /// Scalar node.
@@ -92,29 +90,9 @@ extension Node {
         return scalar.flatMap(Double.construct)
     }
 
-    /// This node as an `NSNull`, if convertible.
-    public var null: NSNull? {
-        return scalar.flatMap(NSNull.construct)
-    }
-
     /// This node as an `Int`, if convertible.
     public var int: Int? {
         return scalar.flatMap(Int.construct)
-    }
-
-    /// This node as a `Data`, if convertible.
-    public var binary: Data? {
-        return scalar.flatMap(Data.construct)
-    }
-
-    /// This node as a `Date`, if convertible.
-    public var timestamp: Date? {
-        return scalar.flatMap(Date.construct)
-    }
-
-    /// This node as a `UUID`, if convertible.
-    public var uuid: UUID? {
-        return scalar.flatMap(UUID.construct)
     }
 
     // MARK: Typed accessor methods

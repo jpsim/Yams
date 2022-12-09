@@ -9,7 +9,6 @@
 #if SWIFT_PACKAGE
 @_implementationOnly import CYaml
 #endif
-import Foundation
 
 /// Produce a YAML string from objects.
 ///
@@ -161,7 +160,7 @@ public func serialize<Nodes>(
     try emitter.open()
     try nodes.forEach(emitter.serialize)
     try emitter.close()
-    return String(data: emitter.data, encoding: .utf8)!
+    return emitter.data
 }
 
 /// Produce a YAML string from a `Node`.
@@ -223,8 +222,8 @@ public final class Emitter {
         case crln
     }
 
-    /// Retrieve this Emitter's binary output.
-    public internal(set) var data = Data()
+    /// Retrieve this Emitter's string output.
+    public internal(set) var data = ""
 
     /// Configuration options to use when emitting YAML.
     public struct Options {
@@ -304,7 +303,7 @@ public final class Emitter {
         yaml_emitter_set_output(&self.emitter, { pointer, buffer, size in
             guard let buffer = buffer else { return 0 }
             let emitter = unsafeBitCast(pointer, to: Emitter.self)
-            emitter.data.append(buffer, count: size)
+            emitter.data.append(String(cString: buffer))
             return 1
         }, unsafeBitCast(self, to: UnsafeMutableRawPointer.self))
 

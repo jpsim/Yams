@@ -9,7 +9,6 @@
 #if SWIFT_PACKAGE
 @_implementationOnly import CYaml
 #endif
-import Foundation
 
 /// Parse all YAML documents in a String
 /// and produce corresponding Swift objects.
@@ -127,25 +126,8 @@ public final class Parser {
         /// This value is case insensitive.
         public static var `default`: Encoding = {
             let key = "YAMS_DEFAULT_ENCODING"
-            if let yamsEncoding = ProcessInfo.processInfo.environment[key],
-                let encoding = Encoding(rawValue: yamsEncoding.lowercased()) {
-                print("""
-                    `Parser.Encoding.default` was set to `\(encoding)` by the `\(key)` environment variable.
-                    """)
-                return encoding
-            }
             return key.utf8.withContiguousStorageIfAvailable({ _ in true }) != nil ? .utf8 : .utf16
         }()
-
-        /// The equivalent `Swift.Encoding` value for `self`.
-        internal var swiftStringEncoding: String.Encoding {
-            switch self {
-            case .utf8:
-                return .utf8
-            case .utf16:
-                return .utf16
-            }
-        }
     }
     /// Encoding
     public let encoding: Encoding
@@ -182,38 +164,8 @@ public final class Parser {
                 try utf8Slice.withUnsafeBytes(startParse(with:))
             }
         case .utf16:
-            // use native endianness
-            let isLittleEndian = 1 == 1.littleEndian
-            yaml_parser_set_encoding(&parser, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
-            let encoding: String.Encoding = isLittleEndian ? .utf16LittleEndian : .utf16BigEndian
-            let data = yaml.data(using: encoding)!
-            buffer = .utf16(data)
-            try data.withUnsafeBytes(startParse(with:))
+            fatalError("Unimplemented")
         }
-    }
-
-    /// Set up a `Parser` with a `Data` value as input.
-    ///
-    /// - parameter string: YAML Data encoded using the `encoding` encoding.
-    /// - parameter resolver: Resolver, `.default` if omitted.
-    /// - parameter constructor: Constructor, `.default` if omitted.
-    /// - parameter encoding: Encoding, `.default` if omitted.
-    ///
-    /// - throws: `YamlError`.
-    public convenience init(yaml data: Data,
-                            resolver: Resolver = .default,
-                            constructor: Constructor = .default,
-                            encoding: Encoding = .default) throws {
-        guard let yamlString = String(data: data, encoding: encoding.swiftStringEncoding) else {
-            throw YamlError.dataCouldNotBeDecoded(encoding: encoding.swiftStringEncoding)
-        }
-
-        try self.init(
-            yaml: yamlString,
-            resolver: resolver,
-            constructor: constructor,
-            encoding: encoding
-        )
     }
 
     deinit {
@@ -258,7 +210,6 @@ public final class Parser {
     private enum Buffer {
         case utf8View(String.UTF8View)
         case utf8Slice(ArraySlice<CChar>)
-        case utf16(Data)
     }
     private var buffer: Buffer
 }
@@ -395,11 +346,7 @@ private class Event {
         return string(from: event.data.scalar.tag)
     }
     var scalarValue: String {
-        // scalar may contain NULL characters
-        let buffer = UnsafeBufferPointer(start: event.data.scalar.value,
-                                         count: event.data.scalar.length)
-        // libYAML converts scalar characters into UTF8 if input is other than YAML_UTF8_ENCODING
-        return String(bytes: buffer, encoding: .utf8)!
+        return String(cString: event.data.scalar.value)
     }
 
     // sequence

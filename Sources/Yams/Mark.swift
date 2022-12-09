@@ -26,14 +26,6 @@ extension Mark: CustomStringConvertible {
 extension Mark {
     /// Returns snippet string pointed by Mark instance from YAML String.
     public func snippet(from yaml: String) -> String {
-        let contents = yaml.substring(at: line - 1)
-        let columnIndex = contents.unicodeScalars
-            .index(contents.unicodeScalars.startIndex,
-                   offsetBy: column - 1,
-                   limitedBy: contents.unicodeScalars.endIndex)?
-            .samePosition(in: contents.utf16) ?? contents.utf16.endIndex
-        let columnInUTF16 = contents.utf16.distance(from: contents.utf16.startIndex, to: columnIndex)
-        return contents.endingWithNewLine +
-            String(repeating: " ", count: columnInUTF16) + "^"
+        fatalError("Unimplemented")
     }
 }
