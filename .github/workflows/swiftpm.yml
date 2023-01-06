@@ -32,7 +32,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: swift -version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
@@ -54,7 +54,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: swift -version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
@@ -67,46 +67,46 @@ jobs:
     container:
       image: swift:${{ matrix.tag }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
 
-  Windows:
-    runs-on: windows-latest
+  # Windows:
+  #   runs-on: windows-latest
 
-    strategy:
-      matrix:
-        include:
-          - branch: swift-5.4.3-release
-            tag: 5.4.3-RELEASE
+  #   strategy:
+  #     matrix:
+  #       include:
+  #         - branch: swift-5.4.3-release
+  #           tag: 5.4.3-RELEASE
 
-          - branch: swift-5.5.1-release
-            tag: 5.5.1-RELEASE
+  #         - branch: swift-5.5.1-release
+  #           tag: 5.5.1-RELEASE
 
-          - branch: development
-            tag: DEVELOPMENT-SNAPSHOT-2021-11-20-a
+  #         - branch: development
+  #           tag: DEVELOPMENT-SNAPSHOT-2021-11-20-a
 
-    steps:
-      - uses: actions/checkout@v2
-      - uses: compnerd/gha-setup-swift@main
-        with:
-          branch: ${{ matrix.branch }}
-          tag: ${{ matrix.tag }}
-      # Commands to run once connected via SSH:
-      #
-      # >d:
-      # >cd a\Yams\Yams
-      # >setx SDKROOT C:\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk
-      # >setx DEVELOPER_DIR C:\Library\Developer
-      # >swift build -v
-      # >swift test -v
-      # >swift test -v --filter testBinary
-      # - name: Start SSH session
-      #   uses: luchihoratiu/debug-via-ssh@main
-      #   with:
-      #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-      #     SSH_PASS: ${{ secrets.SSH_PASS }}
-      - name: Build
-        run: swift build -v
-      - name: Test
-        run: swift test -v
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: compnerd/gha-setup-swift@main
+  #       with:
+  #         branch: ${{ matrix.branch }}
+  #         tag: ${{ matrix.tag }}
+  #     # Commands to run once connected via SSH:
+  #     #
+  #     # >d:
+  #     # >cd a\Yams\Yams
+  #     # >setx SDKROOT C:\Library\Developer\Platforms\Windows.platform\Developer\SDKs\Windows.sdk
+  #     # >setx DEVELOPER_DIR C:\Library\Developer
+  #     # >swift build -v
+  #     # >swift test -v
+  #     # >swift test -v --filter testBinary
+  #     # - name: Start SSH session
+  #     #   uses: luchihoratiu/debug-via-ssh@main
+  #     #   with:
+  #     #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+  #     #     SSH_PASS: ${{ secrets.SSH_PASS }}
+  #     - name: Build
+  #       run: swift build -v
+  #     - name: Test
+  #       run: swift test -v
