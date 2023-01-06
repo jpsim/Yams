@@ -15,4 +15,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: SwiftLint
-        run: swiftlint lint
+        run: swiftlint lint --strict
