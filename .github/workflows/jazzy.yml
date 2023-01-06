@@ -23,24 +23,18 @@ on:
 
 jobs:
   Jazzy:
-    if: ${{ false }} # Disabled because Swift is failing to install
-    runs-on: ubuntu-22.04
+    runs-on: macos-12
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_13.4.app
     steps:
       - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7.5
-          bundler-cache: true
-      - uses: fwal/setup-swift@v1
-        with:
-          swift-version: "5.6"
       - name: Install SourceKitten
-        uses: fjcaetano/mint-action@v1.0.2
-        with:
-          package: jpsim/SourceKitten
+        run: brew install sourcekitten
       - run: swift build
       - name: Generate documentation json
-        run: /home/runner/.mint/bin/sourcekitten doc --spm --module-name Yams > yams.json
+        run: sourcekitten doc --spm --module-name Yams > yams.json
+      - name: Install Gems
+        run: bundle install --path vendor/bundle
       - name: Run jazzy
         run: bundle exec jazzy --clean --sourcekitten-sourcefile yams.json
       - name: Validate documentation coverage
