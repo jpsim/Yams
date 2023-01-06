@@ -35,7 +35,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: xcodebuild -version
       - name: macOS with UTF16
         if: always()
@@ -69,7 +69,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: xcodebuild -version
       - name: macOS with UTF16
         if: always()

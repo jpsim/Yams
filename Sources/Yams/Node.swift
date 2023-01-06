@@ -244,7 +244,8 @@ extension Node: ExpressibleByDictionaryLiteral {
         self = Node(elements)
     }
 
-    /// Create a `Node.mapping` from a dictionary literal of `Node`s and a default `Style` to use for the dictionary literal
+    /// Create a `Node.mapping` from a dictionary literal of `Node`s and a default `Style` to use for the dictionary
+    /// literal.
     public init(dictionaryLiteral elements: (Node, Node)..., style: Mapping.Style) {
         self = Node(elements, .implicit, style)
     }

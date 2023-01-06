@@ -1203,7 +1203,7 @@ extension EncoderTests {
             ("testDecodingAnchors", testDecodingAnchors),
             ("test_null_yml", test_null_yml),
             ("testEncodingDateWithNanosecondGreaterThan999499977", testEncodingDateWithNanosecondGreaterThan999499977),
-            ("testDecoderMark", testDecoderMark),
+            ("testDecoderMark", testDecoderMark)
         ]
 #endif
     }

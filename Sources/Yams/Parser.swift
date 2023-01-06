@@ -6,6 +6,8 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
+// swiftlint:disable file_length
+
 #if SWIFT_PACKAGE
 @_implementationOnly import CYaml
 #endif
