@@ -28,7 +28,8 @@ public class YAMLEncoder {
     /// - throws: `EncodingError` if something went wrong while encoding.
     public func encode<T: Swift.Encodable>(_ value: T, userInfo: [CodingUserInfoKey: Any] = [:]) throws -> String {
         do {
-            let encoder = _Encoder(userInfo: userInfo, sequenceStyle: options.sequenceStyle, mappingStyle: options.mappingStyle)
+            let encoder = _Encoder(userInfo: userInfo, sequenceStyle: options.sequenceStyle,
+                                   mappingStyle: options.mappingStyle)
             var container = encoder.singleValueContainer()
             try container.encode(value)
             return try serialize(node: encoder.node, options: options)
@@ -47,7 +48,8 @@ public class YAMLEncoder {
 private class _Encoder: Swift.Encoder {
     var node: Node = .unused
 
-    init(userInfo: [CodingUserInfoKey: Any] = [:], codingPath: [CodingKey] = [], sequenceStyle: Node.Sequence.Style, mappingStyle: Node.Mapping.Style) {
+    init(userInfo: [CodingUserInfoKey: Any] = [:], codingPath: [CodingKey] = [], sequenceStyle: Node.Sequence.Style,
+         mappingStyle: Node.Mapping.Style) {
         self.userInfo = userInfo
         self.codingPath = codingPath
         self.sequenceStyle = sequenceStyle
@@ -121,13 +123,15 @@ private class _ReferencingEncoder: _Encoder {
     init(referencing encoder: _Encoder, key: CodingKey) {
         self.encoder = encoder
         reference = .mapping(key.stringValue)
-        super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [key], sequenceStyle: encoder.sequenceStyle, mappingStyle: encoder.mappingStyle)
+        super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [key],
+                   sequenceStyle: encoder.sequenceStyle, mappingStyle: encoder.mappingStyle)
     }
 
     init(referencing encoder: _Encoder, at index: Int) {
         self.encoder = encoder
         reference = .sequence(index)
-        super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [_YAMLCodingKey(index: index)], sequenceStyle: encoder.sequenceStyle, mappingStyle: encoder.mappingStyle)
+        super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [_YAMLCodingKey(index: index)],
+                   sequenceStyle: encoder.sequenceStyle, mappingStyle: encoder.mappingStyle)
     }
 
     deinit {

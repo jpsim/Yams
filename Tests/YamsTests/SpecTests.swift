@@ -664,7 +664,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
         XCTAssertEqual(yaml, expectedYaml)
     }
 
-    func testSpecExample2_23_VariousExplicitTags() throws { // swiftlint:disable:this function_body_length
+    func testSpecExample2_23_VariousExplicitTags() throws {
         let example = """
             ---
             not-date: !!str 2002-04-28

@@ -153,7 +153,7 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         YamsAssertEqual(objects, expected)
     }
 
-    func testMerge() throws { // swiftlint:disable:this function_body_length
+    func testMerge() throws {
         let example = """
             ---
             - &CENTER { x: 1, 'y': 2 }

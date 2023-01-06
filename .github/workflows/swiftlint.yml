@@ -11,7 +11,7 @@ jobs:
   SwiftLint:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/realm/swiftlint:0.47.1
+      image: ghcr.io/realm/swiftlint:0.50.3
     steps:
       - uses: actions/checkout@v3
       - name: SwiftLint
