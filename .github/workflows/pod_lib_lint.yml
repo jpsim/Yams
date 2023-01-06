@@ -24,6 +24,6 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_13.4.app
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: bundle install --path vendor/bundle
       - run: bundle exec pod lib lint --verbose

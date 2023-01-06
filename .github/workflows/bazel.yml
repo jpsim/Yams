@@ -23,7 +23,7 @@ jobs:
   MacOS:
     runs-on: macos-12
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: MacOS build test
         if: always()
         run: bazelisk test //Tests:macOSBuildTest
@@ -52,7 +52,7 @@ jobs:
     container:
       image: swift:${{ matrix.tag }}-focal
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: bazelbuild/setup-bazelisk@v2
       - name: Yams tests
         run: bazel test --test_output=all //Tests:UnitTests
