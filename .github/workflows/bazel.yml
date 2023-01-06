@@ -55,10 +55,4 @@ jobs:
       - uses: actions/checkout@v2
       - uses: bazelbuild/setup-bazelisk@v2
       - name: Yams tests
-        if: always()
-        run: bazel test //Tests:UnitTests
-        shell: bash
-      - name: Yams tests logs
-        if: always()
-        run: cat bazel-out/k8-fastbuild/testlogs/Tests/UnitTests/test.log
-        shell: bash
+        run: bazel test --test_output=all //Tests:UnitTests
