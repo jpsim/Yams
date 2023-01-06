@@ -53,7 +53,13 @@ jobs:
       image: swift:${{ matrix.tag }}
     steps:
       - uses: actions/checkout@v2
-      - uses: bazelbuild/setup-bazelisk@v2
+      - name: Install Bazel
+        run: |
+          apt-get update
+          apt-get install -y curl
+          curl -O -L https://github.com/bazelbuild/bazelisk/releases/download/v1.15.0/bazelisk-linux-arm64
+          chmod +x bazelisk-linux-arm64
+          mv bazelisk-linux-arm64 /usr/bin/bazel
       - name: Yams tests
         if: always()
         run: bazel test //Tests:UnitTests
