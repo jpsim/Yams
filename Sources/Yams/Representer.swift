@@ -198,7 +198,7 @@ private let doubleFormatter = numberFormatter(with: 15)
 private let floatFormatter = numberFormatter(with: 7)
 
 // TODO: Support `Float80`
-//extension Float80: ScalarRepresentable {}
+// extension Float80: ScalarRepresentable {}
 
 extension BinaryInteger {
     /// This value's `Node.scalar` representation.

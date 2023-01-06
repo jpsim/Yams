@@ -63,7 +63,7 @@ extension MarkTests {
     static var allTests: [(String, (MarkTests) -> () throws -> Void)] {
         return [
             ("testLocatableDeprecationMessageForSwiftLint", testLocatableDeprecationMessageForSwiftLint),
-            ("testMappingMarkIsCorrect", testMappingMarkIsCorrect),
+            ("testMappingMarkIsCorrect", testMappingMarkIsCorrect)
         ]
     }
 }

@@ -146,20 +146,26 @@ class EmitterTests: XCTestCase {
     }
 
     func testSmartQuotedString() throws {
-        let samples: [(string: String, tag: Tag.Name, expected: String, line: UInt)] = [
-            ("string", .str, "string", #line),
-            ("true", .bool, "'true'", #line),
-            ("1", .int, "'1'", #line),
-            ("1.0", .float, "'1.0'", #line),
-            ("null", .null, "'null'", #line),
-            ("2019-07-06", .timestamp, "'2019-07-06'", #line)
+        struct Sample {
+            let string: String
+            let tag: Tag.Name
+            let expected: String
+            let line: UInt
+        }
+        let samples = [
+            Sample(string: "string", tag: .str, expected: "string", line: #line),
+            Sample(string: "true", tag: .bool, expected: "'true'", line: #line),
+            Sample(string: "1", tag: .int, expected: "'1'", line: #line),
+            Sample(string: "1.0", tag: .float, expected: "'1.0'", line: #line),
+            Sample(string: "null", tag: .null, expected: "'null'", line: #line),
+            Sample(string: "2019-07-06", tag: .timestamp, expected: "'2019-07-06'", line: #line)
         ]
         let resolver = Resolver.default
-        for (string, tag, expected, line) in samples {
-            let resolvedTag = resolver.resolveTag(of: Node(string))
-            XCTAssertEqual(resolvedTag, tag, "Resolver resolves unexpected tag", line: line)
-            let yaml = try Yams.dump(object: string)
-            XCTAssertEqual(yaml, "\(expected)\n", line: line)
+        for sample in samples {
+            let resolvedTag = resolver.resolveTag(of: Node(sample.string))
+            XCTAssertEqual(resolvedTag, sample.tag, "Resolver resolves unexpected tag", line: sample.line)
+            let yaml = try Yams.dump(object: sample.string)
+            XCTAssertEqual(yaml, "\(sample.expected)\n", line: sample.line)
         }
     }
 }
