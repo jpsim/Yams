@@ -4,20 +4,26 @@ on:
   push:
     branches: [main]
     paths:
+      - '.github/workflows/bazel.yml'
       - 'Sources/**/*.[ch]'
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
       - 'Tests/**/*.ya?ml'
       - '**/BUILD'
       - 'WORKSPACE'
+      - '.bazelrc'
+      - '.bazelversion'
   pull_request:
     paths:
+      - '.github/workflows/bazel.yml'
       - 'Sources/**/*.[ch]'
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
       - 'Tests/**/*.ya?ml'
       - '**/BUILD'
       - 'WORKSPACE'
+      - '.bazelrc'
+      - '.bazelversion'
 
 jobs:
   MacOS:
