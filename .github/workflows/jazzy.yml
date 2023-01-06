@@ -33,8 +33,10 @@ jobs:
       - run: swift build
       - name: Generate documentation json
         run: sourcekitten doc --spm --module-name Yams > yams.json
-      - name: Install Gems
-        run: bundle install --path vendor/bundle
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.5
+          bundler-cache: true
       - name: Run jazzy
         run: bundle exec jazzy --clean --sourcekitten-sourcefile yams.json
       - name: Validate documentation coverage
