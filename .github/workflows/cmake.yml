@@ -25,24 +25,7 @@ jobs:
   CMake:
     strategy:
       matrix:
-        xcode_version: ['12.5.1', '13.0', '13.1', '13.2.1']
-    runs-on: macos-11
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
-    steps:
-      - uses: actions/checkout@v3
-      - run: brew install cmake ninja
-      - run: swift -version
-      - run: rm -rf build
-      - run: cmake -B build -G Ninja -S . -DCMAKE_BUILD_TYPE=Release
-      - run: cmake --build build
-      - run: cmake --build build --target install
-      - run: file /usr/local/lib/swift/macosx/libYams.dylib | grep "Mach-O 64-bit dynamically linked shared library x86_64"
-
-  CMake_Monterey:
-    strategy:
-      matrix:
-        xcode_version: ['13.3', '13.4']
+        xcode_version: ['14.2']
     runs-on: macos-12
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
@@ -59,7 +42,7 @@ jobs:
   CMake_Linux:
     strategy:
       matrix:
-        tag: ['5.6-focal', '5.6-bionic']
+        tag: ['5.6', '5.7']
     runs-on: ubuntu-latest
     container:
       image: swift:${{ matrix.tag }}
