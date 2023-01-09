@@ -186,20 +186,23 @@ extension Float: ScalarRepresentable {
     }
 }
 
-private func numberFormatter(with significantDigits: Int, style: NumberFormatter.Style = .scientific) -> NumberFormatter {
+private func numberFormatter(with significantDigits: Int, style: NumberFormatter.Style = .scientific, minimumFractionDigits: Int = 0) -> NumberFormatter {
     let formatter = NumberFormatter()
     formatter.locale = Locale(identifier: "en_US")
     formatter.numberStyle = style
-    formatter.usesSignificantDigits = true
-    formatter.maximumSignificantDigits = significantDigits
+    if style == .scientific {
+        formatter.usesSignificantDigits = true
+        formatter.maximumSignificantDigits = significantDigits
+    }
     formatter.positiveInfinitySymbol = ".inf"
     formatter.negativeInfinitySymbol = "-.inf"
     formatter.notANumberSymbol = ".nan"
     formatter.exponentSymbol = "e+"
+    formatter.minimumFractionDigits = minimumFractionDigits
     return formatter
 }
 
-private let doubleDecimalFormatter = numberFormatter(with: Emitter.Options.doubleMaximumSignificantDigits, style: .decimal)
+private let doubleDecimalFormatter = numberFormatter(with: Emitter.Options.doubleMaximumSignificantDigits, style: .decimal, minimumFractionDigits: Emitter.Options.doubleMinimumFractionDigits)
 private let doubleScientificFormatter = numberFormatter(with: Emitter.Options.doubleMaximumSignificantDigits, style: .scientific)
 
 private let floatFormatter = numberFormatter(with: Emitter.Options.floatMaximumSignificantDigits)

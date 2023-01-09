@@ -263,8 +263,10 @@ public final class Emitter {
         /// Set the style for formatting doubles
         public static var doubleFormatStyle: NumberFormatStyle = .scientific
 
-        public static var doubleMaximumSignificantDigits = 15
-        public static var floatMaximumSignificantDigits = 7
+        public static let doubleMaximumSignificantDigits = 15
+        public static let doubleMinimumFractionDigits = 1
+
+        public static let floatMaximumSignificantDigits = 7
     }
 
     /// Configuration options to use when emitting YAML.
