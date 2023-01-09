@@ -170,7 +170,12 @@ private let iso8601WithoutZFormatter: DateFormatter = {
 extension Double: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
-        return .init(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+        switch Emitter.Options.doubleFormatStyle {
+            case .scientific:
+                return .init(doubleScientificFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+            case .decimal:
+                return .init(doubleDecimalFormatter.string(for: self)!, Tag(.float))
+        }
     }
 }
 
@@ -181,10 +186,10 @@ extension Float: ScalarRepresentable {
     }
 }
 
-private func numberFormatter(with significantDigits: Int) -> NumberFormatter {
+private func numberFormatter(with significantDigits: Int, style: NumberFormatter.Style = .scientific) -> NumberFormatter {
     let formatter = NumberFormatter()
     formatter.locale = Locale(identifier: "en_US")
-    formatter.numberStyle = .scientific
+    formatter.numberStyle = style
     formatter.usesSignificantDigits = true
     formatter.maximumSignificantDigits = significantDigits
     formatter.positiveInfinitySymbol = ".inf"
@@ -194,8 +199,10 @@ private func numberFormatter(with significantDigits: Int) -> NumberFormatter {
     return formatter
 }
 
-private let doubleFormatter = numberFormatter(with: 15)
-private let floatFormatter = numberFormatter(with: 7)
+private let doubleDecimalFormatter = numberFormatter(with: Emitter.Options.doubleMaximumSignificantDigits, style: .decimal)
+private let doubleScientificFormatter = numberFormatter(with: Emitter.Options.doubleMaximumSignificantDigits, style: .scientific)
+
+private let floatFormatter = numberFormatter(with: Emitter.Options.floatMaximumSignificantDigits)
 
 // TODO: Support `Float80`
 // extension Float80: ScalarRepresentable {}
@@ -320,7 +327,7 @@ private extension FloatingPoint where Self: CVarArg {
         // "%*.g" does not use scientific notation if the exponent is less than –4.
         // So fallback to using `NumberFormatter` if string does not uses scientific notation.
         guard string.lazy.suffix(5).contains("e") else {
-            return doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
+            return doubleScientificFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
         }
         return string
     }
