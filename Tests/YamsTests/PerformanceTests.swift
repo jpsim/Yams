@@ -131,10 +131,14 @@ class PerformanceTests: XCTestCase {
 #endif
 
     func testUsingComposeWithUTF16() throws {
+#if os(tvOS)
+        throw XCTSkip("Skipping this test for tvOS")
+#else
         let yaml = try loadYAML()
         self.measure {
             parseSourceKittenIssue289UsingCompose(yaml: yaml, encoding: .utf16)
         }
+#endif
     }
 
     func testUsingComposeWithUTF8() throws {
