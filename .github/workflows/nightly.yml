@@ -27,7 +27,7 @@ jobs:
   Nightly:
     runs-on: ubuntu-latest
     container:
-      image: norionomura/swift:nightly
+      image: swiftlang/swift:nightly
     steps:
       - uses: actions/checkout@v3
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
