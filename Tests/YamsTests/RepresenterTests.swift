@@ -48,26 +48,6 @@ class RepresenterTests: XCTestCase {
         XCTAssertEqual(try Node(Double.leastNormalMagnitude), "2.2250738585072e-308")
     }
 
-    // func testDecimalDoubleStyle() throws {
-    //     let cachedFormatStyle = Emitter.Options.doubleFormatStyle
-    //     defer {
-    //         Emitter.Options.doubleFormatStyle = cachedFormatStyle
-    //     }
-
-    //     Emitter.Options.doubleFormatStyle = .decimal
-    //     XCTAssertEqual(try Node(Double(6.85)), "6.85")
-    // }
-
-    // func testMinimumFractionDigits() throws {
-    //     let cachedFormatStyle = Emitter.Options.doubleFormatStyle
-    //     defer {
-    //         Emitter.Options.doubleFormatStyle = cachedFormatStyle
-    //     }
-
-    //     Emitter.Options.doubleFormatStyle = .decimal
-    //     XCTAssertEqual(try Node(Double(6.0)), "6.0")
-    // }
-
     func testFloat() throws {
         XCTAssertEqual(try Node(Float.infinity), ".inf")
         XCTAssertEqual(try Node(-Float.infinity), "-.inf")
@@ -163,8 +143,6 @@ extension RepresenterTests {
             ("testData", testData),
             ("testDate", testDate),
             ("testDouble", testDouble),
-            // ("testDecimalDoubleStyle", testDecimalDoubleStyle),
-            // ("testMinimumFractionDigits", testMinimumFractionDigits),
             ("testFloat", testFloat),
             ("testInteger", testInteger),
             ("testString", testString),
