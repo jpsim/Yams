@@ -14,6 +14,14 @@ class DoubleEncodingTests: XCTestCase {
     func testMinimumFractionDigits() throws {
         XCTAssertEqual(try Node(Double(6.0)), "6.0")
     }
+
+    func testDecimalDoubleStyleBox() throws {
+        print(try Double(6.85).box(), "6.85")
+    }
+
+    func testMinimumFractionDigitsBox() throws {
+        print(try Double(6.0).box(), "6.0")
+    }
 }
 
 extension DoubleEncodingTests {
@@ -21,6 +29,8 @@ extension DoubleEncodingTests {
         return [
             ("testDecimalDoubleStyle", testDecimalDoubleStyle),
             ("testMinimumFractionDigits", testMinimumFractionDigits),
+            ("testDecimalDoubleStyleBox", testDecimalDoubleStyleBox),
+            ("testMinimumFractionDigitsBox", testMinimumFractionDigitsBox)
         ]
     }
 }

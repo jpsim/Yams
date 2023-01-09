@@ -324,6 +324,10 @@ extension Float: YAMLEncodable {
 
 private extension FloatingPoint where Self: CVarArg {
     var formattedStringForCodable: String {
+        if Emitter.Options.doubleFormatStyle == .decimal {
+            return doubleDecimalFormatter.string(for: self)!
+        }
+
         // Since `NumberFormatter` creates a string with insufficient precision for Decode,
         // it uses with `String(format:...)`
         let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
