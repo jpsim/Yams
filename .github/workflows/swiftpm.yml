@@ -36,20 +36,11 @@ jobs:
       - run: swift -version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
-      - name: Code Coverage
-        if: matrix.xcode_version == '13.2.1'
-        run: |
-          swift test --enable-code-coverage
-          xcrun llvm-cov export -format="lcov" .build/debug/YamsPackageTests.xctest/Contents/MacOS/YamsPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
-          if [[ -n "${CODECOV_TOKEN}" ]]; then
-            bash <(curl -s https://codecov.io/bash) -f coverage.lcov
-          fi
-        env: { 'CODECOV_TOKEN': '${{ secrets.CODECOV_TOKEN }}' }
 
   Xcode_Monterey:
     strategy:
       matrix:
-        xcode_version: ['13.3.1', '13.4']
+        xcode_version: ['13.3.1', '13.4', '14.0.1', '14.1', '14.2']
     runs-on: macos-12
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
@@ -58,11 +49,20 @@ jobs:
       - run: swift -version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
+      - name: Code Coverage
+        if: matrix.xcode_version == '14.2'
+        run: |
+          swift test --enable-code-coverage
+          xcrun llvm-cov export -format="lcov" .build/debug/YamsPackageTests.xctest/Contents/MacOS/YamsPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
+          if [[ -n "${CODECOV_TOKEN}" ]]; then
+            bash <(curl -s https://codecov.io/bash) -f coverage.lcov
+          fi
+        env: { 'CODECOV_TOKEN': '${{ secrets.CODECOV_TOKEN }}' }
 
   Linux:
     strategy:
       matrix:
-        tag: ['5.4', '5.5', '5.6']
+        tag: ['5.4', '5.5', '5.6', '5.7']
     runs-on: ubuntu-latest
     container:
       image: swift:${{ matrix.tag }}

@@ -10,8 +10,7 @@ Pod::Spec.new do |s|
   s.source_files              = 'Sources/**/*.{h,c,swift}'
   s.swift_versions            = ['5.4', '5.5', '5.6']
   s.pod_target_xcconfig       = { 'APPLICATION_EXTENSION_API_ONLY' => 'YES' }
-  s.ios.deployment_target     = '8.0'
-  s.osx.deployment_target     = '10.9'
-  s.tvos.deployment_target    = '9.0'
-  s.watchos.deployment_target = '2.0'
+  s.ios.deployment_target     = '11.0'
+  s.osx.deployment_target     = '10.13'
+  s.tvos.deployment_target    = '11.0'
 end
