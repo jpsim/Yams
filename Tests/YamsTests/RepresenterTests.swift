@@ -50,10 +50,11 @@ class RepresenterTests: XCTestCase {
 
     func testDecimalDoubleStyle() throws {
         let cachedFormatStyle = Emitter.Options.doubleFormatStyle
-        Emitter.Options.doubleFormatStyle = .decimal
         defer {
             Emitter.Options.doubleFormatStyle = cachedFormatStyle
         }
+
+        Emitter.Options.doubleFormatStyle = .decimal
         XCTAssertEqual(try Node(Double(6.85)), "6.85")
     }
 
