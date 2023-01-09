@@ -228,14 +228,15 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
                 "canonical": NSNull(),
                 "english": NSNull(),
                 "~": "null key" // null key is not supported yet.
-            ], [
+            ] as [String: Any],
+            [
                 "sparse": [
                     NSNull(),
                     "2nd entry",
                     NSNull(),
                     "4th entry",
                     NSNull()
-                ]
+                ] as [Any]
             ]
         ]
         YamsAssertEqual(objects, expected)

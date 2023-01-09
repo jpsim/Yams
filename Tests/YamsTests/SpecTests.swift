@@ -133,7 +133,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
               avg:  0.288
             """
         let object = try Yams.load(yaml: example)
-        let expectedObject: [Any] = [
+        let expectedObject: [[String: Any]] = [
             [
                 "name": "Mark McGwire",
                 "hr": 65,
@@ -167,11 +167,11 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
             - [Sammy Sosa  , 63, 0.288]
             """
         let object = try Yams.load(yaml: example)
-        let expectedObject: [Any] = [
+        let expectedObject: [[Any]] = [
             ["name", "hr", "avg"],
             ["Mark McGwire", 65, 0.278],
             ["Sammy Sosa", 63, 0.288]
-            ]
+        ]
         YamsAssertEqual(object, expectedObject)
 
         let yaml = try Yams.dump(object: object)
@@ -414,7 +414,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
               quantity: 1
             """
         let object = try Yams.load(yaml: example)
-        let expectedObject: [Any] = [
+        let expectedObject: [[String: Any]] = [
             ["item": "Super Hoop",
              "quantity": 1],
             ["item": "Basketball",
@@ -752,7 +752,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
                 "city": "Royal Oak",
                 "state": "MI",
                 "postal": 48046
-            ]
+            ] as [String: Any]
         ]
         let expectedObject: [String: Any] = [
             "invoice": 34843,
@@ -765,13 +765,13 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
                     "quantity": 4,
                     "description": "Basketball",
                     "price": 450.0
-                ],
+                ] as [String: Any],
                 [
                     "sku": "BL4438H",
                     "quantity": 1,
                     "description": "Super Hoop",
                     "price": 2392.0
-                ]
+                ] as [String: Any]
             ],
             "tax": 251.42,
             "total": 4443.52,
@@ -855,7 +855,7 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
 
             """
         let objects = Array(try Yams.load_all(yaml: example))
-        let expectedObjects: [Any] = [
+        let expectedObjects: [[String: Any]] = [
             [
                 "Time": timestamp(-5, 2001, 11, 23, 15, 1, 42),
                 "User": "ed",
@@ -875,12 +875,12 @@ class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
                         "file": "TopClass.py",
                         "line": 23,
                         "code": "x = MoreObject(\"345\\n\")\n"
-                    ],
+                    ] as [String: Any],
                     [
                         "file": "MoreClass.py",
                         "line": 58,
                         "code": "foo = bar"
-                    ]
+                    ] as [String: Any]
                 ]
             ]
         ]
