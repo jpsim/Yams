@@ -1,0 +1,9 @@
+tasks:
+  verify_targets:
+    name: Verify targets
+    platform: macos
+    build_targets:
+      - '@yams//:Yams'
+      - '@yams//Tests/...'
+    test_targets:
+      - '@yams//Tests/...'
