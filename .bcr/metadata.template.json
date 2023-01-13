@@ -1,0 +1,15 @@
+{
+    "homepage": "https://github.com/jpsim/Yams",
+    "maintainers": [
+        {
+            "email": "jp@jpsim.com",
+            "github": "jpsim",
+            "name": "JP Simard"
+        }
+    ],
+    "repository": [
+        "github:jpsim/Yams"
+    ],
+    "versions": [],
+    "yanked_versions": {}
+}
