@@ -32,6 +32,7 @@ swift_test(
 macos_build_test(
     name = "macOSBuildTest",
     minimum_os_version = "10.9",
+    target_compatible_with = ["@platforms//os:macos"],
     targets = [
         "//:Yams",
         "//:CYaml",
@@ -41,6 +42,7 @@ macos_build_test(
 watchos_build_test(
     name = "watchOSBuildTest",
     minimum_os_version = "2.0",
+    target_compatible_with = ["@platforms//os:macos"],
     targets = [
         "//:Yams",
         "//:CYaml",
@@ -50,6 +52,7 @@ watchos_build_test(
 tvos_build_test(
     name = "tvOSBuildTest",
     minimum_os_version = "9.0",
+    target_compatible_with = ["@platforms//os:macos"],
     targets = [
         "//:Yams",
         "//:CYaml",
@@ -59,6 +62,7 @@ tvos_build_test(
 ios_build_test(
     name = "iOSBuildTest",
     minimum_os_version = "8.0",
+    target_compatible_with = ["@platforms//os:macos"],
     targets = [
         "//:Yams",
         "//:CYaml",
