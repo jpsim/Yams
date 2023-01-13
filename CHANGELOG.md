@@ -1,4 +1,4 @@
-## Main
+## 5.0.2
 
 ##### Breaking
 
@@ -6,7 +6,8 @@
 
 ##### Enhancements
 
-* None.
+* Added support for bzlmod.  
+  [Keith Smiley](https://github.com/keith)
 
 ##### Bug Fixes
 
