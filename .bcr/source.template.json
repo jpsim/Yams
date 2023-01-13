@@ -1,5 +1,5 @@
 {
     "url": "https://github.com/jpsim/Yams/archive/refs/tags/{TAG}.tar.gz",
     "integrity": "",
-    "strip_prefix": ""
+    "strip_prefix": "Yams-{TAG}"
 }
