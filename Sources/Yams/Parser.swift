@@ -174,13 +174,11 @@ public final class Parser {
         case .utf8:
             yaml_parser_set_encoding(&parser, YAML_UTF8_ENCODING)
             let utf8View = yaml.utf8
-            buffer = .utf8View(utf8View)
             if try utf8View.withContiguousStorageIfAvailable(startParse(with:)) != nil {
                 // Attempt to parse with underlying UTF8 String encoding was successful, nothing further to do
             } else {
                 // Fall back to using UTF8 slice
                 let utf8Slice = string.utf8CString.dropLast()
-                buffer = .utf8Slice(utf8Slice)
                 try utf8Slice.withUnsafeBytes(startParse(with:))
             }
         case .utf16:
@@ -189,7 +187,6 @@ public final class Parser {
             yaml_parser_set_encoding(&parser, isLittleEndian ? YAML_UTF16LE_ENCODING : YAML_UTF16BE_ENCODING)
             let encoding: String.Encoding = isLittleEndian ? .utf16LittleEndian : .utf16BigEndian
             let data = yaml.data(using: encoding)!
-            buffer = .utf16(data)
             try data.withUnsafeBytes(startParse(with:))
         }
     }
@@ -256,13 +253,6 @@ public final class Parser {
 
     private var anchors = [String: Node]()
     private var parser = yaml_parser_t()
-
-    private enum Buffer {
-        case utf8View(String.UTF8View)
-        case utf8Slice(ArraySlice<CChar>)
-        case utf16(Data)
-    }
-    private var buffer: Buffer
 }
 
 // MARK: Implementation Details
