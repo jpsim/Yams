@@ -18,7 +18,7 @@ let package = Package(
         .target(
             name: "CYaml",
             exclude: ["CMakeLists.txt"],
-            cSettings: [.define("YAML_DECLARE_EXPORT")]
+            cSettings: [.define("YAML_DECLARE_STATIC")]
         ),
         .target(
             name: "Yams",
