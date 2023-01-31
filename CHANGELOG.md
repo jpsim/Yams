@@ -1,4 +1,4 @@
-## Main
+## 5.0.4
 
 ##### Breaking
 
@@ -6,7 +6,8 @@
 
 ##### Enhancements
 
-* None.
+* Statically link `CYaml` when building with SwiftPM.  
+  [Saleem Abdulrasool](https://github.com/compnerd)
 
 ##### Bug Fixes
 
