@@ -1,3 +1,18 @@
+## 5.0.5
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* None.
+
+##### Bug Fixes
+
+* Fix using Yams from bazel without bzlmod.  
+  [Keith Smiley](https://github.com/keith)
+
 ## 5.0.4
 
 ##### Breaking
