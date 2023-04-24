@@ -2,6 +2,7 @@ included:
   - Sources
   - Tests
 disabled_rules:
+  - blanket_disable_command
   - todo
 analyzer_rules:
   - unused_import
