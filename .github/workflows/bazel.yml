@@ -27,7 +27,7 @@ on:
 
 jobs:
   MacOS:
-    runs-on: macos-12
+    runs-on: macos-13
     steps:
       - uses: actions/checkout@v3
       - name: Apple tests
@@ -35,7 +35,7 @@ jobs:
   Linux:
     strategy:
       matrix:
-        tag: ['5.4', '5.5', '5.6', '5.7']
+        tag: ['5.4', '5.5', '5.6', '5.7', '5.8']
     runs-on: ubuntu-latest
     container:
       image: swift:${{ matrix.tag }}-focal
