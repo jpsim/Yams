@@ -134,6 +134,10 @@ class RepresenterTests: XCTestCase {
         let intToInt = [1: 2]
         XCTAssertEqual(try Node(intToInt), [1: 2])
     }
+
+    func testEmptyDictionary() throws {
+        XCTAssertEqual(try Yams.dump(object: NSDictionary()), "{}\n")
+    }
 }
 
 extension RepresenterTests {
@@ -149,7 +153,8 @@ extension RepresenterTests {
             ("testUUID", testUUID),
             ("testOptional", testOptional),
             ("testArray", testArray),
-            ("testDictionary", testDictionary)
+            ("testDictionary", testDictionary),
+            ("testEmptyDictionary", testEmptyDictionary)
         ]
     }
 }
