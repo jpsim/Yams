@@ -10,7 +10,10 @@
 
 ##### Bug Fixes
 
-* None.
+* Empty dictionaries can be now represented, regardless of its key or element
+  type information.  
+  [JP Simard](https://github.com/jpsim)
+  [#393](https://github.com/jpsim/Yams/issues/393)
 
 ## 5.0.5
 
