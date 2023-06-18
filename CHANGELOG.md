@@ -6,7 +6,8 @@
 
 ##### Enhancements
 
-* None.
+* Allow decoding from an existing Node.  
+  [Rob Napier](https://github.com/rnapier)
 
 ##### Bug Fixes
 
