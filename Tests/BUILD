@@ -31,7 +31,7 @@ swift_test(
 
 macos_build_test(
     name = "macOSBuildTest",
-    minimum_os_version = "10.9",
+    minimum_os_version = "10.13",
     target_compatible_with = ["@platforms//os:macos"],
     targets = [
         "//:Yams",
