@@ -1,6 +1,6 @@
 module(
     name = "yams",
-    version = "5.0.5",
+    version = "5.0.6",
     compatibility_level = 1,
 )
 
