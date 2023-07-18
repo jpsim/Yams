@@ -16,7 +16,8 @@ let package = Package(
         .target(
             name: "Yams",
             dependencies: ["CYaml"],
-            exclude: ["CMakeLists.txt"]
+            exclude: ["CMakeLists.txt"],
+            cSettings: [.define("YAML_DECLARE_STATIC")]
         ),
         .testTarget(
             name: "YamsTests",
