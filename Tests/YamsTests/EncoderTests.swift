@@ -590,14 +590,6 @@ private struct Address: Codable, Equatable {
     let zipCode: Int
     let country: String
 
-    init(street: String, city: String, state: String, zipCode: Int, country: String) {
-        self.street = street
-        self.city = city
-        self.state = state
-        self.zipCode = zipCode
-        self.country = country
-    }
-
     static func == (_ lhs: Address, _ rhs: Address) -> Bool {
         return lhs.street == rhs.street &&
             lhs.city == rhs.city &&
@@ -684,11 +676,6 @@ private class Employee: Person {
 private struct Company: Codable, Equatable {
     let address: Address
     var employees: [Employee]
-
-    init(address: Address, employees: [Employee]) {
-        self.address = address
-        self.employees = employees
-    }
 
     static func == (_ lhs: Company, _ rhs: Company) -> Bool {
         return lhs.address == rhs.address && lhs.employees == rhs.employees

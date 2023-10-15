@@ -49,8 +49,21 @@ jobs:
       - run: swift -version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
+
+  Xcode_Ventura:
+    strategy:
+      matrix:
+        xcode_version: ['14.3', '15.0']
+    runs-on: macos-13
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
+    steps:
+      - uses: actions/checkout@v3
+      - run: swift -version
+      - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
+      - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
       - name: Code Coverage
-        if: matrix.xcode_version == '14.2'
+        if: matrix.xcode_version == '15.0'
         run: |
           swift test --enable-code-coverage
           xcrun llvm-cov export -format="lcov" .build/debug/YamsPackageTests.xctest/Contents/MacOS/YamsPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
@@ -62,7 +75,7 @@ jobs:
   Linux:
     strategy:
       matrix:
-        tag: ['5.4', '5.5', '5.6', '5.7']
+        tag: ['5.4', '5.5', '5.6', '5.7', '5.8', '5.9']
     runs-on: ubuntu-latest
     container:
       image: swift:${{ matrix.tag }}
