@@ -29,7 +29,7 @@ public class YAMLEncoder {
     public func encode<T: Swift.Encodable>(_ value: T, userInfo: [CodingUserInfoKey: Any] = [:]) throws -> String {
         do {
             let encoder = _Encoder(userInfo: userInfo, sequenceStyle: options.sequenceStyle,
-                                   mappingStyle: options.mappingStyle)
+                                   mappingStyle: options.mappingStyle, newlineScalarStyle: options.newLineScalarStyle)
             var container = encoder.singleValueContainer()
             try container.encode(value)
             return try serialize(node: encoder.node, options: options)
@@ -49,11 +49,12 @@ private class _Encoder: Swift.Encoder {
     var node: Node = .unused
 
     init(userInfo: [CodingUserInfoKey: Any] = [:], codingPath: [CodingKey] = [], sequenceStyle: Node.Sequence.Style,
-         mappingStyle: Node.Mapping.Style) {
+         mappingStyle: Node.Mapping.Style, newlineScalarStyle: Node.Scalar.Style) {
         self.userInfo = userInfo
         self.codingPath = codingPath
         self.sequenceStyle = sequenceStyle
         self.mappingStyle = mappingStyle
+        self.newlineScalarStyle = newlineScalarStyle
     }
 
     // MARK: - Swift.Encoder Methods
@@ -62,6 +63,7 @@ private class _Encoder: Swift.Encoder {
     let userInfo: [CodingUserInfoKey: Any]
     let sequenceStyle: Node.Sequence.Style
     let mappingStyle: Node.Mapping.Style
+    let newlineScalarStyle: Node.Scalar.Style
 
     func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> {
         if canEncodeNewValue {
@@ -124,14 +126,14 @@ private class _ReferencingEncoder: _Encoder {
         self.encoder = encoder
         reference = .mapping(key.stringValue)
         super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [key],
-                   sequenceStyle: encoder.sequenceStyle, mappingStyle: encoder.mappingStyle)
+                   sequenceStyle: encoder.sequenceStyle, mappingStyle: encoder.mappingStyle, newlineScalarStyle: encoder.newlineScalarStyle)
     }
 
     init(referencing encoder: _Encoder, at index: Int) {
         self.encoder = encoder
         reference = .sequence(index)
         super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [_YAMLCodingKey(index: index)],
-                   sequenceStyle: encoder.sequenceStyle, mappingStyle: encoder.mappingStyle)
+                   sequenceStyle: encoder.sequenceStyle, mappingStyle: encoder.mappingStyle, newlineScalarStyle: encoder.newlineScalarStyle)
     }
 
     deinit {
@@ -218,12 +220,18 @@ extension _Encoder: SingleValueEncodingContainer {
     func encode<T>(_ value: T) throws where T: YAMLEncodable {
         assertCanEncodeNewValue()
         node = value.box()
+        if let stringValue = value as? (any StringProtocol), stringValue.contains("\n") {
+            node.scalar?.style = newlineScalarStyle
+        }
     }
 
     func encode<T>(_ value: T) throws where T: Encodable {
         assertCanEncodeNewValue()
         if let encodable = value as? YAMLEncodable {
             node = encodable.box()
+            if let stringValue = value as? (any StringProtocol), stringValue.contains("\n") {
+                node.scalar?.style = newlineScalarStyle
+            }
         } else {
             try value.encode(to: self)
         }
