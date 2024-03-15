@@ -515,6 +515,13 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
         XCTAssertEqual(nodes[1]["link with"]?[1]?["="], "library2.dll")
         XCTAssertEqual(nodes[1]["link with"]?[1]?["version"], "2.3")
     }
+
+    func testStrictParsingSexagesimal() throws {
+        XCTAssertEqual(Int.construct(from: .init("12:34:56")), 45296)
+        XCTAssertEqual(Double.construct(from: .init("12:34:56.789")), 45296.789)
+        XCTAssertNil(Int.construct(from: .init("http://example.com")))
+        XCTAssertNil(Double.construct(from: .init("http://example.com")))
+    }
 }
 
 extension ConstructorTests {

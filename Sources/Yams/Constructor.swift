@@ -530,8 +530,11 @@ public protocol SexagesimalConvertible: ExpressibleByIntegerLiteral {
 }
 
 private extension SexagesimalConvertible {
-    init(sexagesimal value: String) {
-        self = value.sexagesimal()
+    init?(sexagesimal value: String) {
+        guard let value = value.sexagesimal() as Self? else {
+            return nil
+        }
+        self = value
     }
 }
 
@@ -575,7 +578,7 @@ extension Int64: SexagesimalConvertible {}
 extension UInt64: SexagesimalConvertible {}
 
 private extension String {
-    func sexagesimal<T>() -> T where T: SexagesimalConvertible {
+    func sexagesimal<T>() -> T? where T: SexagesimalConvertible {
         assert(contains(":"))
         var scalar = self
 
@@ -589,7 +592,12 @@ private extension String {
         } else {
             sign = 1
         }
-        let digits = scalar.components(separatedBy: ":").compactMap(T.create).reversed()
+        let components = scalar.components(separatedBy: ":")
+        let mappedComponents = components.compactMap(T.create)
+        guard mappedComponents.count == components.count else {
+            return nil
+        }
+        let digits = mappedComponents.reversed()
         let (_, value) = digits.reduce((1, 0) as (T, T)) { baseAndValue, digit in
             let value = baseAndValue.1 + (digit * baseAndValue.0)
             let base = baseAndValue.0 * 60
