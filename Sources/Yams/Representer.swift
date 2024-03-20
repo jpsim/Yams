@@ -172,7 +172,12 @@ private let iso8601WithoutZFormatter: DateFormatter = {
 extension Double: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
-        return .init(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+        switch Emitter.Options.doubleFormatStyle {
+            case .scientific:
+                return .init(doubleScientificFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+            case .decimal:
+                return .init(doubleDecimalFormatter.string(for: self)!, Tag(.float))
+        }
     }
 }
 
@@ -183,21 +188,26 @@ extension Float: ScalarRepresentable {
     }
 }
 
-private func numberFormatter(with significantDigits: Int) -> NumberFormatter {
+private func numberFormatter(with significantDigits: Int, style: NumberFormatter.Style = .scientific, minimumFractionDigits: Int = 0) -> NumberFormatter {
     let formatter = NumberFormatter()
     formatter.locale = Locale(identifier: "en_US")
-    formatter.numberStyle = .scientific
-    formatter.usesSignificantDigits = true
-    formatter.maximumSignificantDigits = significantDigits
+    formatter.numberStyle = style
+    if style == .scientific {
+        formatter.usesSignificantDigits = true
+        formatter.maximumSignificantDigits = significantDigits
+    }
     formatter.positiveInfinitySymbol = ".inf"
     formatter.negativeInfinitySymbol = "-.inf"
     formatter.notANumberSymbol = ".nan"
     formatter.exponentSymbol = "e+"
+    formatter.minimumFractionDigits = minimumFractionDigits
     return formatter
 }
 
-private let doubleFormatter = numberFormatter(with: 15)
-private let floatFormatter = numberFormatter(with: 7)
+private let doubleDecimalFormatter = numberFormatter(with: Emitter.Options.doubleMaximumSignificantDigits, style: .decimal, minimumFractionDigits: Emitter.Options.doubleMinimumFractionDigits)
+private let doubleScientificFormatter = numberFormatter(with: Emitter.Options.doubleMaximumSignificantDigits, style: .scientific)
+
+private let floatFormatter = numberFormatter(with: Emitter.Options.floatMaximumSignificantDigits)
 
 // TODO: Support `Float80`
 // extension Float80: ScalarRepresentable {}
@@ -316,13 +326,17 @@ extension Float: YAMLEncodable {
 
 private extension FloatingPoint where Self: CVarArg {
     var formattedStringForCodable: String {
+        if Emitter.Options.doubleFormatStyle == .decimal {
+            return doubleDecimalFormatter.string(for: self)!
+        }
+
         // Since `NumberFormatter` creates a string with insufficient precision for Decode,
         // it uses with `String(format:...)`
         let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
         // "%*.g" does not use scientific notation if the exponent is less than –4.
         // So fallback to using `NumberFormatter` if string does not uses scientific notation.
         guard string.lazy.suffix(5).contains("e") else {
-            return doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
+            return doubleScientificFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
         }
         return string
     }
