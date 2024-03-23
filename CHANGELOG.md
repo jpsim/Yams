@@ -2,6 +2,14 @@
 
 ##### Breaking
 
+* None.
+
+##### Enhancements
+
+* None.
+
+##### Bug Fixes
+
 * Change how empty strings are decoded into nullable properties.
   `key: ""` previously decoded into
   `struct Value: Codable { let key: String? }` as `Value(key: nil)`
@@ -11,13 +19,9 @@
   [Liam Nichols](https://github.com/liamnichols)
   [#301](https://github.com/jpsim/Yams/issues/301)
 
-##### Enhancements
-
-* None.
-
-##### Bug Fixes
-
-* None.
+* Fix parsing of unquoted URLs into Strings.  
+  [Honza Dvorsky](https://github.com/czechboy0)
+  [#337](https://github.com/jpsim/Yams/issues/337)
 
 ## 5.0.6
 
