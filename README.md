@@ -28,7 +28,7 @@ cmake --build /path/to/build
 ```
 
 To build for Apple platforms (macOS, iOS, tvOS, watchOS), there is no
-need to sparately build Foundation because it is included as part of
+need to separately build Foundation because it is included as part of
 the SDK:
 
 ```
