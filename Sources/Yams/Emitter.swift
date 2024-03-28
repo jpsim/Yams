@@ -223,6 +223,11 @@ public final class Emitter {
         case crln
     }
 
+    public enum NumberFormatStyle {
+        case scientific
+        case decimal
+    }
+
     /// Retrieve this Emitter's binary output.
     public internal(set) var data = Data()
 
@@ -254,6 +259,14 @@ public final class Emitter {
 
         /// Set the style for mappings (dictionaries)
         public var mappingStyle: Node.Mapping.Style = .any
+
+        /// Set the style for formatting doubles
+        public static var doubleFormatStyle: NumberFormatStyle = .scientific
+
+        public static let doubleMaximumSignificantDigits = 15
+        public static let doubleMinimumFractionDigits = 1
+
+        public static let floatMaximumSignificantDigits = 7
     }
 
     /// Configuration options to use when emitting YAML.
