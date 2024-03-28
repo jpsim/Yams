@@ -151,6 +151,27 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
         _testRoundTrip(of: OptionalTopLevelWrapper(url), expectedYAML: expectedYAML)
     }
 
+    func testNewlinesInString() throws {
+        let expectedYamlLiteral = """
+        name: |-
+          This name
+          Has new lines
+        email: test@test.test
+
+        """
+        let expectedYamlFolded = """
+        name: >-
+          This name
+
+          Has new lines
+        email: test@test.test
+
+        """
+        let person = Person(name: "This name\nHas new lines", email: "test@test.test")
+        _testRoundTrip(of: person, with: .init(newLineScalarStyle: .literal), expectedYAML: expectedYamlLiteral)
+        _testRoundTrip(of: person, with: .init(newLineScalarStyle: .folded), expectedYAML: expectedYamlFolded)
+    }
+
     func testNumberInString() throws {
         _testDecode(of: String.self, from: "'10'", expectedValue: "10")
         _testDecode(of: String.self, from: "'10.5'", expectedValue: "10.5")
