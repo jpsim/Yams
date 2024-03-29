@@ -125,15 +125,21 @@ private class _ReferencingEncoder: _Encoder {
     init(referencing encoder: _Encoder, key: CodingKey) {
         self.encoder = encoder
         reference = .mapping(key.stringValue)
-        super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [key],
-                   sequenceStyle: encoder.sequenceStyle, mappingStyle: encoder.mappingStyle, newlineScalarStyle: encoder.newlineScalarStyle)
+        super.init(userInfo: encoder.userInfo,
+                   codingPath: encoder.codingPath + [key],
+                   sequenceStyle: encoder.sequenceStyle,
+                   mappingStyle: encoder.mappingStyle,
+                   newlineScalarStyle: encoder.newlineScalarStyle)
     }
 
     init(referencing encoder: _Encoder, at index: Int) {
         self.encoder = encoder
         reference = .sequence(index)
-        super.init(userInfo: encoder.userInfo, codingPath: encoder.codingPath + [_YAMLCodingKey(index: index)],
-                   sequenceStyle: encoder.sequenceStyle, mappingStyle: encoder.mappingStyle, newlineScalarStyle: encoder.newlineScalarStyle)
+        super.init(userInfo: encoder.userInfo,
+                   codingPath: encoder.codingPath + [_YAMLCodingKey(index: index)],
+                   sequenceStyle: encoder.sequenceStyle,
+                   mappingStyle: encoder.mappingStyle,
+                   newlineScalarStyle: encoder.newlineScalarStyle)
     }
 
     deinit {
