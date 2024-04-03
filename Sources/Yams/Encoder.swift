@@ -226,7 +226,7 @@ extension _Encoder: SingleValueEncodingContainer {
     func encode<T>(_ value: T) throws where T: YAMLEncodable {
         assertCanEncodeNewValue()
         node = value.box()
-#if swift(>=5.6)
+#if swift(>=5.7)
         if let stringValue = value as? (any StringProtocol), stringValue.contains("\n") {
             node.scalar?.style = newlineScalarStyle
         }
@@ -241,7 +241,7 @@ extension _Encoder: SingleValueEncodingContainer {
         assertCanEncodeNewValue()
         if let encodable = value as? YAMLEncodable {
             node = encodable.box()
-#if swift(>=5.6)
+#if swift(>=5.7)
             if let stringValue = value as? (any StringProtocol), stringValue.contains("\n") {
                 node.scalar?.style = newlineScalarStyle
             }
