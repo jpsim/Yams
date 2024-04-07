@@ -41,7 +41,8 @@ public func dump<Objects>(
     version: (major: Int, minor: Int)? = nil,
     sortKeys: Bool = false,
     sequenceStyle: Node.Sequence.Style = .any,
-    mappingStyle: Node.Mapping.Style = .any) throws -> String
+    mappingStyle: Node.Mapping.Style = .any,
+    newLineScalarStyle: Node.Scalar.Style = .any) throws -> String
     where Objects: Sequence {
     func representable(from object: Any) throws -> NodeRepresentable {
         if let representable = object as? NodeRepresentable {
@@ -62,7 +63,8 @@ public func dump<Objects>(
         version: version,
         sortKeys: sortKeys,
         sequenceStyle: sequenceStyle,
-        mappingStyle: mappingStyle
+        mappingStyle: mappingStyle,
+        newLineScalarStyle: newLineScalarStyle
     )
 }
 
@@ -96,7 +98,8 @@ public func dump(
     version: (major: Int, minor: Int)? = nil,
     sortKeys: Bool = false,
     sequenceStyle: Node.Sequence.Style = .any,
-    mappingStyle: Node.Mapping.Style = .any) throws -> String {
+    mappingStyle: Node.Mapping.Style = .any,
+    newLineScalarStyle: Node.Scalar.Style = .any) throws -> String {
     return try serialize(
         node: object.represented(),
         canonical: canonical,
@@ -109,7 +112,8 @@ public func dump(
         version: version,
         sortKeys: sortKeys,
         sequenceStyle: sequenceStyle,
-        mappingStyle: mappingStyle
+        mappingStyle: mappingStyle,
+        newLineScalarStyle: newLineScalarStyle
     )
 }
 
@@ -143,7 +147,8 @@ public func serialize<Nodes>(
     version: (major: Int, minor: Int)? = nil,
     sortKeys: Bool = false,
     sequenceStyle: Node.Sequence.Style = .any,
-    mappingStyle: Node.Mapping.Style = .any) throws -> String
+    mappingStyle: Node.Mapping.Style = .any,
+    newLineScalarStyle: Node.Scalar.Style = .any) throws -> String
     where Nodes: Sequence, Nodes.Iterator.Element == Node {
     let emitter = Emitter(
         canonical: canonical,
@@ -156,7 +161,8 @@ public func serialize<Nodes>(
         version: version,
         sortKeys: sortKeys,
         sequenceStyle: sequenceStyle,
-        mappingStyle: mappingStyle
+        mappingStyle: mappingStyle,
+        newLineScalarStyle: newLineScalarStyle
     )
     try emitter.open()
     try nodes.forEach(emitter.serialize)
@@ -194,7 +200,8 @@ public func serialize(
     version: (major: Int, minor: Int)? = nil,
     sortKeys: Bool = false,
     sequenceStyle: Node.Sequence.Style = .any,
-    mappingStyle: Node.Mapping.Style = .any) throws -> String {
+    mappingStyle: Node.Mapping.Style = .any,
+    newLineScalarStyle: Node.Scalar.Style = .any) throws -> String {
     return try serialize(
         nodes: [node],
         canonical: canonical,
@@ -207,7 +214,8 @@ public func serialize(
         version: version,
         sortKeys: sortKeys,
         sequenceStyle: sequenceStyle,
-        mappingStyle: mappingStyle
+        mappingStyle: mappingStyle,
+        newLineScalarStyle: newLineScalarStyle
     )
 }
 
@@ -254,6 +262,9 @@ public final class Emitter {
 
         /// Set the style for mappings (dictionaries)
         public var mappingStyle: Node.Mapping.Style = .any
+
+        /// Set the style for scalars that include newlines
+        public var newLineScalarStyle: Node.Scalar.Style = .any
     }
 
     /// Configuration options to use when emitting YAML.
@@ -287,7 +298,8 @@ public final class Emitter {
                 version: (major: Int, minor: Int)? = nil,
                 sortKeys: Bool = false,
                 sequenceStyle: Node.Sequence.Style = .any,
-                mappingStyle: Node.Mapping.Style = .any) {
+                mappingStyle: Node.Mapping.Style = .any,
+                newLineScalarStyle: Node.Scalar.Style = .any) {
         options = Options(canonical: canonical,
                           indent: indent,
                           width: width,
@@ -298,7 +310,8 @@ public final class Emitter {
                           version: version,
                           sortKeys: sortKeys,
                           sequenceStyle: sequenceStyle,
-                          mappingStyle: mappingStyle)
+                          mappingStyle: mappingStyle,
+                          newLineScalarStyle: newLineScalarStyle)
         // configure emitter
         yaml_emitter_initialize(&emitter)
         yaml_emitter_set_output(&self.emitter, { pointer, buffer, size in
@@ -420,7 +433,7 @@ extension Emitter.Options {
     public init(canonical: Bool = false, indent: Int = 0, width: Int = 0, allowUnicode: Bool = false,
                 lineBreak: Emitter.LineBreak = .ln, version: (major: Int, minor: Int)? = nil,
                 sortKeys: Bool = false, sequenceStyle: Node.Sequence.Style = .any,
-                mappingStyle: Node.Mapping.Style = .any) {
+                mappingStyle: Node.Mapping.Style = .any, newLineScalarStyle: Node.Scalar.Style = .any) {
         self.canonical = canonical
         self.indent = indent
         self.width = width
@@ -430,6 +443,7 @@ extension Emitter.Options {
         self.sortKeys = sortKeys
         self.sequenceStyle = sequenceStyle
         self.mappingStyle = mappingStyle
+        self.newLineScalarStyle = newLineScalarStyle
     }
 }
 
