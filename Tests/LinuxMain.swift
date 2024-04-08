@@ -1,7 +1,5 @@
 import XCTest
 
-@testable import YamsTests
-
 XCTMain([
     testCase(ConstructorTests.allTests),
     testCase(EmitterTests.allTests),
