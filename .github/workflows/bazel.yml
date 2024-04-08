@@ -39,8 +39,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: swift:${{ matrix.tag }}-focal
-    env:
-      CC: "clang"
     steps:
       - uses: actions/checkout@v3
       - uses: bazelbuild/setup-bazelisk@v2
