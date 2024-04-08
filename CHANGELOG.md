@@ -1,4 +1,4 @@
-## Main
+## 5.1.1
 
 ##### Breaking
 
@@ -6,9 +6,13 @@
 
 ##### Enhancements
 
-* Allow specifying a `newLineScalarStyle` for encoding string scalars with newlines when using `YAMLEncoder`
+* Allow specifying a `newLineScalarStyle` for encoding string scalars with
+  newlines when using `YAMLEncoder`.  
   [Tejas Sharma](https://github.com/tejassharma96)
   [#405](https://github.com/jpsim/Yams/issues/405)
+
+* Improve support for Bazel 7.x.  
+  [JP Simard](https://github.com/jpsim)
 
 ##### Bug Fixes
 
