@@ -1,4 +1,4 @@
-## Main
+## 5.1.2
 
 ##### Breaking
 
@@ -10,7 +10,8 @@
 
 ##### Bug Fixes
 
-* None.
+* Fix support for Bazel 7.x.  
+  [JP Simard](https://github.com/jpsim)
 
 ## 5.1.1
 
