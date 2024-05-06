@@ -355,6 +355,15 @@ private extension Parser {
             pairs.append((key, value))
             event = try parse()
         }
+        let keys = pairs.map { $0.0 }
+        let duplicateKeys =  Dictionary(grouping: keys, by: {$0}).filter { $1.count > 1 }.keys
+        if let duplicatedKey = duplicateKeys.first {
+            throw YamlError.parser(
+                context: YamlError.Context(text: "expected all keys in mapping to be unique",
+                                           mark: Mark(line: 1, column: 1)),
+                problem: "but found multiple instances of: \(duplicateKeys.compactMap { $0.string })", duplicatedKey.mark!,
+                yaml: yaml)
+        }
         let node = Node.mapping(.init(pairs, tag(firstEvent.mappingTag), event.mappingStyle, firstEvent.startMark))
         if let anchor = firstEvent.mappingAnchor {
             anchors[anchor] = node

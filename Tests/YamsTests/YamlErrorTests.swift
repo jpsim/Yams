@@ -149,6 +149,22 @@ class YamlErrorTests: XCTestCase {
             )
         }
     }
+
+    func testDuplicateKeysCannotBeParsed() throws {
+        let yamlString = """
+            key: value
+            key: different_value
+        """
+        XCTAssertThrowsError(try Parser(yaml: yamlString).singleRoot()) { error in
+            XCTAssertTrue(error is YamlError)
+            XCTAssertEqual("\(error)", """
+                1:5: error: parser: expected all keys in mapping to be unique in line 1, column 1
+                but found multiple instances of: ["key"]:
+                    key: value
+                    ^
+                """)
+        }
+    }
 }
 
 extension YamlErrorTests {
