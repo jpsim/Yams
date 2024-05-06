@@ -1,3 +1,19 @@
+## Main
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* None.
+
+##### Bug Fixes
+
+* Yams will now correctly error when it tries to decode a mapping with duplicate keys.  
+  [Tejas Sharma](https://github.com/tejassharma96)
+  [#415](https://github.com/jpsim/Yams/issues/415)
+
 ## 5.1.2
 
 ##### Breaking

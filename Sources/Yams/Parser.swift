@@ -361,7 +361,8 @@ private extension Parser {
             throw YamlError.parser(
                 context: YamlError.Context(text: "expected all keys in mapping to be unique",
                                            mark: Mark(line: 1, column: 1)),
-                problem: "but found multiple instances of: \(duplicateKeys.compactMap { $0.string })", duplicatedKey.mark!,
+                problem: "but found multiple instances of: \(duplicateKeys.compactMap { $0.string })",
+                duplicatedKey.mark!,
                 yaml: yaml)
         }
         let node = Node.mapping(.init(pairs, tag(firstEvent.mappingTag), event.mappingStyle, firstEvent.startMark))
