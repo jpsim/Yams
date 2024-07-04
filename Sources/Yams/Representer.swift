@@ -14,6 +14,10 @@ private let cpow: (_: Double, _: Double) -> Double = Darwin.pow
 #elseif os(Windows)
 import ucrt
 private let cpow: (_: Double, _: Double) -> Double = ucrt.pow
+#elseif canImport(Bionic)
+import CoreFoundation
+import Bionic
+private let cpow: (_: Double, _: Double) -> Double = Bionic.pow
 #else
 import CoreFoundation
 import Glibc
