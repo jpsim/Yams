@@ -3,14 +3,14 @@ name: pod lib lint
 on:
   push:
     branches: [main]
-    paths: 
+    paths:
       - '.github/workflows/pod_lib_lint.yml'
       - '*.podspec'
       - 'Gemfile*'
       - 'Sources/**/*.[ch]'
       - 'Sources/**/*.swift'
   pull_request:
-    paths: 
+    paths:
       - '.github/workflows/pod_lib_lint.yml'
       - '*.podspec'
       - 'Gemfile*'
@@ -20,10 +20,10 @@ on:
 jobs:
   pod_lib_lint:
     name: pod lib lint
-    runs-on: macos-13
+    runs-on: macos-14
     env:
-      DEVELOPER_DIR: /Applications/Xcode_14.3.app
+      DEVELOPER_DIR: /Applications/Xcode_15.4.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: bundle install --path vendor/bundle
       - run: bundle exec pod lib lint --verbose
