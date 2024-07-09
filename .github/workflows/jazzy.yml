@@ -3,7 +3,7 @@ name: Jazzy
 on:
   push:
     branches: [main]
-    paths: 
+    paths:
       - '.github/workflows/jazzy.yml'
       - '.jazzy.yaml'
       - '**/*.md'
@@ -12,7 +12,7 @@ on:
       - 'Package*'
       - 'Sources/**/*.swift'
   pull_request:
-    paths: 
+    paths:
       - '.github/workflows/jazzy.yml'
       - '.jazzy.yaml'
       - '**/*.md'
@@ -27,7 +27,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_15.0.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install SourceKitten
         run: brew install sourcekitten
       - run: swift build

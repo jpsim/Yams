@@ -3,7 +3,7 @@ name: CMake
 on:
   push:
     branches: [main]
-    paths: 
+    paths:
       - '.github/workflows/cmake.yml'
       - '**/CMakeLists.txt'
       - '**/*.cmake'
@@ -12,7 +12,7 @@ on:
       - 'Sources/**/*.swift'
       - 'Sources/**/module.modulemap'
   pull_request:
-    paths: 
+    paths:
       - '.github/workflows/cmake.yml'
       - '**/CMakeLists.txt'
       - '**/*.cmake'
@@ -30,7 +30,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: brew install cmake ninja
       - run: swift -version
       - run: rm -rf build
@@ -47,7 +47,7 @@ jobs:
     container:
       image: swift:${{ matrix.tag }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: apt-get update && apt-get install -y ninja-build curl
       - run: curl -L https://github.com/Kitware/CMake/releases/download/v3.23.1/cmake-3.23.1-linux-x86_64.tar.gz | tar xz --strip-components=1 -C /usr
       - run: swift -version

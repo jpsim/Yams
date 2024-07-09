@@ -31,7 +31,7 @@ jobs:
   MacOS:
     runs-on: macos-13
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Apple tests
         run: bazelisk test //Tests/...
   Linux:
@@ -42,7 +42,7 @@ jobs:
     container:
       image: swift:${{ matrix.tag }}-focal
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: bazelbuild/setup-bazelisk@v2
       - name: Yams tests
         run: bazel test --test_output=all //Tests:UnitTests
