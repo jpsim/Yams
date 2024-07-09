@@ -43,6 +43,6 @@ jobs:
       image: swift:${{ matrix.tag }}-focal
     steps:
       - uses: actions/checkout@v4
-      - uses: bazelbuild/setup-bazelisk@v2
+      - uses: bazelbuild/setup-bazelisk@v3
       - name: Yams tests
         run: bazel test --test_output=all //Tests:UnitTests
