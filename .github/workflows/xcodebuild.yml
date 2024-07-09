@@ -3,7 +3,7 @@ name: xcodebuild
 on:
   push:
     branches: [main]
-    paths: 
+    paths:
       - '.github/workflows/xcodebuild.yml'
       - 'Yams.xcodeproj/**'
       - 'Sources/**/*.[ch]'
@@ -35,7 +35,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: xcodebuild -version
       - name: macOS with UTF16
         if: always()
@@ -71,7 +71,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: xcodebuild -version
       - name: macOS with UTF16
         if: always()
@@ -105,7 +105,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: xcodebuild -version
       - name: macOS with UTF16
         if: always()
@@ -126,4 +126,41 @@ jobs:
       - name: watchOS Simulator
         if: always()
         run: xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcpretty
+        shell: bash
+
+  xcodebuild_Sonoma:
+    strategy:
+      matrix:
+        xcode:
+          - version: '15.4'
+        xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
+    runs-on: macos-14
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
+    steps:
+      - uses: actions/checkout@v4
+      - run: xcodebuild -version
+      - name: macOS with UTF16
+        if: always()
+        run: YAMS_DEFAULT_ENCODING=UTF16 xcodebuild ${{ matrix.xcode_flags }} test | xcpretty
+        shell: bash
+      - name: macOS with UTF8
+        if: always()
+        run: YAMS_DEFAULT_ENCODING=UTF8 xcodebuild ${{ matrix.xcode_flags }} test | xcpretty
+        shell: bash
+      - name: iPhone Simulator
+        if: always()
+        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcpretty
+        shell: bash
+      - name: Apple TV Simulator
+        if: always()
+        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (2nd generation)" | xcpretty
+        shell: bash
+      - name: watchOS Simulator
+        if: always()
+        run: xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcpretty
+        shell: bash
+      - name: visionOS Simulator
+        if: always()
+        run: xcodebuild ${{ matrix.xcode_flags }} build -sdk xrsimulator | xcpretty
         shell: bash
