@@ -28,8 +28,8 @@ on:
       - '.bazelversion'
 
 jobs:
-  MacOS:
-    runs-on: macos-13
+  macOS:
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
       - name: Apple tests
