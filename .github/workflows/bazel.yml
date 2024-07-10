@@ -27,11 +27,15 @@ on:
       - '.bazelrc'
       - '.bazelversion'
 
+concurrency:
+  group: bazel-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  MacOS:
-    runs-on: macos-13
+  macOS:
+    runs-on: macos-14
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Apple tests
         run: bazelisk test //Tests/...
   Linux:
@@ -42,7 +46,7 @@ jobs:
     container:
       image: swift:${{ matrix.tag }}-focal
     steps:
-      - uses: actions/checkout@v3
-      - uses: bazelbuild/setup-bazelisk@v2
+      - uses: actions/checkout@v4
+      - uses: bazelbuild/setup-bazelisk@v3
       - name: Yams tests
         run: bazel test --test_output=all //Tests:UnitTests
