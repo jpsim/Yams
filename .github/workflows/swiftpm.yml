@@ -24,19 +24,6 @@ on:
       - 'Tests/**/*.ya?ml'
 
 jobs:
-  Xcode:
-    strategy:
-      matrix:
-        xcode_version: ['12.5.1', '13.0', '13.1', '13.2.1']
-    runs-on: macos-11
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
-    steps:
-      - uses: actions/checkout@v4
-      - run: swift -version
-      - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
-      - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
-
   Xcode_Monterey:
     strategy:
       matrix:
