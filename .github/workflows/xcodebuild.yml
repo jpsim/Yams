@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
   xcodebuild_Monterey:
-    name: Xcode ${{ matrix.xcode_version }} on macOS 12
+    name: macOS 12 with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
         xcode_version: ['13.3.1', '13.4', '14.0.1', '14.2']
@@ -60,7 +60,7 @@ jobs:
         shell: bash
 
   xcodebuild_Ventura:
-    name: Xcode ${{ matrix.xcode_version }} on macOS 13
+    name: macOS 13 with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
         xcode_version: ['14.3', '15.0']
@@ -93,7 +93,7 @@ jobs:
         shell: bash
 
   xcodebuild_Sonoma:
-    name: Xcode ${{ matrix.xcode_version }} on macOS 14
+    name: macOS 14 with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
         xcode_version: ['15.4']
