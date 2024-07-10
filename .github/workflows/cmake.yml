@@ -42,7 +42,7 @@ jobs:
       - run: cmake -B build -G Ninja -S . -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build
       - run: cmake --build build --target install
-      - run: file /usr/local/lib/swift/macosx/libYams.dylib | grep "Mach-O 64-bit dynamically linked shared library x86_64"
+      - run: file /usr/local/lib/swift/macosx/libYams.dylib | grep "Mach-O 64-bit dynamically linked shared library arm64"
 
   CMake_Linux:
     strategy:
