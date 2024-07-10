@@ -77,7 +77,7 @@ public enum YamlError: Error {
 
     /// Multiple uses of the same key detected in a mapping
     ///
-    /// - parameter duplicates: A dictionary keyed by the duplicated node value, with all nodes that duplicate said value
+    /// - parameter duplicates: A dictionary keyed by the duplicated node value, with all nodes that duplicate the value
     case duplicatedKeysInMapping(duplicates: [String: [Node]], yaml: String)
 
     /// The error context.
