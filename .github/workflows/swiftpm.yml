@@ -23,21 +23,13 @@ on:
       - 'Tests/**/*.swift'
       - 'Tests/**/*.ya?ml'
 
-jobs:
-  Xcode:
-    strategy:
-      matrix:
-        xcode_version: ['12.5.1', '13.0', '13.1', '13.2.1']
-    runs-on: macos-11
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
-    steps:
-      - uses: actions/checkout@v3
-      - run: swift -version
-      - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
-      - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
+concurrency:
+  group: swiftpm-${{ github.ref }}
+  cancel-in-progress: true
 
+jobs:
   Xcode_Monterey:
+    name: macOS 12 with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
         xcode_version: ['13.3.1', '13.4', '14.0.1', '14.1', '14.2']
@@ -45,12 +37,13 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: swift -version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
 
   Xcode_Ventura:
+    name: macOS 13 with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
         xcode_version: ['14.3', '15.0']
@@ -58,12 +51,26 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - run: swift -version
+      - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
+      - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
+
+  Xcode_Sonoma:
+    name: macOS 14 with Xcode ${{ matrix.xcode_version }}
+    strategy:
+      matrix:
+        xcode_version: ['15.4']
+    runs-on: macos-14
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
+    steps:
+      - uses: actions/checkout@v4
       - run: swift -version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
       - name: Code Coverage
-        if: matrix.xcode_version == '15.0'
+        if: matrix.xcode_version == '15.4'
         run: |
           swift test --enable-code-coverage
           xcrun llvm-cov export -format="lcov" .build/debug/YamsPackageTests.xctest/Contents/MacOS/YamsPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
@@ -73,36 +80,30 @@ jobs:
         env: { 'CODECOV_TOKEN': '${{ secrets.CODECOV_TOKEN }}' }
 
   Linux:
+    name: Linux with Swift ${{ matrix.tag }}
     strategy:
       matrix:
-        tag: ['5.4', '5.5', '5.6', '5.7', '5.8', '5.9', '5.10']
+        tag: ['5.7', '5.8', '5.9', '5.10']
     runs-on: ubuntu-latest
     container:
       image: swift:${{ matrix.tag }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
 
   Windows:
+    name: Windows with Swift ${{ matrix.swift_version }}
     runs-on: windows-latest
-
     strategy:
       matrix:
-        include:
-          - branch: swift-5.6.3-release
-            tag: 5.6.3-RELEASE
-          - branch: swift-5.7.2-release
-            tag: 5.7.2-RELEASE
-          - branch: development
-            tag: DEVELOPMENT-SNAPSHOT-2021-11-20-a
-
+        swift_version: ['5.7.3', '5.8.1', '5.9.1', '5.10.1']
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: compnerd/gha-setup-swift@main
         with:
-          branch: ${{ matrix.branch }}
-          tag: ${{ matrix.tag }}
+          branch: swift-${{ matrix.swift_version }}-release
+          tag: ${{ matrix.swift_version }}-RELEASE
       # Commands to run once connected via SSH:
       #
       # >d:

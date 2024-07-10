@@ -3,7 +3,7 @@ name: CMake
 on:
   push:
     branches: [main]
-    paths: 
+    paths:
       - '.github/workflows/cmake.yml'
       - '**/CMakeLists.txt'
       - '**/*.cmake'
@@ -12,7 +12,7 @@ on:
       - 'Sources/**/*.swift'
       - 'Sources/**/module.modulemap'
   pull_request:
-    paths: 
+    paths:
       - '.github/workflows/cmake.yml'
       - '**/CMakeLists.txt'
       - '**/*.cmake'
@@ -21,33 +21,40 @@ on:
       - 'Sources/**/*.swift'
       - 'Sources/**/module.modulemap'
 
+concurrency:
+  group: cmake-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   CMake:
+    name: macOS with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
-        xcode_version: ['14.2', '14.3', '15.0']
-    runs-on: macos-13
+        xcode_version: ['15.0', '15.1', '15.2', '15.3', '15.4']
+    runs-on: macos-14
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - run: sudo chown runner:admin /usr/local
       - run: brew install cmake ninja
       - run: swift -version
       - run: rm -rf build
       - run: cmake -B build -G Ninja -S . -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build
       - run: cmake --build build --target install
-      - run: file /usr/local/lib/swift/macosx/libYams.dylib | grep "Mach-O 64-bit dynamically linked shared library x86_64"
+      - run: file /usr/local/lib/swift/macosx/libYams.dylib | grep "Mach-O 64-bit dynamically linked shared library arm64"
 
   CMake_Linux:
+    name: Linux with Swift ${{ matrix.tag }}
     strategy:
       matrix:
-        tag: ['5.6', '5.7', '5.8', '5.9', '5.10']
+        tag: ['5.7', '5.8', '5.9', '5.10']
     runs-on: ubuntu-latest
     container:
       image: swift:${{ matrix.tag }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: apt-get update && apt-get install -y ninja-build curl
       - run: curl -L https://github.com/Kitware/CMake/releases/download/v3.23.1/cmake-3.23.1-linux-x86_64.tar.gz | tar xz --strip-components=1 -C /usr
       - run: swift -version
