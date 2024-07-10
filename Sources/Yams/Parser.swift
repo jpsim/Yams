@@ -367,12 +367,11 @@ private extension Parser {
     private func checkDuplicates(mappingKeys: [Node]) throws {
         var duplicates: [String: [Node]] = [:]
         for key in mappingKeys {
-            if let keyString = key.string {
-                if duplicates.keys.contains(keyString) {
-                    duplicates[keyString]?.append(key)
-                } else {
-                    duplicates[keyString] = [key]
-                }
+            guard let keyString = key.string else { continue }
+            if duplicates.keys.contains(keyString) {
+                duplicates[keyString]?.append(key)
+            } else {
+                duplicates[keyString] = [key]
             }
         }
         duplicates = duplicates.filter { $1.count > 1 }
