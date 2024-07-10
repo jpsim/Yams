@@ -35,6 +35,7 @@ jobs:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
       - uses: actions/checkout@v4
+      - run: sudo chown runner:admin /usr/local
       - run: brew install cmake ninja
       - run: swift -version
       - run: rm -rf build
