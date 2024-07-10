@@ -27,6 +27,7 @@ concurrency:
 
 jobs:
   CMake:
+    name: macOS with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
         xcode_version: ['15.0', '15.1', '15.2', '15.3', '15.4']
@@ -45,6 +46,7 @@ jobs:
       - run: file /usr/local/lib/swift/macosx/libYams.dylib | grep "Mach-O 64-bit dynamically linked shared library arm64"
 
   CMake_Linux:
+    name: Linux with Swift ${{ matrix.tag }}
     strategy:
       matrix:
         tag: ['5.7', '5.8', '5.9', '5.10']

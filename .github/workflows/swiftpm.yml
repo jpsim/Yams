@@ -29,6 +29,7 @@ concurrency:
 
 jobs:
   Xcode_Monterey:
+    name: Xcode ${{ matrix.xcode_version }} on macOS 12
     strategy:
       matrix:
         xcode_version: ['13.3.1', '13.4', '14.0.1', '14.1', '14.2']
@@ -42,6 +43,7 @@ jobs:
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
 
   Xcode_Ventura:
+    name: Xcode ${{ matrix.xcode_version }} on macOS 13
     strategy:
       matrix:
         xcode_version: ['14.3', '15.0']
@@ -64,6 +66,7 @@ jobs:
         env: { 'CODECOV_TOKEN': '${{ secrets.CODECOV_TOKEN }}' }
 
   Xcode_Sonoma:
+    name: Xcode ${{ matrix.xcode_version }} on macOS 14
     strategy:
       matrix:
         xcode_version: ['15.4']
