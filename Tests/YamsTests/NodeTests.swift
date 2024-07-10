@@ -206,23 +206,6 @@ class NodeTests: XCTestCase {
 
 extension NodeTests {
     static var allTests: [(String, (NodeTests) -> () throws -> Void)] {
-#if os(Windows) && swift(<5.6)
-        return [
-            ("testExpressibleByArrayLiteral", testExpressibleByArrayLiteral),
-            ("testExpressibleByDictionaryLiteral", testExpressibleByDictionaryLiteral),
-            ("testExpressibleByFloatLiteral", testExpressibleByFloatLiteral),
-            ("testExpressibleByIntegerLiteral", testExpressibleByIntegerLiteral),
-            ("testExpressibleByStringLiteral", testExpressibleByStringLiteral),
-            // ("testTypedAccessorProperties", testTypedAccessorProperties),
-            // ("testArray", testArray),
-            ("testSubscriptMapping", testSubscriptMapping),
-            // ("testSubscriptSequence", testSubscriptSequence),
-            ("testSubscriptWithNonDefaultResolver", testSubscriptWithNonDefaultResolver),
-            ("testMappingBehavesLikeADictionary", testMappingBehavesLikeADictionary),
-            ("testSequenceBehavesLikeAnArray", testSequenceBehavesLikeAnArray),
-            ("testScalar", testScalar)
-        ]
-#else
         return [
             ("testExpressibleByArrayLiteral", testExpressibleByArrayLiteral),
             ("testExpressibleByDictionaryLiteral", testExpressibleByDictionaryLiteral),
@@ -238,6 +221,5 @@ extension NodeTests {
             ("testSequenceBehavesLikeAnArray", testSequenceBehavesLikeAnArray),
             ("testScalar", testScalar)
         ]
-#endif
     }
 }

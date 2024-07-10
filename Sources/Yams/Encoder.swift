@@ -226,30 +226,18 @@ extension _Encoder: SingleValueEncodingContainer {
     func encode<T>(_ value: T) throws where T: YAMLEncodable {
         assertCanEncodeNewValue()
         node = value.box()
-#if swift(>=5.7)
         if let stringValue = value as? (any StringProtocol), stringValue.contains("\n") {
             node.scalar?.style = newlineScalarStyle
         }
-#else
-        if let stringValue = value as? String, stringValue.contains("\n") {
-            node.scalar?.style = newlineScalarStyle
-        }
-#endif
     }
 
     func encode<T>(_ value: T) throws where T: Encodable {
         assertCanEncodeNewValue()
         if let encodable = value as? YAMLEncodable {
             node = encodable.box()
-#if swift(>=5.7)
             if let stringValue = value as? (any StringProtocol), stringValue.contains("\n") {
                 node.scalar?.style = newlineScalarStyle
             }
-#else
-            if let stringValue = value as? String, stringValue.contains("\n") {
-                node.scalar?.style = newlineScalarStyle
-            }
-#endif
         } else {
             try value.encode(to: self)
         }
