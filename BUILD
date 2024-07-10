@@ -7,11 +7,11 @@ cc_library(
         "Sources/CYaml/src/*.h",
     ]),
     hdrs = ["Sources/CYaml/include/yaml.h"],
+    aspect_hints = ["@build_bazel_rules_swift//swift:auto_module"],
     # Requires because of https://github.com/bazelbuild/bazel/pull/10143 otherwise host transition builds fail
     copts = ["-fPIC"],
     includes = ["Sources/CYaml/include"],
     linkstatic = True,
-    tags = ["swift_module"],
     visibility = ["//Tests:__subpackages__"],
 )
 
