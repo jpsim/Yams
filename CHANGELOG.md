@@ -2,7 +2,8 @@
 
 ##### Breaking
 
-* None.
+* Swift 5.7 or later is now required to build Yams.  
+  [JP Simard](https://github.com/jpsim)
 
 ##### Enhancements
 
@@ -13,6 +14,28 @@
 * Yams will now correctly error when it tries to decode a mapping with duplicate keys.  
   [Tejas Sharma](https://github.com/tejassharma96)
   [#415](https://github.com/jpsim/Yams/issues/415)
+
+## 5.1.3
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Add support for visionOS.  
+  [ruralharry](http://github.com/ruralharry)
+
+* Add support for Android.  
+  [finagolfin](http://github.com/finagolfin)
+
+* Add support for Bazel's `rules_swift` 2.x versions.  
+  [Luis Padron](https://github.com/luispadron)
+
+##### Bug Fixes
+
+* Fix CI workflows.  
+  [Tony Arnold](https://github.com/tonyarnold)
 
 ## 5.1.2
 

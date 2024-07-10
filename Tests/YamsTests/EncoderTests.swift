@@ -250,7 +250,6 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
         // https://github.com/jpsim/Yams/pull/95
         struct Sample: Decodable {
             // Used for its decodable behavior, even though it's not referenced directly.
-            // swiftlint:disable:next unused_declaration
             let values: [String]
         }
 
@@ -1150,38 +1149,6 @@ private struct Unkeyed: Codable, Equatable {
 
 extension EncoderTests {
     static var allTests: [(String, (EncoderTests) -> () throws -> Void)] {
-#if os(Windows) && swift(<5.6)
-        return [
-            ("testEncodingTopLevelEmptyStruct", testEncodingTopLevelEmptyStruct),
-            ("testEncodingTopLevelEmptyClass", testEncodingTopLevelEmptyClass),
-            ("testEncodingTopLevelSingleValueEnum", testEncodingTopLevelSingleValueEnum),
-            ("testEncodingTopLevelSingleValueStruct", testEncodingTopLevelSingleValueStruct),
-            // ("testEncodingTopLevelSingleValueClass", testEncodingTopLevelSingleValueClass),
-            // ("testEncodingTopLevelStructuredStruct", testEncodingTopLevelStructuredStruct),
-            ("testEncodingTopLevelStructuredClass", testEncodingTopLevelStructuredClass),
-            // ("testEncodingTopLevelStructuredSingleStruct", testEncodingTopLevelStructuredSingleStruct),
-            ("testEncodingTopLevelStructuredSingleClass", testEncodingTopLevelStructuredSingleClass),
-            // ("testEncodingTopLevelDeepStructuredType", testEncodingTopLevelDeepStructuredType),
-            // ("testEncodingClassWhichSharesEncoderWithSuper", testEncodingClassWhichSharesEncoderWithSuper),
-            ("testEncodingTopLevelNullableType", testEncodingTopLevelNullableType),
-            ("testEncodingDate", testEncodingDate),
-            ("testEncodingDateMillisecondsSince1970", testEncodingDateMillisecondsSince1970),
-            ("testEncodingBase64Data", testEncodingBase64Data),
-            // ("testNestedContainerCodingPaths", testNestedContainerCodingPaths),
-            // ("testSuperEncoderCodingPaths", testSuperEncoderCodingPaths),
-            ("testInterceptDecimal", testInterceptDecimal),
-            ("testInterceptURL", testInterceptURL),
-            // ("testValuesInSingleValueContainer", testValuesInSingleValueContainer),
-            // ("testValuesInKeyedContainer", testValuesInKeyedContainer),
-            // ("testValuesInUnkeyedContainer", testValuesInUnkeyedContainer),
-            ("testDictionary", testDictionary),
-            ("testNodeTypeMismatch", testNodeTypeMismatch),
-            // ("testDecodingConcreteTypeParameter", testDecodingConcreteTypeParameter),
-            ("testDecodingAnchors", testDecodingAnchors),
-            ("test_null_yml", test_null_yml),
-            ("testEncodingDateWithNanosecondGreaterThan999499977", testEncodingDateWithNanosecondGreaterThan999499977)
-        ]
-#else
         return [
             ("testEncodingTopLevelEmptyStruct", testEncodingTopLevelEmptyStruct),
             ("testEncodingTopLevelEmptyClass", testEncodingTopLevelEmptyClass),
@@ -1213,6 +1180,5 @@ extension EncoderTests {
             ("testEncodingDateWithNanosecondGreaterThan999499977", testEncodingDateWithNanosecondGreaterThan999499977),
             ("testDecoderMark", testDecoderMark)
         ]
-#endif
     }
 } // swiftlint:disable:this file_length

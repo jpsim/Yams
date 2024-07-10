@@ -526,25 +526,6 @@ class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
 
 extension ConstructorTests {
     static var allTests: [(String, (ConstructorTests) -> () throws -> Void)] {
-#if os(Windows) && swift(<5.6)
-        return [
-            ("testBinary", testBinary),
-            ("testBool", testBool),
-            // ("testFloat", testFloat),
-            // ("testInt", testInt),
-            ("testMap", testMap),
-            // ("testMerge", testMerge),
-            ("testNull", testNull),
-            // ("testOmap", testOmap),
-            ("testPairs", testPairs),
-            ("testQuotationMark", testQuotationMark),
-            ("testSet", testSet),
-            ("testSeq", testSeq),
-            ("testTimestamp", testTimestamp),
-            ("testTimestampWithNanosecond", testTimestampWithNanosecond)
-            // ("testValue", testValue)
-        ]
-#else
         return [
             ("testBinary", testBinary),
             ("testBool", testBool),
@@ -562,6 +543,5 @@ extension ConstructorTests {
             ("testTimestampWithNanosecond", testTimestampWithNanosecond),
             ("testValue", testValue)
         ]
-#endif
     }
 } // swiftlint:disable:this file_length

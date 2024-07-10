@@ -334,7 +334,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if $CI eq true; then\n    # Don't run SwiftLint on CI — it's already running in a workflow\n    exit 0\nfi\n\nexport PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
