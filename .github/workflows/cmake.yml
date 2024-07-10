@@ -21,6 +21,10 @@ on:
       - 'Sources/**/*.swift'
       - 'Sources/**/module.modulemap'
 
+concurrency:
+  group: cmake-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   CMake:
     strategy:

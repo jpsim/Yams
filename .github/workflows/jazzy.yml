@@ -21,6 +21,10 @@ on:
       - 'Package*'
       - 'Sources/**/*.swift'
 
+concurrency:
+  group: jazzy-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   Jazzy:
     runs-on: macos-14

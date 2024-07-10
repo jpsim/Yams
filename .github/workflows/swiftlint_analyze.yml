@@ -19,6 +19,10 @@ on:
       - 'Tests/**/*.swift'
       - '!Tests/LinuxMain.swift'
 
+concurrency:
+  group: swiftlint-analyze-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   Analyze:
     runs-on: macos-14

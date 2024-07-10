@@ -27,6 +27,10 @@ on:
       - '.bazelrc'
       - '.bazelversion'
 
+concurrency:
+  group: bazel-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   macOS:
     runs-on: macos-14

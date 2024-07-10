@@ -23,6 +23,10 @@ on:
   schedule:
     - cron: '0 4 * * *'
 
+concurrency:
+  group: nightly-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   Nightly:
     runs-on: ubuntu-latest

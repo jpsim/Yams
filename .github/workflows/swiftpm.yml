@@ -23,6 +23,10 @@ on:
       - 'Tests/**/*.swift'
       - 'Tests/**/*.ya?ml'
 
+concurrency:
+  group: swiftpm-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   Xcode_Monterey:
     strategy:

@@ -21,6 +21,10 @@ on:
       - 'Tests/**/*.ya?ml'
       - '!Tests/LinuxMain.swift'
 
+concurrency:
+  group: xcodebuild-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   xcodebuild_Monterey:
     strategy:

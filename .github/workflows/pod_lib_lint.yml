@@ -17,6 +17,10 @@ on:
       - 'Sources/**/*.[ch]'
       - 'Sources/**/*.swift'
 
+concurrency:
+  group: pod-lib-lint-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   pod_lib_lint:
     name: pod lib lint
