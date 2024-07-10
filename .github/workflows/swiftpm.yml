@@ -55,15 +55,6 @@ jobs:
       - run: swift -version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
-      - name: Code Coverage
-        if: matrix.xcode_version == '15.0'
-        run: |
-          swift test --enable-code-coverage
-          xcrun llvm-cov export -format="lcov" .build/debug/YamsPackageTests.xctest/Contents/MacOS/YamsPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
-          if [[ -n "${CODECOV_TOKEN}" ]]; then
-            bash <(curl -s https://codecov.io/bash) -f coverage.lcov
-          fi
-        env: { 'CODECOV_TOKEN': '${{ secrets.CODECOV_TOKEN }}' }
 
   Xcode_Sonoma:
     name: macOS 14 with Xcode ${{ matrix.xcode_version }}
