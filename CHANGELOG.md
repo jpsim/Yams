@@ -9,6 +9,9 @@
 * Add support for compiling with the visionOS SDK.  
   [ruralharry](http://github.com/ruralharry)
 
+* Add support for Bazel's `rules_swift` 2.x versions.  
+  [Luis Padron](https://github.com/luispadron)
+
 ##### Bug Fixes
 
 * Fix CI workflows.  
