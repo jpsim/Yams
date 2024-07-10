@@ -3,7 +3,7 @@ name: xcodebuild
 on:
   push:
     branches: [main]
-    paths: 
+    paths:
       - '.github/workflows/xcodebuild.yml'
       - 'Yams.xcodeproj/**'
       - 'Sources/**/*.[ch]'
@@ -21,109 +21,110 @@ on:
       - 'Tests/**/*.ya?ml'
       - '!Tests/LinuxMain.swift'
 
-jobs:
-  xcodebuild:
-    strategy:
-      matrix:
-        xcode:
-          - version: '12.5.1'
-          - version: '13.0'
-          - version: '13.1'
-          - version: '13.2.1'
-        xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
-    runs-on: macos-11
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
-    steps:
-      - uses: actions/checkout@v3
-      - run: xcodebuild -version
-      - name: macOS with UTF16
-        if: always()
-        run: YAMS_DEFAULT_ENCODING=UTF16 xcodebuild ${{ matrix.xcode_flags }} test | xcpretty
-        shell: bash
-      - name: macOS with UTF8
-        if: always()
-        run: YAMS_DEFAULT_ENCODING=UTF8 xcodebuild ${{ matrix.xcode_flags }} test | xcpretty
-        shell: bash
-      - name: iPhone Simulator
-        if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcpretty
-        shell: bash
-      - name: Apple TV Simulator
-        if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K" | xcpretty
-        shell: bash
-      - name: watchOS Simulator
-        if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcpretty
-        shell: bash
+concurrency:
+  group: xcodebuild-${{ github.ref }}
+  cancel-in-progress: true
 
+jobs:
   xcodebuild_Monterey:
+    name: macOS 12 with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
-        xcode:
-          - version: '13.3.1'
-          - version: '13.4'
-          - version: '14.0.1'
-          - version: '14.2'
+        xcode_version: ['13.3.1', '13.4', '14.0.1', '14.2']
         xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
     runs-on: macos-12
     env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: xcodebuild -version
       - name: macOS with UTF16
         if: always()
-        run: YAMS_DEFAULT_ENCODING=UTF16 xcodebuild ${{ matrix.xcode_flags }} test | xcpretty
+        run: set -o pipefail && YAMS_DEFAULT_ENCODING=UTF16 xcodebuild ${{ matrix.xcode_flags }} test | xcbeautify --renderer github-actions
         shell: bash
       - name: macOS with UTF8
         if: always()
-        run: YAMS_DEFAULT_ENCODING=UTF8 xcodebuild ${{ matrix.xcode_flags }} test | xcpretty
+        run: set -o pipefail && YAMS_DEFAULT_ENCODING=UTF8 xcodebuild ${{ matrix.xcode_flags }} test | xcbeautify --renderer github-actions
         shell: bash
       - name: iPhone Simulator
         if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcpretty
+        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcbeautify --renderer github-actions
         shell: bash
       - name: Apple TV Simulator
         if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (2nd generation)" | xcpretty
+        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (2nd generation)" | xcbeautify --renderer github-actions
         shell: bash
       - name: watchOS Simulator
         if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcpretty
+        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcbeautify --renderer github-actions
         shell: bash
 
   xcodebuild_Ventura:
+    name: macOS 13 with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
-        xcode:
-          - version: '14.3'
-          - version: '15.0'
+        xcode_version: ['14.3', '15.0']
         xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
     runs-on: macos-13
     env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode.version }}.app
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: xcodebuild -version
       - name: macOS with UTF16
         if: always()
-        run: YAMS_DEFAULT_ENCODING=UTF16 xcodebuild ${{ matrix.xcode_flags }} test | xcpretty
+        run: set -o pipefail && YAMS_DEFAULT_ENCODING=UTF16 xcodebuild ${{ matrix.xcode_flags }} test | xcbeautify --renderer github-actions
         shell: bash
       - name: macOS with UTF8
         if: always()
-        run: YAMS_DEFAULT_ENCODING=UTF8 xcodebuild ${{ matrix.xcode_flags }} test | xcpretty
+        run: set -o pipefail && YAMS_DEFAULT_ENCODING=UTF8 xcodebuild ${{ matrix.xcode_flags }} test | xcbeautify --renderer github-actions
         shell: bash
       - name: iPhone Simulator
         if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcpretty
+        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcbeautify --renderer github-actions
         shell: bash
       - name: Apple TV Simulator
         if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (2nd generation)" | xcpretty
+        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (2nd generation)" | xcbeautify --renderer github-actions
         shell: bash
       - name: watchOS Simulator
         if: always()
-        run: xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcpretty
+        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcbeautify --renderer github-actions
+        shell: bash
+
+  xcodebuild_Sonoma:
+    name: macOS 14 with Xcode ${{ matrix.xcode_version }}
+    strategy:
+      matrix:
+        xcode_version: ['15.4']
+        xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
+    runs-on: macos-14
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
+    steps:
+      - uses: actions/checkout@v4
+      - run: xcodebuild -version
+      - name: macOS with UTF16
+        if: always()
+        run: set -o pipefail && YAMS_DEFAULT_ENCODING=UTF16 xcodebuild ${{ matrix.xcode_flags }} test | xcbeautify --renderer github-actions
+        shell: bash
+      - name: macOS with UTF8
+        if: always()
+        run: set -o pipefail && YAMS_DEFAULT_ENCODING=UTF8 xcodebuild ${{ matrix.xcode_flags }} test | xcbeautify --renderer github-actions
+        shell: bash
+      - name: iPhone Simulator
+        if: always()
+        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcbeautify --renderer github-actions
+        shell: bash
+      - name: Apple TV Simulator
+        if: always()
+        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (2nd generation)" | xcbeautify --renderer github-actions
+        shell: bash
+      - name: watchOS Simulator
+        if: always()
+        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcbeautify --renderer github-actions
+        shell: bash
+      - name: visionOS Simulator
+        if: always()
+        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} build -sdk xrsimulator | xcbeautify --renderer github-actions
         shell: bash

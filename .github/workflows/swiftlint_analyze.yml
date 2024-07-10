@@ -3,7 +3,7 @@ name: SwiftLint Analyze
 on:
   push:
     branches: [main]
-    paths: 
+    paths:
       - '.github/workflows/swiftlint_analyze.yml'
       - 'Yams.xcodeproj/**'
       - 'Sources/**/*.[ch]'
@@ -19,13 +19,17 @@ on:
       - 'Tests/**/*.swift'
       - '!Tests/LinuxMain.swift'
 
+concurrency:
+  group: swiftlint-analyze-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   Analyze:
-    runs-on: macos-13
+    runs-on: macos-14
     env:
-      DEVELOPER_DIR: /Applications/Xcode_15.0.app
+      DEVELOPER_DIR: /Applications/Xcode_15.4.app
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Generate xcodebuild.log
         run: xcodebuild -sdk macosx -scheme Yams -project Yams.xcodeproj clean build-for-testing > xcodebuild.log
         shell: bash

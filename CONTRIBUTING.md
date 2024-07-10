@@ -19,5 +19,5 @@ We follow the same syntax as [CocoaPods' `CHANGELOG.md`](https://github.com/Coco
 
 CI jobs for the latest official Swift and Xcode releases should be kept
 up to date based on the available Xcode versions that can be found
-in the [actions/virtual-environments](https://github.com/actions/virtual-environments/blob/main/images/macos/macos-10.15-Readme.md#xcode)
+in the [actions/virtual-environments](https://github.com/actions/runner-images?tab=readme-ov-file#available-images)
 repo.
