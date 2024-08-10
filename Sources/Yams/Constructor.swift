@@ -98,6 +98,17 @@ extension Constructor {
         .omap: [Any].construct_omap,
         .pairs: [Any].construct_pairs
     ]
+  
+    public static let dynamicMappingMap: MappingMap = [
+        .map: NSMutableDictionary.construct_mapping,
+        .set: NSMutableSet.construct_set
+    ]
+
+    public static let dynamicSequenceMap: SequenceMap = [
+        .seq: NSMutableArray.construct_seq,
+        .omap: NSMutableArray.construct_omap,
+        .pairs: NSMutableArray.construct_pairs
+    ]
 }
 
 // MARK: - ScalarConstructible
@@ -433,6 +444,31 @@ private extension Dictionary {
     }
 }
 
+extension NSMutableDictionary {
+    /// Construct an `NSMutableDictionary`, if possible, from the specified mapping.
+    ///
+    /// - parameter mapping: The `Node.Mapping` from which to extract an `NSMutableDictionary`, if possible.
+    ///
+    /// - returns: An instance of `NSMutableDictionary`, if one was successfully extracted from the mapping.
+    public static func construct_mapping(from mapping: Node.Mapping) -> NSMutableDictionary? {
+        _construct_mapping(from: mapping)
+    }
+}
+
+private extension NSMutableDictionary {
+    static func _construct_mapping(from mapping: Node.Mapping) -> NSMutableDictionary {
+        let result = NSMutableDictionary()
+        let mapping = mapping.flatten()
+
+        mapping.forEach { key, value in
+            if let keyString = String.construct(from: key) {
+                result[keyString] = mapping.tag.constructor.any(from: value)
+            }
+        }
+        return result
+    }
+}
+
 extension Set {
     /// Construct a `Set`, if possible, from the specified mapping.
     ///
@@ -444,6 +480,23 @@ extension Set {
         return Set<AnyHashable>(mapping.map({ String.construct(from: $0.key)! as AnyHashable }))
         // Explicitly declaring the generic parameter as `<AnyHashable>` above is required,
         // because this is inside extension of `Set` and Swift can't infer the type without that.
+    }
+}
+
+extension NSMutableSet {
+    /// Construct an `NSMutableSet`, if possible, from the specified mapping.
+    ///
+    /// - parameter mapping: The `Node.Mapping` from which to extract an `NSMutableSet`, if possible.
+    ///
+    /// - returns: An instance of `NSMutableSet`, if one was successfully extracted from the mapping.
+    public static func construct_set(from mapping: Node.Mapping) -> NSMutableSet? {
+        let result = NSMutableSet()
+        mapping.forEach { key, _ in
+            if let keyString = String.construct(from: key) {
+                result.add(keyString as AnyHashable)
+            }
+        }
+        return result
     }
 }
 
@@ -487,6 +540,53 @@ extension Array {
         }
     }
 }
+
+extension NSMutableArray {
+    /// Construct an NSMutableArray of `Any` from the specified `sequence`.
+    ///
+    /// - parameter sequence: Sequence to convert to `NSMutableArray`.
+    ///
+    /// - returns: NSMutableArray of `Any`.
+    public static func construct_seq(from sequence: Node.Sequence) -> NSMutableArray {
+        let result = NSMutableArray()
+        sequence.forEach { subnode in
+            result.add(sequence.tag.constructor.any(from: subnode))
+        }
+        return result
+    }
+
+    /// Construct an "O-map" (NSMutableArray of `(Any, Any)` tuples) from the specified `sequence`.
+    ///
+    /// - parameter sequence: Sequence to convert to `NSMutableArray`.
+    ///
+    /// - returns: NSMutableArray of `(Any, Any)` tuples.
+    public static func construct_omap(from sequence: Node.Sequence) -> NSMutableArray {
+        let result = NSMutableArray()
+        sequence.forEach { subnode in
+            // TODO: Should raise error if subnode is not mapping or mapping.count != 1
+            if let (key, value) = subnode.mapping?.first {
+                result.add((sequence.tag.constructor.any(from: key), sequence.tag.constructor.any(from: value)))
+            }
+        }
+        return result
+    }
+
+    /// Construct an NSMutableArray of `(Any, Any)` tuples from the specified `sequence`.
+    ///
+    /// - parameter sequence: Sequence to convert to `NSMutableArray`.
+    ///
+    /// - returns: NSMutableArray of `(Any, Any)` tuples.
+    public static func construct_pairs(from sequence: Node.Sequence) -> NSMutableArray {
+        let result = NSMutableArray()
+        sequence.forEach { subnode in
+            if let (key, value) = subnode.mapping?.first {
+                result.add((sequence.tag.constructor.any(from: key), sequence.tag.constructor.any(from: value)))
+            }
+        }
+        return result
+    }
+}
+
 
 private extension String {
     func substring(with range: NSRange) -> Substring? {
