@@ -98,12 +98,14 @@ extension Constructor {
         .omap: [Any].construct_omap,
         .pairs: [Any].construct_pairs
     ]
-  
+
+    ///`Tag.Name` to `Node.Mapping` map that support dynamic collection.
     public static let dynamicMappingMap: MappingMap = [
         .map: NSMutableDictionary.construct_mapping,
         .set: NSMutableSet.construct_set
     ]
 
+    ///`Tag.Name` to `Node.Sequence` map that support dynamic collection.
     public static let dynamicSequenceMap: SequenceMap = [
         .seq: NSMutableArray.construct_seq,
         .omap: NSMutableArray.construct_omap,
@@ -586,7 +588,6 @@ extension NSMutableArray {
         return result
     }
 }
-
 
 private extension String {
     func substring(with range: NSRange) -> Substring? {
