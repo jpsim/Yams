@@ -265,12 +265,12 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
             return nil
         }
 
-        switch scalar.string {
-        case ".inf", ".Inf", ".INF", "+.inf", "+.Inf", "+.INF":
+      switch scalar.string.lowercased() {
+        case ".inf", "+.inf":
             return .infinity
-        case "-.inf", "-.Inf", "-.INF":
+        case "-.inf":
             return -.infinity
-        case ".nan", ".NaN", ".NAN":
+        case ".nan":
             return .nan
         default:
             let string = scalar.string.replacingOccurrences(of: "_", with: "")
