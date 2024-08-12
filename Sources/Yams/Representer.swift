@@ -57,7 +57,23 @@ extension Array: NodeRepresentable {
     }
 }
 
+extension NSArray: NodeRepresentable {
+    /// This value's `Node` representation.
+    public func represented() throws -> Node {
+        let nodes = try map(represent)
+        return Node(nodes, Tag(.seq))
+    }
+}
+
 extension Dictionary: NodeRepresentable {
+    /// This value's `Node` representation.
+    public func represented() throws -> Node {
+        let pairs = try map { (key: try represent($0.0), value: try represent($0.1)) }
+        return Node(pairs.sorted { $0.key < $1.key }, Tag(.map))
+    }
+}
+
+extension NSDictionary: NodeRepresentable {
     /// This value's `Node` representation.
     public func represented() throws -> Node {
         let pairs = try map { (key: try represent($0.0), value: try represent($0.1)) }
@@ -187,6 +203,13 @@ extension Float: ScalarRepresentable {
     }
 }
 
+extension NSValue: ScalarRepresentable {
+    /// This value's `Node.scalar` representation.
+    public func represented() -> Node.Scalar {
+        return .init(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+    }
+}
+
 private func numberFormatter(with significantDigits: Int) -> NumberFormatter {
     let formatter = NumberFormatter()
     formatter.locale = Locale(identifier: "en_US")
@@ -255,6 +278,14 @@ extension String: ScalarRepresentable {
     public func represented() -> Node.Scalar {
         let scalar = Node.Scalar(self)
         return scalar.resolvedTag.name == .str ? scalar : .init(self, Tag(.str), .singleQuoted)
+    }
+}
+
+extension NSString: ScalarRepresentable {
+    /// This value's `Node.scalar` representation.
+    public func represented() -> Node.Scalar {
+      let scalar = Node.Scalar(String(self))
+        return scalar.resolvedTag.name == .str ? scalar : .init(String(self), Tag(.str), .singleQuoted)
     }
 }
 
