@@ -405,35 +405,6 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     // MARK: - Helper Functions
 
-    private func _testRoundTrip<T>(of value: T,
-                                   with options: YAMLEncoder.Options = .init(),
-                                   expectedYAML yamlString: String? = nil,
-                                   file: StaticString = #file,
-                                   line: UInt = #line) where T: Codable, T: Equatable {
-        do {
-            let encoder = YAMLEncoder()
-            encoder.options = options
-            let producedYAML = try encoder.encode(value)
-
-            if let expectedYAML = yamlString {
-                XCTAssertEqual(producedYAML, expectedYAML, "Produced YAML not identical to expected YAML.",
-                               file: (file), line: line)
-            }
-
-            let decoder = YAMLDecoder()
-            let decoded = try decoder.decode(T.self, from: producedYAML)
-            XCTAssertEqual(decoded, value, "\(T.self) did not round-trip to an equal value.",
-                           file: (file), line: line)
-
-        } catch let error as EncodingError {
-            XCTFail("Failed to encode \(T.self) from YAML by error: \(error)", file: (file), line: line)
-        } catch let error as DecodingError {
-            XCTFail("Failed to decode \(T.self) from YAML by error: \(error)", file: (file), line: line)
-        } catch {
-            XCTFail("Rout trip test of \(T.self) failed with error: \(error)", file: (file), line: line)
-        }
-    }
-
     private func _testDecode<T>(of type: T.Type,
                                 from string: String,
                                 expectedValue value: T?,
@@ -465,6 +436,35 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
             XCTFail("Decode test of \(T.self) failed in unexpected way with error: \(error)", file: (file), line: line)
         }
         XCTFail("Decode test of \(T.self) did not fail as expected.")
+    }
+}
+
+internal func _testRoundTrip<T>(of value: T,
+                               with options: YAMLEncoder.Options = .init(),
+                               expectedYAML yamlString: String? = nil,
+                               file: StaticString = #file,
+                               line: UInt = #line) where T: Codable, T: Equatable {
+    do {
+        let encoder = YAMLEncoder()
+        encoder.options = options
+        let producedYAML = try encoder.encode(value)
+
+        if let expectedYAML = yamlString {
+            XCTAssertEqual(producedYAML, expectedYAML, "Produced YAML not identical to expected YAML.",
+                           file: (file), line: line)
+        }
+
+        let decoder = YAMLDecoder()
+        let decoded = try decoder.decode(T.self, from: producedYAML)
+        XCTAssertEqual(decoded, value, "\(T.self) did not round-trip to an equal value.",
+                       file: (file), line: line)
+
+    } catch let error as EncodingError {
+        XCTFail("Failed to encode \(T.self) from YAML by error: \(error)", file: (file), line: line)
+    } catch let error as DecodingError {
+        XCTFail("Failed to decode \(T.self) from YAML by error: \(error)", file: (file), line: line)
+    } catch {
+        XCTFail("Rout trip test of \(T.self) failed with error: \(error)", file: (file), line: line)
     }
 }
 

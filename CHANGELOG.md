@@ -2,6 +2,32 @@
 
 ##### Breaking
 
+* None.
+
+##### Enhancements
+
+* Yams is able to encode and decode Anchors via YamlAnchorProviding, and
+  YamlAnchorCoding. 
+  [Adora Lynch](https://github.com/lynchsft)
+  [#125](https://github.com/jpsim/Yams/issues/125)
+  
+* Yams is able to encode and decode Tags via YamlTagProviding
+  and YamlTagCoding.
+  [Adora Lynch](https://github.com/lynchsft) 
+  [#265](https://github.com/jpsim/Yams/issues/265)
+  
+* Yams is able to detect redundant structes and automaticaly
+  alias them during encoding via RedundancyAliasingStrategy
+  [Adora Lynch](https://github.com/lynchsft)
+
+##### Bug Fixes
+
+* None.
+
+## 5.2.0
+  
+##### Breaking
+
 * Swift 5.7 or later is now required to build Yams.  
   [JP Simard](https://github.com/jpsim)
 

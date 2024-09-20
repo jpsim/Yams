@@ -54,6 +54,8 @@ public final class Constructor {
                 return result
             }
             return [Any].construct_seq(from: sequence)
+        case .alias(_):
+            preconditionFailure("Aliases should be resolved before construction")
         }
     }
 
