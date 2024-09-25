@@ -18,10 +18,14 @@ private let cpow: (_: Double, _: Double) -> Double = ucrt.pow
 import CoreFoundation
 import Bionic
 private let cpow: (_: Double, _: Double) -> Double = Bionic.pow
-#else
+#elseif canImport(Glibc)
 import CoreFoundation
 import Glibc
 private let cpow: (_: Double, _: Double) -> Double = Glibc.pow
+#elseif canImport(Musl)
+import CoreFoundation
+import Musl
+private let cpow: (_: Double, _: Double) -> Double = Musl.pow
 #endif
 
 public extension Node {

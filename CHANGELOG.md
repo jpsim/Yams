@@ -7,7 +7,9 @@
 
 ##### Enhancements
 
-* None.
+* Add support for Musl(Static Linux SDK).  
+  [arasan01](http://github.com/arasan01)
+  [#429](https://github.com/jpsim/Yams/issues/429)
 
 ##### Bug Fixes
 
