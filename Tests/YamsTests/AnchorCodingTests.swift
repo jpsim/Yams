@@ -72,7 +72,7 @@ class AnchorCodingTests: XCTestCase {
                      stringValue: it's a value
                    intValue: 52
                    
-                   """.data(using: .utf8)!
+                   """.data(using: decoder.encoding.swiftStringEncoding)!
         
         let decodedStruct = try decoder.decode(SimpleWithStringTypeAnchorName.self, from: data)
         

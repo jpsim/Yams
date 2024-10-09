@@ -140,7 +140,7 @@ public final class Parser {
         }()
 
         /// The equivalent `Swift.Encoding` value for `self`.
-        internal var swiftStringEncoding: String.Encoding {
+        public var swiftStringEncoding: String.Encoding {
             switch self {
             case .utf8:
                 return .utf8
