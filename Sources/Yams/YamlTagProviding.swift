@@ -24,19 +24,19 @@ internal extension Node {
 }
 
 private final class YamlTagFunctionNameProvider: YamlTagProviding {
-    
+
     fileprivate var functionName: StaticString?
-    
+
     var yamlTag: Tag? {
         functionName = #function
         return nil
     }
-    
+
     func getName() -> StaticString {
         _ = yamlTag
         return functionName!
     }
-    
+
     func getName() -> String {
         String(describing: getName() as StaticString)
     }

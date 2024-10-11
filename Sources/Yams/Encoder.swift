@@ -242,7 +242,7 @@ extension _Encoder: SingleValueEncodingContainer {
         assertCanEncodeNewValue()
         try encode(yamlEncodable: value)
     }
-    
+
     private func encode(yamlEncodable encodable: YAMLEncodable) throws {
         func encodeNode() {
             node = encodable.box()
@@ -270,7 +270,8 @@ extension _Encoder: SingleValueEncodingContainer {
         if let encodable = value as? YAMLEncodable {
             try encode(yamlEncodable: encodable)
         } else {
-            if let redundancyAliasingStrategy = userInfo[.redundancyAliasingStrategyKey] as? RedundancyAliasingStrategy {
+            if let redundancyAliasingStrategy =
+                userInfo[.redundancyAliasingStrategyKey] as? RedundancyAliasingStrategy {
                 switch try redundancyAliasingStrategy.alias(for: value) {
                 case .none:
                     try value.encode(to: self)

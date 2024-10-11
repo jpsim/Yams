@@ -6,8 +6,6 @@
 //  Copyright (c) 2024 Yams. All rights reserved.
 //
 
-import Foundation
-
 /// Types that conform to YamlAnchorProviding and Encodable can optionally dictate the name of
 /// a yaml anchor when they are encoded with YAMLEncoder
 public protocol YamlAnchorProviding {
@@ -26,19 +24,19 @@ internal extension Node {
 }
 
 private final class YamlAnchorFunctionNameProvider: YamlAnchorProviding {
-    
+
     fileprivate var functionName: StaticString?
-    
+
     var yamlAnchor: Anchor? {
         functionName = #function
         return nil
     }
-    
+
     func getName() -> StaticString {
         _ = yamlAnchor
         return functionName!
     }
-    
+
     func getName() -> String {
         String(describing: getName() as StaticString)
     }

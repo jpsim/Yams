@@ -51,7 +51,7 @@ public class YAMLDecoder {
             let parser = try Parser(yaml: yaml, resolver: Resolver([.merge]), encoding: encoding)
             // ^ the parser holds the references to Anchors while parsing,
             return try withExtendedLifetime(parser) {
-                //^ so we hold an explicit reference to the parser during decoding
+                // ^ so we hold an explicit reference to the parser during decoding
                 let node = try parser.singleRoot() ?? ""
                 // ^ nodes only have weak references to Anchors (the Anchors would disappear if not held by the parser)
                 return try self.decode(type, from: node, userInfo: userInfo)
@@ -151,24 +151,24 @@ private struct _KeyedDecodingContainer<Key: CodingKey>: KeyedDecodingContainerPr
 
     init(decoder: _Decoder, wrapping mapping: Node.Mapping) {
         self.decoder = decoder
-        
+
         let keys = mapping.keys
-        
+
         let decodeAnchor: Anchor?
         let decodeTag: Tag?
-        
+
         if let anchor = mapping.anchor, keys.contains(.anchorKeyNode) == false {
             decodeAnchor = anchor
         } else {
             decodeAnchor = nil
         }
-        
+
         if mapping.tag.name != .implicit && keys.contains(.tagKeyNode) == false {
             decodeTag = mapping.tag
         } else {
             decodeTag = nil
         }
-        
+
         switch (decodeAnchor, decodeTag) {
         case (nil, nil):
             self.mapping = mapping
@@ -426,3 +426,5 @@ extension YAMLDecoder: TopLevelDecoder {
     }
 }
 #endif
+
+// swiftlint:disable:this file_length

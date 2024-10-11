@@ -6,8 +6,6 @@
 //  Copyright (c) 2024 Yams. All rights reserved.
 //
 
-import Foundation
-
 public enum RedundancyAliasingOutcome {
     case anchor(Anchor)
     case alias(Anchor)
@@ -24,14 +22,14 @@ public enum RedundancyAliasingOutcome {
 /// when releaseAnchorReferences() is called by the Encoder. After this call the implementation will no longer be
 /// referenced by the Encoder and will itself be released.
 public protocol RedundancyAliasingStrategy: AnyObject {
-    
+
     /// Implementations should return RedundancyAliasingOutcome.anchor(...) for the first occurrence of a value.
     /// Subsequent occurrences of the same value (where same-ness is defined by the implementation) should
     /// return RedundancyAliasingOutcome.alias(...) where the contained Anchor has the same value as the previously
     /// returned RedundancyAliasingOutcome.anchor(...). Its the identity of the Anchor values returned that ultimately
     /// informs the YAML encoder when to use aliases.
     func alias(for encodable: any Encodable) throws -> RedundancyAliasingOutcome
-    
+
     /// It is essential that implementations release all references to Anchors which are created by this type
     /// when releaseAnchorReferences() is called by the Encoder. After this call, the implementation will no longer be
     /// referenced by the Encoder and will itself be released.
@@ -43,18 +41,18 @@ public protocol RedundancyAliasingStrategy: AnyObject {
 /// i.e. if two values are Hashable-Equal, they will be aliased in the resultant YML document.
 public class HashableAliasingStrategy: RedundancyAliasingStrategy {
     private var hashesToAliases: [AnyHashable: Anchor] = [:]
-    
+
     let uniqueAliasProvider = UniqueAliasProvider()
-    
+
     public init() {}
-    
+
     public func alias(for encodable: any Encodable) throws -> RedundancyAliasingOutcome {
         guard let hashable = encodable as? any Hashable & Encodable else {
             return .none
         }
         return try alias(for: hashable)
     }
-    
+
     private func alias(for hashable: any Hashable & Encodable) throws -> RedundancyAliasingOutcome {
         let anyHashable = AnyHashable(hashable)
         if let existing = hashesToAliases[anyHashable] {
@@ -65,23 +63,24 @@ public class HashableAliasingStrategy: RedundancyAliasingStrategy {
             return .anchor(newAlias)
         }
     }
-    
+
     public func releaseAnchorReferences() throws {
         hashesToAliases.removeAll()
     }
 }
 
-/// An implementation of RedundancyAliasingStrategy that defines alias-ability by the coded representation of the values.
-/// i.e. if two values encode to exactly the same, they will be aliased in the resultant YML document even if the values themselves are of different types
+/// An implementation of RedundancyAliasingStrategy that defines alias-ability by the coded representation
+/// of the values. i.e. if two values encode to exactly the same, they will be aliased in the resultant YML
+/// document even if the values themselves are of different types
 public class StrictEncodableAliasingStrategy: RedundancyAliasingStrategy {
     private var codedToAliases: [String: Anchor] = [:]
-    
+
     let uniqueAliasProvider = UniqueAliasProvider()
-    
+
     public init() {}
-    
+
     private let encoder = YAMLEncoder()
-    
+
     public func alias(for encodable: any Encodable) throws -> RedundancyAliasingOutcome {
         let coded = try encoder.encode(encodable)
         if let existing = codedToAliases[coded] {
@@ -92,7 +91,7 @@ public class StrictEncodableAliasingStrategy: RedundancyAliasingStrategy {
             return .anchor(newAlias)
         }
     }
-    
+
     public func releaseAnchorReferences() throws {
         codedToAliases.removeAll()
     }
@@ -100,14 +99,14 @@ public class StrictEncodableAliasingStrategy: RedundancyAliasingStrategy {
 
 class UniqueAliasProvider {
     private var counter = 0
-    
+
     func uniqueAlias(for encodable: any Encodable) -> Anchor {
         if let anchorProviding = encodable as? YamlAnchorProviding,
            let anchor = anchorProviding.yamlAnchor {
             return anchor
         } else {
             counter += 1
-            return Anchor(rawValue: String(counter)) 
+            return Anchor(rawValue: String(counter))
         }
     }
 }

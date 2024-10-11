@@ -271,10 +271,10 @@ public final class Emitter {
 
         /// Set the style for scalars that include newlines
         public var newLineScalarStyle: Node.Scalar.Style = .any
-        
+
         /// Redundancy aliasing strategy to use when encoding. Defaults to nil
         public var redundancyAliasingStrategy: RedundancyAliasingStrategy?
-        
+
         /// Create `Emitter.Options` with the specified values.
         ///
         /// - parameter canonical:     Set if the output should be in the "canonical" format described in the YAML
@@ -290,7 +290,8 @@ public final class Emitter {
         /// - parameter sequenceStyle: Set the style for sequences (arrays / lists)
         /// - parameter mappingStyle:  Set the style for mappings (dictionaries)
         /// - parameter newLineScalarStyle: Set the style for newline-containing scalars
-        /// - parameter redundancyAliasingStrategy: Set the strategy for identifying redundant structures and automatically aliasing them
+        /// - parameter redundancyAliasingStrategy: Set the strategy for identifying
+        /// redundant structures and automatically aliasing them
         public init(canonical: Bool = false, indent: Int = 0, width: Int = 0, allowUnicode: Bool = false,
                     lineBreak: Emitter.LineBreak = .ln,
                     explicitStart: Bool = false,
@@ -338,7 +339,8 @@ public final class Emitter {
     /// - parameter sequenceStyle: Set the style for sequences (arrays / lists)
     /// - parameter mappingStyle:  Set the style for mappings (dictionaries)
     /// - parameter newLineScalarStyle: Set the style for newline-containing scalars
-    /// - parameter redundancyAliasingStrategy: Set the strategy for identifying redundant structures and automatically aliasing them
+    /// - parameter redundancyAliasingStrategy: Set the strategy for identifying redundant
+    /// structures and automatically aliasing them
     public init(canonical: Bool = false,
                 indent: Int = 0,
                 width: Int = 0,
@@ -466,12 +468,6 @@ public final class Emitter {
     }
 }
 
-//// MARK: - Options Initializer
-
-extension Emitter.Options {
-    
-}
-
 // MARK: Implementation Details
 
 extension Emitter {
@@ -489,7 +485,7 @@ extension Emitter {
         case .alias(let alias): try serializeAlias(alias)
         }
     }
-    
+
     private func serializeAlias(_ alias: Node.Alias) throws {
         var event = yaml_event_t()
         let anchor = alias.anchor.rawValue

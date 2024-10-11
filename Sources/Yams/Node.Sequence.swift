@@ -37,7 +37,11 @@ extension Node {
         /// - parameter tag:   This sequence's `Tag`.
         /// - parameter style: The style to use when emitting this `Sequence`.
         /// - parameter mark:  This sequence's `Mark`.
-        public init(_ nodes: [Node], _ tag: Tag = .implicit, _ style: Style = .any, _ mark: Mark? = nil, _ anchor: Anchor? = nil) {
+        public init(_ nodes: [Node],
+                    _ tag: Tag = .implicit,
+                    _ style: Style = .any,
+                    _ mark: Mark? = nil,
+                    _ anchor: Anchor? = nil) {
             self.nodes = nodes
             self.tag = tag
             self.style = style

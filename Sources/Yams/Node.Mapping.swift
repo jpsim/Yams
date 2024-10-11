@@ -35,7 +35,11 @@ extension Node {
         /// - parameter tag:   This mapping's `Tag`.
         /// - parameter style: The style to use when emitting this `Mapping`.
         /// - parameter mark:  This mapping's `Mark`.
-        public init(_ pairs: [(Node, Node)], _ tag: Tag = .implicit, _ style: Style = .any, _ mark: Mark? = nil, _ anchor: Anchor? = nil) {
+        public init(_ pairs: [(Node, Node)],
+                    _ tag: Tag = .implicit,
+                    _ style: Style = .any,
+                    _ mark: Mark? = nil,
+                    _ anchor: Anchor? = nil) {
             self.pairs = pairs.map { Pair($0.0, $0.1) }
             self.tag = tag
             self.style = style

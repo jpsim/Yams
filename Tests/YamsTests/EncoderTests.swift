@@ -440,10 +440,11 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
 }
 
 internal func _testRoundTrip<T>(of value: T,
-                               with options: YAMLEncoder.Options = .init(),
-                               expectedYAML yamlString: String? = nil,
-                               file: StaticString = #file,
-                               line: UInt = #line) where T: Codable, T: Equatable {
+                                with options: YAMLEncoder.Options = .init(),
+                                expectedYAML yamlString: String? = nil,
+                                file: StaticString = #file,
+                                line: UInt = #line)
+where T: Codable, T: Equatable {
     do {
         let encoder = YAMLEncoder()
         encoder.options = options

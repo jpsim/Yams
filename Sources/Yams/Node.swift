@@ -26,7 +26,10 @@ extension Node {
     /// - parameter string: String value for this node.
     /// - parameter tag:    Tag for this node.
     /// - parameter style:  Style to use when emitting this node.
-    public init(_ string: String, _ tag: Tag = .implicit, _ style: Scalar.Style = .any, _ anchor: Anchor? = nil) {
+    public init(_ string: String,
+                _ tag: Tag = .implicit,
+                _ style: Scalar.Style = .any,
+                _ anchor: Anchor? = nil) {
         self = .scalar(.init(string, tag, style, nil, anchor))
     }
 
@@ -35,7 +38,10 @@ extension Node {
     /// - parameter pairs:  Pairs of nodes to use for this node.
     /// - parameter tag:    Tag for this node.
     /// - parameter style:  Style to use when emitting this node.
-    public init(_ pairs: [(Node, Node)], _ tag: Tag = .implicit, _ style: Mapping.Style = .any, _ anchor: Anchor? = nil) {
+    public init(_ pairs: [(Node, Node)],
+                _ tag: Tag = .implicit,
+                _ style: Mapping.Style = .any,
+                _ anchor: Anchor? = nil) {
         self = .mapping(.init(pairs, tag, style, nil, anchor))
     }
 
@@ -44,7 +50,10 @@ extension Node {
     /// - parameter nodes:  Sequence of nodes to use for this node.
     /// - parameter tag:    Tag for this node.
     /// - parameter style:  Style to use when emitting this node.
-    public init(_ nodes: [Node], _ tag: Tag = .implicit, _ style: Sequence.Style = .any, _ anchor: Anchor? = nil) {
+    public init(_ nodes: [Node],
+                _ tag: Tag = .implicit,
+                _ style: Sequence.Style = .any,
+                _ anchor: Anchor? = nil) {
         self = .sequence(.init(nodes, tag, style, nil, anchor))
     }
 }
@@ -73,7 +82,7 @@ extension Node {
         case let .alias(alias): return alias.mark
         }
     }
-    
+
     /// The anchor for this node.
     public var anchor: Anchor? {
         switch self {
@@ -304,7 +313,7 @@ extension Node {
         }
         return false
     }
-    
+
     func setting(anchor: Anchor) -> Self {
         switch self {
         case var .mapping(mapping):
@@ -321,7 +330,7 @@ extension Node {
             return .alias(alias)
         }
     }
-    
+
     func setting(tag: Tag) -> Self {
         switch self {
         case var .mapping(mapping):

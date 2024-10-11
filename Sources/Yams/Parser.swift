@@ -265,7 +265,7 @@ public final class Parser {
         case utf16(Data)
     }
     private var buffer: Buffer
-    
+
     // MARK: – Pivate Mutators
     private func register(anchor: Anchor?, to node: Node) {
         if let anchor {
@@ -341,7 +341,11 @@ private extension Parser {
 
     func loadScalar(from event: Event) throws -> Node {
         let anchor = event.scalarAnchor
-        let node = Node.scalar(.init(event.scalarValue, tag(event.scalarTag), event.scalarStyle, event.startMark, anchor))
+        let node = Node.scalar(.init(event.scalarValue,
+                                     tag(event.scalarTag),
+                                     event.scalarStyle,
+                                     event.startMark,
+                                     anchor))
         register(anchor: anchor, to: node)
         return node
     }
@@ -354,7 +358,11 @@ private extension Parser {
             event = try parse()
         }
         let anchor = firstEvent.sequenceAnchor
-        let node = Node.sequence(.init(array, tag(firstEvent.sequenceTag), event.sequenceStyle, firstEvent.startMark, anchor))
+        let node = Node.sequence(.init(array,
+                                       tag(firstEvent.sequenceTag),
+                                       event.sequenceStyle,
+                                       firstEvent.startMark,
+                                       anchor))
         register(anchor: anchor, to: node)
         return node
     }
@@ -370,7 +378,11 @@ private extension Parser {
             event = try parse()
         }
         let anchor = firstEvent.mappingAnchor
-        let node = Node.mapping(.init(pairs, tag(firstEvent.mappingTag), event.mappingStyle, firstEvent.startMark, anchor))
+        let node = Node.mapping(.init(pairs,
+                                      tag(firstEvent.mappingTag),
+                                      event.mappingStyle,
+                                      firstEvent.startMark,
+                                      anchor))
         register(anchor: anchor, to: node)
         return node
     }

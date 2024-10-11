@@ -6,8 +6,6 @@
 //  Copyright (c) 2024 Yams. All rights reserved.
 //
 
-import Foundation
-
 // MARK: Node+Alias
 
 extension Node {
@@ -19,7 +17,7 @@ extension Node {
         public var tag: Tag
         /// The location for this node.
         public var mark: Mark?
-        
+
         /// Create a `Node.Alias` using the specified parameters.
         ///
         /// - parameter tag:    This scalar's `Tag`.
