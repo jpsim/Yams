@@ -6,6 +6,10 @@
 //  Copyright (c) 2024 Yams. All rights reserved.
 //
 
+/// An enum indicating the outcome of a `RedundancyAliasingStrategy`
+/// if the strategy returns `anchor` the encoder will encode an Anchor
+/// if the strategy returns `alias` the encoder will encode an alias to an anchor which should already have been specified.
+/// If the strategy returns none the encoder will encode without an anchor or an alias
 public enum RedundancyAliasingOutcome {
     case anchor(Anchor)
     case alias(Anchor)
