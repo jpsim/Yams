@@ -8,7 +8,8 @@
 import Foundation
 
 /// A representation of a YAML tag see: https://yaml.org/spec/1.2.2/
-/// Types interested in Encoding and Decoding Anchors should conform to YamlAnchorProviding and YamlAnchorCoding respectively.
+/// Types interested in Encoding and Decoding Anchors should
+/// conform to YamlAnchorProviding and YamlAnchorCoding respectively.
 public final class Anchor: RawRepresentable, ExpressibleByStringLiteral, Codable, Hashable {
 
     /// A CharacterSet containing only characters which are permitted by the underlying cyaml implementation
