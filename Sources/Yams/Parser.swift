@@ -365,15 +365,8 @@ private extension Parser {
     }
 
     private func checkDuplicates(mappingKeys: [Node]) throws {
-        var duplicates: [Node: [Node]] = [:]
-        for key in mappingKeys {
-            if duplicates.keys.contains(key) {
-                duplicates[key]?.append(key)
-            } else {
-                duplicates[key] = [key]
-            }
-        }
-        duplicates = duplicates.filter { $1.count > 1 }
+        let duplicates: [Node: [Node]] = Dictionary(grouping: mappingKeys) { $0 }
+            .filter { $1.count > 1 }
         guard duplicates.isEmpty else {
             throw YamlError.duplicatedKeysInMapping(duplicates: duplicates, yaml: yaml)
         }
