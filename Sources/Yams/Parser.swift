@@ -365,13 +365,12 @@ private extension Parser {
     }
 
     private func checkDuplicates(mappingKeys: [Node]) throws {
-        var duplicates: [String: [Node]] = [:]
+        var duplicates: [Node: [Node]] = [:]
         for key in mappingKeys {
-            guard let keyString = key.string else { continue }
-            if duplicates.keys.contains(keyString) {
-                duplicates[keyString]?.append(key)
+            if duplicates.keys.contains(key) {
+                duplicates[key]?.append(key)
             } else {
-                duplicates[keyString] = [key]
+                duplicates[key] = [key]
             }
         }
         duplicates = duplicates.filter { $1.count > 1 }

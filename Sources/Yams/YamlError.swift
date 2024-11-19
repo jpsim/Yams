@@ -79,7 +79,7 @@ public enum YamlError: Error {
     ///
     /// - parameter duplicates: A dictionary keyed by the duplicated node value, with all nodes that duplicate the value
     /// - parameter yaml:       YAML String which the problem occured while reading. 
-    case duplicatedKeysInMapping(duplicates: [String: [Node]], yaml: String)
+    case duplicatedKeysInMapping(duplicates: [Node: [Node]], yaml: String)
 
     /// The error context.
     public struct Context: CustomStringConvertible {
@@ -187,13 +187,13 @@ extension YamlError: CustomStringConvertible {
     }
 }
 
-private extension Dictionary where Key == String, Value == [Node] {
+private extension Dictionary where Key == Node, Value == [Node] {
     func duplicatedKeyErrorDescription(yaml: String) -> String {
         var error = "error: parser: expected all keys to be unique but found the following duplicated key(s):"
         for key in self.keys.sorted() {
             let duplicatedNodes = self[key]!
             let marks = duplicatedNodes.compactMap { $0.mark }
-            error += "\n\(key) (\(marks)):\n\(marks.map { $0.snippet(from: yaml) }.joined(separator: "\n"))"
+            error += "\n\(key.any) (\(marks)):\n\(marks.map { $0.snippet(from: yaml) }.joined(separator: "\n"))"
         }
         return error
     }
