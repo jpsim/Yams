@@ -18,12 +18,14 @@
 /// distinct anchors in the YAML document). In some scenarios this may significantly reduce the memory footprint of
 /// the decoded type.
 public protocol AliasDereferencingStrategy: AnyObject {
-
+    /// The stored exestential type of all AliasDereferencingStrategys
+    typealias Value = (any Decodable)
     /// get and set cached references, keyed bo an Anchor
-    subscript(_ key: Anchor) -> Any? { get set }
+    subscript(_ key: Anchor) -> Value? { get set }
 }
 
-/// A AliasDereferencingStrategy which caches all values (even value-type values) in a Dictionary, keyed by their Anchor.
+/// A AliasDereferencingStrategy which caches all values (even value-type values) in a Dictionary,
+/// keyed by their Anchor.
 /// For reference types, this strategy achieves reference coalescing
 /// For value types, this strategy achieves short-cutting the decoding process when dereferencing aliases.
 /// if the aliased structure is large, this may result in a time savings
@@ -31,10 +33,10 @@ public class BasicAliasDereferencingStrategy: AliasDereferencingStrategy {
     /// Create a new BasicAliasDereferencingStrategy
     public init() {}
 
-    private var map: [Anchor: Any] = .init()
+    private var map: [Anchor: Value] = .init()
 
     /// get and set cached references, keyed bo an Anchor
-    public subscript(_ key: Anchor) -> Any? {
+    public subscript(_ key: Anchor) -> Value? {
         get { map[key] }
         set { map[key] = newValue }
     }

@@ -380,7 +380,7 @@ extension _Decoder: SingleValueDecodingContainer {
         return existing
     }
 
-    private func recordAnchor<T>(_ constructed: T) {
+    private func recordAnchor<T: Decodable>(_ constructed: T) {
         guard let anchor = self.node.anchor else {
             return
         }
