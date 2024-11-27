@@ -1,6 +1,7 @@
 add_library(YamsTests
   AnchorCodingTests.swift
   AnchorTolerancesTests.swift
+  ClassReferenceDecodingTests.swift
   ConstructorTests.swift
   EmitterTests.swift
   EncoderTests.swift

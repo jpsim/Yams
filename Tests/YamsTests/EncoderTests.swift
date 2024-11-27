@@ -463,7 +463,7 @@ where T: Codable, T: Equatable {
         let decoded = try decoder.decode(T.self, from: producedYAML)
         XCTAssertEqual(decoded, value, "\(T.self) did not round-trip to an equal value.",
                        file: (file), line: line)
-        
+
         return decoded
 
     } catch let error as EncodingError {
@@ -473,7 +473,7 @@ where T: Codable, T: Equatable {
     } catch {
         XCTFail("Rout trip test of \(T.self) failed with error: \(error)", file: (file), line: line)
     }
-    
+
     return nil
 }
 

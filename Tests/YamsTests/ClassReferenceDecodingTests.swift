@@ -30,17 +30,17 @@ class ClassReferenceDecodingTests: XCTestCase {
                                      - *simple
 
                                      """ )
-        
+
         guard let decoded else { return }
-        
+
         XCTAssertTrue(decoded[0] === decoded[1], "Class reference not unique")
     }
-    
+
     /// If types conform to YamlAnchorProviding and are Hashable-Equal then HashableAliasingStrategy aliases them
     func testEncoderAutoAlias_Hashable_duplicateAnchor_objectCoalescing() throws {
         let simpleStruct1 = SimpleWithAnchor(nested: .init(stringValue: "it's a value"), intValue: 52)
         let simpleStruct2 = SimpleWithAnchor(nested: .init(stringValue: "it's a value"), intValue: 52)
-        
+
         let sameTypeOneAnchorPair = SimplePair(first: simpleStruct1, second: simpleStruct2)
 
         let encodingOptions = YAMLEncoder.Options(redundancyAliasingStrategy: HashableAliasingStrategy())
@@ -57,9 +57,9 @@ class ClassReferenceDecodingTests: XCTestCase {
                                      second: *simple
 
                                      """ )
-        
+
         guard let decoded else { return }
-        
+
         XCTAssertTrue(decoded.first === decoded.first, "Class reference not unique")
     }
 
@@ -82,9 +82,9 @@ class ClassReferenceDecodingTests: XCTestCase {
                                      - *2
 
                                      """ )
-        
+
         guard let decoded else { return }
-        
+
         XCTAssertTrue(decoded[0] === decoded[1], "Class reference not unique")
     }
 
@@ -115,9 +115,9 @@ class ClassReferenceDecodingTests: XCTestCase {
                                        intValue: *4
 
                                      """ )
-        
+
         guard let decoded else { return }
-        
+
         XCTAssertTrue(decoded.first.nested === decoded.second.nested, "Class reference not unique")
     }
 
@@ -150,9 +150,9 @@ class ClassReferenceDecodingTests: XCTestCase {
                                        intValue: *5
 
                                      """ )
-        
+
         guard let decoded else { return }
-        
+
         XCTAssertTrue(decoded.first.nested === decoded.second.nested, "Class reference not unique")
     }
 
@@ -181,21 +181,20 @@ class ClassReferenceDecodingTests: XCTestCase {
                                      second: *2
 
                                      """ )
-        
+
         guard let decoded else { return }
-        
+
         /// It is expected and rational behavior that if an aliased value is decoded into two different types
         /// that those types cannot share object identity (a memory address)
         XCTAssertTrue(decoded.first !== decoded.second, "Class reference is unique")
-        
-        
+
         /// It would be nice,
-        ///  if objects contained within aliased values which are decoded different types could still identify and preserve the
-        ///  object identity of those contained objects. (If ivars of different types could share reference to common data)
-        ///  but is asking too much....
+        ///  if objects contained within aliased values which are decoded different types could still identify and
+        ///  preserve the object identity of those contained objects.
+        ///  (If ivars of different types could share reference to common data)
+        /// but is asking too much....
         XCTAssertFalse(decoded.first.nested === decoded.second.nested, "You fixed it!")
-        
-        
+
         /// The reality of the behavior is that if you declared to decode an aliased value into two different classes,
         /// you forfeit the possibility of down-graph reference sharing.
         XCTAssertTrue(decoded.first.nested !== decoded.second.nested, "Class reference is unique")
@@ -213,15 +212,15 @@ class ClassReferenceDecodingTests: XCTestCase {
 
 private class NestedStruct: Codable, Hashable {
     let stringValue: String
-    
+
     init(stringValue: String) {
         self.stringValue = stringValue
     }
-    
+
     static func == (lhs: NestedStruct, rhs: NestedStruct) -> Bool {
         lhs.stringValue == rhs.stringValue
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(stringValue)
     }
@@ -238,19 +237,19 @@ private class SimpleWithAnchor: SimpleProtocol, YamlAnchorProviding {
     let nested: NestedStruct
     let intValue: Int
     let yamlAnchor: Anchor?
-    
+
     init(nested: NestedStruct, intValue: Int, yamlAnchor: Anchor? = "simple") {
         self.nested = nested
         self.intValue = intValue
         self.yamlAnchor = yamlAnchor
     }
-    
+
     static func == (lhs: SimpleWithAnchor, rhs: SimpleWithAnchor) -> Bool {
         lhs.nested == rhs.nested &&
         lhs.intValue == rhs.intValue &&
         lhs.yamlAnchor == rhs.yamlAnchor
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(nested)
         hasher.combine(intValue)
@@ -261,17 +260,17 @@ private class SimpleWithAnchor: SimpleProtocol, YamlAnchorProviding {
 private class SimpleWithoutAnchor: SimpleProtocol {
     let nested: NestedStruct
     let intValue: Int
-    
+
     init(nested: NestedStruct, intValue: Int) {
         self.nested = nested
         self.intValue = intValue
     }
-    
+
     static func == (lhs: SimpleWithoutAnchor, rhs: SimpleWithoutAnchor) -> Bool {
         lhs.nested == rhs.nested &&
         lhs.intValue == rhs.intValue
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(nested)
         hasher.combine(intValue)
@@ -279,51 +278,49 @@ private class SimpleWithoutAnchor: SimpleProtocol {
 }
 
 private class SimpleWithoutAnchor2: SimpleProtocol {
-    
+
     let nested: NestedStruct
     let intValue: Int
-    // swiftlint:disable unused_declaration
     let unrelatedValue: String?
-    
+
     init(nested: NestedStruct, intValue: Int, unrelatedValue: String? = nil) {
         self.nested = nested
         self.intValue = intValue
         self.unrelatedValue = unrelatedValue
     }
 
-    
     static func == (lhs: SimpleWithoutAnchor2, rhs: SimpleWithoutAnchor2) -> Bool {
         lhs.nested == rhs.nested &&
         lhs.intValue == rhs.intValue &&
         lhs.unrelatedValue == rhs.unrelatedValue
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(nested)
         hasher.combine(intValue)
         hasher.combine(unrelatedValue)
     }
-    
+
 }
 
 private class SimpleWithStringTypeAnchorName: SimpleProtocol {
-    
+
     let nested: NestedStruct
     let intValue: Int
     let yamlAnchor: String?
-    
+
     init(nested: NestedStruct, intValue: Int, yamlAnchor: String? = "StringTypeAnchor") {
         self.nested = nested
         self.intValue = intValue
         self.yamlAnchor = yamlAnchor
     }
-    
+
     static func == (lhs: SimpleWithStringTypeAnchorName, rhs: SimpleWithStringTypeAnchorName) -> Bool {
         lhs.nested == rhs.nested &&
         lhs.intValue == rhs.intValue &&
         lhs.yamlAnchor == rhs.yamlAnchor
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(nested)
         hasher.combine(intValue)

@@ -13,22 +13,23 @@ import Foundation
 public class YAMLDecoder {
     /// Options to use when decoding from YAML.
     public struct Options {
+        /// Create `YAMLDecoder.Options` with the specified values.
         public init(encoding: Parser.Encoding = .default,
                     aliasDereferencingStrategy: AliasDereferencingStrategy? = nil) {
             self.encoding = encoding
             self.aliasDereferencingStrategy = aliasDereferencingStrategy
         }
-        
+
         /// Encoding
         public var encoding: Parser.Encoding = .default
-        
+
         /// Alias dereferencing strategy to use when decoding. Defaults to nil
         public var aliasDereferencingStrategy: AliasDereferencingStrategy?
     }
-    
+
     /// Options to use when decoding from YAML.
     public var options = Options()
-    
+
     /// Creates a `YAMLDecoder` instance.
     ///
     /// - parameter encoding: String encoding,
@@ -36,7 +37,7 @@ public class YAMLDecoder {
         self.init()
         self.options.encoding = encoding
     }
-    
+
     /// Creates a `YAMLDecoder` instance.
     public init() {}
 
@@ -56,7 +57,7 @@ public class YAMLDecoder {
         if let dealiasingStrategy = options.aliasDereferencingStrategy {
             finalUserInfo[.aliasDereferencingStrategy] = dealiasingStrategy
         }
-        
+
         let decoder = _Decoder(referencing: node, userInfo: finalUserInfo)
         let container = try decoder.singleValueContainer()
         return try container.decode(type)
@@ -334,26 +335,26 @@ extension _Decoder: SingleValueDecodingContainer {
         if let dereferenced = dereferenceAnchor(type) {
             return dereferenced
         }
-        
+
         let constructed = try _construct(type)
-        
+
         recordAnchor(constructed)
-        
+
         return constructed
     }
-    
+
     private func _construct<T: Decodable>(_ type: T.Type) throws -> T {
         if let constructibleType = type as? ScalarConstructible.Type {
             let scalarConstructed = try constructScalar(constructibleType)
-            guard let t = scalarConstructed as? T else {
+            guard let scalarT = scalarConstructed as? T else {
                 throw _typeMismatch(at: codingPath, expectation: type, reality: scalarConstructed)
             }
-            return t
+            return scalarT
         }
         // not scalar constructable, initialize as Decodable
         return try type.init(from: self)
     }
-    
+
     /// constuct `T` from `node`
     private func constructScalar<T: ScalarConstructible>(_ type: T.Type) throws -> T {
         let scalar = try self.scalar()
@@ -362,33 +363,32 @@ extension _Decoder: SingleValueDecodingContainer {
         }
         return constructed
     }
-    
-    
+
     private func dereferenceAnchor<T>(_ type: T.Type) -> T? {
         guard let anchor = self.node.anchor else {
             return nil
         }
-        
+
         guard let strategy = userInfo[.aliasDereferencingStrategy] as? any AliasDereferencingStrategy else {
             return nil
         }
-        
+
         guard let existing = strategy[anchor] as? T else {
             return nil
         }
-        
+
         return existing
     }
-    
+
     private func recordAnchor<T>(_ constructed: T) {
         guard let anchor = self.node.anchor else {
             return
         }
-        
+
         guard let strategy = userInfo[.aliasDereferencingStrategy] as? any AliasDereferencingStrategy else {
             return
         }
-        
+
         return strategy[anchor] = constructed
     }
 }
