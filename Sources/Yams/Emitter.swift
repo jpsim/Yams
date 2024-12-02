@@ -99,7 +99,8 @@ public func dump(
     sortKeys: Bool = false,
     sequenceStyle: Node.Sequence.Style = .any,
     mappingStyle: Node.Mapping.Style = .any,
-    newLineScalarStyle: Node.Scalar.Style = .any) throws -> String {
+    newLineScalarStyle: Node.Scalar.Style = .any,
+    redundancyAliasingStrategy: RedundancyAliasingStrategy? = nil) throws -> String {
     return try serialize(
         node: object.represented(),
         canonical: canonical,
@@ -113,7 +114,8 @@ public func dump(
         sortKeys: sortKeys,
         sequenceStyle: sequenceStyle,
         mappingStyle: mappingStyle,
-        newLineScalarStyle: newLineScalarStyle
+        newLineScalarStyle: newLineScalarStyle,
+        redundancyAliasingStrategy: redundancyAliasingStrategy
     )
 }
 
@@ -148,7 +150,8 @@ public func serialize<Nodes>(
     sortKeys: Bool = false,
     sequenceStyle: Node.Sequence.Style = .any,
     mappingStyle: Node.Mapping.Style = .any,
-    newLineScalarStyle: Node.Scalar.Style = .any) throws -> String
+    newLineScalarStyle: Node.Scalar.Style = .any,
+    redundancyAliasingStrategy: RedundancyAliasingStrategy? = nil) throws -> String
     where Nodes: Sequence, Nodes.Iterator.Element == Node {
     let emitter = Emitter(
         canonical: canonical,
@@ -162,7 +165,8 @@ public func serialize<Nodes>(
         sortKeys: sortKeys,
         sequenceStyle: sequenceStyle,
         mappingStyle: mappingStyle,
-        newLineScalarStyle: newLineScalarStyle
+        newLineScalarStyle: newLineScalarStyle,
+        redundancyAliasingStrategy: redundancyAliasingStrategy
     )
     try emitter.open()
     try nodes.forEach(emitter.serialize)
@@ -201,7 +205,8 @@ public func serialize(
     sortKeys: Bool = false,
     sequenceStyle: Node.Sequence.Style = .any,
     mappingStyle: Node.Mapping.Style = .any,
-    newLineScalarStyle: Node.Scalar.Style = .any) throws -> String {
+    newLineScalarStyle: Node.Scalar.Style = .any,
+    redundancyAliasingStrategy: RedundancyAliasingStrategy? = nil) throws -> String {
     return try serialize(
         nodes: [node],
         canonical: canonical,
@@ -215,7 +220,8 @@ public func serialize(
         sortKeys: sortKeys,
         sequenceStyle: sequenceStyle,
         mappingStyle: mappingStyle,
-        newLineScalarStyle: newLineScalarStyle
+        newLineScalarStyle: newLineScalarStyle,
+        redundancyAliasingStrategy: redundancyAliasingStrategy
     )
 }
 
@@ -246,10 +252,10 @@ public final class Emitter {
         public var allowUnicode: Bool = false
         /// Set the preferred line break.
         public var lineBreak: LineBreak = .ln
-
-        // internal since we don't know if these should be exposed.
-        var explicitStart: Bool = false
-        var explicitEnd: Bool = false
+        /// Set to emit an explicit document start marker.
+        public var explicitStart: Bool = false
+        /// Set to emit an explicit document end marker.
+        public var explicitEnd: Bool = false
 
         /// The `%YAML` directive value or nil.
         public var version: (major: Int, minor: Int)?
@@ -265,6 +271,50 @@ public final class Emitter {
 
         /// Set the style for scalars that include newlines
         public var newLineScalarStyle: Node.Scalar.Style = .any
+
+        /// Redundancy aliasing strategy to use when encoding. Defaults to nil
+        public var redundancyAliasingStrategy: RedundancyAliasingStrategy?
+
+        /// Create `Emitter.Options` with the specified values.
+        ///
+        /// - parameter canonical:     Set if the output should be in the "canonical" format described in the YAML
+        ///                            specification.
+        /// - parameter indent:        Set the indentation value.
+        /// - parameter width:         Set the preferred line width. -1 means unlimited.
+        /// - parameter allowUnicode:  Set if unescaped non-ASCII characters are allowed.
+        /// - parameter lineBreak:     Set the preferred line break.
+        /// - parameter explicitStart: Explicit document start `---`.
+        /// - parameter explicitEnd:   Explicit document end `...`.
+        /// - parameter version:       The `%YAML` directive value or nil.
+        /// - parameter sortKeys:      Set if emitter should sort keys in lexicographic order.
+        /// - parameter sequenceStyle: Set the style for sequences (arrays / lists)
+        /// - parameter mappingStyle:  Set the style for mappings (dictionaries)
+        /// - parameter newLineScalarStyle: Set the style for newline-containing scalars
+        /// - parameter redundancyAliasingStrategy: Set the strategy for identifying
+        /// redundant structures and automatically aliasing them
+        public init(canonical: Bool = false, indent: Int = 0, width: Int = 0, allowUnicode: Bool = false,
+                    lineBreak: Emitter.LineBreak = .ln,
+                    explicitStart: Bool = false,
+                    explicitEnd: Bool = false,
+                    version: (major: Int, minor: Int)? = nil,
+                    sortKeys: Bool = false, sequenceStyle: Node.Sequence.Style = .any,
+                    mappingStyle: Node.Mapping.Style = .any,
+                    newLineScalarStyle: Node.Scalar.Style = .any,
+                    redundancyAliasingStrategy: RedundancyAliasingStrategy? = nil) {
+            self.canonical = canonical
+            self.indent = indent
+            self.width = width
+            self.allowUnicode = allowUnicode
+            self.lineBreak = lineBreak
+            self.explicitStart = explicitStart
+            self.explicitEnd = explicitEnd
+            self.version = version
+            self.sortKeys = sortKeys
+            self.sequenceStyle = sequenceStyle
+            self.mappingStyle = mappingStyle
+            self.newLineScalarStyle = newLineScalarStyle
+            self.redundancyAliasingStrategy = redundancyAliasingStrategy
+        }
     }
 
     /// Configuration options to use when emitting YAML.
@@ -288,6 +338,9 @@ public final class Emitter {
     /// - parameter sortKeys:      Set if emitter should sort keys in lexicographic order.
     /// - parameter sequenceStyle: Set the style for sequences (arrays / lists)
     /// - parameter mappingStyle:  Set the style for mappings (dictionaries)
+    /// - parameter newLineScalarStyle: Set the style for newline-containing scalars
+    /// - parameter redundancyAliasingStrategy: Set the strategy for identifying redundant
+    /// structures and automatically aliasing them
     public init(canonical: Bool = false,
                 indent: Int = 0,
                 width: Int = 0,
@@ -299,7 +352,8 @@ public final class Emitter {
                 sortKeys: Bool = false,
                 sequenceStyle: Node.Sequence.Style = .any,
                 mappingStyle: Node.Mapping.Style = .any,
-                newLineScalarStyle: Node.Scalar.Style = .any) {
+                newLineScalarStyle: Node.Scalar.Style = .any,
+                redundancyAliasingStrategy: RedundancyAliasingStrategy? = nil) {
         options = Options(canonical: canonical,
                           indent: indent,
                           width: width,
@@ -311,7 +365,8 @@ public final class Emitter {
                           sortKeys: sortKeys,
                           sequenceStyle: sequenceStyle,
                           mappingStyle: mappingStyle,
-                          newLineScalarStyle: newLineScalarStyle)
+                          newLineScalarStyle: newLineScalarStyle,
+                          redundancyAliasingStrategy: redundancyAliasingStrategy)
         // configure emitter
         yaml_emitter_initialize(&emitter)
         yaml_emitter_set_output(&self.emitter, { pointer, buffer, size in
@@ -413,40 +468,6 @@ public final class Emitter {
     }
 }
 
-// MARK: - Options Initializer
-
-extension Emitter.Options {
-    /// Create `Emitter.Options` with the specified values.
-    ///
-    /// - parameter canonical:     Set if the output should be in the "canonical" format described in the YAML
-    ///                            specification.
-    /// - parameter indent:        Set the indentation value.
-    /// - parameter width:         Set the preferred line width. -1 means unlimited.
-    /// - parameter allowUnicode:  Set if unescaped non-ASCII characters are allowed.
-    /// - parameter lineBreak:     Set the preferred line break.
-    /// - parameter explicitStart: Explicit document start `---`.
-    /// - parameter explicitEnd:   Explicit document end `...`.
-    /// - parameter version:       The `%YAML` directive value or nil.
-    /// - parameter sortKeys:      Set if emitter should sort keys in lexicographic order.
-    /// - parameter sequenceStyle: Set the style for sequences (arrays / lists)
-    /// - parameter mappingStyle:  Set the style for mappings (dictionaries)
-    public init(canonical: Bool = false, indent: Int = 0, width: Int = 0, allowUnicode: Bool = false,
-                lineBreak: Emitter.LineBreak = .ln, version: (major: Int, minor: Int)? = nil,
-                sortKeys: Bool = false, sequenceStyle: Node.Sequence.Style = .any,
-                mappingStyle: Node.Mapping.Style = .any, newLineScalarStyle: Node.Scalar.Style = .any) {
-        self.canonical = canonical
-        self.indent = indent
-        self.width = width
-        self.allowUnicode = allowUnicode
-        self.lineBreak = lineBreak
-        self.version = version
-        self.sortKeys = sortKeys
-        self.sequenceStyle = sequenceStyle
-        self.mappingStyle = mappingStyle
-        self.newLineScalarStyle = newLineScalarStyle
-    }
-}
-
 // MARK: Implementation Details
 
 extension Emitter {
@@ -461,7 +482,16 @@ extension Emitter {
         case .scalar(let scalar): try serializeScalar(scalar)
         case .sequence(let sequence): try serializeSequence(sequence)
         case .mapping(let mapping): try serializeMapping(mapping)
+        case .alias(let alias): try serializeAlias(alias)
         }
+    }
+
+    private func serializeAlias(_ alias: Node.Alias) throws {
+        var event = yaml_event_t()
+        let anchor = alias.anchor.rawValue
+        yaml_alias_event_initialize(&event,
+                                    anchor)
+        try emit(&event)
     }
 
     private func serializeScalar(_ scalar: Node.Scalar) throws {
@@ -472,7 +502,7 @@ extension Emitter {
             tag.withUnsafeMutableBytes { tag in
                 yaml_scalar_event_initialize(
                     &event,
-                    nil,
+                    scalar.anchor?.rawValue,
                     tag.baseAddress?.assumingMemoryBound(to: UInt8.self),
                     value.baseAddress?.assumingMemoryBound(to: UInt8.self),
                     Int32(value.count - 1),
@@ -492,7 +522,7 @@ extension Emitter {
         _ = tag.withUnsafeMutableBytes { tag in
             yaml_sequence_start_event_initialize(
                 &event,
-                nil,
+                sequence.anchor?.rawValue,
                 tag.baseAddress?.assumingMemoryBound(to: UInt8.self),
                 implicit,
                 sequenceStyle)
@@ -511,7 +541,7 @@ extension Emitter {
         _ = tag.withUnsafeMutableBytes { tag in
             yaml_mapping_start_event_initialize(
                 &event,
-                nil,
+                mapping.anchor?.rawValue,
                 tag.baseAddress?.assumingMemoryBound(to: UInt8.self),
                 implicit,
                 mappingStyle)

@@ -85,12 +85,32 @@ extension Tag: Hashable {
     }
 }
 
+extension Tag: RawRepresentable {
+    public convenience init?(rawValue: String) {
+        self.init(stringLiteral: rawValue)
+    }
+    public var rawValue: String {
+        name.rawValue
+    }
+}
+
+extension Tag: Codable {}
+
+extension Tag: ExpressibleByStringLiteral {
+    /// :nodoc:
+    public convenience init(stringLiteral value: String) {
+        self.init(.init(rawValue: value))
+    }
+}
+
 extension Tag.Name: ExpressibleByStringLiteral {
     /// :nodoc:
     public init(stringLiteral value: String) {
         self.rawValue = value
     }
 }
+
+extension Tag.Name: Codable {}
 
 // http://www.yaml.org/spec/1.2/spec.html#Schema
 extension Tag.Name {
