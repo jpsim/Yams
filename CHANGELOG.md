@@ -6,6 +6,21 @@
 
 ##### Enhancements
 
+* Yams is able to coalesce references to objects decoded with YAML anchors.
+  [Adora Lynch](https://github.com/lynchsft)
+
+##### Bug Fixes
+
+* None.
+
+## 5.3.0
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
 * Yams is able to encode and decode Anchors via YamlAnchorProviding, and
   YamlAnchorCoding. 
   [Adora Lynch](https://github.com/lynchsft)
@@ -16,7 +31,7 @@
   [Adora Lynch](https://github.com/lynchsft) 
   [#265](https://github.com/jpsim/Yams/issues/265)
   
-* Yams is able to detect redundant structes and automaticaly
+* Yams is able to detect redundant structs and automatically
   alias them during encoding via RedundancyAliasingStrategy
   [Adora Lynch](https://github.com/lynchsft)
 
