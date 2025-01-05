@@ -119,7 +119,7 @@ class PerformanceTests: XCTestCase {
         }
     }
 #if canImport(Android)
-    override func measure(_ block: () -> Void) {
+    func measure(_ block: () -> Void) {
         // the hardwired max standard deviation of 10% varies too much on the Android emulator and fails the tests
         block()
     }
