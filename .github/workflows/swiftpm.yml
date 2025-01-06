@@ -116,7 +116,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: skiptools/swift-android-action@main
+      - uses: skiptools/swift-android-action@v2
         with:
           swift-version: ${{ matrix.tag }}
           # needed for tests that use fixturesDirectory
