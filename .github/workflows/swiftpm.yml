@@ -112,7 +112,7 @@ jobs:
     name: Android with Swift ${{ matrix.tag }}
     strategy:
       matrix:
-        tag: ['6.0.2']
+        tag: ['6.0.3']
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
