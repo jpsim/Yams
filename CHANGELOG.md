@@ -33,11 +33,15 @@
 
 ##### Enhancements
 
-* None.
-
+* Removes dependency on libc and the platform-specific pow function.  
+  [Bradley Mackey](https://github.com/bradleymackey)
+  [#429](https://github.com/jpsim/Yams/issues/429)
+  
 ##### Bug Fixes
 
-* None.
+* Yams will now correctly error when it tries to decode a mapping with duplicate keys.  
+  [Tejas Sharma](https://github.com/tejassharma96)
+  [#415](https://github.com/jpsim/Yams/issues/415)
 
 ## 5.1.3
 
