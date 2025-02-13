@@ -120,8 +120,11 @@ class PerformanceTests: XCTestCase {
     }
 #if canImport(Android)
     func measure(_ block: () -> Void) {
+        let start = Date.now
         // the hardwired max standard deviation of 10% varies too much on the Android emulator and fails the tests
         block()
+        let t = Date.now.timeIntervalSince(start)
+        print("measured time: \(t)")
     }
 #elseif canImport(Combine)
     override func measure(_ block: () -> Void) {
