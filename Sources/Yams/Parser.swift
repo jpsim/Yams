@@ -355,11 +355,20 @@ private extension Parser {
             pairs.append((key, value))
             event = try parse()
         }
+        let keys = pairs.map { $0.0 }
+        try checkDuplicates(mappingKeys: keys)
         let node = Node.mapping(.init(pairs, tag(firstEvent.mappingTag), event.mappingStyle, firstEvent.startMark))
         if let anchor = firstEvent.mappingAnchor {
             anchors[anchor] = node
         }
         return node
+    }
+
+    private func checkDuplicates(mappingKeys: [Node]) throws {
+        let duplicates: [Node: [Node]] = Dictionary(grouping: mappingKeys) { $0 }.filter { $1.count > 1 }
+        guard duplicates.isEmpty else {
+            throw YamlError.duplicatedKeysInMapping(duplicates: duplicates, yaml: yaml)
+        }
     }
 
     func tag(_ string: String?) -> Tag {
