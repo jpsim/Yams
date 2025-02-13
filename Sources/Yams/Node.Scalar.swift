@@ -23,6 +23,8 @@ extension Node {
         public var style: Style
         /// The location for this node.
         public var mark: Mark?
+        /// The anchor for this node.
+        public weak var anchor: Anchor?
 
         /// The style to use when emitting a `Scalar`.
         public enum Style: UInt32 {
@@ -48,11 +50,16 @@ extension Node {
         /// - parameter tag:    This scalar's `Tag`.
         /// - parameter style:  The style to use when emitting this `Scalar`.
         /// - parameter mark:   This scalar's `Mark`.
-        public init(_ string: String, _ tag: Tag = .implicit, _ style: Style = .any, _ mark: Mark? = nil) {
+        public init(_ string: String,
+                    _ tag: Tag = .implicit,
+                    _ style: Style = .any,
+                    _ mark: Mark? = nil,
+                    _ anchor: Anchor? = nil) {
             self.string = string
             self.tag = tag
             self.style = style
             self.mark = mark
+            self.anchor = anchor
         }
     }
 

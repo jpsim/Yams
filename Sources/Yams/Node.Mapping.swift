@@ -16,6 +16,8 @@ extension Node {
         public var style: Style
         /// This mapping's `Mark`.
         public var mark: Mark?
+        /// The anchor for this node.
+        public weak var anchor: Anchor?
 
         /// The style to use when emitting a `Mapping`.
         public enum Style: UInt32 {
@@ -33,11 +35,16 @@ extension Node {
         /// - parameter tag:   This mapping's `Tag`.
         /// - parameter style: The style to use when emitting this `Mapping`.
         /// - parameter mark:  This mapping's `Mark`.
-        public init(_ pairs: [(Node, Node)], _ tag: Tag = .implicit, _ style: Style = .any, _ mark: Mark? = nil) {
+        public init(_ pairs: [(Node, Node)],
+                    _ tag: Tag = .implicit,
+                    _ style: Style = .any,
+                    _ mark: Mark? = nil,
+                    _ anchor: Anchor? = nil) {
             self.pairs = pairs.map { Pair($0.0, $0.1) }
             self.tag = tag
             self.style = style
             self.mark = mark
+            self.anchor = anchor
         }
     }
 
@@ -166,7 +173,7 @@ extension Node.Mapping {
                 index += 1
             }
         }
-        return Node.Mapping(merge + pairs, tag, style)
+        return Node.Mapping(merge + pairs, tag, style, nil, anchor)
     }
 }
 
