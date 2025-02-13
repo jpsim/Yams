@@ -122,9 +122,10 @@ class PerformanceTests: XCTestCase {
     func measure(_ block: () -> Void) {
         let start = Date.now
         // the hardwired max standard deviation of 10% varies too much on the Android emulator and fails the tests
+        // this is being tracked at https://github.com/swiftlang/swift-corelibs-xctest/pull/506
         block()
-        let t = Date.now.timeIntervalSince(start)
-        print("measured time: \(t)")
+        let duration = Date.now.timeIntervalSince(start)
+        print("measured time: \(duration)")
     }
 #elseif canImport(Combine)
     override func measure(_ block: () -> Void) {
