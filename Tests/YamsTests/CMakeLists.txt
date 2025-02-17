@@ -1,4 +1,6 @@
 add_library(YamsTests
+  AnchorCodingTests.swift
+  AnchorTolerancesTests.swift
   ConstructorTests.swift
   EmitterTests.swift
   EncoderTests.swift
@@ -9,6 +11,8 @@ add_library(YamsTests
   ResolverTests.swift
   SpecTests.swift
   StringTests.swift
+  TagCodingTests.swift
+  TagTolerancesTests.swift
   TestHelper.swift
   TopLevelDecoderTests.swift
   YamlErrorTests.swift)
