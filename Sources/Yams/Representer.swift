@@ -8,22 +8,6 @@
 
 import Foundation
 
-#if os(iOS) || os(macOS) || os(watchOS) || os(tvOS) || os(visionOS)
-import Darwin
-private let cpow: (_: Double, _: Double) -> Double = Darwin.pow
-#elseif os(Windows)
-import ucrt
-private let cpow: (_: Double, _: Double) -> Double = ucrt.pow
-#elseif canImport(Bionic)
-import CoreFoundation
-import Bionic
-private let cpow: (_: Double, _: Double) -> Double = Bionic.pow
-#else
-import CoreFoundation
-import Glibc
-private let cpow: (_: Double, _: Double) -> Double = Glibc.pow
-#endif
-
 public extension Node {
     /// Initialize a `Node` with a value of `NodeRepresentable`.
     ///
@@ -143,9 +127,7 @@ private extension TimeInterval {
         var integral = 0.0
         let fractional = modf(self, &integral)
 
-        // TODO(TF-1203): Can't use `pow` free function due to
-        // https://bugs.swift.org/browse/TF-1203.
-        let radix = cpow(10.0, Double(precision))
+        let radix = pow(10.0, Double(precision))
 
         let rounded = Int((fractional * radix).rounded())
         let quotient = rounded / Int(radix)
