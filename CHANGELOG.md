@@ -6,6 +6,10 @@
 
 ##### Enhancements
 
+* Add Android Support
+  [Marc Prud'hommeaux](https://github.com/marcprux)
+  [#437](https://github.com/jpsim/Yams/pull/437)
+
 * Removes dependency on libc and the platform-specific pow function.  
   [Bradley Mackey](https://github.com/bradleymackey)
   [#429](https://github.com/jpsim/Yams/issues/429)
