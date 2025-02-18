@@ -48,6 +48,8 @@ public final class Resolver {
             return resolveTag(of: mapping)
         case let .sequence(sequence):
             return resolveTag(of: sequence)
+        case let .alias(alias):
+            return resolveTag(of: alias)
         }
     }
 
