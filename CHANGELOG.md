@@ -6,11 +6,10 @@
 
 ##### Enhancements
 
-* Yams is able to encode and decode Anchors via YamlAnchorProviding, and
-  YamlAnchorCoding. 
-  [Adora Lynch](https://github.com/lynchsft)
-  [#125](https://github.com/jpsim/Yams/issues/125)
-  
+* Add Android Support
+  [Marc Prud'hommeaux](https://github.com/marcprux)
+  [#437](https://github.com/jpsim/Yams/pull/437)
+
 * Yams is able to encode and decode Tags via YamlTagProviding
   and YamlTagCoding.
   [Adora Lynch](https://github.com/lynchsft) 
