@@ -1,5 +1,20 @@
 ## Main
 
+## 5.4.0
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Yams is able to coalesce references to objects decoded with YAML anchors.
+  [Adora Lynch](https://github.com/lynchsft)
+
+##### Bug Fixes
+
+* None.
+
 ## 5.3.1
 
 ##### Breaking

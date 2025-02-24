@@ -1,5 +1,6 @@
 
 add_library(Yams
+  AliasDereferencingStrategy.swift
   Anchor.swift
   Constructor.swift
   Decoder.swift

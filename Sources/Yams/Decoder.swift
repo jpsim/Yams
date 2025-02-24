@@ -11,12 +11,35 @@ import Foundation
 /// `Codable`-style `Decoder` that can be used to decode a `Decodable` type from a given `String` and optional
 /// user info mapping. Similar to `Foundation.JSONDecoder`.
 public class YAMLDecoder {
+    /// Options to use when decoding from YAML.
+    public struct Options {
+        /// Create `YAMLDecoder.Options` with the specified values.
+        public init(encoding: Parser.Encoding = .default,
+                    aliasDereferencingStrategy: AliasDereferencingStrategy? = nil) {
+            self.encoding = encoding
+            self.aliasDereferencingStrategy = aliasDereferencingStrategy
+        }
+
+        /// Encoding
+        public var encoding: Parser.Encoding = .default
+
+        /// Alias dereferencing strategy to use when decoding. Defaults to nil
+        public var aliasDereferencingStrategy: AliasDereferencingStrategy?
+    }
+
+    /// Options to use when decoding from YAML.
+    public var options = Options()
+
     /// Creates a `YAMLDecoder` instance.
     ///
-    /// - parameter encoding: Encoding, `.default` if omitted.
-    public init(encoding: Parser.Encoding = .default) {
-        self.encoding = encoding
+    /// - parameter encoding: String encoding,
+    public convenience init(encoding: Parser.Encoding) {
+        self.init()
+        self.options.encoding = encoding
     }
+
+    /// Creates a `YAMLDecoder` instance.
+    public init() {}
 
     /// Decode a `Decodable` type from a given `Node` and optional user info mapping.
     ///
@@ -30,7 +53,12 @@ public class YAMLDecoder {
     public func decode<T>(_ type: T.Type = T.self,
                           from node: Node,
                           userInfo: [CodingUserInfoKey: Any] = [:]) throws -> T where T: Swift.Decodable {
-        let decoder = _Decoder(referencing: node, userInfo: userInfo)
+        var finalUserInfo = userInfo
+        if let dealiasingStrategy = options.aliasDereferencingStrategy {
+            finalUserInfo[.aliasDereferencingStrategy] = dealiasingStrategy
+        }
+
+        let decoder = _Decoder(referencing: node, userInfo: finalUserInfo)
         let container = try decoder.singleValueContainer()
         return try container.decode(type)
     }
@@ -48,7 +76,7 @@ public class YAMLDecoder {
                           from yaml: String,
                           userInfo: [CodingUserInfoKey: Any] = [:]) throws -> T where T: Swift.Decodable {
         do {
-            let parser = try Parser(yaml: yaml, resolver: Resolver([.merge]), encoding: encoding)
+            let parser = try Parser(yaml: yaml, resolver: Resolver([.merge]), encoding: options.encoding)
             // ^ the parser holds the references to Anchors while parsing,
             return try withExtendedLifetime(parser) {
                 // ^ so we hold an explicit reference to the parser during decoding
@@ -80,15 +108,18 @@ public class YAMLDecoder {
     public func decode<T>(_ type: T.Type = T.self,
                           from yamlData: Data,
                           userInfo: [CodingUserInfoKey: Any] = [:]) throws -> T where T: Swift.Decodable {
-        guard let yamlString = String(data: yamlData, encoding: encoding.swiftStringEncoding) else {
-            throw YamlError.dataCouldNotBeDecoded(encoding: encoding.swiftStringEncoding)
+        guard let yamlString = String(data: yamlData, encoding: options.encoding.swiftStringEncoding) else {
+            throw YamlError.dataCouldNotBeDecoded(encoding: options.encoding.swiftStringEncoding)
         }
 
         return try decode(type, from: yamlString, userInfo: userInfo)
     }
 
     /// Encoding
-    public var encoding: Parser.Encoding
+    @available(*, deprecated, renamed: "options.encoding")
+    public var encoding: Parser.Encoding {
+        options.encoding
+    }
 }
 
 private struct _Decoder: Decoder {
@@ -295,13 +326,37 @@ extension _Decoder: SingleValueDecodingContainer {
     // MARK: - Swift.SingleValueDecodingContainer Methods
 
     func decodeNil() -> Bool { return node.null == NSNull() }
-    func decode<T>(_ type: T.Type) throws -> T where T: Decodable & ScalarConstructible { return try construct(type) }
-    func decode<T>(_ type: T.Type) throws -> T where T: Decodable {return try construct(type) ?? type.init(from: self) }
+    func decode<T>(_ type: T.Type) throws -> T where T: Decodable & ScalarConstructible { return try _decode(type) }
+    func decode<T>(_ type: T.Type) throws -> T where T: Decodable {return try _decode(type) }
 
     // MARK: -
 
+    private func _decode<T: Decodable>(_ type: T.Type) throws -> T {
+        if let dereferenced = dereferenceAnchor(type) {
+            return dereferenced
+        }
+
+        let constructed = try _construct(type)
+
+        recordAnchor(constructed)
+
+        return constructed
+    }
+
+    private func _construct<T: Decodable>(_ type: T.Type) throws -> T {
+        if let constructibleType = type as? ScalarConstructible.Type {
+            let scalarConstructed = try constructScalar(constructibleType)
+            guard let scalarT = scalarConstructed as? T else {
+                throw _typeMismatch(at: codingPath, expectation: type, reality: scalarConstructed)
+            }
+            return scalarT
+        }
+        // not scalar constructable, initialize as Decodable
+        return try type.init(from: self)
+    }
+
     /// constuct `T` from `node`
-    private func construct<T: ScalarConstructible>(_ type: T.Type) throws -> T {
+    private func constructScalar<T: ScalarConstructible>(_ type: T.Type) throws -> T {
         let scalar = try self.scalar()
         guard let constructed = type.construct(from: scalar) else {
             throw _typeMismatch(at: codingPath, expectation: type, reality: scalar)
@@ -309,15 +364,32 @@ extension _Decoder: SingleValueDecodingContainer {
         return constructed
     }
 
-    private func construct<T>(_ type: T.Type) throws -> T? {
-        guard let constructibleType = type as? ScalarConstructible.Type else {
+    private func dereferenceAnchor<T>(_ type: T.Type) -> T? {
+        guard let anchor = self.node.anchor else {
             return nil
         }
-        let scalar = try self.scalar()
-        guard let value = constructibleType.construct(from: scalar) else {
-            throw _valueNotFound(at: codingPath, type, "Expected \(type) value but found \(scalar) instead.")
+
+        guard let strategy = userInfo[.aliasDereferencingStrategy] as? any AliasDereferencingStrategy else {
+            return nil
         }
-        return value as? T
+
+        guard let existing = strategy[anchor] as? T else {
+            return nil
+        }
+
+        return existing
+    }
+
+    private func recordAnchor<T: Decodable>(_ constructed: T) {
+        guard let anchor = self.node.anchor else {
+            return
+        }
+
+        guard let strategy = userInfo[.aliasDereferencingStrategy] as? any AliasDereferencingStrategy else {
+            return
+        }
+
+        return strategy[anchor] = constructed
     }
 }
 
