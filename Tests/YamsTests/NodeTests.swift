@@ -202,6 +202,21 @@ class NodeTests: XCTestCase {
         node.scalar?.string = "test"
         XCTAssertEqual(node.tag, Tag(.str))
     }
+
+    func testAlias_read_write() {
+        var node = Node.alias(Node.Alias(Anchor(rawValue: "test")))
+        XCTAssertEqual(node.alias?.anchor, "test")
+        node.alias?.anchor = "test2"
+        XCTAssertEqual(node.alias?.anchor, "test2")
+    }
+
+    func testAlias_nil() {
+        var node = Node("1") // a scalar
+        XCTAssertEqual(node.alias, nil)
+        node.alias?.anchor = "test2"
+        XCTAssertEqual(node.alias, nil)
+        // ^^ still nil because the alias property is nil
+    }
 }
 
 extension NodeTests {

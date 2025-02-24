@@ -77,6 +77,21 @@ extension Node {
             }
         }
     }
+
+    /// Get or set the `Node.Alias` value if this node is a `Node.alias`.
+    public var alias: Alias? {
+        get {
+            if case let .alias(alias) = self {
+                return alias
+            }
+            return nil
+        }
+        set {
+            if let newValue = newValue {
+                self = .alias(newValue)
+            }
+        }
+    }
 }
 
 extension Node.Scalar: Comparable {

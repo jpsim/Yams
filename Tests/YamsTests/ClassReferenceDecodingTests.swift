@@ -31,7 +31,10 @@ class ClassReferenceDecodingTests: XCTestCase {
 
                                      """ )
 
-        guard let decoded else { return }
+        guard let decoded else {
+            XCTFail("decoded value is nil")
+            return
+        }
 
         XCTAssertTrue(decoded[0] === decoded[1], "Class reference not unique")
     }
@@ -58,7 +61,10 @@ class ClassReferenceDecodingTests: XCTestCase {
 
                                      """ )
 
-        guard let decoded else { return }
+        guard let decoded else {
+            XCTFail("decoded value is nil")
+            return
+        }
 
         XCTAssertTrue(decoded.first === decoded.first, "Class reference not unique")
     }
@@ -83,7 +89,10 @@ class ClassReferenceDecodingTests: XCTestCase {
 
                                      """ )
 
-        guard let decoded else { return }
+        guard let decoded else {
+            XCTFail("decoded value is nil")
+            return
+        }
 
         XCTAssertTrue(decoded[0] === decoded[1], "Class reference not unique")
     }
@@ -116,7 +125,10 @@ class ClassReferenceDecodingTests: XCTestCase {
 
                                      """ )
 
-        guard let decoded else { return }
+        guard let decoded else {
+            XCTFail("decoded value is nil")
+            return
+        }
 
         XCTAssertTrue(decoded.first.nested === decoded.second.nested, "Class reference not unique")
     }
@@ -151,7 +163,10 @@ class ClassReferenceDecodingTests: XCTestCase {
 
                                      """ )
 
-        guard let decoded else { return }
+        guard let decoded else {
+            XCTFail("decoded value is nil")
+            return
+        }
 
         XCTAssertTrue(decoded.first.nested === decoded.second.nested, "Class reference not unique")
     }
@@ -182,7 +197,10 @@ class ClassReferenceDecodingTests: XCTestCase {
 
                                      """ )
 
-        guard let decoded else { return }
+        guard let decoded else {
+            XCTFail("decoded value is nil")
+            return
+        }
 
         /// It is expected and rational behavior that if an aliased value is decoded into two different types
         /// that those types cannot share object identity (a memory address)
@@ -301,29 +319,4 @@ private class SimpleWithoutAnchor2: SimpleProtocol {
         hasher.combine(unrelatedValue)
     }
 
-}
-
-private class SimpleWithStringTypeAnchorName: SimpleProtocol {
-
-    let nested: NestedStruct
-    let intValue: Int
-    let yamlAnchor: String?
-
-    init(nested: NestedStruct, intValue: Int, yamlAnchor: String? = "StringTypeAnchor") {
-        self.nested = nested
-        self.intValue = intValue
-        self.yamlAnchor = yamlAnchor
-    }
-
-    static func == (lhs: SimpleWithStringTypeAnchorName, rhs: SimpleWithStringTypeAnchorName) -> Bool {
-        lhs.nested == rhs.nested &&
-        lhs.intValue == rhs.intValue &&
-        lhs.yamlAnchor == rhs.yamlAnchor
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(nested)
-        hasher.combine(intValue)
-        hasher.combine(yamlAnchor)
-    }
 }

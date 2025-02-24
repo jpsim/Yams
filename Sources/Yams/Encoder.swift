@@ -250,18 +250,46 @@ extension _Encoder: SingleValueEncodingContainer {
                 node.scalar?.style = newlineScalarStyle
             }
         }
+        try resolveAlias(for: encodable, encode: encodeNode)
+    }
+
+    private func resolveAlias(for encodable: any Encodable, encode: () throws -> Void) throws {
         if let redundancyAliasingStrategy = userInfo[.redundancyAliasingStrategyKey] as? RedundancyAliasingStrategy {
             switch try redundancyAliasingStrategy.alias(for: encodable) {
-            case .none:
-                encodeNode()
             case let .anchor(anchor):
-                encodeNode()
+                self.node = self.node.setting(anchor: anchor) // a hack
+                try encode()
+
+                guard self.node.anchor != anchor else {
+                    return // nothing left to do
+                }
+
+                if let orphanedAnchor = self.node.anchor {
+                    // our sub-tree was a single value container which declared an anchor
+                    // that anchor will not be represented in the final tree
+                    // because `anchor` is the prevailing value in this context
+                    // therefore the encoding strategy must remit the anchor,
+                    // allowing it to be deallocated, so no aliases can be made to it.
+                    try redundancyAliasingStrategy.remit(anchor: orphanedAnchor)
+                }
+
                 self.node = self.node.setting(anchor: anchor)
+
             case let .alias(anchor):
-                self.node = .alias(.init(anchor))
+                if self.node.anchor == nil {
+                    self.node = .alias(.init(anchor))
+                } else {
+                    // This node can't be both an anchor and an alias.
+                    // The ambiguity arises from single-value container types
+                    // like RawRepresentable types. In this case, we encode
+                    // normally, allowing the exiting anchor to remain.
+                    fallthrough
+                }
+            case .none:
+                try encode()
             }
         } else {
-            encodeNode()
+            try encode()
         }
     }
 
@@ -270,18 +298,7 @@ extension _Encoder: SingleValueEncodingContainer {
         if let encodable = value as? YAMLEncodable {
             try encode(yamlEncodable: encodable)
         } else {
-            if let redundancyAliasingStrategy =
-                userInfo[.redundancyAliasingStrategyKey] as? RedundancyAliasingStrategy {
-                switch try redundancyAliasingStrategy.alias(for: value) {
-                case .none:
-                    try value.encode(to: self)
-                case let .anchor(anchor):
-                    try value.encode(to: self)
-                    self.node = self.node.setting(anchor: anchor)
-                case let .alias(anchor):
-                    self.node = .alias(.init(anchor))
-                }
-            } else {
+            try resolveAlias(for: value) {
                 try value.encode(to: self)
             }
         }

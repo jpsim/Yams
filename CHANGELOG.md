@@ -15,6 +15,23 @@
 
 * None.
 
+## 5.3.1
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Add Android Support
+  [Marc Prud'hommeaux](https://github.com/marcprux)
+  [#437](https://github.com/jpsim/Yams/pull/437)
+  
+##### Bug Fixes
+
+* Resolves an issue where Yams would sometimes produce an invalid Anchor/alias
+  pair when encoding single-value types.
+
 ## 5.3.0
 
 ##### Breaking
@@ -27,7 +44,7 @@
   YamlAnchorCoding. 
   [Adora Lynch](https://github.com/lynchsft)
   [#125](https://github.com/jpsim/Yams/issues/125)
-  
+
 * Yams is able to encode and decode Tags via YamlTagProviding
   and YamlTagCoding.
   [Adora Lynch](https://github.com/lynchsft) 

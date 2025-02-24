@@ -5,3 +5,5 @@ tasks:
     bazel: 7.x
     build_targets:
       - '@yams//:Yams'
+    build_flags:
+      - "--repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1"
