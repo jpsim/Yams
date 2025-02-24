@@ -1,4 +1,5 @@
 add_library(YamsTests
+  AliasingStrategyTests.swift
   AnchorCodingTests.swift
   AnchorTolerancesTests.swift
   ConstructorTests.swift
