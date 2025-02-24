@@ -39,6 +39,9 @@ public protocol RedundancyAliasingStrategy: AnyObject {
     /// referenced by the Encoder and will itself be released.
 
     func releaseAnchorReferences() throws
+
+    /// Implementations must remove all reference to the supplied anchor, permitting it to be deallocated.
+    func remit(anchor: Anchor) throws
 }
 
 /// An implementation of RedundancyAliasingStrategy that defines alias-ability by Hashable-Equality.
@@ -72,6 +75,10 @@ public class HashableAliasingStrategy: RedundancyAliasingStrategy {
     public func releaseAnchorReferences() throws {
         hashesToAliases.removeAll()
     }
+
+    public func remit(anchor: Anchor) throws {
+        hashesToAliases.remove(keysForValue: anchor)
+    }
 }
 
 /// An implementation of RedundancyAliasingStrategy that defines alias-ability by the coded representation
@@ -101,6 +108,10 @@ public class StrictEncodableAliasingStrategy: RedundancyAliasingStrategy {
     public func releaseAnchorReferences() throws {
         codedToAliases.removeAll()
     }
+
+    public func remit(anchor: Anchor) throws {
+        codedToAliases.remove(keysForValue: anchor)
+    }
 }
 
 class UniqueAliasProvider {
@@ -119,4 +130,19 @@ class UniqueAliasProvider {
 
 extension CodingUserInfoKey {
     internal static let redundancyAliasingStrategyKey = Self(rawValue: "redundancyAliasingStrategy")!
+}
+
+fileprivate extension Dictionary {
+
+    func removing(keysForValue: Value) -> Self where Value: Equatable {
+        var mutable = Self(minimumCapacity: self.count)
+        for (key, value) in self where value != keysForValue {
+            mutable[key] = value
+        }
+        return mutable
+    }
+
+    mutating func remove(keysForValue value: Value) where Value: Equatable {
+        self = self.removing(keysForValue: value)
+    }
 }
