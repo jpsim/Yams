@@ -140,7 +140,7 @@ public final class Parser {
         }()
 
         /// The equivalent `Swift.Encoding` value for `self`.
-        internal var swiftStringEncoding: String.Encoding {
+        public var swiftStringEncoding: String.Encoding {
             switch self {
             case .utf8:
                 return .utf8
@@ -254,7 +254,9 @@ public final class Parser {
 
     // MARK: - Private Members
 
-    private var anchors = [String: Node]()
+    private var _anchorMap = [Anchor: Node]()
+    private var _anchorList = [Anchor]()
+    private var anchors: [Anchor: Node] { _anchorMap }
     private var parser = yaml_parser_t()
 
     private enum Buffer {
@@ -263,6 +265,20 @@ public final class Parser {
         case utf16(Data)
     }
     private var buffer: Buffer
+
+    // MARK: – Pivate Mutators
+    private func register(anchor: Anchor?, to node: Node) {
+        if let anchor {
+            _anchorList.append(anchor)
+            // We keep a list (not a set) of all anchors encountered
+            // because yaml anchors are allowed to shadow one another.
+            //
+            // The map will keep the latest reference as expected
+            // but without the list the map will release reference to
+            // one of the Anchor instances whenever duplicates are encountered.
+            _anchorMap[anchor] = node
+        }
+    }
 }
 
 // MARK: Implementation Details
@@ -324,10 +340,13 @@ private extension Parser {
     }
 
     func loadScalar(from event: Event) throws -> Node {
-        let node = Node.scalar(.init(event.scalarValue, tag(event.scalarTag), event.scalarStyle, event.startMark))
-        if let anchor = event.scalarAnchor {
-            anchors[anchor] = node
-        }
+        let anchor = event.scalarAnchor
+        let node = Node.scalar(.init(event.scalarValue,
+                                     tag(event.scalarTag),
+                                     event.scalarStyle,
+                                     event.startMark,
+                                     anchor))
+        register(anchor: anchor, to: node)
         return node
     }
 
@@ -338,10 +357,13 @@ private extension Parser {
             array.append(try loadNode(from: event))
             event = try parse()
         }
-        let node = Node.sequence(.init(array, tag(firstEvent.sequenceTag), event.sequenceStyle, firstEvent.startMark))
-        if let anchor = firstEvent.sequenceAnchor {
-            anchors[anchor] = node
-        }
+        let anchor = firstEvent.sequenceAnchor
+        let node = Node.sequence(.init(array,
+                                       tag(firstEvent.sequenceTag),
+                                       event.sequenceStyle,
+                                       firstEvent.startMark,
+                                       anchor))
+        register(anchor: anchor, to: node)
         return node
     }
 
@@ -355,11 +377,23 @@ private extension Parser {
             pairs.append((key, value))
             event = try parse()
         }
-        let node = Node.mapping(.init(pairs, tag(firstEvent.mappingTag), event.mappingStyle, firstEvent.startMark))
-        if let anchor = firstEvent.mappingAnchor {
-            anchors[anchor] = node
-        }
+        let keys = pairs.map { $0.0 }
+        try checkDuplicates(mappingKeys: keys)
+        let anchor = firstEvent.mappingAnchor
+        let node = Node.mapping(.init(pairs,
+                                      tag(firstEvent.mappingTag),
+                                      event.mappingStyle,
+                                      firstEvent.startMark,
+                                      anchor))
+        register(anchor: anchor, to: node)
         return node
+    }
+
+    private func checkDuplicates(mappingKeys: [Node]) throws {
+        let duplicates: [Node: [Node]] = Dictionary(grouping: mappingKeys) { $0 }.filter { $1.count > 1 }
+        guard duplicates.isEmpty else {
+            throw YamlError.duplicatedKeysInMapping(duplicates: duplicates, yaml: yaml)
+        }
     }
 
     func tag(_ string: String?) -> Tag {
@@ -378,13 +412,13 @@ private class Event {
     }
 
     // alias
-    var aliasAnchor: String? {
-        return string(from: event.data.alias.anchor)
+    var aliasAnchor: Anchor? {
+        return string(from: event.data.alias.anchor).map(Anchor.init(stringLiteral: ))
     }
 
     // scalar
-    var scalarAnchor: String? {
-        return string(from: event.data.scalar.anchor)
+    var scalarAnchor: Anchor? {
+        return string(from: event.data.scalar.anchor).map(Anchor.init(stringLiteral: ))
     }
     var scalarStyle: Node.Scalar.Style {
         // swiftlint:disable:next force_unwrapping
@@ -405,8 +439,8 @@ private class Event {
     }
 
     // sequence
-    var sequenceAnchor: String? {
-        return string(from: event.data.sequence_start.anchor)
+    var sequenceAnchor: Anchor? {
+        return string(from: event.data.sequence_start.anchor).map(Anchor.init(stringLiteral: ))
     }
     var sequenceStyle: Node.Sequence.Style {
         // swiftlint:disable:next force_unwrapping
@@ -418,8 +452,8 @@ private class Event {
     }
 
     // mapping
-    var mappingAnchor: String? {
-        return string(from: event.data.scalar.anchor)
+    var mappingAnchor: Anchor? {
+        return string(from: event.data.mapping_start.anchor).map(Anchor.init(stringLiteral: ))
     }
     var mappingStyle: Node.Mapping.Style {
         // swiftlint:disable:next force_unwrapping

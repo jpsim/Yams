@@ -28,10 +28,17 @@ public class YAMLEncoder {
     /// - throws: `EncodingError` if something went wrong while encoding.
     public func encode<T: Swift.Encodable>(_ value: T, userInfo: [CodingUserInfoKey: Any] = [:]) throws -> String {
         do {
-            let encoder = _Encoder(userInfo: userInfo, sequenceStyle: options.sequenceStyle,
-                                   mappingStyle: options.mappingStyle, newlineScalarStyle: options.newLineScalarStyle)
+            var finalUserInfo = userInfo
+            if let aliasingStrategy = options.redundancyAliasingStrategy {
+                finalUserInfo[.redundancyAliasingStrategyKey] = aliasingStrategy
+            }
+            let encoder = _Encoder(userInfo: finalUserInfo,
+                                   sequenceStyle: options.sequenceStyle,
+                                   mappingStyle: options.mappingStyle,
+                                   newlineScalarStyle: options.newLineScalarStyle)
             var container = encoder.singleValueContainer()
             try container.encode(value)
+            try options.redundancyAliasingStrategy?.releaseAnchorReferences()
             return try serialize(node: encoder.node, options: options)
         } catch let error as EncodingError {
             throw error
@@ -165,7 +172,15 @@ private struct _KeyedEncodingContainer<Key: CodingKey>: KeyedEncodingContainerPr
     var codingPath: [CodingKey] { return encoder.codingPath }
     func encodeNil(forKey key: Key) throws { encoder.mapping[key.stringValue] = .null }
     func encode<T>(_ value: T, forKey key: Key) throws where T: YAMLEncodable { try encoder(for: key).encode(value) }
-    func encode<T>(_ value: T, forKey key: Key) throws where T: Encodable { try encoder(for: key).encode(value) }
+    func encode<T>(_ value: T, forKey key: Key) throws where T: Encodable {
+        if let anchor = value as? Anchor, key.stringValue == Node.anchorKeyNode.string {
+            encoder.node = encoder.node.setting(anchor: anchor)
+        } else if let tag = value as? Tag, key.stringValue == Node.tagKeyNode.string {
+            encoder.node = encoder.node.setting(tag: tag)
+        } else {
+            try encoder(for: key).encode(value)
+        }
+    }
 
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type,
                                     forKey key: Key) -> KeyedEncodingContainer<NestedKey> {
@@ -225,21 +240,67 @@ extension _Encoder: SingleValueEncodingContainer {
 
     func encode<T>(_ value: T) throws where T: YAMLEncodable {
         assertCanEncodeNewValue()
-        node = value.box()
-        if let stringValue = value as? (any StringProtocol), stringValue.contains("\n") {
-            node.scalar?.style = newlineScalarStyle
+        try encode(yamlEncodable: value)
+    }
+
+    private func encode(yamlEncodable encodable: YAMLEncodable) throws {
+        func encodeNode() {
+            node = encodable.box()
+            if let stringValue = encodable as? (any StringProtocol), stringValue.contains("\n") {
+                node.scalar?.style = newlineScalarStyle
+            }
+        }
+        try resolveAlias(for: encodable, encode: encodeNode)
+    }
+
+    private func resolveAlias(for encodable: any Encodable, encode: () throws -> Void) throws {
+        if let redundancyAliasingStrategy = userInfo[.redundancyAliasingStrategyKey] as? RedundancyAliasingStrategy {
+            switch try redundancyAliasingStrategy.alias(for: encodable) {
+            case let .anchor(anchor):
+                self.node = self.node.setting(anchor: anchor) // a hack
+                try encode()
+
+                guard self.node.anchor != anchor else {
+                    return // nothing left to do
+                }
+
+                if let orphanedAnchor = self.node.anchor {
+                    // our sub-tree was a single value container which declared an anchor
+                    // that anchor will not be represented in the final tree
+                    // because `anchor` is the prevailing value in this context
+                    // therefore the encoding strategy must remit the anchor,
+                    // allowing it to be deallocated, so no aliases can be made to it.
+                    try redundancyAliasingStrategy.remit(anchor: orphanedAnchor)
+                }
+
+                self.node = self.node.setting(anchor: anchor)
+
+            case let .alias(anchor):
+                if self.node.anchor == nil {
+                    self.node = .alias(.init(anchor))
+                } else {
+                    // This node can't be both an anchor and an alias.
+                    // The ambiguity arises from single-value container types
+                    // like RawRepresentable types. In this case, we encode
+                    // normally, allowing the exiting anchor to remain.
+                    fallthrough
+                }
+            case .none:
+                try encode()
+            }
+        } else {
+            try encode()
         }
     }
 
     func encode<T>(_ value: T) throws where T: Encodable {
         assertCanEncodeNewValue()
         if let encodable = value as? YAMLEncodable {
-            node = encodable.box()
-            if let stringValue = value as? (any StringProtocol), stringValue.contains("\n") {
-                node.scalar?.style = newlineScalarStyle
-            }
+            try encode(yamlEncodable: encodable)
         } else {
-            try value.encode(to: self)
+            try resolveAlias(for: value) {
+                try value.encode(to: self)
+            }
         }
     }
 

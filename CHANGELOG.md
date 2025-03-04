@@ -1,5 +1,50 @@
 ## Main
 
+## 5.3.1
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Add Android Support
+  [Marc Prud'hommeaux](https://github.com/marcprux)
+  [#437](https://github.com/jpsim/Yams/pull/437)
+  
+##### Bug Fixes
+
+* Resolves an issue where Yams would sometimes produce an invalid Anchor/alias
+  pair when encoding single-value types.
+
+## 5.3.0
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Yams is able to encode and decode Anchors via YamlAnchorProviding, and
+  YamlAnchorCoding. 
+  [Adora Lynch](https://github.com/lynchsft)
+  [#125](https://github.com/jpsim/Yams/issues/125)
+
+* Yams is able to encode and decode Tags via YamlTagProviding
+  and YamlTagCoding.
+  [Adora Lynch](https://github.com/lynchsft) 
+  [#265](https://github.com/jpsim/Yams/issues/265)
+  
+* Yams is able to detect redundant structs and automatically
+  alias them during encoding via RedundancyAliasingStrategy
+  [Adora Lynch](https://github.com/lynchsft)
+
+##### Bug Fixes
+
+* None.
+
+## 5.2.0
+  
 ##### Breaking
 
 * Swift 5.7 or later is now required to build Yams.  
@@ -7,11 +52,15 @@
 
 ##### Enhancements
 
-* None.
-
+* Removes dependency on libc and the platform-specific pow function.  
+  [Bradley Mackey](https://github.com/bradleymackey)
+  [#429](https://github.com/jpsim/Yams/issues/429)
+  
 ##### Bug Fixes
 
-* None.
+* Yams will now correctly error when it tries to decode a mapping with duplicate keys.  
+  [Tejas Sharma](https://github.com/tejassharma96)
+  [#415](https://github.com/jpsim/Yams/issues/415)
 
 ## 5.1.3
 

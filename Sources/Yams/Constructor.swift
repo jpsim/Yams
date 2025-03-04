@@ -48,12 +48,14 @@ public final class Constructor {
             if let method = mappingMap[node.tag.name], let result = method(mapping) {
                 return result
             }
-            return [AnyHashable: Any]._construct_mapping(from: mapping)
+            return [AnyHashable: Any].private_construct_mapping(from: mapping)
         case .sequence(let sequence):
             if let method = sequenceMap[node.tag.name], let result = method(sequence) {
                 return result
             }
             return [Any].construct_seq(from: sequence)
+        case .alias:
+            preconditionFailure("Aliases should be resolved before construction")
         }
     }
 
@@ -283,7 +285,7 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
 }
 
 private extension FixedWidthInteger where Self: SexagesimalConvertible {
-    static func _construct(from scalar: Node.Scalar) -> Self? {
+    static func private_construct(from scalar: Node.Scalar) -> Self? {
         guard scalar.style == .any || scalar.style == .plain else {
             return nil
         }
@@ -328,7 +330,7 @@ extension Int: ScalarConstructible {
     ///
     /// - returns: An instance of `Int`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> Int? {
-        return _construct(from: scalar)
+        return private_construct(from: scalar)
     }
 }
 
@@ -341,7 +343,7 @@ extension UInt: ScalarConstructible {
     ///
     /// - returns: An instance of `UInt`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> UInt? {
-        return _construct(from: scalar)
+        return private_construct(from: scalar)
     }
 }
 
@@ -354,7 +356,7 @@ extension Int64: ScalarConstructible {
     ///
     /// - returns: An instance of `Int64`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> Int64? {
-        return _construct(from: scalar)
+        return private_construct(from: scalar)
     }
 }
 
@@ -367,7 +369,7 @@ extension UInt64: ScalarConstructible {
     ///
     /// - returns: An instance of `UInt64`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> UInt64? {
-        return _construct(from: scalar)
+        return private_construct(from: scalar)
     }
 }
 
@@ -431,12 +433,12 @@ extension Dictionary {
     ///
     /// - returns: An instance of `[AnyHashable: Any]`, if one was successfully extracted from the mapping.
     public static func construct_mapping(from mapping: Node.Mapping) -> [AnyHashable: Any]? {
-        return _construct_mapping(from: mapping)
+        return private_construct_mapping(from: mapping)
     }
 }
 
 private extension Dictionary {
-    static func _construct_mapping(from mapping: Node.Mapping) -> [AnyHashable: Any] {
+    static func private_construct_mapping(from mapping: Node.Mapping) -> [AnyHashable: Any] {
         let mapping = mapping.flatten()
         // TODO: YAML supports keys other than str.
         return [AnyHashable: Any](

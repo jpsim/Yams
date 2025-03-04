@@ -1,20 +1,25 @@
 
 add_library(Yams
+  Anchor.swift
   Constructor.swift
   Decoder.swift
   Emitter.swift
   Encoder.swift
   Mark.swift
+  Node.Alias.swift
   Node.Mapping.swift
   Node.Scalar.swift
   Node.Sequence.swift
   Node.swift
   Parser.swift
+  RedundancyAliasingStrategy.swift
   Representer.swift
   Resolver.swift
   String+Yams.swift
   Tag.swift
-  YamlError.swift)
+  YamlAnchorProviding.swift
+  YamlError.swift
+  YamlTagProviding.swift)
 target_compile_definitions(Yams PRIVATE
   SWIFT_PACKAGE)
 target_compile_options(Yams PRIVATE

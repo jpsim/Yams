@@ -27,7 +27,12 @@ jobs:
     runs-on: macos-14
     env:
       DEVELOPER_DIR: /Applications/Xcode_15.4.app
+    strategy:
+      matrix:
+        platform: [macOS, iOS, tvOS, visionOS]
     steps:
       - uses: actions/checkout@v4
       - run: bundle install --path vendor/bundle
-      - run: bundle exec pod lib lint --verbose
+      - if: matrix.platform == 'visionOS'
+        run: xcodebuild -downloadPlatform visionOS
+      - run: bundle exec pod lib lint --platforms=${{ matrix.platform }} --verbose
