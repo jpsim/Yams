@@ -59,11 +59,11 @@ final class NodeDecoderTests: XCTestCase {
 
         let desired = try YAMLDecoder().decode(TopLevel.self, from: desiredNode)
 
-        XCTAssertEqual(desired.unquotedBool, true)
-        XCTAssertEqual(desired.explicitBool, true)
-        XCTAssertEqual(desired.explicitStringNotBool, "true")
-        XCTAssertEqual(desired.singleQuotedStringNotBool, "true")
-        XCTAssertEqual(desired.doubleQuotedStringNotBool, "true")
+        XCTAssertEqual(desired.unquotedBool, .bool(true))
+        XCTAssertEqual(desired.explicitBool, .bool(true))
+        XCTAssertEqual(desired.explicitStringNotBool, .string("true"))
+        XCTAssertEqual(desired.singleQuotedStringNotBool, .string("true"))
+        XCTAssertEqual(desired.doubleQuotedStringNotBool, .string("true"))
     }
 }
 
@@ -80,17 +80,5 @@ extension BoolOrString: Decodable {
         } else {
             self = .string(try container.decode(String.self))
         }
-    }
-}
-
-extension BoolOrString: ExpressibleByStringLiteral {
-    init(stringLiteral value: String) {
-        self = .string(value)
-    }
-}
-
-extension BoolOrString: ExpressibleByBooleanLiteral {
-    init(booleanLiteral value: Bool) {
-        self = .bool(value)
     }
 }
