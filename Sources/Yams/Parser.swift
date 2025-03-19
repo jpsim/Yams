@@ -9,7 +9,11 @@
 // swiftlint:disable file_length
 
 #if SWIFT_PACKAGE
+#if compiler(>=6)
+internal import CYaml
+#else
 @_implementationOnly import CYaml
+#endif
 #endif
 import Foundation
 
