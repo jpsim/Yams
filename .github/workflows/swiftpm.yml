@@ -109,7 +109,7 @@ jobs:
         swift_version: ['5.7.3', '5.8.1', '5.9.1', '5.10.1', '6.0']
     steps:
       - uses: actions/checkout@v4
-      - uses: compnerd/gha-setup-swift@main
+      - uses: compnerd/gha-setup-swift@15100508ed98274c660b39a3d171f9b9b80926c5
         with:
           branch: swift-${{ matrix.swift_version }}-release
           tag: ${{ matrix.swift_version }}-RELEASE
