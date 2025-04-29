@@ -63,6 +63,9 @@
                 <a class="nav-group-task-link" href="Classes/Anchor.html">Anchor</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/BasicAliasDereferencingStrategy.html">BasicAliasDereferencingStrategy</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/Constructor.html">Constructor</a>
               </li>
               <li class="nav-group-task">
@@ -100,6 +103,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/YAMLDecoder.html">YAMLDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/YAMLDecoder/Options.html">– Options</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/YAMLEncoder.html">YAMLEncoder</a>
@@ -254,6 +260,9 @@
             <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/AliasDereferencingStrategy.html">AliasDereferencingStrategy</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Protocols/NodeRepresentable.html">NodeRepresentable</a>
               </li>
               <li class="nav-group-task">
@@ -312,6 +321,41 @@
           <div class="section-content">
             <div class="task-group">
               <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams31BasicAliasDereferencingStrategyC"></a>
+                    <a name="//apple_ref/swift/Class/BasicAliasDereferencingStrategy" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams31BasicAliasDereferencingStrategyC">BasicAliasDereferencingStrategy</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A AliasDereferencingStrategy which caches all values (even value-type values) in a Dictionary,
+keyed by their Anchor.
+For reference types, this strategy achieves reference coalescing
+For value types, this strategy achieves short-cutting the decoding process when dereferencing aliases.
+if the aliased structure is large, this may result in a time savings</p>
+
+                        <a href="Classes/BasicAliasDereferencingStrategy.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">BasicAliasDereferencingStrategy</span> <span class="p">:</span> <span class="kt"><a href="Protocols/AliasDereferencingStrategy.html">AliasDereferencingStrategy</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/AliasDereferencingStrategy.swift#L32-L43">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
                 <li class="item">
                   <div>
                     <code>
@@ -405,7 +449,7 @@ user info mapping. Similar to <code>Foundation.JSONDecoder</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L13-L92">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L13-L123">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

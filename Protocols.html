@@ -63,6 +63,9 @@
                 <a class="nav-group-task-link" href="Classes/Anchor.html">Anchor</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/BasicAliasDereferencingStrategy.html">BasicAliasDereferencingStrategy</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/Constructor.html">Constructor</a>
               </li>
               <li class="nav-group-task">
@@ -100,6 +103,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/YAMLDecoder.html">YAMLDecoder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/YAMLDecoder/Options.html">– Options</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/YAMLEncoder.html">YAMLEncoder</a>
@@ -254,6 +260,9 @@
             <a class="nav-group-name-link" href="Protocols.html">Protocols</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/AliasDereferencingStrategy.html">AliasDereferencingStrategy</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Protocols/NodeRepresentable.html">NodeRepresentable</a>
               </li>
               <li class="nav-group-task">
@@ -310,6 +319,51 @@
 
         <section class="section">
           <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams26AliasDereferencingStrategyP"></a>
+                    <a name="//apple_ref/swift/Protocol/AliasDereferencingStrategy" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams26AliasDereferencingStrategyP">AliasDereferencingStrategy</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A class-bound protocol which implements a strategy for dereferencing aliases (or dealiasing) values during
+YAML document decoding. YAML documents which do not contain anchors will not benefit from the use of
+an AliasDereferencingStrategy in any way. The main use-case for dereferencing aliases in a YML document
+is when decoding into class types. If the yaml document is large and contains many references
+(perhaps it is a representation of a dense graph) then, decoding into structs will require the of large amounts
+of system memory to represent highly redundant (duplicated) data structures.
+However, if the same document is decoded into class types and the decoding uses
+an <code>AliasDereferencingStrategy</code> such as <code><a href="Classes/BasicAliasDereferencingStrategy.html">BasicAliasDereferencingStrategy</a></code> then the emitted value will have its
+class references coalesced. No duplicate objects will be initialized (unless identical objects have multiple
+distinct anchors in the YAML document). In some scenarios this may significantly reduce the memory footprint of
+the decoded type.</p>
+
+                        <a href="Protocols/AliasDereferencingStrategy.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AliasDereferencingStrategy</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/AliasDereferencingStrategy.swift#L20-L25">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
             <div class="task-group">
               <div class="task-name-container">
                 <a name="/ScalarConstructible"></a>
@@ -391,7 +445,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Constructor.swift#L509-L532">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Constructor.swift#L512-L535">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
