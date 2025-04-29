@@ -109,10 +109,9 @@ jobs:
         swift_version: ['5.7.3', '5.8.1', '5.9.1', '5.10.1', '6.0']
     steps:
       - uses: actions/checkout@v4
-      - uses: compnerd/gha-setup-swift@15100508ed98274c660b39a3d171f9b9b80926c5
+      - uses: SwiftyLab/setup-swift@44fd9859001e5b9538d023eb7d8d9106c6ea7659
         with:
-          branch: swift-${{ matrix.swift_version }}-release
-          tag: ${{ matrix.swift_version }}-RELEASE
+          swift-version: ${{ matrix.swift_version }}
       # Commands to run once connected via SSH:
       #
       # >d:
