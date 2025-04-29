@@ -106,13 +106,12 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        swift_version: ['5.8.1', '5.9.1', '5.10.1', '6.0']
+        swift_version: ['5.7.3', '5.8.1', '5.9.1', '5.10.1', '6.0']
     steps:
       - uses: actions/checkout@v4
       - uses: SwiftyLab/setup-swift@bf0987b4ed5eca4d558dda243b257f0562b4b36e
         with:
           swift-version: ${{ matrix.swift_version }}
-          #visual-studio-components: “Microsoft.VisualStudio.Component.VC.ATL;Microsoft.VisualStudio.Component.VC.CMake.Project;Microsoft.VisualStudio.Component.Windows10SDK”
       # Commands to run once connected via SSH:
       #
       # >d:
