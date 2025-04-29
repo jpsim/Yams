@@ -112,6 +112,7 @@ jobs:
       - uses: SwiftyLab/setup-swift@bf0987b4ed5eca4d558dda243b257f0562b4b36e
         with:
           swift-version: ${{ matrix.swift_version }}
+          visual-studio-components: “Microsoft.VisualStudio.Component.VC.ATL;Microsoft.VisualStudio.Component.VC.CMake.Project;Microsoft.VisualStudio.Component.Windows10SDK”
       # Commands to run once connected via SSH:
       #
       # >d:
