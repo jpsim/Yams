@@ -69,7 +69,7 @@ jobs:
     name: macOS 15 with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
-        xcode_version: ['15.4', '16.0', '16.2']
+        xcode_version: ['15.4', '16.0', '16.2', '16.3']
     runs-on: macos-15
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
@@ -92,7 +92,7 @@ jobs:
     name: Linux with Swift ${{ matrix.tag }}
     strategy:
       matrix:
-        tag: ['5.7', '5.8', '5.9', '5.10', '6.0']
+        tag: ['5.7', '5.8', '5.9', '5.10', '6.0', '6.1']
     runs-on: ubuntu-latest
     container:
       image: swift:${{ matrix.tag }}
@@ -106,7 +106,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        swift_version: ['5.8.1', '5.9.1', '5.10.1', '6.0']
+        swift_version: ['5.8.1', '5.9.1', '5.10.1', '6.0', '6.1']
     steps:
       - uses: actions/checkout@v4
       - uses: SwiftyLab/setup-swift@bf0987b4ed5eca4d558dda243b257f0562b4b36e

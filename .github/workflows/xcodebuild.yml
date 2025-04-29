@@ -99,7 +99,7 @@ jobs:
     name: macOS 15 with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
-        xcode_version: ['15.4', '16.0', '16.2']
+        xcode_version: ['15.4', '16.0', '16.2', '16.3']
         xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
     runs-on: macos-15
     env:
