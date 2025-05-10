@@ -222,7 +222,11 @@ private struct _KeyedDecodingContainer<Key: CodingKey>: KeyedDecodingContainerPr
     // MARK: - Swift.KeyedDecodingContainerProtocol Methods
 
     var codingPath: [CodingKey] { return decoder.codingPath }
-    var allKeys: [Key] { return mapping.keys.compactMap { $0.string.flatMap(Key.init(stringValue:)) } }
+    var allKeys: [Key] {
+        return mapping.keys
+            .filter { $0 != .anchorKeyNode && $0 != .tagKeyNode }
+            .compactMap { $0.string.flatMap(Key.init(stringValue:)) }
+    }
     func contains(_ key: Key) -> Bool { return mapping[key.stringValue] != nil }
 
     func decodeNil(forKey key: Key) throws -> Bool {
