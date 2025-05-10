@@ -430,7 +430,7 @@ private struct SimpleWithStringTypeAnchorName: SimpleProtocol {
 #if swift(>=6.0)
 extension Int: @retroactive RawRepresentable {}
 #else
-extension Int: @retroactive RawRepresentable {}
+extension Int: RawRepresentable {}
 #endif
 extension Int {
     public var rawValue: Int { self }
