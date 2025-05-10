@@ -328,6 +328,61 @@ class AnchorAliasingTests: XCTestCase {
                                      """ )
     }
 
+    func testMetaPropertyKeyExposure_anchors() throws {
+        let string = """
+                     &foo
+                     x: 120
+
+                     """
+        
+        try _testMetaPropertyKeyExposure(source: string)
+    }
+    
+    func testMetaPropertyKeyExposure_tags() throws {
+        let string = """
+                     !<simple>
+                     x: 120
+
+                     """
+        
+        try _testMetaPropertyKeyExposure(source: string)
+    }
+    
+    func testMetaPropertyKeyExposure_tags_and_anchors() throws {
+        let string = """
+                     !<simple>
+                     &foo
+                     x: 120
+
+                     """
+        try _testMetaPropertyKeyExposure(source: string)
+    }
+    
+    func _testMetaPropertyKeyExposure(source: String) throws {
+        struct S: Codable {
+            var x: Int
+            
+            init(x: Int) {
+                self.x = x
+            }
+            init(from decoder: any Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                self.x = try container.decode(Int.self, forKey: .x)
+                
+                XCTAssertEqual(container.allKeys.count, 1)
+            }
+        }
+        
+        let data = source.data(using: .utf8)!
+        
+        let s2 = try YAMLDecoder().decode(S.self, from: data)
+        XCTAssertEqual(s2.x, 120)
+        
+        let dict = try YAMLDecoder().decode([String: String].self, from: data)
+        XCTAssertEqual(dict["x"], "120")
+        XCTAssertEqual(dict.keys.count, 1)
+    }
+    
     /// A type used to contain values used during testing
     private struct SimplePair<First: SimpleProtocol, Second: SimpleProtocol>: Hashable, Codable {
         let first: First
@@ -348,7 +403,7 @@ private protocol SimpleProtocol: Codable, Hashable {
     var intValue: IntegerValue { get }
 }
 
-private struct SimpleWithAnchor: SimpleProtocol, YamlAnchorProviding {
+private struct SimpleWithAnchor: SimpleProtocol, YamlAnchorCoding {
     let nested: NestedStruct
     let intValue: Int
     var yamlAnchor: Anchor? = "simple"
@@ -375,7 +430,7 @@ private struct SimpleWithStringTypeAnchorName: SimpleProtocol {
 #if swift(>=6.0)
 extension Int: @retroactive RawRepresentable {}
 #else
-extension Int: RawRepresentable {}
+extension Int: @retroactive RawRepresentable {}
 #endif
 extension Int {
     public var rawValue: Int { self }
