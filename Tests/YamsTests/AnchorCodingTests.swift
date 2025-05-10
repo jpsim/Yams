@@ -331,7 +331,8 @@ class AnchorAliasingTests: XCTestCase {
     func testMetaPropertyKeyExposure_anchors() throws {
         let string = """
                      &foo
-                     x: 120
+                     someInt: 120
+                     someString: beep
 
                      """
         
@@ -341,7 +342,8 @@ class AnchorAliasingTests: XCTestCase {
     func testMetaPropertyKeyExposure_tags() throws {
         let string = """
                      !<simple>
-                     x: 120
+                     someInt: 120
+                     someString: beep
 
                      """
         
@@ -352,35 +354,39 @@ class AnchorAliasingTests: XCTestCase {
         let string = """
                      !<simple>
                      &foo
-                     x: 120
+                     someInt: 120
+                     someString: beep
 
                      """
         try _testMetaPropertyKeyExposure(source: string)
     }
-    
-    func _testMetaPropertyKeyExposure(source: String) throws {
-        struct S: Codable {
-            var x: Int
-            
-            init(x: Int) {
-                self.x = x
+
+    private func _testMetaPropertyKeyExposure(source: String) throws {
+        struct KeyCountAssertingStruct: Codable {
+            var someInt: Int
+            var someString: String
+
+            init(someInt: Int, someString: String) {
+                self.someInt = someInt
+                self.someString = someString
             }
             init(from decoder: any Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
-                self.x = try container.decode(Int.self, forKey: .x)
-                
-                XCTAssertEqual(container.allKeys.count, 1)
+                self.someInt = try container.decode(Int.self, forKey: .someInt)
+                self.someString = try container.decode(String.self, forKey: .someString)
+
+                XCTAssertEqual(container.allKeys.count, 2)
             }
         }
-        
-        let data = source.data(using: .utf8)!
-        
-        let s2 = try YAMLDecoder().decode(S.self, from: data)
-        XCTAssertEqual(s2.x, 120)
-        
-        let dict = try YAMLDecoder().decode([String: String].self, from: data)
-        XCTAssertEqual(dict["x"], "120")
-        XCTAssertEqual(dict.keys.count, 1)
+
+        let decoded = try YAMLDecoder().decode(KeyCountAssertingStruct.self, from: source)
+        XCTAssertEqual(decoded.someInt, 120)
+        XCTAssertEqual(decoded.someString, "beep")
+
+        let dict = try YAMLDecoder().decode([String: String].self, from: source)
+        XCTAssertEqual(dict["someInt"], "120")
+        XCTAssertEqual(dict["someString"], "beep")
+        XCTAssertEqual(dict.keys.count, 2)
     }
     
     /// A type used to contain values used during testing
