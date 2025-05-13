@@ -4,16 +4,25 @@
 
 ##### Breaking
 
-* None.
-
+* Abandon support for Swift 5.7 on Windows
+  [Adora Lynch](https://github.com/lynchsft)
+  
 ##### Enhancements
 
 * Yams is able to coalesce references to objects decoded with YAML anchors.
   [Adora Lynch](https://github.com/lynchsft)
+* Don't decode explicit strings as bools, regardless of content
+  [Honza Dvorsky](https://github.com/czechboy0)
+* Use `internal import` when possible
+  [Matt Pennig](https://github.com/pennig)
+* Validate swift 6.1 compatibility with CI jobs
+  [Adora Lynch](https://github.com/lynchsft)
 
 ##### Bug Fixes
 
-* None.
+* Meta-keys used for Anchor and Tag parsing are not exposed to allKeys property
+  [Adora Lynch](https://github.com/lynchsft)
+  [#442](https://github.com/jpsim/Yams/issues/442)
 
 ## 5.3.1
 
