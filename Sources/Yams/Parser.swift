@@ -7,9 +7,14 @@
 //
 
 // swiftlint:disable file_length
+// swiftlint:disable duplicate_imports
 
 #if SWIFT_PACKAGE
+#if compiler(>=6)
+internal import CYaml
+#else
 @_implementationOnly import CYaml
+#endif
 #endif
 import Foundation
 
