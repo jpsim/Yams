@@ -10,7 +10,7 @@ import Foundation
 import XCTest
 import Yams
 
-class PerformanceTests: XCTestCase {
+final class PerformanceTests: XCTestCase, @unchecked Sendable {
     private let fixturesDirectory: String = {
         if ProcessInfo.processInfo.environment["TEST_WORKSPACE"] != nil {
             return "Tests/YamsTests/Fixtures/"
