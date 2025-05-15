@@ -158,7 +158,7 @@ final class YamlErrorTests: XCTestCase, @unchecked Sendable {
         XCTAssertThrowsError(try Parser(yaml: yamlString).singleRoot()) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", """
-                Parser: expected all keys to be unique but found the following duplicated key: 'a'.
+                Parser: expected all keys to be unique but found the following duplicated key(s): 'a'.
                 Context:
                 a: value
                 a: different_value in line 1, column 1
@@ -178,7 +178,7 @@ final class YamlErrorTests: XCTestCase, @unchecked Sendable {
         XCTAssertThrowsError(try Parser(yaml: yamlString).singleRoot()) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", """
-                Parser: expected all keys to be unique but found the following duplicated key: 'a'.
+                Parser: expected all keys to be unique but found the following duplicated key(s): 'a', 'b'.
                 Context:
                 a: value
                 a: different_value

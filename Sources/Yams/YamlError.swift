@@ -85,7 +85,7 @@ public enum YamlError: Error {
     ///
     /// - parameter duplicates: A dictionary keyed by the duplicated node value, with all nodes that duplicate the value
     /// - parameter yaml:       YAML String which the problem occured while reading. 
-    case duplicatedKeysInMapping(duplicates: String, context: Context)
+    case duplicatedKeysInMapping(duplicates: [String], context: Context)
 
     /// The error context.
     public struct Context: CustomStringConvertible, Sendable {
@@ -188,8 +188,9 @@ extension YamlError: CustomStringConvertible {
         case .dataCouldNotBeDecoded(encoding: let encoding):
             return "String could not be decoded from data using '\(encoding)' encoding"
         case let .duplicatedKeysInMapping(duplicates, context):
+            let duplicateKeys = duplicates.sorted().map { "'\($0)'" }.joined(separator: ", ")
             return """
-                   Parser: expected all keys to be unique but found the following duplicated key: '\(duplicates)'.
+                   Parser: expected all keys to be unique but found the following duplicated key(s): \(duplicateKeys).
                    Context:
                    \(context.description)
                    """

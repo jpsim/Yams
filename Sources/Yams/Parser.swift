@@ -397,12 +397,13 @@ private extension Parser {
     private func checkDuplicates(mappingKeys: [Node]) throws {
         let duplicates: [Node: [Node]] = Dictionary(grouping: mappingKeys) { $0 }.filter { $1.count > 1 }
         guard duplicates.isEmpty else {
-            let firstKey = duplicates.keys.first!
-            throw YamlError.duplicatedKeysInMapping(duplicates: firstKey.string ?? "<uncovertable>",
+            let sortedKeys = duplicates.keys.sorted()
+            let firstKey = sortedKeys.first!
+            let firstMark = firstKey.mark ?? .init(line: 0, column: 0)
+            let duplicates = sortedKeys.map { $0.string ?? "<uncovertable>" }
+            throw YamlError.duplicatedKeysInMapping(duplicates: duplicates,
                                                     context: .init(text: yaml,
-                                                                   mark: firstKey.mark ?? .init(line: 0, column: 0)
-                                                                  )
-                                                    )
+                                                                   mark: firstMark))
         }
     }
 
