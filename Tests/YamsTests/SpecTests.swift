@@ -10,7 +10,7 @@ import Foundation
 import XCTest
 import Yams
 
-class SpecTests: XCTestCase { // swiftlint:disable:this type_body_length
+final class SpecTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:this type_body_length
 
     func testEmptyString() throws {
         XCTAssertNil(try Yams.load(yaml: ""))

@@ -10,7 +10,7 @@ import Foundation
 import XCTest
 import Yams
 
-class NodeTests: XCTestCase {
+final class NodeTests: XCTestCase, @unchecked Sendable {
 
     func testExpressibleByArrayLiteral() {
         let sequence: Node = [

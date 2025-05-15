@@ -344,12 +344,12 @@ struct _YAMLCodingKey: CodingKey { // swiftlint:disable:this type_name
 // MARK: -
 
 private extension Node {
-    static let null = Node("null", Tag(.null))
-    static let unused = Node("", .unused)
+    static var null: Node { Node("null", Tag(.null)) }
+    static var unused: Node { Node("", .unused) }
 }
 
 private extension Tag {
-    static let unused = Tag(.unused)
+    static var unused: Tag { Tag(.unused) }
 }
 
 private extension Tag.Name {

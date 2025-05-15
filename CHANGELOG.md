@@ -1,5 +1,28 @@
 ## Main
 
+## 6.0.0
+
+##### Breaking
+
+* YamlError.duplicatedKeysInMapping changed the types of its associated values
+  to conform to Sendable.
+  [Adora Lynch](https://github.com/lynchsft)
+
+##### Enhancements
+
+* Yams conforms to Swift 6 language mode with full concurrency checking
+  [Adora Lynch](https://github.com/lynchsft)
+
+##### Bug Fixes
+
+* None.
+
+## 5.3.1
+
+##### Breaking
+
+* None.
+
 ## 5.4.0
 
 ##### Breaking

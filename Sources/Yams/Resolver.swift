@@ -9,9 +9,9 @@
 import Foundation
 
 /// Class used to resolve nodes to tags based on customizable rules.
-public final class Resolver {
+public final class Resolver: Sendable {
     /// Rule describing how to resolve tags from regex patterns.
-    public struct Rule {
+    public struct Rule: Sendable {
         /// The tag name this rule applies to.
         public let tag: Tag.Name
         fileprivate let regexp: NSRegularExpression

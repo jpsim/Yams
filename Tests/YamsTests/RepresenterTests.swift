@@ -10,7 +10,7 @@ import Foundation
 import XCTest
 import Yams
 
-class RepresenterTests: XCTestCase {
+final class RepresenterTests: XCTestCase, @unchecked Sendable {
     func testBool() throws {
         XCTAssertEqual(try Node(true), "true")
         XCTAssertEqual(try Node(false), "false")

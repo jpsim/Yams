@@ -9,7 +9,7 @@
 import XCTest
 import Yams
 
-class EmitterTests: XCTestCase {
+final class EmitterTests: XCTestCase, @unchecked Sendable {
 
     func testScalar() throws {
         var node: Node = "key"
