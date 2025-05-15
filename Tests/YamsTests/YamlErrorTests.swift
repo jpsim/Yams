@@ -152,46 +152,40 @@ class YamlErrorTests: XCTestCase {
 
     func testDuplicateKeysCannotBeParsed() throws {
         let yamlString = """
-            a: value
-            a: different_value
-        """
+                         a: value
+                         a: different_value
+                         """
         XCTAssertThrowsError(try Parser(yaml: yamlString).singleRoot()) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", """
-                error: parser: expected all keys to be unique but found the following duplicated key(s):
-                a ([1:5, 2:5]):
-                    a: value
-                    ^
-                    a: different_value
-                    ^
+                Parser: expected all keys to be unique but found the following duplicated key: 'a'.
+                Context:
+                a: value
+                a: different_value in line 1, column 1
+
                 """)
         }
     }
 
     func testDuplicatedKeysCannotBeParsed_MultipleDuplicates() throws {
         let yamlString = """
-            a: value
-            a: different_value
-            b: value
-            b: different_value
-            b: different_different_value
-        """
+                         a: value
+                         a: different_value
+                         b: value
+                         b: different_value
+                         b: different_different_value
+                         """
         XCTAssertThrowsError(try Parser(yaml: yamlString).singleRoot()) { error in
             XCTAssertTrue(error is YamlError)
             XCTAssertEqual("\(error)", """
-                error: parser: expected all keys to be unique but found the following duplicated key(s):
-                a ([1:5, 2:5]):
-                    a: value
-                    ^
-                    a: different_value
-                    ^
-                b ([3:5, 4:5, 5:5]):
-                    b: value
-                    ^
-                    b: different_value
-                    ^
-                    b: different_different_value
-                    ^
+                Parser: expected all keys to be unique but found the following duplicated key: 'a'.
+                Context:
+                a: value
+                a: different_value
+                b: value
+                b: different_value
+                b: different_different_value in line 1, column 1
+
                 """)
         }
     }

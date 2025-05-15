@@ -85,10 +85,10 @@ public enum YamlError: Error {
     ///
     /// - parameter duplicates: A dictionary keyed by the duplicated node value, with all nodes that duplicate the value
     /// - parameter yaml:       YAML String which the problem occured while reading. 
-    case duplicatedKeysInMapping(duplicates: [Node: [Node]], yaml: String)
+    case duplicatedKeysInMapping(duplicates: String, context: Context)
 
     /// The error context.
-    public struct Context: CustomStringConvertible {
+    public struct Context: CustomStringConvertible, Sendable {
         /// Context text.
         public let text: String
         /// Context position.
@@ -187,20 +187,13 @@ extension YamlError: CustomStringConvertible {
             return problem
         case .dataCouldNotBeDecoded(encoding: let encoding):
             return "String could not be decoded from data using '\(encoding)' encoding"
-        case let .duplicatedKeysInMapping(duplicates, yaml):
-            return duplicates.duplicatedKeyErrorDescription(yaml: yaml)
-        }
-    }
-}
+        case let .duplicatedKeysInMapping(duplicates, context):
+            return """
+                   Parser: expected all keys to be unique but found the following duplicated key: '\(duplicates)'.
+                   Context:
+                   \(context.description)
+                   """
 
-private extension Dictionary where Key == Node, Value == [Node] {
-    func duplicatedKeyErrorDescription(yaml: String) -> String {
-        var error = "error: parser: expected all keys to be unique but found the following duplicated key(s):"
-        for key in self.keys.sorted() {
-            let duplicatedNodes = self[key]!
-            let marks = duplicatedNodes.compactMap { $0.mark }
-            error += "\n\(key.any) (\(marks)):\n\(marks.map { $0.snippet(from: yaml) }.joined(separator: "\n"))"
         }
-        return error
     }
 }

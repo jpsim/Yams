@@ -132,7 +132,7 @@ public final class Parser {
         /// The default encoding, determined at run time based on the String type's native encoding.
         /// This can be overridden by setting `YAMS_DEFAULT_ENCODING` to either `UTF8` or `UTF16`.
         /// This value is case insensitive.
-        public static var `default`: Encoding = {
+        public static var `default`: Encoding {
             let key = "YAMS_DEFAULT_ENCODING"
             if let yamsEncoding = ProcessInfo.processInfo.environment[key],
                 let encoding = Encoding(rawValue: yamsEncoding.lowercased()) {
@@ -142,7 +142,7 @@ public final class Parser {
                 return encoding
             }
             return key.utf8.withContiguousStorageIfAvailable({ _ in true }) != nil ? .utf8 : .utf16
-        }()
+        }
 
         /// The equivalent `Swift.Encoding` value for `self`.
         public var swiftStringEncoding: String.Encoding {
@@ -397,7 +397,12 @@ private extension Parser {
     private func checkDuplicates(mappingKeys: [Node]) throws {
         let duplicates: [Node: [Node]] = Dictionary(grouping: mappingKeys) { $0 }.filter { $1.count > 1 }
         guard duplicates.isEmpty else {
-            throw YamlError.duplicatedKeysInMapping(duplicates: duplicates, yaml: yaml)
+            let firstKey = duplicates.keys.first!
+            throw YamlError.duplicatedKeysInMapping(duplicates: firstKey.string ?? "<uncovertable>",
+                                                    context: .init(text: yaml,
+                                                                   mark: firstKey.mark ?? .init(line: 0, column: 0)
+                                                                  )
+                                                    )
         }
     }
 

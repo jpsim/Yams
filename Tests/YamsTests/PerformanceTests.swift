@@ -15,7 +15,13 @@ class PerformanceTests: XCTestCase {
         if ProcessInfo.processInfo.environment["TEST_WORKSPACE"] != nil {
             return "Tests/YamsTests/Fixtures/"
         }
-        return URL(fileURLWithPath: #file).deletingLastPathComponent().path + "/Fixtures/"
+        let baseURL: URL
+#if swift(>=6.0)
+        baseURL = URL(fileURLWithPath: #filePath)
+#else
+        baseURL = URL(fileURLWithPath: #file)
+#endif
+        return baseURL.deletingLastPathComponent().path + "/Fixtures/"
     }()
     let expectedImports = ["/SourceKitten/.build/debug"]
     let expectedOtherArguments = [

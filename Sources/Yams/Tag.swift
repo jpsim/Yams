@@ -9,7 +9,7 @@
 /// Tags describe the the _type_ of a Node.
 public final class Tag {
     /// Tag name.
-    public struct Name: RawRepresentable, Hashable {
+    public struct Name: RawRepresentable, Hashable, Sendable {
         /// This `Tag.Name`'s raw string value.
         public let rawValue: String
         /// Create a `Tag.Name` with a raw string value.

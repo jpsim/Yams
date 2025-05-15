@@ -7,7 +7,7 @@
 //
 
 /// The pointer position.
-public struct Mark {
+public struct Mark: Sendable {
     /// Line number starting from 1.
     public let line: Int
     /// Column number starting from 1. libYAML counts columns in `UnicodeScalar`.
