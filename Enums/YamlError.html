@@ -933,9 +933,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:4Yams9YamlErrorO23duplicatedKeysInMappingyACSDyAA4NodeOSayAFGG_SStcACmF"></a>
-                    <a name="//apple_ref/swift/Element/duplicatedKeysInMapping(duplicates:yaml:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:4Yams9YamlErrorO23duplicatedKeysInMappingyACSDyAA4NodeOSayAFGG_SStcACmF">duplicatedKeysInMapping(duplicates:<wbr>yaml:<wbr>)</a>
+                    <a name="/s:4Yams9YamlErrorO23duplicatedKeysInMappingyACSaySSG_AC7ContextVtcACmF"></a>
+                    <a name="//apple_ref/swift/Element/duplicatedKeysInMapping(duplicates:context:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams9YamlErrorO23duplicatedKeysInMappingyACSaySSG_AC7ContextVtcACmF">duplicatedKeysInMapping(duplicates:<wbr>context:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -950,7 +950,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">duplicatedKeysInMapping</span><span class="p">(</span><span class="nv">duplicates</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Enums/Node.html">Node</a></span> <span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="p">]],</span> <span class="nv">yaml</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">duplicatedKeysInMapping</span><span class="p">(</span><span class="nv">duplicates</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">],</span> <span class="nv">context</span><span class="p">:</span> <span class="kt"><a href="../Enums/YamlError/Context.html">Context</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -1012,7 +1012,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Context</span> <span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Context</span> <span class="p">:</span> <span class="kt">CustomStringConvertible</span><span class="p">,</span> <span class="kt">Sendable</span></code></pre>
 
                         </div>
                       </div>
@@ -1047,7 +1047,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/YamlError.swift#L167-L193">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/YamlError.swift#L167-L199">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
