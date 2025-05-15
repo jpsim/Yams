@@ -9,7 +9,7 @@
 import XCTest
 import Yams
 
-class YamlErrorTests: XCTestCase {
+final class YamlErrorTests: XCTestCase, @unchecked Sendable {
     func testYamlErrorEmitter() throws {
         XCTAssertThrowsError(try Yams.serialize(node: "test", version: (1, 3))) { error in
             XCTAssertTrue(error is YamlError)

@@ -9,7 +9,7 @@
 import XCTest
 import Yams
 
-class ResolverTests: XCTestCase {
+final class ResolverTests: XCTestCase, @unchecked Sendable {
 
     func testBasic() {
         let resolver = Resolver.basic
