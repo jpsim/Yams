@@ -313,7 +313,7 @@ extension Float: YAMLEncodable {
 private extension FloatingPoint where Self: CVarArg {
     func formattedStringForCodable(numberFormatStyle: Emitter.NumberFormatStyle,
                                    formatter: NumberFormatter) -> String {
-        if numberFormatStyle == .decimal {
+        if numberFormatStyle == .decimal && self != .greatestFiniteMagnitude && self != -.greatestFiniteMagnitude {
             formatter.numberStyle = .decimal
             return formatter.string(for: self)!
         }

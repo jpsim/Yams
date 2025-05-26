@@ -59,6 +59,24 @@ final class EncoderTests: XCTestCase, @unchecked Sendable { // swiftlint:disable
                     expectedYAML: "6\n")
     }
 
+    func testDecimalDoubleGreatestFiniteMagnitude() throws {
+        _testRoundTrip(of: Double.greatestFiniteMagnitude,
+                        with: YAMLEncoder.Options(numberFormatStrategy: .init(style: .decimal)),
+                        expectedYAML: "1.7976931348623157e+308\n")
+    }
+
+    func testDecimalDoubleNegativeGreatestFiniteMagnitude() throws {
+        _testRoundTrip(of: -Double.greatestFiniteMagnitude,
+                        with: YAMLEncoder.Options(numberFormatStrategy: .init(style: .decimal)),
+                        expectedYAML: "-1.7976931348623157e+308\n")
+    }
+
+    func testDecimalFloatGreatestFiniteMagnitude() throws {
+        _testRoundTrip(of: Float.greatestFiniteMagnitude,
+                        with: YAMLEncoder.Options(numberFormatStrategy: .init(style: .decimal)),
+                        expectedYAML: "3.4028234663852886e+38\n")
+    }
+
     func testEncodingTopLevelSingleValueClass() {
         _testRoundTrip(of: Counter(), expectedYAML: "0\n")
     }
