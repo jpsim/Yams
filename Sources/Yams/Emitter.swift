@@ -243,6 +243,28 @@ public final class Emitter {
         case crln
     }
 
+    /// Number format style to use when emitting YAML.
+    public enum NumberFormatStyle {
+        /// Use scientific notation.
+        case scientific
+        /// Use decimal notation.
+        case decimal
+    }
+
+    public struct NumberFormatStrategy {
+        public var style: NumberFormatStyle = .scientific
+        public var doubleMaximumSignificantDigits = 15
+        public var floatMaximumSignificantDigits = 7
+
+        public init(style: NumberFormatStyle = .scientific,
+                    doubleMaximumSignificantDigits: Int = 15, 
+                    floatMaximumSignificantDigits: Int = 7) {
+            self.style = style
+            self.doubleMaximumSignificantDigits = doubleMaximumSignificantDigits
+            self.floatMaximumSignificantDigits = floatMaximumSignificantDigits
+        }
+    }
+
     /// Retrieve this Emitter's binary output.
     public internal(set) var data = Data()
 
@@ -281,6 +303,9 @@ public final class Emitter {
         /// Redundancy aliasing strategy to use when encoding. Defaults to nil
         public var redundancyAliasingStrategy: RedundancyAliasingStrategy?
 
+        /// Set the number format strategy to use when emitting YAML.
+        public var numberFormatStrategy: NumberFormatStrategy = NumberFormatStrategy()
+
         /// Create `Emitter.Options` with the specified values.
         ///
         /// - parameter canonical:     Set if the output should be in the "canonical" format described in the YAML
@@ -297,6 +322,7 @@ public final class Emitter {
         /// - parameter mappingStyle:  Set the style for mappings (dictionaries)
         /// - parameter newLineScalarStyle: Set the style for newline-containing scalars
         /// - parameter redundancyAliasingStrategy: Set the strategy for identifying
+        /// - parameter numberFormatStrategy: Set the number format strategy to use when emitting YAML.
         /// redundant structures and automatically aliasing them
         public init(canonical: Bool = false, indent: Int = 0, width: Int = 0, allowUnicode: Bool = false,
                     lineBreak: Emitter.LineBreak = .ln,
@@ -306,7 +332,8 @@ public final class Emitter {
                     sortKeys: Bool = false, sequenceStyle: Node.Sequence.Style = .any,
                     mappingStyle: Node.Mapping.Style = .any,
                     newLineScalarStyle: Node.Scalar.Style = .any,
-                    redundancyAliasingStrategy: RedundancyAliasingStrategy? = nil) {
+                    redundancyAliasingStrategy: RedundancyAliasingStrategy? = nil,
+                    numberFormatStrategy: NumberFormatStrategy = NumberFormatStrategy()) {
             self.canonical = canonical
             self.indent = indent
             self.width = width
@@ -320,6 +347,7 @@ public final class Emitter {
             self.mappingStyle = mappingStyle
             self.newLineScalarStyle = newLineScalarStyle
             self.redundancyAliasingStrategy = redundancyAliasingStrategy
+            self.numberFormatStrategy = numberFormatStrategy
         }
     }
 

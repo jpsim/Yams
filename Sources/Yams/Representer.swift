@@ -62,40 +62,40 @@ private func represent(_ value: Any) throws -> Node {
 /// Type is representable as `Node.scalar`.
 public protocol ScalarRepresentable: NodeRepresentable {
     /// This value's `Node.scalar` representation.
-    func represented() -> Node.Scalar
+    func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar
 }
 
 extension ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() throws -> Node {
-        return .scalar(represented())
+        return .scalar(represented(numberFormatStrategy: .init()))
     }
 }
 
 extension NSNull: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar {
         return .init("null", Tag(.null))
     }
 }
 
 extension Bool: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar {
         return .init(self ? "true" : "false", Tag(.bool))
     }
 }
 
 extension Data: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar {
         return .init(base64EncodedString(), Tag(.binary))
     }
 }
 
 extension Date: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar {
         return .init(iso8601String, Tag(.timestamp))
     }
 
@@ -157,14 +157,16 @@ private let iso8601WithoutZFormatter: DateFormatter = {
 
 extension Double: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar {
+        doubleFormatter.maximumSignificantDigits = numberFormatStrategy.doubleMaximumSignificantDigits
         return .init(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
 }
 
 extension Float: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar {
+        floatFormatter.maximumSignificantDigits = numberFormatStrategy.floatMaximumSignificantDigits
         return .init(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
 }
@@ -190,7 +192,7 @@ private let floatFormatter = numberFormatter(with: 7)
 
 extension BinaryInteger {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar {
         return .init(String(describing: self), Tag(.int))
     }
 }
@@ -220,21 +222,21 @@ extension Optional: NodeRepresentable {
 
 extension Decimal: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar {
         return .init(description)
     }
 }
 
 extension URL: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar {
         return .init(absoluteString)
     }
 }
 
 extension String: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar {
         let scalar = Node.Scalar(self)
         return scalar.resolvedTag.name == .str ? scalar : .init(self, Tag(.str), .singleQuoted)
     }
@@ -242,7 +244,7 @@ extension String: ScalarRepresentable {
 
 extension UUID: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node.Scalar {
         return .init(uuidString)
     }
 }
@@ -252,13 +254,13 @@ extension UUID: ScalarRepresentable {
 /// Types conforming to this protocol can be encoded by `YamlEncoder`.
 public protocol YAMLEncodable: Encodable {
     /// Returns this value wrapped in a `Node`.
-    func box() -> Node
+    func box(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node
 }
 
 extension YAMLEncodable where Self: ScalarRepresentable {
     /// Returns this value wrapped in a `Node.scalar`.
-    public func box() -> Node {
-        return .scalar(represented())
+    public func box(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node {
+        return .scalar(represented(numberFormatStrategy: numberFormatStrategy))
     }
 }
 
@@ -281,35 +283,60 @@ extension UUID: YAMLEncodable {}
 
 extension Date: YAMLEncodable {
     /// Returns this value wrapped in a `Node.scalar`.
-    public func box() -> Node {
+    public func box(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node {
         return Node(iso8601StringWithFullNanosecond, Tag(.timestamp))
     }
 }
 
+let encodableFloatingPointFormatter = numberFormatter(with: 7)
+
 extension Double: YAMLEncodable {
     /// Returns this value wrapped in a `Node.scalar`.
-    public func box() -> Node {
-        return Node(formattedStringForCodable, Tag(.float))
+    public func box(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node {
+        encodableFloatingPointFormatter.maximumSignificantDigits = numberFormatStrategy.doubleMaximumSignificantDigits
+        let formattedString = formattedStringForCodable(numberFormatStyle: numberFormatStrategy.style, 
+                                                                formatter: encodableFloatingPointFormatter)
+        return Node(formattedString, Tag(.float))
     }
 }
 
 extension Float: YAMLEncodable {
     /// Returns this value wrapped in a `Node.scalar`.
-    public func box() -> Node {
-        return Node(formattedStringForCodable, Tag(.float))
+    public func box(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node {
+        encodableFloatingPointFormatter.maximumSignificantDigits = numberFormatStrategy.floatMaximumSignificantDigits
+        let formattedString = formattedStringForCodable(numberFormatStyle: numberFormatStrategy.style, 
+                                                                formatter: encodableFloatingPointFormatter)
+        return Node(formattedString, Tag(.float))
     }
 }
 
 private extension FloatingPoint where Self: CVarArg {
-    var formattedStringForCodable: String {
+    func formattedStringForCodable(numberFormatStyle: Emitter.NumberFormatStyle, 
+                                formatter: NumberFormatter) -> String {
+        if numberFormatStyle == .decimal {
+            formatter.numberStyle = .decimal
+            return formatter.string(for: self)!
+        }
         // Since `NumberFormatter` creates a string with insufficient precision for Decode,
         // it uses with `String(format:...)`
         let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
         // "%*.g" does not use scientific notation if the exponent is less than –4.
         // So fallback to using `NumberFormatter` if string does not uses scientific notation.
         guard string.lazy.suffix(5).contains("e") else {
-            return doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
+            formatter.numberStyle = .scientific
+            return formatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
         }
         return string
+    }
+}
+
+extension Emitter.NumberFormatStrategy {
+    var numberFormatStyle: NumberFormatter.Style {
+        switch self.style {
+        case .scientific:
+            return .scientific
+        case .decimal:
+            return .decimal
+        }
     }
 }

@@ -35,7 +35,8 @@ public class YAMLEncoder {
             let encoder = _Encoder(userInfo: finalUserInfo,
                                    sequenceStyle: options.sequenceStyle,
                                    mappingStyle: options.mappingStyle,
-                                   newlineScalarStyle: options.newLineScalarStyle)
+                                   newlineScalarStyle: options.newLineScalarStyle,
+                                   numberFormatStrategy: options.numberFormatStrategy)
             var container = encoder.singleValueContainer()
             try container.encode(value)
             try options.redundancyAliasingStrategy?.releaseAnchorReferences()
@@ -55,13 +56,18 @@ public class YAMLEncoder {
 private class _Encoder: Swift.Encoder {
     var node: Node = .unused
 
-    init(userInfo: [CodingUserInfoKey: Any] = [:], codingPath: [CodingKey] = [], sequenceStyle: Node.Sequence.Style,
-         mappingStyle: Node.Mapping.Style, newlineScalarStyle: Node.Scalar.Style) {
+    init(userInfo: [CodingUserInfoKey: Any] = [:], 
+        codingPath: [CodingKey] = [], 
+        sequenceStyle: Node.Sequence.Style,
+        mappingStyle: Node.Mapping.Style, 
+        newlineScalarStyle: Node.Scalar.Style,
+        numberFormatStrategy: Emitter.NumberFormatStrategy) {
         self.userInfo = userInfo
         self.codingPath = codingPath
         self.sequenceStyle = sequenceStyle
         self.mappingStyle = mappingStyle
         self.newlineScalarStyle = newlineScalarStyle
+        self.numberFormatStrategy = numberFormatStrategy
     }
 
     // MARK: - Swift.Encoder Methods
@@ -71,6 +77,7 @@ private class _Encoder: Swift.Encoder {
     let sequenceStyle: Node.Sequence.Style
     let mappingStyle: Node.Mapping.Style
     let newlineScalarStyle: Node.Scalar.Style
+    let numberFormatStrategy: Emitter.NumberFormatStrategy
 
     func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> {
         if canEncodeNewValue {
@@ -136,7 +143,8 @@ private class _ReferencingEncoder: _Encoder {
                    codingPath: encoder.codingPath + [key],
                    sequenceStyle: encoder.sequenceStyle,
                    mappingStyle: encoder.mappingStyle,
-                   newlineScalarStyle: encoder.newlineScalarStyle)
+                   newlineScalarStyle: encoder.newlineScalarStyle,
+                   numberFormatStrategy: encoder.numberFormatStrategy)
     }
 
     init(referencing encoder: _Encoder, at index: Int) {
@@ -146,7 +154,8 @@ private class _ReferencingEncoder: _Encoder {
                    codingPath: encoder.codingPath + [_YAMLCodingKey(index: index)],
                    sequenceStyle: encoder.sequenceStyle,
                    mappingStyle: encoder.mappingStyle,
-                   newlineScalarStyle: encoder.newlineScalarStyle)
+                   newlineScalarStyle: encoder.newlineScalarStyle,
+                   numberFormatStrategy: encoder.numberFormatStrategy)
     }
 
     deinit {
@@ -245,7 +254,7 @@ extension _Encoder: SingleValueEncodingContainer {
 
     private func encode(yamlEncodable encodable: YAMLEncodable) throws {
         func encodeNode() {
-            node = encodable.box()
+            node = encodable.box(numberFormatStrategy: numberFormatStrategy)
             if let stringValue = encodable as? (any StringProtocol), stringValue.contains("\n") {
                 node.scalar?.style = newlineScalarStyle
             }
