@@ -294,7 +294,7 @@ extension Double: YAMLEncodable {
     /// Returns this value wrapped in a `Node.scalar`.
     public func box(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node {
         encodableFloatingPointFormatter.maximumSignificantDigits = numberFormatStrategy.doubleMaximumSignificantDigits
-        let formattedString = formattedStringForCodable(numberFormatStyle: numberFormatStrategy.style, 
+        let formattedString = formattedStringForCodable(numberFormatStyle: numberFormatStrategy.style,
                                                                 formatter: encodableFloatingPointFormatter)
         return Node(formattedString, Tag(.float))
     }
@@ -304,15 +304,15 @@ extension Float: YAMLEncodable {
     /// Returns this value wrapped in a `Node.scalar`.
     public func box(numberFormatStrategy: Emitter.NumberFormatStrategy) -> Node {
         encodableFloatingPointFormatter.maximumSignificantDigits = numberFormatStrategy.floatMaximumSignificantDigits
-        let formattedString = formattedStringForCodable(numberFormatStyle: numberFormatStrategy.style, 
+        let formattedString = formattedStringForCodable(numberFormatStyle: numberFormatStrategy.style,
                                                                 formatter: encodableFloatingPointFormatter)
         return Node(formattedString, Tag(.float))
     }
 }
 
 private extension FloatingPoint where Self: CVarArg {
-    func formattedStringForCodable(numberFormatStyle: Emitter.NumberFormatStyle, 
-                                formatter: NumberFormatter) -> String {
+    func formattedStringForCodable(numberFormatStyle: Emitter.NumberFormatStyle,
+                                   formatter: NumberFormatter) -> String {
         if numberFormatStyle == .decimal {
             formatter.numberStyle = .decimal
             return formatter.string(for: self)!
@@ -330,7 +330,7 @@ private extension FloatingPoint where Self: CVarArg {
     }
 }
 
-extension Emitter.NumberFormatStrategy {
+private extension Emitter.NumberFormatStrategy {
     var numberFormatStyle: NumberFormatter.Style {
         switch self.style {
         case .scientific:

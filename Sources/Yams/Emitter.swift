@@ -257,7 +257,7 @@ public final class Emitter {
         public var floatMaximumSignificantDigits = 7
 
         public init(style: NumberFormatStyle = .scientific,
-                    doubleMaximumSignificantDigits: Int = 15, 
+                    doubleMaximumSignificantDigits: Int = 15,
                     floatMaximumSignificantDigits: Int = 7) {
             self.style = style
             self.doubleMaximumSignificantDigits = doubleMaximumSignificantDigits

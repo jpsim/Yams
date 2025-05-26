@@ -36,21 +36,20 @@ final class EncoderTests: XCTestCase, @unchecked Sendable { // swiftlint:disable
     }
 
     func testEncodingTopLevelSingleValueStructDecimalDouble() {
-        _testRoundTrip(of: Double(3.141592653), 
-                        with: YAMLEncoder.Options(numberFormatStrategy: .init(style: .decimal)), 
+        _testRoundTrip(of: Double(3.141592653),
+                        with: YAMLEncoder.Options(numberFormatStrategy: .init(style: .decimal)),
                         expectedYAML: "3.141592653\n")
     }
 
-
     func testDecimalDoubleStyle() throws {
-        _testRoundTrip(of: Double(6.8), 
-                        with: YAMLEncoder.Options(numberFormatStrategy: .init(style: .decimal)), 
+        _testRoundTrip(of: Double(6.8),
+                        with: YAMLEncoder.Options(numberFormatStrategy: .init(style: .decimal)),
                         expectedYAML: "6.8\n")
     }
 
     func testDecimalFloatStyle() throws {
-        _testRoundTrip(of: Float(6.8), 
-                        with: YAMLEncoder.Options(numberFormatStrategy: .init(style: .decimal)), 
+        _testRoundTrip(of: Float(6.8),
+                        with: YAMLEncoder.Options(numberFormatStrategy: .init(style: .decimal)),
                         expectedYAML: "6.8\n")
     }
 

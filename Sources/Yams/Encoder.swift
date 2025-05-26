@@ -56,12 +56,14 @@ public class YAMLEncoder {
 private class _Encoder: Swift.Encoder {
     var node: Node = .unused
 
-    init(userInfo: [CodingUserInfoKey: Any] = [:], 
-        codingPath: [CodingKey] = [], 
+    init(
+        userInfo: [CodingUserInfoKey: Any] = [:],
+        codingPath: [CodingKey] = [],
         sequenceStyle: Node.Sequence.Style,
-        mappingStyle: Node.Mapping.Style, 
+        mappingStyle: Node.Mapping.Style,
         newlineScalarStyle: Node.Scalar.Style,
-        numberFormatStrategy: Emitter.NumberFormatStrategy) {
+        numberFormatStrategy: Emitter.NumberFormatStrategy
+    ) {
         self.userInfo = userInfo
         self.codingPath = codingPath
         self.sequenceStyle = sequenceStyle
