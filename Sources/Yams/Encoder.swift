@@ -32,11 +32,7 @@ public class YAMLEncoder {
             if let aliasingStrategy = options.redundancyAliasingStrategy {
                 finalUserInfo[.redundancyAliasingStrategyKey] = aliasingStrategy
             }
-            let encoder = _Encoder(userInfo: finalUserInfo,
-                                   sequenceStyle: options.sequenceStyle,
-                                   mappingStyle: options.mappingStyle,
-                                   newlineScalarStyle: options.newLineScalarStyle,
-                                   numberFormatStrategy: options.numberFormatStrategy)
+            let encoder = _Encoder(userInfo: finalUserInfo, options: options)
             var container = encoder.singleValueContainer()
             try container.encode(value)
             try options.redundancyAliasingStrategy?.releaseAnchorReferences()
@@ -59,31 +55,22 @@ private class _Encoder: Swift.Encoder {
     init(
         userInfo: [CodingUserInfoKey: Any] = [:],
         codingPath: [CodingKey] = [],
-        sequenceStyle: Node.Sequence.Style,
-        mappingStyle: Node.Mapping.Style,
-        newlineScalarStyle: Node.Scalar.Style,
-        numberFormatStrategy: Emitter.NumberFormatStrategy
+        options: YAMLEncoder.Options
     ) {
         self.userInfo = userInfo
         self.codingPath = codingPath
-        self.sequenceStyle = sequenceStyle
-        self.mappingStyle = mappingStyle
-        self.newlineScalarStyle = newlineScalarStyle
-        self.numberFormatStrategy = numberFormatStrategy
+        self.options = options
     }
 
     // MARK: - Swift.Encoder Methods
 
     let codingPath: [CodingKey]
     let userInfo: [CodingUserInfoKey: Any]
-    let sequenceStyle: Node.Sequence.Style
-    let mappingStyle: Node.Mapping.Style
-    let newlineScalarStyle: Node.Scalar.Style
-    let numberFormatStrategy: Emitter.NumberFormatStrategy
+    let options: YAMLEncoder.Options
 
     func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> {
         if canEncodeNewValue {
-            node = Node([(Node, Node)](), .implicit, mappingStyle)
+            node = Node([(Node, Node)](), .implicit, options.mappingStyle)
         } else {
             precondition(
                 node.isMapping,
@@ -95,7 +82,7 @@ private class _Encoder: Swift.Encoder {
 
     func unkeyedContainer() -> UnkeyedEncodingContainer {
         if canEncodeNewValue {
-            node = Node([], .implicit, sequenceStyle)
+            node = Node([], .implicit, options.sequenceStyle)
         } else {
             precondition(
                 node.isSequence,
@@ -143,10 +130,7 @@ private class _ReferencingEncoder: _Encoder {
         reference = .mapping(key.stringValue)
         super.init(userInfo: encoder.userInfo,
                    codingPath: encoder.codingPath + [key],
-                   sequenceStyle: encoder.sequenceStyle,
-                   mappingStyle: encoder.mappingStyle,
-                   newlineScalarStyle: encoder.newlineScalarStyle,
-                   numberFormatStrategy: encoder.numberFormatStrategy)
+                   options: encoder.options)
     }
 
     init(referencing encoder: _Encoder, at index: Int) {
@@ -154,10 +138,7 @@ private class _ReferencingEncoder: _Encoder {
         reference = .sequence(index)
         super.init(userInfo: encoder.userInfo,
                    codingPath: encoder.codingPath + [_YAMLCodingKey(index: index)],
-                   sequenceStyle: encoder.sequenceStyle,
-                   mappingStyle: encoder.mappingStyle,
-                   newlineScalarStyle: encoder.newlineScalarStyle,
-                   numberFormatStrategy: encoder.numberFormatStrategy)
+                   options: encoder.options)
     }
 
     deinit {
@@ -256,9 +237,9 @@ extension _Encoder: SingleValueEncodingContainer {
 
     private func encode(yamlEncodable encodable: YAMLEncodable) throws {
         func encodeNode() {
-            node = encodable.box(numberFormatStrategy: numberFormatStrategy)
+            node = encodable.box(options: options)
             if let stringValue = encodable as? (any StringProtocol), stringValue.contains("\n") {
-                node.scalar?.style = newlineScalarStyle
+                node.scalar?.style = options.newLineScalarStyle
             }
         }
         try resolveAlias(for: encodable, encode: encodeNode)

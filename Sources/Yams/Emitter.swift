@@ -243,26 +243,12 @@ public final class Emitter {
         case crln
     }
 
-    /// Number format style to use when emitting YAML.
-    public enum NumberFormatStyle {
+    /// Floating point number format style to use when emitting YAML.
+    public enum FloatingPointNumberFormatStrategy {
         /// Use scientific notation.
         case scientific
         /// Use decimal notation.
         case decimal
-    }
-
-    public struct NumberFormatStrategy {
-        public var style: NumberFormatStyle = .scientific
-        public var doubleMaximumSignificantDigits = 15
-        public var floatMaximumSignificantDigits = 7
-
-        public init(style: NumberFormatStyle = .scientific,
-                    doubleMaximumSignificantDigits: Int = 15,
-                    floatMaximumSignificantDigits: Int = 7) {
-            self.style = style
-            self.doubleMaximumSignificantDigits = doubleMaximumSignificantDigits
-            self.floatMaximumSignificantDigits = floatMaximumSignificantDigits
-        }
     }
 
     /// Retrieve this Emitter's binary output.
@@ -304,7 +290,7 @@ public final class Emitter {
         public var redundancyAliasingStrategy: RedundancyAliasingStrategy?
 
         /// Set the number format strategy to use when emitting YAML.
-        public var numberFormatStrategy: NumberFormatStrategy = NumberFormatStrategy()
+        public var floatingPointNumberFormatStrategy: FloatingPointNumberFormatStrategy = .scientific
 
         /// Create `Emitter.Options` with the specified values.
         ///
@@ -333,7 +319,7 @@ public final class Emitter {
                     mappingStyle: Node.Mapping.Style = .any,
                     newLineScalarStyle: Node.Scalar.Style = .any,
                     redundancyAliasingStrategy: RedundancyAliasingStrategy? = nil,
-                    numberFormatStrategy: NumberFormatStrategy = NumberFormatStrategy()) {
+                    floatingPointNumberFormatStrategy: FloatingPointNumberFormatStrategy = .scientific) {
             self.canonical = canonical
             self.indent = indent
             self.width = width
@@ -347,7 +333,7 @@ public final class Emitter {
             self.mappingStyle = mappingStyle
             self.newLineScalarStyle = newLineScalarStyle
             self.redundancyAliasingStrategy = redundancyAliasingStrategy
-            self.numberFormatStrategy = numberFormatStrategy
+            self.floatingPointNumberFormatStrategy = floatingPointNumberFormatStrategy
         }
     }
 
@@ -374,6 +360,7 @@ public final class Emitter {
     /// - parameter mappingStyle:  Set the style for mappings (dictionaries)
     /// - parameter newLineScalarStyle: Set the style for newline-containing scalars
     /// - parameter redundancyAliasingStrategy: Set the strategy for identifying redundant
+    /// - parameter numberFormatStrategy: Set the number format strategy to use when emitting YAML.
     /// structures and automatically aliasing them
     public init(canonical: Bool = false,
                 indent: Int = 0,
@@ -387,7 +374,8 @@ public final class Emitter {
                 sequenceStyle: Node.Sequence.Style = .any,
                 mappingStyle: Node.Mapping.Style = .any,
                 newLineScalarStyle: Node.Scalar.Style = .any,
-                redundancyAliasingStrategy: RedundancyAliasingStrategy? = nil) {
+                redundancyAliasingStrategy: RedundancyAliasingStrategy? = nil,
+                floatingPointNumberFormatStrategy: FloatingPointNumberFormatStrategy = .scientific) {
         options = Options(canonical: canonical,
                           indent: indent,
                           width: width,
@@ -400,7 +388,8 @@ public final class Emitter {
                           sequenceStyle: sequenceStyle,
                           mappingStyle: mappingStyle,
                           newLineScalarStyle: newLineScalarStyle,
-                          redundancyAliasingStrategy: redundancyAliasingStrategy)
+                          redundancyAliasingStrategy: redundancyAliasingStrategy,
+                          floatingPointNumberFormatStrategy: floatingPointNumberFormatStrategy)
         // configure emitter
         yaml_emitter_initialize(&emitter)
         yaml_emitter_set_output(&self.emitter, { pointer, buffer, size in
