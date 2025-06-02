@@ -398,6 +398,10 @@ extension String: ScalarConstructible {
 
 // MARK: - Types that can't conform to ScalarConstructible
 
+#if canImport(FoundationEssesntials)
+struct NSNull {}
+#endif
+
 extension NSNull/*: ScalarConstructible*/ {
     /// Construct an instance of `NSNull`, if possible, from the specified scalar.
     ///
