@@ -398,7 +398,7 @@ extension String: ScalarConstructible {
 
 // MARK: - Types that can't conform to ScalarConstructible
 
-#if !canImport(ObjectiveC)
+#if !canImport(ObjectiveC) && canImport(FoundationEssentials)
 public struct NSNull: Hashable {
     public init() {}
 }
