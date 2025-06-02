@@ -398,7 +398,7 @@ extension String: ScalarConstructible {
 
 // MARK: - Types that can't conform to ScalarConstructible
 
-#if canImport(FoundationEssesntials)
+#if !canImport(ObjectiveC)
 struct NSNull {}
 #endif
 
