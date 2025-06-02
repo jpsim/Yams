@@ -6,7 +6,11 @@
 //  Copyright (c) 2017 Yams. All rights reserved.
 //
 
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#else
 import Foundation
+#endif
 import XCTest
 import Yams
 

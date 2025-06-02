@@ -5,7 +5,11 @@
 //  Created by Adora Lynch on 8/9/24.
 //  Copyright (c) 2024 Yams. All rights reserved.
 
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#else
 import Foundation
+#endif
 
 /// A representation of a YAML tag see: https://yaml.org/spec/1.2.2/
 /// Types interested in Encoding and Decoding Anchors should

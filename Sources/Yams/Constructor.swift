@@ -6,7 +6,11 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#else
 import Foundation
+#endif
 
 /// Constructors are used to translate `Node`s to Swift values.
 public final class Constructor {

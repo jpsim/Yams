@@ -6,7 +6,11 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#else
 import Foundation
+#endif
 
 extension String {
     typealias LineNumberColumnAndContents = (lineNumber: Int, column: Int, contents: String)

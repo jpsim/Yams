@@ -6,7 +6,11 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#else
 import Foundation
+#endif
 
 /// Class used to resolve nodes to tags based on customizable rules.
 public final class Resolver: Sendable {
