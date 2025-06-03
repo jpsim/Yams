@@ -75,38 +75,18 @@ extension Constructor {
     public static var `default`: Constructor { .init() }
 
     /// The default `Tag.Name` to `Node.Scalar` map.
-    public static var defaultScalarMap: ScalarMap {
-        if #available(macOS 13.0, *) {
-            return [
-                // Failsafe Schema
-                .str: String.construct,
-                // JSON Schema
-                .bool: Bool.construct,
-                .float: Double.construct,
-                .null: NSNull.construct,
-                .int: MemoryLayout<Int>.size == 8 ? Int.construct : {
-                    Int.construct(from: $0) ?? Int64.construct(from: $0)
-                },
-                // http://yaml.org/type/index.html
-                .binary: Data.construct,
-                .timestamp: Date.construct
-            ]
-        } else {
-            return [
-                // Failsafe Schema
-                .str: String.construct,
-                // JSON Schema
-                .bool: Bool.construct,
-                .float: Double.construct,
-                .null: NSNull.construct,
-                .int: MemoryLayout<Int>.size == 8 ? Int.construct : {
-                    Int.construct(from: $0) ?? Int64.construct(from: $0)
-                },
-                // http://yaml.org/type/index.html
-                .binary: Data.construct
-            ]
-        }
-    }
+    public static var defaultScalarMap: ScalarMap { [
+        // Failsafe Schema
+        .str: String.construct,
+        // JSON Schema
+        .bool: Bool.construct,
+        .float: Double.construct,
+        .null: NSNull.construct,
+        .int: MemoryLayout<Int>.size == 8 ? Int.construct : { Int.construct(from: $0) ?? Int64.construct(from: $0) },
+        // http://yaml.org/type/index.html
+        .binary: Data.construct,
+        .timestamp: Date.construct
+    ] }
 
     /// The default `Tag.Name` to `Node.Mapping` map.
     public static var defaultMappingMap: MappingMap { [
@@ -192,7 +172,6 @@ extension Data: ScalarConstructible {
 
 // MARK: - ScalarConstructible Date Conformance
 
-@available(macOS 13.0, *)
 extension Date: ScalarConstructible {
     /// Construct an instance of `Date`, if possible, from the specified scalar.
     ///
