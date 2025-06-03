@@ -18,7 +18,7 @@ public final class Resolver: Sendable {
     public struct Rule: Sendable {
         /// The tag name this rule applies to.
         public let tag: Tag.Name
-        fileprivate nonisolated(unsafe) let regexp: Regex<AnyRegexOutput>
+        fileprivate let regexp: Regex<AnyRegexOutput>
         /// The regex pattern used to resolve this rule.
         public let pattern: String
 
@@ -171,3 +171,9 @@ func pattern(_ string: String) -> Regex<AnyRegexOutput> {
         fatalError("unreachable")
     }
 }
+
+#if swift(>=6.0)
+extension Regex: @retroactive @unchecked Sendable {}
+#else
+extension Regex: @unchecked Sendable {}
+#endif

@@ -221,7 +221,7 @@ extension Date: ScalarConstructible {
 
     private static let gregorianCalendar = Calendar(identifier: .gregorian)
 
-    nonisolated(unsafe) private static let timestampPattern: Regex<AnyRegexOutput> = pattern([
+    private static let timestampPattern: Regex<AnyRegexOutput> = pattern([
         "^(?<year>[0-9][0-9][0-9][0-9])",                       // year
         "-(?<month>[0-9][0-9]?)",                               // month
         "-(?<day>[0-9][0-9]?)",                                 // day
