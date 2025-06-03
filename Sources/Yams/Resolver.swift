@@ -160,9 +160,10 @@ extension Resolver.Rule {
     // swiftlint:enable force_try
 }
 
-func pattern(_ string: String) -> NSRegularExpression {
+@available(macOS 13.0, *)
+func pattern(_ string: String) -> Regex<AnyRegexOutput> {
     do {
-        return try .init(pattern: string, options: [])
+        return try .init(string)
     } catch {
         fatalError("unreachable")
     }

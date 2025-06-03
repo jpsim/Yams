@@ -135,6 +135,7 @@ extension Node {
     }
 
     /// This node as a `Date`, if convertible.
+    @available(macOS 13.0, *)
     public var timestamp: Date? {
         return scalar.flatMap(Date.construct)
     }

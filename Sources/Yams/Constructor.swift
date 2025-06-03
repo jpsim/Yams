@@ -75,18 +75,38 @@ extension Constructor {
     public static var `default`: Constructor { .init() }
 
     /// The default `Tag.Name` to `Node.Scalar` map.
-    public static var defaultScalarMap: ScalarMap { [
-        // Failsafe Schema
-        .str: String.construct,
-        // JSON Schema
-        .bool: Bool.construct,
-        .float: Double.construct,
-        .null: NSNull.construct,
-        .int: MemoryLayout<Int>.size == 8 ? Int.construct : { Int.construct(from: $0) ?? Int64.construct(from: $0) },
-        // http://yaml.org/type/index.html
-        .binary: Data.construct,
-        .timestamp: Date.construct
-    ] }
+    public static var defaultScalarMap: ScalarMap {
+        if #available(macOS 13.0, *) {
+            return [
+                // Failsafe Schema
+                .str: String.construct,
+                // JSON Schema
+                .bool: Bool.construct,
+                .float: Double.construct,
+                .null: NSNull.construct,
+                .int: MemoryLayout<Int>.size == 8 ? Int.construct : {
+                    Int.construct(from: $0) ?? Int64.construct(from: $0)
+                },
+                // http://yaml.org/type/index.html
+                .binary: Data.construct,
+                .timestamp: Date.construct
+            ]
+        } else {
+            return [
+                // Failsafe Schema
+                .str: String.construct,
+                // JSON Schema
+                .bool: Bool.construct,
+                .float: Double.construct,
+                .null: NSNull.construct,
+                .int: MemoryLayout<Int>.size == 8 ? Int.construct : {
+                    Int.construct(from: $0) ?? Int64.construct(from: $0)
+                },
+                // http://yaml.org/type/index.html
+                .binary: Data.construct
+            ]
+        }
+    }
 
     /// The default `Tag.Name` to `Node.Mapping` map.
     public static var defaultMappingMap: MappingMap { [
@@ -172,6 +192,7 @@ extension Data: ScalarConstructible {
 
 // MARK: - ScalarConstructible Date Conformance
 
+@available(macOS 13.0, *)
 extension Date: ScalarConstructible {
     /// Construct an instance of `Date`, if possible, from the specified scalar.
     ///
@@ -179,24 +200,19 @@ extension Date: ScalarConstructible {
     ///
     /// - returns: An instance of `Date`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> Date? {
-        let range = NSRange(location: 0, length: scalar.string.utf16.count)
-        guard let result = timestampPattern.firstMatch(in: scalar.string, options: [], range: range),
-            result.range.location != NSNotFound else {
+        guard let result = try! timestampPattern.firstMatch(in: scalar.string) else {
                 return nil
-        }
-        let components = (1..<result.numberOfRanges).map {
-            scalar.string.substring(with: result.range(at: $0))
         }
 
         var datecomponents = DateComponents()
         datecomponents.calendar = gregorianCalendar
-        datecomponents.year = components[0].flatMap { Int($0) }
-        datecomponents.month = components[1].flatMap { Int($0) }
-        datecomponents.day = components[2].flatMap { Int($0) }
-        datecomponents.hour = components[3].flatMap { Int($0) }
-        datecomponents.minute = components[4].flatMap { Int($0) }
-        datecomponents.second = components[5].flatMap { Int($0) }
-        let nanoseconds: TimeInterval? = components[6].flatMap { fraction in
+        datecomponents.year = result["year"]?.substring.flatMap { Int($0) }
+        datecomponents.month = result["month"]?.substring.flatMap { Int($0) }
+        datecomponents.day = result["day"]?.substring.flatMap { Int($0) }
+        datecomponents.hour = result["hour"]?.substring.flatMap { Int($0) }
+        datecomponents.minute = result["minute"]?.substring.flatMap { Int($0) }
+        datecomponents.second = result["second"]?.substring.flatMap { Int($0) }
+        let nanoseconds: TimeInterval? = result["fraction"]?.substring.flatMap { fraction in
             let length = fraction.count
             let nanoseconds: Int?
             if length < 9 {
@@ -210,13 +226,13 @@ extension Date: ScalarConstructible {
         }
         datecomponents.timeZone = {
             var seconds = 0
-            if let hourInSecond = components[9].flatMap({ Int($0) }).map({ $0 * 60 * 60 }) {
+            if let hourInSecond = result["tz_hour"]?.substring.flatMap({ Int($0) }).map({ $0 * 60 * 60 }) {
                 seconds += hourInSecond
             }
-            if let minuteInSecond = components[10].flatMap({ Int($0) }).map({ $0 * 60 }) {
+            if let minuteInSecond = result["tz_minute"]?.substring.flatMap({ Int($0) }).map({ $0 * 60 }) {
                 seconds += minuteInSecond
             }
-            if components[8] == "-" { // sign
+            if result["tz_sign"]?.substring == "-" { // sign
                 seconds *= -1
             }
             return TimeZone(secondsFromGMT: seconds)
@@ -226,17 +242,17 @@ extension Date: ScalarConstructible {
 
     private static let gregorianCalendar = Calendar(identifier: .gregorian)
 
-    private static let timestampPattern: NSRegularExpression = pattern([
-        "^([0-9][0-9][0-9][0-9])",          // year
-        "-([0-9][0-9]?)",                   // month
-        "-([0-9][0-9]?)",                   // day
+    nonisolated(unsafe) private static let timestampPattern: Regex<AnyRegexOutput> = pattern([
+        "^(?<year>[0-9][0-9][0-9][0-9])",                       // year
+        "-(?<month>[0-9][0-9]?)",                               // month
+        "-(?<day>[0-9][0-9]?)",                                 // day
         "(?:(?:[Tt]|[ \\t]+)",
-        "([0-9][0-9]?)",                    // hour
-        ":([0-9][0-9])",                    // minute
-        ":([0-9][0-9])",                    // second
-        "(?:\\.([0-9]*))?",                 // fraction
-        "(?:[ \\t]*(Z|([-+])([0-9][0-9]?)", // tz_sign, tz_hour
-        "(?::([0-9][0-9]))?))?)?$"          // tz_minute
+        "(?<hour>[0-9][0-9]?)",                                 // hour
+        ":(?<minute>[0-9][0-9])",                               // minute
+        ":(?<second>[0-9][0-9])",                               // second
+        "(?:\\.(?<fraction>[0-9]*))?",                          // fraction
+        "(?:[ \\t]*(Z|(?<tz_sign>[-+])(?<tz_hour>[0-9][0-9]?)", // tz_sign, tz_hour
+        "(?::(?<tz_minute>[0-9][0-9]))?))?)?$"                  // tz_minute
         ].joined()
     )
 }
