@@ -10,7 +10,7 @@ import Foundation
 import XCTest
 import Yams
 
-class ConstructorTests: XCTestCase { // swiftlint:disable:this type_body_length
+final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:this type_body_length
     // Samples come from PyYAML.
 
     func testBinary() throws {

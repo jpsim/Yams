@@ -9,7 +9,7 @@
 import XCTest
 @testable import Yams
 
-class StringTests: XCTestCase {
+final class StringTests: XCTestCase, @unchecked Sendable {
     // column     1 2 3 4 5 6 7 8 9  10 11
     // line 1     L I N E 1 _ 6 7 あ \n
     // line 2     L I N E 2 _ 7 8 9  0 \n

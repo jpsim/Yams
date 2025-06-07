@@ -6,8 +6,14 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
+// swiftlint:disable duplicate_imports
+
 #if SWIFT_PACKAGE
+#if compiler(>=6)
+internal import CYaml
+#else
 @_implementationOnly import CYaml
+#endif
 #endif
 import Foundation
 
@@ -79,10 +85,10 @@ public enum YamlError: Error {
     ///
     /// - parameter duplicates: A dictionary keyed by the duplicated node value, with all nodes that duplicate the value
     /// - parameter yaml:       YAML String which the problem occured while reading. 
-    case duplicatedKeysInMapping(duplicates: [Node: [Node]], yaml: String)
+    case duplicatedKeysInMapping(duplicates: [String], context: Context)
 
     /// The error context.
-    public struct Context: CustomStringConvertible {
+    public struct Context: CustomStringConvertible, Sendable {
         /// Context text.
         public let text: String
         /// Context position.
@@ -181,20 +187,14 @@ extension YamlError: CustomStringConvertible {
             return problem
         case .dataCouldNotBeDecoded(encoding: let encoding):
             return "String could not be decoded from data using '\(encoding)' encoding"
-        case let .duplicatedKeysInMapping(duplicates, yaml):
-            return duplicates.duplicatedKeyErrorDescription(yaml: yaml)
-        }
-    }
-}
+        case let .duplicatedKeysInMapping(duplicates, context):
+            let duplicateKeys = duplicates.sorted().map { "'\($0)'" }.joined(separator: ", ")
+            return """
+                   Parser: expected all keys to be unique but found the following duplicated key(s): \(duplicateKeys).
+                   Context:
+                   \(context.description)
+                   """
 
-private extension Dictionary where Key == Node, Value == [Node] {
-    func duplicatedKeyErrorDescription(yaml: String) -> String {
-        var error = "error: parser: expected all keys to be unique but found the following duplicated key(s):"
-        for key in self.keys.sorted() {
-            let duplicatedNodes = self[key]!
-            let marks = duplicatedNodes.compactMap { $0.mark }
-            error += "\n\(key.any) (\(marks)):\n\(marks.map { $0.snippet(from: yaml) }.joined(separator: "\n"))"
         }
-        return error
     }
 }

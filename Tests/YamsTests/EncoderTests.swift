@@ -13,7 +13,7 @@ import Yams
 // swiftlint:disable identifier_name line_length
 
 /// Tests are copied from https://github.com/apple/swift/blob/main/test/stdlib/TestJSONEncoder.swift
-class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
+final class EncoderTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:this type_body_length
     // MARK: - Encoding Top-Level Empty Types
     func testEncodingTopLevelEmptyStruct() {
         let empty = EmptyStruct()
@@ -439,11 +439,14 @@ class EncoderTests: XCTestCase { // swiftlint:disable:this type_body_length
     }
 }
 
+/// returns the decoded instance of T
+@discardableResult
 internal func _testRoundTrip<T>(of value: T,
                                 with options: YAMLEncoder.Options = .init(),
+                                decodingOptions: YAMLDecoder.Options = .init(),
                                 expectedYAML yamlString: String? = nil,
                                 file: StaticString = #file,
-                                line: UInt = #line)
+                                line: UInt = #line) -> T?
 where T: Codable, T: Equatable {
     do {
         let encoder = YAMLEncoder()
@@ -456,9 +459,12 @@ where T: Codable, T: Equatable {
         }
 
         let decoder = YAMLDecoder()
+        decoder.options = decodingOptions
         let decoded = try decoder.decode(T.self, from: producedYAML)
         XCTAssertEqual(decoded, value, "\(T.self) did not round-trip to an equal value.",
                        file: (file), line: line)
+
+        return decoded
 
     } catch let error as EncodingError {
         XCTFail("Failed to encode \(T.self) from YAML by error: \(error)", file: (file), line: line)
@@ -467,6 +473,8 @@ where T: Codable, T: Equatable {
     } catch {
         XCTFail("Rout trip test of \(T.self) failed with error: \(error)", file: (file), line: line)
     }
+
+    return nil
 }
 
 // MARK: - Helper Global Functions

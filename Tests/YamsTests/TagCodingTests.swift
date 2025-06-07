@@ -77,7 +77,7 @@ class TagCodingTests: XCTestCase {
                      stringValue: it's a value
                    intValue: 52
 
-                   """.data(using: decoder.encoding.swiftStringEncoding)!
+                   """.data(using: decoder.options.encoding.swiftStringEncoding)!
 
         let decodedStruct = try decoder.decode(SimpleWithStringTypeTagName.self, from: data)
 

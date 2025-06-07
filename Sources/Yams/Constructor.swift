@@ -68,10 +68,10 @@ public final class Constructor {
 
 extension Constructor {
     /// The default `Constructor` to be used with APIs where none is explicitly provided.
-    public static let `default` = Constructor()
+    public static var `default`: Constructor { .init() }
 
     /// The default `Tag.Name` to `Node.Scalar` map.
-    public static let defaultScalarMap: ScalarMap = [
+    public static var defaultScalarMap: ScalarMap { [
         // Failsafe Schema
         .str: String.construct,
         // JSON Schema
@@ -82,24 +82,24 @@ extension Constructor {
         // http://yaml.org/type/index.html
         .binary: Data.construct,
         .timestamp: Date.construct
-    ]
+    ] }
 
     /// The default `Tag.Name` to `Node.Mapping` map.
-    public static let defaultMappingMap: MappingMap = [
+    public static var defaultMappingMap: MappingMap { [
         .map: [AnyHashable: Any].construct_mapping,
         // http://yaml.org/type/index.html
         .set: Set<AnyHashable>.construct_set
         // .merge is supported in `[AnyHashable: Any].construct_mapping`.
         // .value is supported in `String.construct` and `[AnyHashable: Any].construct_mapping`.
-    ]
+    ] }
 
     /// The default `Tag.Name` to `Node.Sequence` map.
-    public static let defaultSequenceMap: SequenceMap = [
+    public static var defaultSequenceMap: SequenceMap { [
         .seq: [Any].construct_seq,
         // http://yaml.org/type/index.html
         .omap: [Any].construct_omap,
         .pairs: [Any].construct_pairs
-    ]
+    ] }
 
     ///`Tag.Name` to `Node.Mapping` map that support dynamic collection.
     public static let dynamicMappingMap: MappingMap = [
@@ -152,6 +152,9 @@ extension Bool: ScalarConstructible {
     ///
     /// - returns: An instance of `Bool`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> Bool? {
+        if scalar.tag.name == .str {
+            return nil
+        }
         switch scalar.string.lowercased() {
         case "true", "yes", "on":
             return true
