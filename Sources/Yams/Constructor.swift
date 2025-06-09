@@ -102,17 +102,17 @@ extension Constructor {
     ] }
 
     ///`Tag.Name` to `Node.Mapping` map that support dynamic collection.
-    public static let dynamicMappingMap: MappingMap = [
-        .map: NSMutableDictionary.construct_mapping,
-        .set: NSMutableSet.construct_set
-    ]
+    public static var dynamicMappingMap: MappingMap { [
+      .map: NSMutableDictionary.construct_mapping,
+      .set: NSMutableSet.construct_set
+    ] }
 
     ///`Tag.Name` to `Node.Sequence` map that support dynamic collection.
-    public static let dynamicSequenceMap: SequenceMap = [
-        .seq: NSMutableArray.construct_seq,
-        .omap: NSMutableArray.construct_omap,
-        .pairs: NSMutableArray.construct_pairs
-    ]
+    public static var dynamicSequenceMap: SequenceMap { [
+      .seq: NSMutableArray.construct_seq,
+      .omap: NSMutableArray.construct_omap,
+      .pairs: NSMutableArray.construct_pairs
+    ] }
 }
 
 // MARK: - ScalarConstructible
