@@ -18,9 +18,9 @@ public final class Resolver: Sendable {
     public struct Rule: Sendable {
         /// The tag name this rule applies to.
         public let tag: Tag.Name
-        fileprivate let regexp: NSRegularExpression
+        fileprivate let regexp: Regex<AnyRegexOutput>
         /// The regex pattern used to resolve this rule.
-        public var pattern: String { return regexp.pattern }
+        public let pattern: String
 
         /// Create a rule with the specified tag name and regex pattern.
         ///
@@ -30,7 +30,8 @@ public final class Resolver: Sendable {
         /// - throws: Throws an error if the regular expression pattern is invalid.
         public init(_ tag: Tag.Name, _ pattern: String) throws {
             self.tag = tag
-            self.regexp = try .init(pattern: pattern, options: [])
+            self.regexp = try .init(pattern)
+            self.pattern = pattern
         }
     }
 
@@ -89,7 +90,10 @@ public final class Resolver: Sendable {
     }
 
     func resolveTag(from string: String) -> Tag.Name {
-        for rule in rules where rule.regexp.matches(in: string) {
+        let rule = rules.first { rule in
+            try! rule.regexp.firstMatch(in: string) != nil
+        }
+        if let rule {
             return rule.tag
         }
         return .str
@@ -160,20 +164,16 @@ extension Resolver.Rule {
     // swiftlint:enable force_try
 }
 
-func pattern(_ string: String) -> NSRegularExpression {
+func pattern(_ string: String) -> Regex<AnyRegexOutput> {
     do {
-        return try .init(pattern: string, options: [])
+        return try .init(string)
     } catch {
         fatalError("unreachable")
     }
 }
 
-private extension NSRegularExpression {
-    func matches(in string: String) -> Bool {
-        let range = NSRange(location: 0, length: string.utf16.count)
-        if let match = firstMatch(in: string, options: [], range: range) {
-            return match.range.location != NSNotFound
-        }
-        return false
-    }
-}
+#if swift(>=6.0)
+extension Regex: @retroactive @unchecked Sendable {}
+#else
+extension Regex: @unchecked Sendable {}
+#endif
