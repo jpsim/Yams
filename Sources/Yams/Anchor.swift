@@ -16,6 +16,7 @@ import Foundation
 /// conform to YamlAnchorProviding and YamlAnchorCoding respectively.
 public final class Anchor: RawRepresentable, ExpressibleByStringLiteral, Codable, Hashable {
 
+#if !canImport(FoundationEssentials)
     /// A CharacterSet containing only characters which are permitted by the underlying cyaml implementation
     public static let permittedCharacters = CharacterSet.lowercaseLetters
                                                 .union(.uppercaseLetters)
@@ -26,6 +27,15 @@ public final class Anchor: RawRepresentable, ExpressibleByStringLiteral, Codable
     public static func is_cyamlAlpha(_ string: String) -> Bool {
         Anchor.permittedCharacters.isSuperset(of: .init(charactersIn: string))
     }
+#else
+    /// An Set containing only characters which are permitted by the underlying cyaml implementation
+    public static let permittedCharacters = Set( "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_")
+
+    /// Returns true if and only if `string` contains only characters which are also in `permittedCharacters`
+    public static func is_cyamlAlpha(_ string: String) -> Bool {
+        Anchor.permittedCharacters.isSuperset(of: .init(string))
+    }
+#endif
 
     public let rawValue: String
 
