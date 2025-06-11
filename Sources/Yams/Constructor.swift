@@ -101,13 +101,13 @@ extension Constructor {
         .pairs: [Any].construct_pairs
     ] }
 
-    ///`Tag.Name` to `Node.Mapping` map that support dynamic collection.
+    /// `Tag.Name` to `Node.Mapping` map that support dynamic collection.
     public static var dynamicMappingMap: MappingMap { [
       .map: NSMutableDictionary.construct_mapping,
       .set: NSMutableSet.construct_set
     ] }
 
-    ///`Tag.Name` to `Node.Sequence` map that support dynamic collection.
+    /// `Tag.Name` to `Node.Sequence` map that support dynamic collection.
     public static var dynamicSequenceMap: SequenceMap { [
       .seq: NSMutableArray.construct_seq,
       .omap: NSMutableArray.construct_omap,
@@ -458,12 +458,12 @@ extension NSMutableDictionary {
     ///
     /// - returns: An instance of `NSMutableDictionary`, if one was successfully extracted from the mapping.
     public static func construct_mapping(from mapping: Node.Mapping) -> NSMutableDictionary? {
-        _construct_mapping(from: mapping)
+        private_construct_mapping(from: mapping)
     }
 }
 
 private extension NSMutableDictionary {
-    static func _construct_mapping(from mapping: Node.Mapping) -> NSMutableDictionary {
+    static func private_construct_mapping(from mapping: Node.Mapping) -> NSMutableDictionary {
         let result = NSMutableDictionary()
         let mapping = mapping.flatten()
 
