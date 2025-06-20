@@ -1,4 +1,17 @@
-## Main
+## 6.0.1
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Add support for rules_swift 3.0.  
+  [Luis Padron](https://github.com/luispadron)
+
+##### Bug Fixes
+
+* None.
 
 ## 6.0.0
 
