@@ -1,3 +1,18 @@
+## 6.0.2
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* None.
+
+##### Bug Fixes
+
+* Fix bug where anchors were not properly set in decoded types in some circumstances.
+  [Adora Lynch](https://github.com/lynchsft)
+
 ## 6.0.1
 
 ##### Breaking
