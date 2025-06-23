@@ -7,6 +7,7 @@ add_library(YamsTests
   EmitterTests.swift
   EncoderTests.swift
   MarkTests.swift
+  NodeInternalHelpersTests.swift
   NodeTests.swift
   PerformanceTests.swift
   RepresenterTests.swift
