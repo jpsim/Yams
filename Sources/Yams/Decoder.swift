@@ -340,7 +340,14 @@ extension _Decoder: SingleValueDecodingContainer {
             return dereferenced
         }
 
-        let constructed = try _construct(type)
+        var constructed = try _construct(type)
+
+        if var anchorCoding = constructed as? YamlAnchorCoding,
+           anchorCoding.yamlAnchor == nil,
+           let anchor = self.node.anchor {
+            anchorCoding.yamlAnchor = anchor
+            constructed = anchorCoding as! T // swiftlint:disable:this force_cast
+        }
 
         recordAnchor(constructed)
 

@@ -243,6 +243,17 @@ extension _Encoder: SingleValueEncodingContainer {
         try encode(yamlEncodable: value)
     }
 
+    func encode<T>(_ value: T) throws where T: Encodable {
+        assertCanEncodeNewValue()
+        if let encodable = value as? YAMLEncodable {
+            try encode(yamlEncodable: encodable)
+        } else {
+            try resolveAlias(for: value) {
+                try value.encode(to: self)
+            }
+        }
+    }
+
     private func encode(yamlEncodable encodable: YAMLEncodable) throws {
         func encodeNode() {
             node = encodable.box()
@@ -264,7 +275,7 @@ extension _Encoder: SingleValueEncodingContainer {
                     return // nothing left to do
                 }
 
-                if let orphanedAnchor = self.node.anchor {
+                if let orphanedAnchor = self.node.anchor, self.node.isScalar {
                     // our sub-tree was a single value container which declared an anchor
                     // that anchor will not be represented in the final tree
                     // because `anchor` is the prevailing value in this context
@@ -290,17 +301,6 @@ extension _Encoder: SingleValueEncodingContainer {
             }
         } else {
             try encode()
-        }
-    }
-
-    func encode<T>(_ value: T) throws where T: Encodable {
-        assertCanEncodeNewValue()
-        if let encodable = value as? YAMLEncodable {
-            try encode(yamlEncodable: encodable)
-        } else {
-            try resolveAlias(for: value) {
-                try value.encode(to: self)
-            }
         }
     }
 

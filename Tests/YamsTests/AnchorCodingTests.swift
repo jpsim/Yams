@@ -96,6 +96,7 @@ class AnchorCodingTests: XCTestCase {
     }
 }
 
+// swiftlint:disable:next type_body_length
 class AnchorAliasingTests: XCTestCase {
 
     /// CYaml library does not detect identical values and automatically alias them.
@@ -225,7 +226,8 @@ class AnchorAliasingTests: XCTestCase {
     /// If types conform to YamlAnchorProviding and are NOT Hashable-Equal then
     /// HashableAliasingStrategy does not alias them even though their members may still be
     /// Hashable-Equal and therefor maybe aliased.
-    /// Note particularly that the to Simple* values here have exactly the same encoded representation,
+    /// Note particularly that the to SimpleSimpleWithoutAnchor* and the int-valued types here
+    /// have exactly the same encoded representation,
     /// they're just different types and thus not Hashable-Equal
     func testEncoderAutoAlias_Hashable_NoAnchor() throws {
         let differentTypesNoAnchors = SimplePair(first:
@@ -359,6 +361,53 @@ class AnchorAliasingTests: XCTestCase {
         try _testMetaPropertyKeyExposure(source: string)
     }
 
+    /// Test that RawRepresentable types which conform toYamlAnchorCoding preserve their Anchors round-trip
+    func testDecoder_anchorPreserving_RawRepresentable_mapping() throws {
+        var intWithAnchor: SimpleIntRepresesnting = 52
+        intWithAnchor.yamlAnchor = "fifty_two"
+        let subject = ["key": intWithAnchor]
+
+        var options = YAMLEncoder.Options()
+        options.redundancyAliasingStrategy = StrictEncodableAliasingStrategy()
+        _testRoundTrip(of: subject,
+                       with: options,
+                       expectedYAML: """
+                                     key: &fifty_two 52
+
+                                     """ )
+    }
+
+    /// Test that RawRepresentable types which conform toYamlAnchorCoding preserve their Anchors round-trip
+    func testDecoder_anchorPreserving_RawRepresentable_sequence() throws {
+        var intWithAnchor: SimpleIntRepresesnting = 52
+        intWithAnchor.yamlAnchor = "fifty_two"
+        let subject = [intWithAnchor]
+
+        var options = YAMLEncoder.Options()
+        options.redundancyAliasingStrategy = StrictEncodableAliasingStrategy()
+        _testRoundTrip(of: subject,
+                       with: options,
+                       expectedYAML: """
+                                     - &fifty_two 52
+
+                                     """ )
+    }
+
+    /// Test that RawRepresentable types which conform toYamlAnchorCoding preserve their Anchors round-trip
+    func testDecoder_anchorPreserving_RawRepresentable_scalar() throws {
+        var intWithAnchor: SimpleIntRepresesnting = 52
+        intWithAnchor.yamlAnchor = "fifty_two"
+
+        var options = YAMLEncoder.Options()
+        options.redundancyAliasingStrategy = StrictEncodableAliasingStrategy()
+        _testRoundTrip(of: intWithAnchor,
+                       with: options,
+                       expectedYAML: """
+                                     &fifty_two 52
+
+                                     """ )
+    }
+
     private func _testMetaPropertyKeyExposure(source: String) throws {
         struct KeyCountAssertingStruct: Codable {
             var someInt: Int
@@ -445,7 +494,11 @@ extension Int {
     }
 }
 
-private struct SimpleIntRepresesnting: RawRepresentable, Codable, Hashable, ExpressibleByIntegerLiteral {
+private struct SimpleIntRepresesnting: RawRepresentable,
+                                        Codable,
+                                        Hashable,
+                                        ExpressibleByIntegerLiteral,
+                                        YamlAnchorCoding {
     init(integerLiteral value: Int) {
         self.rawValue = value
     }
@@ -455,6 +508,11 @@ private struct SimpleIntRepresesnting: RawRepresentable, Codable, Hashable, Expr
     }
 
     let rawValue: Int
+    var yamlAnchor: Anchor?
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.rawValue == rhs.rawValue && lhs.yamlAnchor == rhs.yamlAnchor
+    }
 }
 
 // swiftlint:disable:this file_length

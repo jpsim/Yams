@@ -454,7 +454,7 @@ where T: Codable, T: Equatable {
         let producedYAML = try encoder.encode(value)
 
         if let expectedYAML = yamlString {
-            XCTAssertEqual(producedYAML, expectedYAML, "Produced YAML not identical to expected YAML.",
+            XCTAssertEqual("\n"+producedYAML, "\n"+expectedYAML, "Produced YAML not identical to expected YAML.",
                            file: (file), line: line)
         }
 
