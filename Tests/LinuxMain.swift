@@ -7,6 +7,7 @@ XCTMain([
     testCase(EmitterTests.allTests),
     testCase(EncoderTests.allTests),
     testCase(MarkTests.allTests),
+    testCase(NodeInternalHelpersTests.allTests)
     testCase(NodeTests.allTests),
     testCase(PerformanceTests.allTests),
     testCase(RepresenterTests.allTests),

@@ -96,6 +96,7 @@ class AnchorCodingTests: XCTestCase {
     }
 }
 
+// swiftlint:disable:next type_body_length
 class AnchorAliasingTests: XCTestCase {
 
     /// CYaml library does not detect identical values and automatically alias them.
@@ -359,7 +360,7 @@ class AnchorAliasingTests: XCTestCase {
                      """
         try _testMetaPropertyKeyExposure(source: string)
     }
-    
+
     /// Test that RawRepresentable types which conform toYamlAnchorCoding preserve their Anchors round-trip
     func testDecoder_anchorPreserving_RawRepresentable_mapping() throws {
         var intWithAnchor: SimpleIntRepresesnting = 52
@@ -375,7 +376,7 @@ class AnchorAliasingTests: XCTestCase {
 
                                      """ )
     }
-    
+
     /// Test that RawRepresentable types which conform toYamlAnchorCoding preserve their Anchors round-trip
     func testDecoder_anchorPreserving_RawRepresentable_sequence() throws {
         var intWithAnchor: SimpleIntRepresesnting = 52
@@ -391,7 +392,7 @@ class AnchorAliasingTests: XCTestCase {
 
                                      """ )
     }
-    
+
     /// Test that RawRepresentable types which conform toYamlAnchorCoding preserve their Anchors round-trip
     func testDecoder_anchorPreserving_RawRepresentable_scalar() throws {
         var intWithAnchor: SimpleIntRepresesnting = 52
@@ -493,7 +494,11 @@ extension Int {
     }
 }
 
-private struct SimpleIntRepresesnting: RawRepresentable, Codable, Hashable, ExpressibleByIntegerLiteral, YamlAnchorCoding {
+private struct SimpleIntRepresesnting: RawRepresentable,
+                                        Codable,
+                                        Hashable,
+                                        ExpressibleByIntegerLiteral,
+                                        YamlAnchorCoding {
     init(integerLiteral value: Int) {
         self.rawValue = value
     }
@@ -504,8 +509,8 @@ private struct SimpleIntRepresesnting: RawRepresentable, Codable, Hashable, Expr
 
     let rawValue: Int
     var yamlAnchor: Anchor?
-    
-    static func ==(lhs: Self, rhs: Self) -> Bool {
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.rawValue == rhs.rawValue && lhs.yamlAnchor == rhs.yamlAnchor
     }
 }
