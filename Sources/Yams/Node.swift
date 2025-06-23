@@ -306,7 +306,7 @@ extension Node {
         }
         return false
     }
-    
+
     var isMapping: Bool {
         if case .mapping = self {
             return true
