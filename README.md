@@ -176,6 +176,29 @@ let node = try Yams.compose(yaml: yaml)
 map == node
 ```
 
+#### NSMutable* compatibility
+
+Yams also supports deep conversion of YAML into `NSMutableDictionary` and `NSMutableArray`,
+which is useful when working with mutable Cocoa-style collections, such as NSMutableDictionary and NSMutableArray.
+
+To produce `NSMutable*` results, use a custom constructor:
+
+```swift
+let yaml = """
+names:
+  - Alice
+  - Bob
+"""
+
+let constructor = Constructor(Constructor.defaultScalarMap,
+                              Constructor.dynamicMappingMap,
+                              Constructor.dynamicSequenceMap)
+
+let result = try Yams.load(yaml: yaml, .default, constructor) as? NSMutableDictionary
+let names = result?["names"] as? NSMutableArray
+print(names ?? "No data") // -> (Alice, Bob)
+```
+
 #### Integrating with [Combine](https://developer.apple.com/documentation/combine)
 
 When Apple's Combine framework is available, `YAMLDecoder` conforms to the
