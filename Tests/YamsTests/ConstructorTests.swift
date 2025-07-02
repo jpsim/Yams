@@ -176,8 +176,8 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
         let objects = try Yams.load(yaml: Self._mapExample,
                   .default,
                   Constructor(Constructor.defaultScalarMap,
-                              Constructor.dynamicMappingMap,
-                              Constructor.dynamicSequenceMap)) as? NSMutableDictionary
+                              Constructor.nsMutableMappingMap,
+                              Constructor.nsMutableSequenceMap)) as? NSMutableDictionary
 
         let expected: NSMutableDictionary = NSMutableDictionary()
         expected["Block style"] = NSMutableDictionary(objects: ["Evans", "Ingerson", "Ben-Kiki"],
@@ -473,8 +473,8 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
         let objects = try Yams.load(yaml: Self._seqExample,
                       .default,
                       Constructor(Constructor.defaultScalarMap,
-                                  Constructor.dynamicMappingMap,
-                                  Constructor.dynamicSequenceMap)) as? NSMutableDictionary
+                                  Constructor.nsMutableMappingMap,
+                                  Constructor.nsMutableSequenceMap)) as? NSMutableDictionary
 
         let expected = NSMutableDictionary()
         expected["Block style"] = NSMutableArray(array: [
