@@ -458,7 +458,15 @@ extension NSMutableDictionary {
     ///
     /// - returns: An instance of `NSMutableDictionary`, if one was successfully extracted from the mapping.
     public static func construct_mapping(from mapping: Node.Mapping) -> NSMutableDictionary? {
-        private_construct_mapping(from: mapping)
+        let result = NSMutableDictionary()
+        let mapping = mapping.flatten()
+        
+        mapping.forEach { key, value in
+            if let keyString = String.construct(from: key) {
+                result[keyString] = mapping.tag.constructor.any(from: value)
+            }
+        }
+        return result
     }
 }
 
