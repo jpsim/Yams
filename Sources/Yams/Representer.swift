@@ -185,13 +185,6 @@ extension Float: ScalarRepresentable {
     }
 }
 
-extension NSValue: ScalarRepresentable {
-    /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
-        return .init(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
-    }
-}
-
 private func numberFormatter(with significantDigits: Int) -> NumberFormatter {
     let formatter = NumberFormatter()
     formatter.locale = Locale(identifier: "en_US")
