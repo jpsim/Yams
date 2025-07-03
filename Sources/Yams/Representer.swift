@@ -256,14 +256,6 @@ extension String: ScalarRepresentable {
     }
 }
 
-extension NSString: ScalarRepresentable {
-    /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
-      let scalar = Node.Scalar(String(self))
-        return scalar.resolvedTag.name == .str ? scalar : .init(String(self), Tag(.str), .singleQuoted)
-    }
-}
-
 extension UUID: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
