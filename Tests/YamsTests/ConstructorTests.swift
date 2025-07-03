@@ -181,10 +181,10 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
 
         let expected: NSMutableDictionary = NSMutableDictionary()
         expected["Block style"] = NSMutableDictionary(objects: ["Evans", "Ingerson", "Ben-Kiki"],
-                                            forKeys: ["Clark", "Brian", "Oren"] as [NSCopying])
+                                            forKeys: ["Clark", "Brian", "Oren"].map(NSString.init))
 
         expected["Flow style"] = NSMutableDictionary(objects: ["Evans", "Ingerson", "Ben-Kiki"],
-                                            forKeys: ["Clark", "Brian", "Oren"] as [NSCopying])
+                                            forKeys: ["Clark", "Brian", "Oren"].map(NSString.init))
 
         YamsAssertEqualType(objects, expected)
         YamsAssertEqual(objects, expected)
