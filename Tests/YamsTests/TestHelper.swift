@@ -110,9 +110,6 @@ func YamsAssertEqualType(_ actual: Any?, _ expected: Any?, path: [String] = []) 
     let actualType = type(of: actual)
     let expectedType = type(of: expected)
 
-    XCTAssert(actualType == expectedType,
-              "Type mismatch at '\(pathString)': expected \(expectedType), got \(actualType)")
-
     switch (actual, expected) {
     case let (aDict as [String: Any], eDict as [String: Any]):
         XCTAssertEqual(aDict.count, eDict.count, "Dictionary count mismatch at '\(pathString)'")
@@ -131,7 +128,9 @@ func YamsAssertEqualType(_ actual: Any?, _ expected: Any?, path: [String] = []) 
         }
 
     default:
-        break // For scalars (String, Int, etc.), type already compared
+        XCTAssertEqual(String(describing: actualType),
+                       String(describing: expectedType),
+                       "Type mismatch at '\(pathString)'")
     }
 }
 
