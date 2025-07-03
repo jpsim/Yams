@@ -94,6 +94,46 @@ func YamsAssertEqual(_ lhs: Any?, _ rhs: Any?,
     return equal(lhs, rhs, context())
 }
 
+func YamsAssertEqualType(_ actual: Any?, _ expected: Any?, path: [String] = []) {
+    // swiftlint:disable:previous identifier_name
+    let pathString = path.joined(separator: ".")
+
+    guard let actual = actual else {
+        XCTFail("Actual is nil at '\(pathString)'")
+        return
+    }
+    guard let expected = expected else {
+        XCTFail("Expected is nil at '\(pathString)'")
+        return
+    }
+
+    let actualType = type(of: actual)
+    let expectedType = type(of: expected)
+
+    switch (actual, expected) {
+    case let (aDict as [String: Any], eDict as [String: Any]):
+        XCTAssertEqual(aDict.count, eDict.count, "Dictionary count mismatch at '\(pathString)'")
+        for key in eDict.keys {
+            guard let aValue = aDict[key], let eValue = eDict[key] else {
+                XCTFail("Missing key '\(key)' at '\(pathString)'")
+                continue
+            }
+            YamsAssertEqualType(aValue, eValue, path: path + [key])
+        }
+
+    case let (aArray as [Any], eArray as [Any]):
+        XCTAssertEqual(aArray.count, eArray.count, "Array count mismatch at '\(pathString)'")
+        for index in 0..<eArray.count {
+            YamsAssertEqualType(aArray[index], eArray[index], path: path + ["[\(index)]"])
+        }
+
+    default:
+        XCTAssertEqual(String(describing: actualType),
+                       String(describing: expectedType),
+                       "Type mismatch at '\(pathString)'")
+    }
+}
+
 private func dumped<T>(_ value: T) -> String {
     var output = ""
     dump(value, to: &output)
