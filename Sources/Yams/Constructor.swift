@@ -460,7 +460,7 @@ extension NSMutableDictionary {
     public static func construct_mapping(from mapping: Node.Mapping) -> NSMutableDictionary? {
         let result = NSMutableDictionary()
         let mapping = mapping.flatten()
-        
+
         mapping.forEach { key, value in
             if let keyString = String.construct(from: key) {
                 result[keyString] = mapping.tag.constructor.any(from: value)
