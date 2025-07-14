@@ -84,7 +84,11 @@ and a third one for a [Yams-native](#yamsnode) representation.
   `Data`.
 
 ```swift
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#else
 import Foundation
+#endif
 import Yams
 
 struct S: Codable {
@@ -184,7 +188,11 @@ When Apple's Combine framework is available, `YAMLDecoder` conforms to the
 
 ```swift
 import Combine
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#else
 import Foundation
+#endif
 import Yams
 
 func fetchBook(from url: URL) -> AnyPublisher<Book, Error> {
