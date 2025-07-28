@@ -185,6 +185,13 @@ extension Float: ScalarRepresentable {
     }
 }
 
+extension NSNumber: ScalarRepresentable {
+    /// This value's `Node.scalar` representation.
+    public func represented() -> Node.Scalar {
+        return .init(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+    }
+}
+
 private func numberFormatter(with significantDigits: Int) -> NumberFormatter {
     let formatter = NumberFormatter()
     formatter.locale = Locale(identifier: "en_US")
@@ -253,6 +260,14 @@ extension String: ScalarRepresentable {
     public func represented() -> Node.Scalar {
         let scalar = Node.Scalar(self)
         return scalar.resolvedTag.name == .str ? scalar : .init(self, Tag(.str), .singleQuoted)
+    }
+}
+
+extension NSString: ScalarRepresentable {
+    /// This value's `Node.scalar` representation.
+    public func represented() -> Node.Scalar {
+      let scalar = Node.Scalar(String(self))
+        return scalar.resolvedTag.name == .str ? scalar : .init(String(self), Tag(.str), .singleQuoted)
     }
 }
 
