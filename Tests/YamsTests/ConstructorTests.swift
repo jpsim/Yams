@@ -13,6 +13,33 @@ import Yams
 final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:this type_body_length
     // Samples come from PyYAML.
 
+    private static let _mapExample = """
+            # Unordered set of key: value pairs.
+            Block style: !!map
+              Clark : Evans
+              Brian : Ingerson
+              Oren  : Ben-Kiki
+            Flow style: !!map { Clark: Evans, Brian: Ingerson, Oren: Ben-Kiki }
+
+            """
+    private static let _seqExample = """
+        # Ordered sequence of nodes
+        Block style: !!seq
+        - Mercury   # Rotates - no light/dark sides.
+        - Venus     # Deadliest. Aptly named.
+        - Earth     # Mostly dirt.
+        - Mars      # Seems empty.
+        - Jupiter   # The king.
+        - Saturn    # Pretty.
+        - Uranus    # Where the sun hardly shines.
+        - Neptune   # Boring. No rings.
+        - Pluto     # You call this a planet?
+        Flow style: !!seq [ Mercury, Venus, Earth, Mars,      # Rocks
+                            Jupiter, Saturn, Uranus, Neptune, # Gas
+                            Pluto ]                           # Overrated
+
+        """
+
     func testBinary() throws {
         let example = """
             canonical: !!binary \"\\
@@ -132,16 +159,8 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
     }
 
     func testMap() throws {
-        let example = """
-            # Unordered set of key: value pairs.
-            Block style: !!map
-              Clark : Evans
-              Brian : Ingerson
-              Oren  : Ben-Kiki
-            Flow style: !!map { Clark: Evans, Brian: Ingerson, Oren: Ben-Kiki }
+        let objects = try Yams.load(yaml: Self._mapExample)
 
-            """
-        let objects = try Yams.load(yaml: example)
         let expected: [String: Any] = [
             "Block style": [
                 "Clark": "Evans",
@@ -150,6 +169,24 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
             ],
             "Flow style": ["Clark": "Evans", "Brian": "Ingerson", "Oren": "Ben-Kiki"]
         ]
+        YamsAssertEqual(objects, expected)
+    }
+
+    func testNSMutableMap() throws {
+        let objects = try Yams.load(yaml: Self._mapExample,
+                  .default,
+                  Constructor(Constructor.defaultScalarMap,
+                              Constructor.nsMutableMappingMap,
+                              Constructor.nsMutableSequenceMap)) as? NSMutableDictionary
+
+        let expected: NSMutableDictionary = NSMutableDictionary()
+        expected["Block style"] = NSMutableDictionary(objects: ["Evans", "Ingerson", "Ben-Kiki"],
+                                            forKeys: ["Clark", "Brian", "Oren"].map(NSString.init))
+
+        expected["Flow style"] = NSMutableDictionary(objects: ["Evans", "Ingerson", "Ben-Kiki"],
+                                            forKeys: ["Clark", "Brian", "Oren"].map(NSString.init))
+
+        YamsAssertEqualType(objects, expected)
         YamsAssertEqual(objects, expected)
     }
 
@@ -412,24 +449,7 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
     }
 
     func testSeq() throws {
-        let example = """
-            # Ordered sequence of nodes
-            Block style: !!seq
-            - Mercury   # Rotates - no light/dark sides.
-            - Venus     # Deadliest. Aptly named.
-            - Earth     # Mostly dirt.
-            - Mars      # Seems empty.
-            - Jupiter   # The king.
-            - Saturn    # Pretty.
-            - Uranus    # Where the sun hardly shines.
-            - Neptune   # Boring. No rings.
-            - Pluto     # You call this a planet?
-            Flow style: !!seq [ Mercury, Venus, Earth, Mars,      # Rocks
-                                Jupiter, Saturn, Uranus, Neptune, # Gas
-                                Pluto ]                           # Overrated
-
-            """
-        let objects = try Yams.load(yaml: example)
+        let objects = try Yams.load(yaml: Self._seqExample)
         let expected: [String: Any] = [
             "Block style": [
                 "Mercury",
@@ -446,6 +466,25 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
                             "Jupiter", "Saturn", "Uranus", "Neptune",
                             "Pluto" ]
         ]
+        YamsAssertEqual(objects, expected)
+    }
+
+    func testMutableSeq() throws {
+        let objects = try Yams.load(yaml: Self._seqExample,
+                      .default,
+                      Constructor(Constructor.defaultScalarMap,
+                                  Constructor.nsMutableMappingMap,
+                                  Constructor.nsMutableSequenceMap)) as? NSMutableDictionary
+
+        let expected = NSMutableDictionary()
+        expected["Block style"] = NSMutableArray(array: [
+            "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"
+        ])
+        expected["Flow style"] = NSMutableArray(array: [
+            "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"
+        ])
+
+        YamsAssertEqualType(objects, expected)
         YamsAssertEqual(objects, expected)
     }
 
