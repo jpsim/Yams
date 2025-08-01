@@ -470,20 +470,6 @@ extension NSMutableDictionary {
     }
 }
 
-private extension NSMutableDictionary {
-    static func private_construct_mapping(from mapping: Node.Mapping) -> NSMutableDictionary {
-        let result = NSMutableDictionary()
-        let mapping = mapping.flatten()
-
-        mapping.forEach { key, value in
-            if let keyString = String.construct(from: key) {
-                result[keyString] = mapping.tag.constructor.any(from: value)
-            }
-        }
-        return result
-    }
-}
-
 extension Set {
     /// Construct a `Set`, if possible, from the specified mapping.
     ///
