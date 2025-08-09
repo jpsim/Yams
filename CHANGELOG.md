@@ -1,3 +1,18 @@
+## 6.1.0
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Adds support for NS[Mutable]Dictionary, NS[Mutable]Array, and NSString
+  [Tomek Popis](https://github.com/PopTo)
+
+##### Bug Fixes
+
+* None
+
 ## 6.0.2
 
 ##### Breaking
