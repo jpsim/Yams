@@ -190,7 +190,28 @@
                 <a class="nav-group-task-link" href="Extensions.html#/s:s4Int8V">Int8</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/NSArray.html">NSArray</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/NSDictionary.html">NSDictionary</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/NSMutableArray.html">NSMutableArray</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/NSMutableDictionary.html">NSMutableDictionary</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/NSMutableSet.html">NSMutableSet</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Extensions/NSNull.html">NSNull</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/NSNumber.html">NSNumber</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Extensions/NSString.html">NSString</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Extensions/Optional.html">Optional</a>
@@ -469,6 +490,26 @@ Produces an instance of <code><a href="Enums/Node.html">Node</a></code> from YAM
 """</span>
 <span class="k">let</span> <span class="nv">node</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">Yams</span><span class="o">.</span><span class="nf">compose</span><span class="p">(</span><span class="nv">yaml</span><span class="p">:</span> <span class="n">yaml</span><span class="p">)</span>
 <span class="n">map</span> <span class="o">==</span> <span class="n">node</span>
+</code></pre>
+<h4 id='nsmutable-compatibility' class='heading'>NSMutable* compatibility</h4>
+
+<p>Yams also supports deep conversion of YAML into <code>NSMutableDictionary</code> and <code>NSMutableArray</code>,
+which is useful when working with mutable Cocoa-style collections, such as NSMutableDictionary and NSMutableArray.</p>
+
+<p>To produce <code>NSMutable*</code> results, use a custom constructor:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">yaml</span> <span class="o">=</span> <span class="s">"""
+names:
+  - Alice
+  - Bob
+"""</span>
+
+<span class="k">let</span> <span class="nv">constructor</span> <span class="o">=</span> <span class="kt">Constructor</span><span class="p">(</span><span class="kt">Constructor</span><span class="o">.</span><span class="n">defaultScalarMap</span><span class="p">,</span>
+                              <span class="kt">Constructor</span><span class="o">.</span><span class="n">dynamicMappingMap</span><span class="p">,</span>
+                              <span class="kt">Constructor</span><span class="o">.</span><span class="n">dynamicSequenceMap</span><span class="p">)</span>
+
+<span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">Yams</span><span class="o">.</span><span class="nf">load</span><span class="p">(</span><span class="nv">yaml</span><span class="p">:</span> <span class="n">yaml</span><span class="p">,</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="n">constructor</span><span class="p">)</span> <span class="k">as?</span> <span class="kt">NSMutableDictionary</span>
+<span class="k">let</span> <span class="nv">names</span> <span class="o">=</span> <span class="n">result</span><span class="p">?[</span><span class="s">"names"</span><span class="p">]</span> <span class="k">as?</span> <span class="kt">NSMutableArray</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">names</span> <span class="p">??</span> <span class="s">"No data"</span><span class="p">)</span> <span class="c1">// -&gt; (Alice, Bob)</span>
 </code></pre>
 <h4 id='integrating-with-a-href-https-developer-apple-com-documentation-combine-combine-a' class='heading'>Integrating with <a href="https://developer.apple.com/documentation/combine">Combine</a></h4>
 
