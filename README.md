@@ -191,8 +191,8 @@ names:
 """
 
 let constructor = Constructor(Constructor.defaultScalarMap,
-                              Constructor.dynamicMappingMap,
-                              Constructor.dynamicSequenceMap)
+                              Constructor.nsMutableMappingMap,
+                              Constructor.nsMutableSequenceMap)
 
 let result = try Yams.load(yaml: yaml, .default, constructor) as? NSMutableDictionary
 let names = result?["names"] as? NSMutableArray
