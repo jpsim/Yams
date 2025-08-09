@@ -504,8 +504,8 @@ names:
 """</span>
 
 <span class="k">let</span> <span class="nv">constructor</span> <span class="o">=</span> <span class="kt">Constructor</span><span class="p">(</span><span class="kt">Constructor</span><span class="o">.</span><span class="n">defaultScalarMap</span><span class="p">,</span>
-                              <span class="kt">Constructor</span><span class="o">.</span><span class="n">dynamicMappingMap</span><span class="p">,</span>
-                              <span class="kt">Constructor</span><span class="o">.</span><span class="n">dynamicSequenceMap</span><span class="p">)</span>
+                              <span class="kt">Constructor</span><span class="o">.</span><span class="n">nsMutableMappingMap</span><span class="p">,</span>
+                              <span class="kt">Constructor</span><span class="o">.</span><span class="n">nsMutableSequenceMap</span><span class="p">)</span>
 
 <span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">Yams</span><span class="o">.</span><span class="nf">load</span><span class="p">(</span><span class="nv">yaml</span><span class="p">:</span> <span class="n">yaml</span><span class="p">,</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="n">constructor</span><span class="p">)</span> <span class="k">as?</span> <span class="kt">NSMutableDictionary</span>
 <span class="k">let</span> <span class="nv">names</span> <span class="o">=</span> <span class="n">result</span><span class="p">?[</span><span class="s">"names"</span><span class="p">]</span> <span class="k">as?</span> <span class="kt">NSMutableArray</span>
