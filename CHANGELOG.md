@@ -1,3 +1,11 @@
+## Main
+
+##### Other
+
+* Rename Package@swift-6.swift to Package@swift-6.0.swift to work around Swift 
+  Registry idiosyncrasies.  
+  [Andrew Watt](https://github.com/watt)
+
 ## 6.1.0
 
 ##### Breaking
