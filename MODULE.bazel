@@ -13,4 +13,4 @@ bazel_dep(
 )
 
 bazel_dep(name = "platforms", version = "0.0.9", dev_dependency = True)
-bazel_dep(name = "rules_apple", version = "3.5.1", dev_dependency = True)
+bazel_dep(name = "rules_apple", version = "4.1.2", dev_dependency = True)
