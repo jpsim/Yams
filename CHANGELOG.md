@@ -6,7 +6,8 @@
 
 ##### Enhancements
 
-* None.
+* `YAMLDecoder` can decode `DecodableWithConfiguration` objects.
+  [Vitalii Budnik](https://github.com/nekrich)
 
 ##### Bug Fixes
 
