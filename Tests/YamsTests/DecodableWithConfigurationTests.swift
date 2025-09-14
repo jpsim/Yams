@@ -14,20 +14,24 @@ class DecodableWithConfigurationTests: XCTestCase {
     struct Container: DecodableWithConfiguration, Equatable {
         /// Decoding configuration provider.
         enum DecodingConfigurationProvider: DecodingConfigurationProviding {
-            static let decodingConfiguration: DecodingConfiguration = .init(fileManager: .default)
+            static let decodingConfiguration: DecodingConfiguration = .init(nonDecodableObject: .init(property: UUID().uuidString))
         }
 
         /// Decoding configuration.
-        struct DecodingConfiguration: @unchecked Sendable {
-            let fileManager: FileManager
+        struct DecodingConfiguration: Sendable {
+            let nonDecodableObject: NonDecodableObject
         }
 
         struct DecodableObject: Decodable, Equatable {
             var name: String
         }
 
+        struct NonDecodableObject: Equatable, Sendable {
+            var property: String
+        }
+
         var decodableObject: DecodableObject?
-        var fileManager: FileManager
+        var nonDecodableObject: NonDecodableObject
 
         enum CodingKeys: String, CodingKey {
             case decodableObject
@@ -36,7 +40,7 @@ class DecodableWithConfigurationTests: XCTestCase {
         init(from decoder: any Decoder, configuration: DecodingConfiguration) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             decodableObject = try container.decodeIfPresent(DecodableObject.self, forKey: .decodableObject)
-            fileManager = configuration.fileManager
+            nonDecodableObject = configuration.nonDecodableObject
         }
     }
 
@@ -47,7 +51,7 @@ class DecodableWithConfigurationTests: XCTestCase {
         """
 
         let yamlData = try XCTUnwrap(yaml.data(using: Parser.Encoding.default.swiftStringEncoding))
-        let decodingConfiguration = Container.DecodingConfiguration(fileManager: .init())
+        let decodingConfiguration = Container.DecodingConfiguration(nonDecodableObject: .init(property: "value"))
 
         let container: Container
         do {
@@ -57,8 +61,7 @@ class DecodableWithConfigurationTests: XCTestCase {
             return
         }
 
-        XCTAssertTrue(container.fileManager === decodingConfiguration.fileManager)
-        XCTAssertFalse(container.fileManager === FileManager.default)
+        XCTAssertEqual(container.nonDecodableObject, decodingConfiguration.nonDecodableObject)
         XCTAssertEqual(container.decodableObject, .init(name: "item1"), "correctly decodes the decodable object")
     }
 
@@ -81,8 +84,10 @@ class DecodableWithConfigurationTests: XCTestCase {
             return
         }
 
-        XCTAssertTrue(container.fileManager === FileManager.default)
-        XCTAssertFalse(container.fileManager === FileManager())
+        XCTAssertEqual(
+            container.nonDecodableObject,
+            Container.DecodingConfigurationProvider.decodingConfiguration.nonDecodableObject
+        )
         XCTAssertEqual(container.decodableObject, .init(name: "item1"), "correctly decodes the decodable object")
     }
 }
