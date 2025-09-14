@@ -57,8 +57,8 @@ class DecodableWithConfigurationTests: XCTestCase {
             return
         }
 
-        XCTAssertEqual(container.fileManager, decodingConfiguration.fileManager)
-        XCTAssertNotEqual(container.fileManager, FileManager.default)
+        XCTAssertTrue(container.fileManager === decodingConfiguration.fileManager)
+        XCTAssertFalse(container.fileManager === FileManager.default)
         XCTAssertEqual(container.decodableObject, .init(name: "item1"), "correctly decodes the decodable object")
     }
 
@@ -81,8 +81,8 @@ class DecodableWithConfigurationTests: XCTestCase {
             return
         }
 
-        XCTAssertEqual(container.fileManager, FileManager.default)
-        XCTAssertNotEqual(container.fileManager, .init())
+        XCTAssertTrue(container.fileManager === FileManager.default)
+        XCTAssertFalse(container.fileManager === FileManager())
         XCTAssertEqual(container.decodableObject, .init(name: "item1"), "correctly decodes the decodable object")
     }
 }
