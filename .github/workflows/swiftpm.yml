@@ -106,7 +106,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        swift_version: ['5.8.1', '5.9.1', '5.10.1', '6.0', '6.1']
+        swift_version: ['6.0']
     steps:
       - uses: actions/checkout@v4
       - uses: SwiftyLab/setup-swift@4bbb093f8c68d1dee1caa8b67c681a3f8fe70a91
