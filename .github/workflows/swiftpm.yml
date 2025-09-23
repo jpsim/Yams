@@ -109,7 +109,7 @@ jobs:
         swift_version: ['5.8.1', '5.9.1', '5.10.1', '6.0', '6.1']
     steps:
       - uses: actions/checkout@v4
-      - uses: SwiftyLab/setup-swift@bf0987b4ed5eca4d558dda243b257f0562b4b36e
+      - uses: SwiftyLab/setup-swift@4bbb093f8c68d1dee1caa8b67c681a3f8fe70a91
         with:
           swift-version: ${{ matrix.swift_version }}
       - name: Build
