@@ -126,7 +126,7 @@ jobs:
         if: always()
         run: |
           set -o pipefail
-          xcodebuild -downloadPlatform visionOS
+          xcodebuild -downloadPlatform tvOS
           xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (3rd generation)" | xcbeautify --renderer github-actions
         shell: bash
       - name: watchOS Simulator
