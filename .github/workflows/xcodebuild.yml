@@ -117,11 +117,17 @@ jobs:
         shell: bash
       - name: iPhone Simulator
         if: always()
-        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 16" | xcbeautify --renderer github-actions
+        run: |
+          set -o pipefail
+          xcodebuild -downloadPlatform iOS
+          xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 16" | xcbeautify --renderer github-actions
         shell: bash
       - name: Apple TV Simulator
         if: always()
-        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (3rd generation)" | xcbeautify --renderer github-actions
+        run: |
+          set -o pipefail
+          xcodebuild -downloadPlatform tvOS
+          xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (3rd generation)" | xcbeautify --renderer github-actions
         shell: bash
       - name: watchOS Simulator
         if: always()
