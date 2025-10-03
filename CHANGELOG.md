@@ -1,3 +1,26 @@
+## Main
+
+##### Other
+
+* Rename Package@swift-6.swift to Package@swift-6.0.swift to work around Swift 
+  Registry idiosyncrasies.  
+  [Andrew Watt](https://github.com/watt)
+
+## 6.1.0
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Adds support for NS[Mutable]Dictionary, NS[Mutable]Array, and NSString
+  [Tomek Popis](https://github.com/PopTo)
+
+##### Bug Fixes
+
+* None
+
 ## 6.0.2
 
 ##### Breaking
