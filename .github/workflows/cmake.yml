@@ -37,7 +37,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: sudo chown runner:admin /usr/local
-      - run: brew install cmake ninja
+      - run: |
+          # macOS GHA runners have an issue with the version of cmake installed by defaut from the pinned tap
+          # https://github.com/actions/runner-images/issues/12912
+          # Quick fix is to update the brew tap and install cmake only if it's not already installed
+          # https://github.com/actions/runner-images/issues/12912#issuecomment-3240845829
+
+          echo "Updating brew and installing cmake if needed..."
+          brew update && (brew list cmake || brew install cmake)
+
+          echo "Installing ninja..."
+          brew install ninja
+        name: Install Homebrew dependencies
+
       - run: swift -version
       - run: rm -rf build
       - run: cmake -B build -G Ninja -S . -DCMAKE_BUILD_TYPE=Release
