@@ -14,7 +14,7 @@ class DecodableWithConfigurationTests: XCTestCase {
     struct Container: DecodableWithConfiguration, Equatable {
         /// Decoding configuration provider.
         enum DecodingConfigurationProvider: DecodingConfigurationProviding {
-            static let decodingConfiguration: DecodingConfiguration = 
+            static let decodingConfiguration: DecodingConfiguration =
                 .init(nonDecodableObject: .init(property: UUID().uuidString))
         }
 
