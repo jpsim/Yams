@@ -347,7 +347,7 @@
 user info mapping. Similar to <code>Foundation.JSONDecoder</code>.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L13-L123">Show on GitHub</a>
+                <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L13-L104">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -575,7 +575,7 @@ user info mapping. Similar to <code>Foundation.JSONDecoder</code>.</p>
                         <p>Returns the decoded type <code>T</code>.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L53-L64">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L53-L59">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -659,7 +659,7 @@ user info mapping. Similar to <code>Foundation.JSONDecoder</code>.</p>
                         <p>Returns the decoded type <code>T</code>.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L75-L97">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L70-L78">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -743,7 +743,7 @@ user info mapping. Similar to <code>Foundation.JSONDecoder</code>.</p>
                         <p>Returns the decoded type <code>T</code>.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L108-L116">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L89-L97">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -774,7 +774,7 @@ user info mapping. Similar to <code>Foundation.JSONDecoder</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L120-L122">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L101-L103">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -816,7 +816,7 @@ user info mapping. Similar to <code>Foundation.JSONDecoder</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L505">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L548">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -845,7 +845,492 @@ user info mapping. Similar to <code>Foundation.JSONDecoder</code>.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L507-L509">Show on GitHub</a>
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L550-L552">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/JSONDecoder%20API"></a>
+                <a name="//apple_ref/swift/Section/JSONDecoder API" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/JSONDecoder%20API"></a>
+                  <h3 class="section-name"><span>JSONDecoder API</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11YAMLDecoderC6decode_4from13configurationxxm_10Foundation4DataV21DecodingConfigurationQztKAG013DecodableWithI0RzlF"></a>
+                    <a name="//apple_ref/swift/Method/decode(_:from:configuration:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11YAMLDecoderC6decode_4from13configurationxxm_10Foundation4DataV21DecodingConfigurationQztKAG013DecodableWithI0RzlF">decode(_:<wbr>from:<wbr>configuration:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns a value of the type you specify, decoded from a YAML object.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">decode</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span> <span class="o">=</span> <span class="kt">T</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
+                      <span class="n">from</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span>
+                      <span class="nv">configuration</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="kt">DecodingConfiguration</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="k">where</span> <span class="kt">T</span><span class="p">:</span> <span class="kt">DecodableWithConfiguration</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>type</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The type of the value to decode from the supplied YAML object.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The YAML object <code>Data</code> to decode.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A decoding configuration that provides additional information necessary for decoding.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A value of the specified type, if the decoder can parse the data.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L571-L575">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11YAMLDecoderC6decode_4from13configurationxxm_10Foundation4DataVq_mtKAG26DecodableWithConfigurationRzAG08DecodingJ9ProvidingR_0kJ0Qy_ALRtzr0_lF"></a>
+                    <a name="//apple_ref/swift/Method/decode(_:from:configuration:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11YAMLDecoderC6decode_4from13configurationxxm_10Foundation4DataVq_mtKAG26DecodableWithConfigurationRzAG08DecodingJ9ProvidingR_0kJ0Qy_ALRtzr0_lF">decode(_:<wbr>from:<wbr>configuration:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns a value of the type you specify, decoded from a YAML object.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">decode</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">DecodableWithConfiguration</span><span class="p">,</span> <span class="kt">C</span><span class="p">:</span> <span class="kt">DecodingConfigurationProviding</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span> <span class="o">=</span> <span class="kt">T</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
+    <span class="n">from</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span>
+    <span class="nv">configuration</span><span class="p">:</span> <span class="kt">C</span><span class="o">.</span><span class="k">Type</span>
+<span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="k">where</span> <span class="kt">T</span><span class="o">.</span><span class="kt">DecodingConfiguration</span> <span class="o">==</span> <span class="kt">C</span><span class="o">.</span><span class="kt">DecodingConfiguration</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>type</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The type of the value to decode from the supplied YAML object.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The YAML object <code>Data</code> to decode.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A configuration instance provider to help decode types that don’t support
+           encoding by themselves.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A value of the specified type, if the decoder can parse the data.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L586-L592">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Yams%20API"></a>
+                <a name="//apple_ref/swift/Section/Yams API" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Yams%20API"></a>
+                  <h3 class="section-name"><span>Yams API</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11YAMLDecoderC6decode_4from13configuration8userInfoxxm_10Foundation4DataV21DecodingConfigurationQzSDys010CodingUserG3KeyVypGtKAH013DecodableWithK0RzlF"></a>
+                    <a name="//apple_ref/swift/Method/decode(_:from:configuration:userInfo:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11YAMLDecoderC6decode_4from13configuration8userInfoxxm_10Foundation4DataV21DecodingConfigurationQzSDys010CodingUserG3KeyVypGtKAH013DecodableWithK0RzlF">decode(_:<wbr>from:<wbr>configuration:<wbr>userInfo:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns a value of the type you specify, decoded from a YAML object.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">decode</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span> <span class="o">=</span> <span class="kt">T</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
+                      <span class="n">from</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span>
+                      <span class="nv">configuration</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="kt">DecodingConfiguration</span><span class="p">,</span>
+                      <span class="nv">userInfo</span><span class="p">:</span> <span class="p">[</span><span class="kt">CodingUserInfoKey</span><span class="p">:</span> <span class="kt">Any</span><span class="p">])</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="k">where</span> <span class="kt">T</span><span class="p">:</span> <span class="kt">DecodableWithConfiguration</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>type</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The type of the value to decode from the supplied YAML object.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The YAML object <code>Data</code> to decode.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A configuration instance provider to help decode types that don’t support
+           encoding by themselves.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>userInfo</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A dictionary you use to customize the decoding process by providing contextual information.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A value of the specified type, if the decoder can parse the data.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L606-L619">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11YAMLDecoderC6decode_4from13configuration8userInfoxxm_10Foundation4DataVq_mSDys010CodingUserG3KeyVypGtKAH26DecodableWithConfigurationRzAH08DecodingO9ProvidingR_0pO0Qy_APRtzr0_lF"></a>
+                    <a name="//apple_ref/swift/Method/decode(_:from:configuration:userInfo:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11YAMLDecoderC6decode_4from13configuration8userInfoxxm_10Foundation4DataVq_mSDys010CodingUserG3KeyVypGtKAH26DecodableWithConfigurationRzAH08DecodingO9ProvidingR_0pO0Qy_APRtzr0_lF">decode(_:<wbr>from:<wbr>configuration:<wbr>userInfo:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns a value of the type you specify, decoded from a YAML object.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">decode</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">DecodableWithConfiguration</span><span class="p">,</span> <span class="kt">C</span><span class="p">:</span> <span class="kt">DecodingConfigurationProviding</span><span class="o">&gt;</span><span class="p">(</span>
+    <span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span> <span class="o">=</span> <span class="kt">T</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
+    <span class="n">from</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span>
+    <span class="nv">configuration</span><span class="p">:</span> <span class="kt">C</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span>
+    <span class="nv">userInfo</span><span class="p">:</span> <span class="p">[</span><span class="kt">CodingUserInfoKey</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="k">where</span> <span class="kt">T</span><span class="o">.</span><span class="kt">DecodingConfiguration</span> <span class="o">==</span> <span class="kt">C</span><span class="o">.</span><span class="kt">DecodingConfiguration</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>type</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The type of the value to decode from the supplied YAML object.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The YAML object <code>Data</code> to decode.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A configuration instance provider to help decode types that don’t support
+           encoding by themselves.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>userInfo</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A dictionary you use to customize the decoding process by providing contextual information.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A value of the specified type, if the decoder can parse the data.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L631-L638">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Node%20decoder"></a>
+                <a name="//apple_ref/swift/Section/Node decoder" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Node%20decoder"></a>
+                  <h3 class="section-name"><span>Node decoder</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:4Yams11YAMLDecoderC6decode_4from13configuration8userInfoxxm_AA4NodeO21DecodingConfigurationQzSDys010CodingUserG3KeyVypGtK10Foundation013DecodableWithJ0RzlF"></a>
+                    <a name="//apple_ref/swift/Method/decode(_:from:configuration:userInfo:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:4Yams11YAMLDecoderC6decode_4from13configuration8userInfoxxm_AA4NodeO21DecodingConfigurationQzSDys010CodingUserG3KeyVypGtK10Foundation013DecodableWithJ0RzlF">decode(_:<wbr>from:<wbr>configuration:<wbr>userInfo:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Decode a <code>Decodable</code> type from a given <code><a href="../Enums/Node.html">Node</a></code> and optional user info mapping.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>DecodingError</code> or <code><a href="../Enums/YamlError.html">YamlError</a></code> if something went wrong while decoding.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">decode</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span> <span class="o">=</span> <span class="kt">T</span><span class="o">.</span><span class="k">self</span><span class="p">,</span>
+                      <span class="n">from</span> <span class="nv">node</span><span class="p">:</span> <span class="kt"><a href="../Enums/Node.html">Node</a></span><span class="p">,</span>
+                      <span class="nv">configuration</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="kt">DecodingConfiguration</span><span class="p">,</span>
+                      <span class="nv">userInfo</span><span class="p">:</span> <span class="p">[</span><span class="kt">CodingUserInfoKey</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:])</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="k">where</span> <span class="kt">T</span><span class="p">:</span> <span class="kt">DecodableWithConfiguration</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>type</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The type of the value to decode from the supplied YAML node.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>node</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>YAML Node to decode.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A configuration instance that provides additional information necessary for decoding.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>userInfo</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A dictionary you use to customize the decoding process by providing contextual information.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Returns the decoded type <code>T</code>.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/jpsim/Yams/tree/main/Sources/Yams/Decoder.swift#L653-L660">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
