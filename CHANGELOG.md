@@ -1,10 +1,23 @@
 ## Main
 
-##### Other
+## 6.2.0
+
+##### Breaking
+
+* None.
+
+##### Enhancements
 
 * Rename Package@swift-6.swift to Package@swift-6.0.swift to work around Swift 
   Registry idiosyncrasies.  
   [Andrew Watt](https://github.com/watt)
+  
+* Add Support for DecodableWithConfiguration protocol
+  [Vitalii Budnik](https://github.com/nekrich)
+
+##### Bug Fixes
+
+* None
 
 ## 6.1.0
 
