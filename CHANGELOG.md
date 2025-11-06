@@ -1,5 +1,18 @@
 ## Main
 
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Increase compatibility with Swift C++ clients.  
+  [John Fairhurst](https://github.com/johnfairh)
+
+##### Bug Fixes
+
+* None
+
 ## 6.2.0
 
 ##### Breaking

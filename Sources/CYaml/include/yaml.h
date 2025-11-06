@@ -11,13 +11,13 @@
 #ifndef YAML_H
 #define YAML_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * @defgroup export Export Definitions
