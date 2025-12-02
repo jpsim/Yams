@@ -7,8 +7,11 @@ cc_library(
         "Sources/CYaml/src/*.h",
     ]),
     hdrs = ["Sources/CYaml/include/yaml.h"],
-    # Requires because of https://github.com/bazelbuild/bazel/pull/10143 otherwise host transition builds fail
-    copts = ["-fPIC"],
+    copts = [
+        # Required because of https://github.com/bazelbuild/bazel/pull/10143 otherwise host transition builds fail.
+        "-fPIC",
+        "-DYAML_DECLARE_STATIC"
+    ],
     includes = ["Sources/CYaml/include"],
     linkstatic = True,
     tags = ["swift_module"],
