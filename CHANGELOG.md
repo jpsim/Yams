@@ -1,5 +1,23 @@
 ## Main
 
+## 6.2.1
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Fix compatibility with newer rules_swift and bazel.
+  [Adin Cebic](https://github.com/adincebic)
+
+* Build static library on Windows with Bazel.
+  [SimplyDanny](https://github.com/SimplyDanny)
+
+##### Bug Fixes
+
+* None.
+
 ## 6.2.0
 
 ##### Breaking
