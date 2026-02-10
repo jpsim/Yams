@@ -78,40 +78,40 @@ private func represent(_ value: Any) throws -> Node {
 /// Type is representable as `Node.scalar`.
 public protocol ScalarRepresentable: NodeRepresentable {
     /// This value's `Node.scalar` representation.
-    func represented() -> Node.Scalar
+    func represented(options: Emitter.Options) -> Node.Scalar
 }
 
 extension ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() throws -> Node {
-        return .scalar(represented())
+        return .scalar(represented(options: .init()))
     }
 }
 
 extension NSNull: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(options: Emitter.Options) -> Node.Scalar {
         return .init("null", Tag(.null))
     }
 }
 
 extension Bool: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(options: Emitter.Options) -> Node.Scalar {
         return .init(self ? "true" : "false", Tag(.bool))
     }
 }
 
 extension Data: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(options: Emitter.Options) -> Node.Scalar {
         return .init(base64EncodedString(), Tag(.binary))
     }
 }
 
 extension Date: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(options: Emitter.Options) -> Node.Scalar {
         return .init(iso8601String, Tag(.timestamp))
     }
 
@@ -173,15 +173,25 @@ private let iso8601WithoutZFormatter: DateFormatter = {
 
 extension Double: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
-        return .init(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+    public func represented(options: Emitter.Options) -> Node.Scalar {
+        let formattedString: String = formattedStringForCodable(
+            value: self,
+            floatingPointNumberFormatStrategy: options.floatingPointNumberFormatStrategy,
+            formatter: doubleFormatter
+        )
+        return .init(formattedString.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
 }
 
 extension Float: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
-        return .init(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+    public func represented(options: Emitter.Options) -> Node.Scalar {
+        let formattedString: String = formattedStringForCodable(
+            value: self,
+            floatingPointNumberFormatStrategy: options.floatingPointNumberFormatStrategy,
+            formatter: floatFormatter
+        )
+        return .init(formattedString.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
     }
 }
 
@@ -213,7 +223,7 @@ private let floatFormatter = numberFormatter(with: 7)
 
 extension BinaryInteger {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(options: Emitter.Options) -> Node.Scalar {
         return .init(String(describing: self), Tag(.int))
     }
 }
@@ -243,21 +253,21 @@ extension Optional: NodeRepresentable {
 
 extension Decimal: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(options: Emitter.Options) -> Node.Scalar {
         return .init(description)
     }
 }
 
 extension URL: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(options: Emitter.Options) -> Node.Scalar {
         return .init(absoluteString)
     }
 }
 
 extension String: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(options: Emitter.Options) -> Node.Scalar {
         let scalar = Node.Scalar(self)
         return scalar.resolvedTag.name == .str ? scalar : .init(self, Tag(.str), .singleQuoted)
     }
@@ -273,7 +283,7 @@ extension NSString: ScalarRepresentable {
 
 extension UUID: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
-    public func represented() -> Node.Scalar {
+    public func represented(options: Emitter.Options) -> Node.Scalar {
         return .init(uuidString)
     }
 }
@@ -283,13 +293,13 @@ extension UUID: ScalarRepresentable {
 /// Types conforming to this protocol can be encoded by `YamlEncoder`.
 public protocol YAMLEncodable: Encodable {
     /// Returns this value wrapped in a `Node`.
-    func box() -> Node
+    func box(options: Emitter.Options) -> Node
 }
 
 extension YAMLEncodable where Self: ScalarRepresentable {
     /// Returns this value wrapped in a `Node.scalar`.
-    public func box() -> Node {
-        return .scalar(represented())
+    public func box(options: Emitter.Options) -> Node {
+        return .scalar(represented(options: options))
     }
 }
 
@@ -312,35 +322,61 @@ extension UUID: YAMLEncodable {}
 
 extension Date: YAMLEncodable {
     /// Returns this value wrapped in a `Node.scalar`.
-    public func box() -> Node {
+    public func box(options: Emitter.Options) -> Node {
         return Node(iso8601StringWithFullNanosecond, Tag(.timestamp))
     }
 }
 
 extension Double: YAMLEncodable {
     /// Returns this value wrapped in a `Node.scalar`.
-    public func box() -> Node {
-        return Node(formattedStringForCodable, Tag(.float))
+    public func box(options: Emitter.Options) -> Node {
+        let formattedString: String = formattedStringForCodable(
+            value: self,
+            floatingPointNumberFormatStrategy: options.floatingPointNumberFormatStrategy,
+            formatter: doubleFormatter
+        )
+        return Node(formattedString, Tag(.float))
     }
 }
 
 extension Float: YAMLEncodable {
     /// Returns this value wrapped in a `Node.scalar`.
-    public func box() -> Node {
-        return Node(formattedStringForCodable, Tag(.float))
+    public func box(options: Emitter.Options) -> Node {
+        let formattedString: String = formattedStringForCodable(
+            value: self,
+            floatingPointNumberFormatStrategy: options.floatingPointNumberFormatStrategy,
+            formatter: floatFormatter
+        )
+        return Node(formattedString, Tag(.float))
     }
 }
 
-private extension FloatingPoint where Self: CVarArg {
-    var formattedStringForCodable: String {
-        // Since `NumberFormatter` creates a string with insufficient precision for Decode,
-        // it uses with `String(format:...)`
-        let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
-        // "%*.g" does not use scientific notation if the exponent is less than –4.
-        // So fallback to using `NumberFormatter` if string does not uses scientific notation.
-        guard string.lazy.suffix(5).contains("e") else {
-            return doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
+private func formattedStringForCodable<T: FloatingPoint & CustomStringConvertible & CVarArg>(
+    value: T,
+    floatingPointNumberFormatStrategy: Emitter.FloatingPointNumberFormatStrategy,
+    formatter: NumberFormatter
+) -> String {
+    if floatingPointNumberFormatStrategy == .decimal {
+        switch value {
+        case .infinity:
+            return ".inf"
+        case -.infinity:
+            return "-.inf"
+        case .nan:
+            return ".nan"
+        default:
+            return value.description
         }
-        return string
     }
+
+    // Since `NumberFormatter` creates a string with insufficient precision for Decode,
+    // it uses with `String(format:...)`
+    let string = String(format: "%.*g", DBL_DECIMAL_DIG, value)
+    // "%*.g" does not use scientific notation if the exponent is less than –4.
+    // So fallback to using `NumberFormatter` if string does not uses scientific notation.
+    guard string.lazy.suffix(5).contains("e") else {
+        formatter.numberStyle = .scientific
+        return formatter.string(for: value)!.replacingOccurrences(of: "+-", with: "-")
+    }
+    return string
 }
