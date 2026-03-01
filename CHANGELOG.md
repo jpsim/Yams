@@ -1,5 +1,7 @@
 ## Main
 
+## 6.2.1
+
 ##### Breaking
 
 * None.
@@ -13,6 +15,11 @@
 * Add WASI platform support for DBL_DECIMAL_DIG to fix compilation on
   SwiftWasm.
   [David Hunt](https://github.com/foscomputerservices)
+* Fix compatibility with newer rules_swift and bazel.
+  [Adin Cebic](https://github.com/adincebic)
+
+* Build static library on Windows with Bazel.
+  [SimplyDanny](https://github.com/SimplyDanny)
 
 ## 6.2.0
 
