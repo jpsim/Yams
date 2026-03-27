@@ -6,7 +6,19 @@
 //  Copyright (c) 2017 Yams. All rights reserved.
 //
 
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#elseif canImport(Foundation)
 import Foundation
+#endif
+
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#elseif canImport(Musl)
+import Musl
+#endif
 
 public extension Node {
     /// Initialize a `Node` with a value of `NodeRepresentable`.
@@ -41,6 +53,7 @@ extension Array: NodeRepresentable {
     }
 }
 
+#if canImport(ObjectiveC)
 extension NSArray: NodeRepresentable {
     /// This value's `Node` representation.
     public func represented() throws -> Node {
@@ -48,6 +61,7 @@ extension NSArray: NodeRepresentable {
         return Node(nodes, Tag(.seq))
     }
 }
+#endif
 
 extension Dictionary: NodeRepresentable {
     /// This value's `Node` representation.
@@ -57,6 +71,7 @@ extension Dictionary: NodeRepresentable {
     }
 }
 
+#if canImport(ObjectiveC)
 extension NSDictionary: NodeRepresentable {
     /// This value's `Node` representation.
     public func represented() throws -> Node {
@@ -64,13 +79,17 @@ extension NSDictionary: NodeRepresentable {
         return Node(pairs.sorted { $0.key < $1.key }, Tag(.map))
     }
 }
+#endif
 
 private func represent(_ value: Any) throws -> Node {
     if let representable = value as? NodeRepresentable {
         return try representable.represented()
-    } else if (value as? NSDictionary)?.count == 0 {
+    }
+    #if canImport(ObjectiveC)
+    if (value as? NSDictionary)?.count == 0 {
         return .mapping(Node.Mapping([]))
     }
+    #endif
     throw YamlError.representer(problem: "Failed to represent \(value)")
 }
 
@@ -88,7 +107,7 @@ extension ScalarRepresentable {
     }
 }
 
-extension NSNull: ScalarRepresentable {
+extension YAMLNull: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
         return .init("null", Tag(.null))
@@ -117,28 +136,24 @@ extension Date: ScalarRepresentable {
 
     private var iso8601String: String {
         let (integral, millisecond) = timeIntervalSinceReferenceDate.separateFractionalSecond(withPrecision: 3)
-        guard millisecond != 0 else { return iso8601Formatter.string(from: self) }
+        guard millisecond != 0 else { return formatted(iso8601FormatStyle) }
 
         let dateWithoutMillisecond = Date(timeIntervalSinceReferenceDate: integral)
-        return iso8601WithoutZFormatter.string(from: dateWithoutMillisecond) +
-            String(format: ".%03d", millisecond).trimmingCharacters(in: characterSetZero) + "Z"
+        return dateWithoutMillisecond.formatted(iso8601WithoutZFormatStyle) +
+            ("." + zeroPad(millisecond, width: 3)).trimmingTrailingCharacters("0") + "Z"
     }
 
     private var iso8601StringWithFullNanosecond: String {
         let (integral, nanosecond) = timeIntervalSinceReferenceDate.separateFractionalSecond(withPrecision: 9)
-        guard nanosecond != 0 else { return iso8601Formatter.string(from: self) }
+        guard nanosecond != 0 else { return formatted(iso8601FormatStyle) }
 
         let dateWithoutNanosecond = Date(timeIntervalSinceReferenceDate: integral)
-        return iso8601WithoutZFormatter.string(from: dateWithoutNanosecond) +
-            String(format: ".%09d", nanosecond).trimmingCharacters(in: characterSetZero) + "Z"
+        return dateWithoutNanosecond.formatted(iso8601WithoutZFormatStyle) +
+            ("." + zeroPad(nanosecond, width: 9)).trimmingTrailingCharacters("0") + "Z"
     }
 }
 
 private extension TimeInterval {
-    /// Separates the time interval into integral and fractional components, then rounds the `fractional`
-    /// component to `precision` number of digits.
-    ///
-    /// - returns: Tuple of integral part and converted fractional part
     func separateFractionalSecond(withPrecision precision: Int) -> (integral: TimeInterval, fractional: Int) {
         var integral = 0.0
         let fractional = modf(self, &integral)
@@ -147,66 +162,67 @@ private extension TimeInterval {
 
         let rounded = Int((fractional * radix).rounded())
         let quotient = rounded / Int(radix)
-        return quotient != 0 ? // carry-up?
+        return quotient != 0 ?
             (integral + TimeInterval(quotient), rounded % Int(radix)) :
             (integral, rounded)
     }
 }
 
-private let characterSetZero = CharacterSet(charactersIn: "0")
+private func zeroPad(_ value: Int, width: Int) -> String {
+    var s = String(value)
+    while s.count < width { s = "0" + s }
+    return s
+}
 
-private let iso8601Formatter: DateFormatter = {
-    var formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
-    return formatter
-}()
+private extension String {
+    func trimmingTrailingCharacters(_ character: Character) -> String {
+        String(self[startIndex..<(lastIndex(where: { $0 != character }).map(index(after:)) ?? startIndex)])
+    }
+}
 
-private let iso8601WithoutZFormatter: DateFormatter = {
-    var formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss"
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
-    return formatter
-}()
+// "yyyy-MM-ddTHH:mm:ssZ"
+private let iso8601FormatStyle = Date.ISO8601FormatStyle()
+
+// "yyyy-MM-ddTHH:mm:ss" (no trailing Z, for manual fractional-second append)
+private let iso8601WithoutZFormatStyle = Date.ISO8601FormatStyle().year().month().day().time(includingFractionalSeconds: false)
 
 extension Double: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
-        return .init(doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+        return .init(formatYAMLFloat(self), Tag(.float))
     }
 }
 
 extension Float: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
-        return .init(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+        return .init(formatYAMLFloat(self), Tag(.float))
     }
 }
 
+#if canImport(ObjectiveC)
 extension NSNumber: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
-        return .init(floatFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-"), Tag(.float))
+        return .init(formatYAMLFloat(self.doubleValue), Tag(.float))
     }
 }
+#endif
 
-private func numberFormatter(with significantDigits: Int) -> NumberFormatter {
-    let formatter = NumberFormatter()
-    formatter.locale = Locale(identifier: "en_US")
-    formatter.numberStyle = .scientific
-    formatter.usesSignificantDigits = true
-    formatter.maximumSignificantDigits = significantDigits
-    formatter.positiveInfinitySymbol = ".inf"
-    formatter.negativeInfinitySymbol = "-.inf"
-    formatter.notANumberSymbol = ".nan"
-    formatter.exponentSymbol = "e+"
-    return formatter
+/// Format a floating-point value for YAML output using Swift's built-in Ryū algorithm
+/// (shortest round-trip representation). Handles YAML special values (.inf, -.inf, .nan).
+private func formatYAMLFloat<F: BinaryFloatingPoint & LosslessStringConvertible>(
+    _ value: F
+) -> String {
+    if value.isNaN { return ".nan" }
+    if value.isInfinite { 
+        return switch(value.sign) {
+            case .plus: ".inf"
+            case .minus: "-.inf"
+        }
+    }
+    return "\(value)"
 }
-
-private let doubleFormatter = numberFormatter(with: 15)
-private let floatFormatter = numberFormatter(with: 7)
 
 // TODO: Support `Float80`
 // extension Float80: ScalarRepresentable {}
@@ -263,6 +279,7 @@ extension String: ScalarRepresentable {
     }
 }
 
+#if canImport(ObjectiveC)
 extension NSString: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
     public func represented() -> Node.Scalar {
@@ -270,6 +287,7 @@ extension NSString: ScalarRepresentable {
         return scalar.resolvedTag.name == .str ? scalar : .init(String(self), Tag(.str), .singleQuoted)
     }
 }
+#endif
 
 extension UUID: ScalarRepresentable {
     /// This value's `Node.scalar` representation.
@@ -331,16 +349,8 @@ extension Float: YAMLEncodable {
     }
 }
 
-private extension FloatingPoint where Self: CVarArg {
+private extension BinaryFloatingPoint where Self: LosslessStringConvertible {
     var formattedStringForCodable: String {
-        // Since `NumberFormatter` creates a string with insufficient precision for Decode,
-        // it uses with `String(format:...)`
-        let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
-        // "%*.g" does not use scientific notation if the exponent is less than –4.
-        // So fallback to using `NumberFormatter` if string does not uses scientific notation.
-        guard string.lazy.suffix(5).contains("e") else {
-            return doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
-        }
-        return string
+        formatYAMLFloat(self)
     }
 }

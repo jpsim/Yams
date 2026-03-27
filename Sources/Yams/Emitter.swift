@@ -15,7 +15,11 @@ internal import CYaml
 @_implementationOnly import CYaml
 #endif
 #endif
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#elseif canImport(Foundation)
 import Foundation
+#endif
 
 /// Produce a YAML string from objects.
 ///

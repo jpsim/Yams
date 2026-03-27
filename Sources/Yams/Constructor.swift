@@ -6,7 +6,11 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#elseif canImport(Foundation)
 import Foundation
+#endif
 
 /// Constructors are used to translate `Node`s to Swift values.
 public final class Constructor {
@@ -77,7 +81,7 @@ extension Constructor {
         // JSON Schema
         .bool: Bool.construct,
         .float: Double.construct,
-        .null: NSNull.construct,
+        .null: YAMLNull.construct,
         .int: MemoryLayout<Int>.size == 8 ? Int.construct : { Int.construct(from: $0) ?? Int64.construct(from: $0) },
         // http://yaml.org/type/index.html
         .binary: Data.construct,
@@ -101,6 +105,7 @@ extension Constructor {
         .pairs: [Any].construct_pairs
     ] }
 
+    #if canImport(ObjectiveC)
     /// `Tag.Name` to `Node.Mapping` map that support `NSMutableDictionary` and `NSMutableSet`.
     public static var nsMutableMappingMap: MappingMap { [
       .map: NSMutableDictionary.construct_mapping,
@@ -113,6 +118,7 @@ extension Constructor {
       .omap: NSMutableArray.construct_omap,
       .pairs: NSMutableArray.construct_pairs
     ] }
+    #endif
 }
 
 // MARK: - ScalarConstructible
@@ -188,14 +194,11 @@ extension Date: ScalarConstructible {
     ///
     /// - returns: An instance of `Date`, if one was successfully extracted from the scalar.
     public static func construct(from scalar: Node.Scalar) -> Date? {
-        let range = NSRange(location: 0, length: scalar.string.utf16.count)
-        guard let result = timestampPattern.firstMatch(in: scalar.string, options: [], range: range),
-            result.range.location != NSNotFound else {
-                return nil
+        guard let match = try? timestampPattern.wholeMatch(in: scalar.string) else {
+            return nil
         }
-        let components = (1..<result.numberOfRanges).map {
-            scalar.string.substring(with: result.range(at: $0))
-        }
+        let output = match.output
+        let components = (1..<output.count).map { output[$0].substring }
 
         var datecomponents = DateComponents()
         datecomponents.calendar = gregorianCalendar
@@ -235,7 +238,8 @@ extension Date: ScalarConstructible {
 
     private static let gregorianCalendar = Calendar(identifier: .gregorian)
 
-    private static let timestampPattern: NSRegularExpression = pattern([
+    // swiftlint:disable:next force_try
+    private nonisolated(unsafe) static let timestampPattern: Regex<AnyRegexOutput> = try! Regex([
         "^([0-9][0-9][0-9][0-9])",          // year
         "-([0-9][0-9]?)",                   // month
         "-([0-9][0-9]?)",                   // day
@@ -278,7 +282,7 @@ extension ScalarConstructible where Self: FloatingPoint & SexagesimalConvertible
         case ".nan":
             return .nan
         default:
-            let string = scalar.string.replacingOccurrences(of: "_", with: "")
+            let string = scalar.string.replacing("_", with: "")
             if string.contains(":") {
                 return Self(sexagesimal: string)
             }
@@ -293,7 +297,7 @@ private extension FixedWidthInteger where Self: SexagesimalConvertible {
             return nil
         }
 
-        let scalarWithSign = scalar.string.replacingOccurrences(of: "_", with: "")
+        let scalarWithSign = scalar.string.replacing("_", with: "")
 
         if scalarWithSign == "0" {
             return 0
@@ -405,22 +409,23 @@ extension String: ScalarConstructible {
     }
 }
 
-// MARK: - Types that can't conform to ScalarConstructible
+// MARK: - YAMLNull
 
-extension NSNull/*: ScalarConstructible*/ {
-    /// Construct an instance of `NSNull`, if possible, from the specified scalar.
+/// A type representing a YAML null value.
+public struct YAMLNull: Hashable, Sendable, ScalarConstructible {
+    public init() {}
+
+    /// Construct an instance of `YAMLNull`, if possible, from the specified scalar.
     ///
-    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `NSNull`, if possible.
+    /// - parameter scalar: The `Node.Scalar` from which to extract a value of type `YAMLNull`, if possible.
     ///
-    /// - returns: An instance of `NSNull`, if one was successfully extracted from the scalar.
-    public static func construct(from scalar: Node.Scalar) -> NSNull? {
-        // When constructing from a Scalar, only plain style scalars should be recognized.
-        // For example #"key: 'null'"# or #"key: ''"# should not be considered as null.
+    /// - returns: An instance of `YAMLNull`, if one was successfully extracted from the scalar.
+    public static func construct(from scalar: Node.Scalar) -> YAMLNull? {
         guard case .plain = scalar.style else { return nil }
 
         switch scalar.string {
         case "", "~", "null", "Null", "NULL":
-            return NSNull()
+            return YAMLNull()
         default:
             return nil
         }
@@ -451,6 +456,21 @@ private extension Dictionary {
     }
 }
 
+extension Set {
+    /// Construct a `Set`, if possible, from the specified mapping.
+    ///
+    /// - parameter mapping: The `Node.Mapping` from which to extract a `Set`, if possible.
+    ///
+    /// - returns: An instance of `Set<AnyHashable>`, if one was successfully extracted from the mapping.
+    public static func construct_set(from mapping: Node.Mapping) -> Set<AnyHashable>? {
+        // TODO: YAML supports Hashable elements other than str.
+        return Set<AnyHashable>(mapping.map({ String.construct(from: $0.key)! as AnyHashable }))
+        // Explicitly declaring the generic parameter as `<AnyHashable>` above is required,
+        // because this is inside extension of `Set` and Swift can't infer the type without that.
+    }
+}
+
+#if canImport(ObjectiveC)
 extension NSMutableDictionary {
     /// Construct an `NSMutableDictionary`, if possible, from the specified mapping.
     ///
@@ -470,20 +490,6 @@ extension NSMutableDictionary {
     }
 }
 
-extension Set {
-    /// Construct a `Set`, if possible, from the specified mapping.
-    ///
-    /// - parameter mapping: The `Node.Mapping` from which to extract a `Set`, if possible.
-    ///
-    /// - returns: An instance of `Set<AnyHashable>`, if one was successfully extracted from the mapping.
-    public static func construct_set(from mapping: Node.Mapping) -> Set<AnyHashable>? {
-        // TODO: YAML supports Hashable elements other than str.
-        return Set<AnyHashable>(mapping.map({ String.construct(from: $0.key)! as AnyHashable }))
-        // Explicitly declaring the generic parameter as `<AnyHashable>` above is required,
-        // because this is inside extension of `Set` and Swift can't infer the type without that.
-    }
-}
-
 extension NSMutableSet {
     /// Construct an `NSMutableSet`, if possible, from the specified mapping.
     ///
@@ -500,6 +506,7 @@ extension NSMutableSet {
         return result
     }
 }
+#endif
 
 // MARK: Sequence
 
@@ -542,6 +549,7 @@ extension Array {
     }
 }
 
+#if canImport(ObjectiveC)
 extension NSMutableArray {
     /// Construct an NSMutableArray of `Any` from the specified `sequence`.
     ///
@@ -587,19 +595,7 @@ extension NSMutableArray {
         return result
     }
 }
-
-private extension String {
-    func substring(with range: NSRange) -> Substring? {
-        guard range.location != NSNotFound else { return nil }
-        let utf16lowerBound = utf16.index(utf16.startIndex, offsetBy: range.location)
-        let utf16upperBound = utf16.index(utf16lowerBound, offsetBy: range.length)
-        guard let lowerBound = utf16lowerBound.samePosition(in: self),
-            let upperBound = utf16upperBound.samePosition(in: self) else {
-                fatalError("unreachable")
-        }
-        return self[lowerBound..<upperBound]
-    }
-}
+#endif
 
 // MARK: - SexagesimalConvertible
 
@@ -692,7 +688,7 @@ private extension String {
         } else {
             sign = 1
         }
-        let components = scalar.components(separatedBy: ":")
+        let components = scalar.split(separator: ":").map(String.init)
         let mappedComponents = components.compactMap(T.create)
         guard mappedComponents.count == components.count else {
             return nil
