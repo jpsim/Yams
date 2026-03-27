@@ -15,7 +15,11 @@ internal import CYaml
 @_implementationOnly import CYaml
 #endif
 #endif
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#elseif canImport(Foundation)
 import Foundation
+#endif
 
 /// Errors thrown by Yams APIs.
 public enum YamlError: Error {

@@ -32,7 +32,7 @@ final class EncoderTests: XCTestCase, @unchecked Sendable { // swiftlint:disable
     }
 
     func testEncodingTopLevelSingleValueStruct() {
-        _testRoundTrip(of: Timestamp(3141592653), expectedYAML: "3.141592653e+9\n")
+        _testRoundTrip(of: Timestamp(3141592653), expectedYAML: "3141592653.0\n")
     }
 
     func testEncodingTopLevelSingleValueClass() {

@@ -60,7 +60,7 @@ final class NodeTests: XCTestCase, @unchecked Sendable {
         XCTAssertEqual(scalarFloat.float, 1.0)
 
         let scalarNull = Node("null", .implicit, .plain)
-        XCTAssertEqual(scalarNull.null, NSNull())
+        XCTAssertEqual(scalarNull.null, YAMLNull())
 
         let scalarInt: Node = "1"
         XCTAssertEqual(scalarInt.int, 1)
