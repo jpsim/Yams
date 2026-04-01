@@ -7,6 +7,10 @@
 //
 
 import Foundation
+#if canImport(Musl)
+// Workaround for conflict between _float and _Builtin_float in Musl SDK with Swift 6.3
+import var _float.DBL_DECIMAL_DIG
+#endif
 
 public extension Node {
     /// Initialize a `Node` with a value of `NodeRepresentable`.
