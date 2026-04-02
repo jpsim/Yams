@@ -1,5 +1,19 @@
 ## Main
 
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* None.
+
+##### Bug Fixes
+
+* Add WASI platform support for `DBL_DECIMAL_DIG` to fix compilation
+  on SwiftWasm.  
+  [David Hunt](https://github.com/foscomputerservices)
+
 ## 6.2.1
 
 ##### Breaking
@@ -12,9 +26,6 @@
 
 ##### Bug Fixes
 
-* Add WASI platform support for DBL_DECIMAL_DIG to fix compilation on
-  SwiftWasm.
-  [David Hunt](https://github.com/foscomputerservices)
 * Fix compatibility with newer rules_swift and bazel.
   [Adin Cebic](https://github.com/adincebic)
 
