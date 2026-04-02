@@ -8,6 +8,12 @@
 
 import Foundation
 
+#if os(WASI)
+// WASI/WASM environment - DBL_DECIMAL_DIG not available from system headers
+// DBL_DECIMAL_DIG is 17 for IEEE 754 double precision (53-bit mantissa)
+private let DBL_DECIMAL_DIG = 17
+#endif
+
 public extension Node {
     /// Initialize a `Node` with a value of `NodeRepresentable`.
     ///
