@@ -27,7 +27,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_15.4.app
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
       - name: Generate xcodebuild.log
         run: xcodebuild -sdk macosx -scheme Yams -project Yams.xcodeproj clean build-for-testing > xcodebuild.log
         shell: bash
