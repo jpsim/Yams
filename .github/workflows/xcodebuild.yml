@@ -10,7 +10,6 @@ on:
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
       - 'Tests/**/*.ya?ml'
-      - '!Tests/LinuxMain.swift'
   pull_request:
     paths:
       - '.github/workflows/xcodebuild.yml'
@@ -19,7 +18,6 @@ on:
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
       - 'Tests/**/*.ya?ml'
-      - '!Tests/LinuxMain.swift'
 
 concurrency:
   group: xcodebuild-${{ github.ref }}
