@@ -1,5 +1,25 @@
 ## Main
 
+## 6.2.2
+
+##### Breaking
+
+* None.
+
+##### Enhancements
+
+* Improve C++ interoperability by moving C standard library includes outside
+  the `extern "C"` block.  
+  [Mattias Holm](https://github.com/lorrden)
+  [#472](https://github.com/jpsim/Yams/pull/472)
+
+##### Bug Fixes
+
+* Work around a Swift 6.3 Musl SDK conflict between the `_float` and
+  `_Builtin_float` modules.  
+  [Gwynne Raskind](https://github.com/gwynne)
+  [#477](https://github.com/jpsim/Yams/pull/477)
+
 ## 6.2.1
 
 ##### Breaking
