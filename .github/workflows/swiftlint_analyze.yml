@@ -9,7 +9,6 @@ on:
       - 'Sources/**/*.[ch]'
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
-      - '!Tests/LinuxMain.swift'
   pull_request:
     paths:
       - '.github/workflows/swiftlint_analyze.yml'
@@ -17,7 +16,6 @@ on:
       - 'Sources/**/*.[ch]'
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
-      - '!Tests/LinuxMain.swift'
 
 concurrency:
   group: swiftlint-analyze-${{ github.ref }}
