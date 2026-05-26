@@ -31,13 +31,13 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_15.4.app
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
       - name: Install SourceKitten
         run: brew install sourcekitten
       - run: swift build
       - name: Generate documentation json
         run: sourcekitten doc --spm --module-name Yams > yams.json
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1.310.0
         with:
           ruby-version: 3.3.3
           bundler-cache: true
@@ -51,7 +51,7 @@ jobs:
             exit 1
           fi
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: API Docs
           path: docs
