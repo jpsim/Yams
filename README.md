@@ -7,7 +7,6 @@ A sweet and swifty [YAML](http://yaml.org/) parser built on
 
 [![SwiftPM](https://github.com/jpsim/Yams/workflows/SwiftPM/badge.svg)](https://github.com/jpsim/Yams/actions?query=workflow%3ASwiftPM)
 [![xcodebuild](https://github.com/jpsim/Yams/workflows/xcodebuild/badge.svg)](https://github.com/jpsim/Yams/actions?query=workflow%3Axcodebuild)
-[![pod lib lint](https://github.com/jpsim/Yams/workflows/pod%20lib%20lint/badge.svg)](https://github.com/jpsim/Yams/actions?query=workflow%3A%22pod+lib+lint%22)
 [![Nightly](https://github.com/jpsim/Yams/workflows/Nightly/badge.svg)](https://github.com/jpsim/Yams/actions?query=workflow%3ANightly)
 [![codecov](https://codecov.io/gh/jpsim/Yams/branch/main/graph/badge.svg)](https://codecov.io/gh/jpsim/Yams)
 
@@ -38,16 +37,8 @@ cmake --build /path/to/build
 
 ### Swift Package Manager
 
-Add `.package(url: "https://github.com/jpsim/Yams.git", from: "6.2.1")` to your
+Add `.package(url: "https://github.com/jpsim/Yams.git", from: "6.2.2")` to your
 `Package.swift` file's `dependencies`.
-
-### CocoaPods
-
-Add `pod 'Yams'` to your `Podfile`.
-
-### Carthage
-
-Add `github "jpsim/Yams"` to your `Cartfile`.
 
 ### Bazel
 

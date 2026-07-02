@@ -4,24 +4,9 @@ load("@rules_apple//apple:tvos.bzl", "tvos_build_test")
 load("@rules_apple//apple:ios.bzl", "ios_build_test")
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_test")
 
-config_setting(
-    name = "linux",
-    constraint_values = ["@platforms//os:linux"],
-)
-
-genrule(
-    name = "LinuxMain",
-    srcs = ["LinuxMain.swift"],
-    outs = ["main.swift"],
-    cmd = "cp $< $@",
-)
-
 swift_test(
     name = "UnitTests",
-    srcs = glob(["YamsTests/*.swift"]) + select({
-        ":linux": ["main.swift"],
-        "//conditions:default": [],
-    }),
+    srcs = glob(["YamsTests/*.swift"]),
     data = glob(["YamsTests/Fixtures/**/*.*"]),
     module_name = "YamsTests",
     deps = [

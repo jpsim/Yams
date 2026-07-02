@@ -7,6 +7,10 @@
 //
 
 import Foundation
+#if canImport(Musl)
+// Workaround for conflict between _float and _Builtin_float in Musl SDK with Swift 6.3
+import var _float.DBL_DECIMAL_DIG
+#endif
 
 #if os(WASI)
 // WASI/WASM environment - DBL_DECIMAL_DIG not available from system headers
