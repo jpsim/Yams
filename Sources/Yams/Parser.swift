@@ -16,7 +16,11 @@ internal import CYaml
 @_implementationOnly import CYaml
 #endif
 #endif
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#elseif canImport(Foundation)
 import Foundation
+#endif
 
 /// Parse all YAML documents in a String
 /// and produce corresponding Swift objects.

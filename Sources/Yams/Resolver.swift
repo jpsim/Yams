@@ -6,17 +6,22 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#elseif canImport(Foundation)
 import Foundation
+#endif
 
 /// Class used to resolve nodes to tags based on customizable rules.
 public final class Resolver: Sendable {
     /// Rule describing how to resolve tags from regex patterns.
-    public struct Rule: Sendable {
+    public struct Rule: @unchecked Sendable {
         /// The tag name this rule applies to.
         public let tag: Tag.Name
-        fileprivate let regexp: NSRegularExpression
+        fileprivate let regexp: Regex<AnyRegexOutput>
+        private let _pattern: String
         /// The regex pattern used to resolve this rule.
-        public var pattern: String { return regexp.pattern }
+        public var pattern: String { return _pattern }
 
         /// Create a rule with the specified tag name and regex pattern.
         ///
@@ -26,7 +31,8 @@ public final class Resolver: Sendable {
         /// - throws: Throws an error if the regular expression pattern is invalid.
         public init(_ tag: Tag.Name, _ pattern: String) throws {
             self.tag = tag
-            self.regexp = try .init(pattern: pattern, options: [])
+            self._pattern = pattern
+            self.regexp = try Regex(pattern)
         }
     }
 
@@ -85,7 +91,7 @@ public final class Resolver: Sendable {
     }
 
     func resolveTag(from string: String) -> Tag.Name {
-        for rule in rules where rule.regexp.matches(in: string) {
+        for rule in rules where (try? rule.regexp.wholeMatch(in: string)) != nil {
             return rule.tag
         }
         return .str
@@ -156,20 +162,3 @@ extension Resolver.Rule {
     // swiftlint:enable force_try
 }
 
-func pattern(_ string: String) -> NSRegularExpression {
-    do {
-        return try .init(pattern: string, options: [])
-    } catch {
-        fatalError("unreachable")
-    }
-}
-
-private extension NSRegularExpression {
-    func matches(in string: String) -> Bool {
-        let range = NSRange(location: 0, length: string.utf16.count)
-        if let match = firstMatch(in: string, options: [], range: range) {
-            return match.range.location != NSNotFound
-        }
-        return false
-    }
-}

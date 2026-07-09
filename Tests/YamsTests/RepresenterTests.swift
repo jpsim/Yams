@@ -42,20 +42,20 @@ final class RepresenterTests: XCTestCase, @unchecked Sendable {
         XCTAssertEqual(try Node(Double.infinity), ".inf")
         XCTAssertEqual(try Node(-Double.infinity), "-.inf")
         XCTAssertEqual(try Node(Double.nan), ".nan")
-        XCTAssertEqual(try Node(Double(6.8523015e+5)), "6.8523015e+5")
-        XCTAssertEqual(try Node(Double(6.8523015e-5)), "6.8523015e-5")
-        XCTAssertEqual(try Node(Double.greatestFiniteMagnitude), "1.79769313486232e+308")
-        XCTAssertEqual(try Node(Double.leastNormalMagnitude), "2.2250738585072e-308")
+        XCTAssertEqual(try Node(Double(6.8523015e+5)), Node("\(Double(6.8523015e+5))"))
+        XCTAssertEqual(try Node(Double(6.8523015e-5)), Node("\(Double(6.8523015e-5))"))
+        XCTAssertEqual(try Node(Double.greatestFiniteMagnitude), Node("\(Double.greatestFiniteMagnitude)"))
+        XCTAssertEqual(try Node(Double.leastNormalMagnitude), Node("\(Double.leastNormalMagnitude)"))
     }
 
     func testFloat() throws {
         XCTAssertEqual(try Node(Float.infinity), ".inf")
         XCTAssertEqual(try Node(-Float.infinity), "-.inf")
         XCTAssertEqual(try Node(Float.nan), ".nan")
-        XCTAssertEqual(try Node(Float(6.852301e+5)), "6.852301e+5")
-        XCTAssertEqual(try Node(Float(6.852301e-5)), "6.852301e-5")
-        XCTAssertEqual(try Node(Float.greatestFiniteMagnitude), "3.402823e+38")
-        XCTAssertEqual(try Node(Float.leastNormalMagnitude), "1.175494e-38")
+        XCTAssertEqual(try Node(Float(6.852301e+5)), Node("\(Float(6.852301e+5))"))
+        XCTAssertEqual(try Node(Float(6.852301e-5)), Node("\(Float(6.852301e-5))"))
+        XCTAssertEqual(try Node(Float.greatestFiniteMagnitude), Node("\(Float.greatestFiniteMagnitude)"))
+        XCTAssertEqual(try Node(Float.leastNormalMagnitude), Node("\(Float.leastNormalMagnitude)"))
     }
 
     func testInteger() throws {
@@ -135,14 +135,16 @@ final class RepresenterTests: XCTestCase, @unchecked Sendable {
         XCTAssertEqual(try Node(intToInt), [1: 2])
     }
 
+    #if canImport(ObjectiveC)
     func testEmptyDictionary() throws {
         XCTAssertEqual(try Yams.dump(object: NSDictionary()), "{}\n")
     }
+    #endif
 }
 
 extension RepresenterTests {
     static var allTests: [(String, (RepresenterTests) -> () throws -> Void)] {
-        return [
+        var tests: [(String, (RepresenterTests) -> () throws -> Void)] = [
             ("testBool", testBool),
             ("testData", testData),
             ("testDate", testDate),
@@ -154,7 +156,10 @@ extension RepresenterTests {
             ("testOptional", testOptional),
             ("testArray", testArray),
             ("testDictionary", testDictionary),
-            ("testEmptyDictionary", testEmptyDictionary)
         ]
+        #if canImport(ObjectiveC)
+        tests.append(("testEmptyDictionary", testEmptyDictionary))
+        #endif
+        return tests
     }
 }

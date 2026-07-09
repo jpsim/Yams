@@ -72,7 +72,7 @@ final class SpecTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:th
         let yaml = try Yams.dump(object: object)
         // canonical format
         let expectedYaml = """
-            avg: 2.78e-1
+            avg: 0.278
             hr: 65
             rbi: 147
 
@@ -149,10 +149,10 @@ final class SpecTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:th
 
         let yaml = try Yams.dump(object: object)
         let expectedYaml = """
-            - avg: 2.78e-1
+            - avg: 0.278
               hr: 65
               name: Mark McGwire
-            - avg: 2.88e-1
+            - avg: 0.288
               hr: 63
               name: Sammy Sosa
 
@@ -181,10 +181,10 @@ final class SpecTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:th
               - avg
             - - Mark McGwire
               - 65
-              - 2.78e-1
+              - 0.278
             - - Sammy Sosa
               - 63
-              - 2.88e-1
+              - 0.288
 
             """
         XCTAssertEqual(yaml, expectedYaml)
@@ -211,10 +211,10 @@ final class SpecTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:th
         let yaml = try Yams.dump(object: object)
         let expectedYaml = """
             Mark McGwire:
-              avg: 2.78e-1
+              avg: 0.278
               hr: 65
             Sammy Sosa:
-              avg: 2.88e-1
+              avg: 0.288
               hr: 63
 
             """
@@ -654,9 +654,9 @@ final class SpecTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:th
 
         let yaml = try Yams.dump(object: object)
         let expectedYaml = """
-            canonical: 1.23015e+3
-            exponential: 1.23015e+3
-            fixed: 1.23015e+3
+            canonical: 1230.15
+            exponential: 1230.15
+            fixed: 1230.15
             negative infinity: -.inf
             not a number: .nan
 
@@ -798,11 +798,11 @@ final class SpecTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:th
             invoice: 34843
             product:
             - description: Basketball
-              price: 4.5e+2
+              price: 450.0
               quantity: 4
               sku: BL394D
             - description: Super Hoop
-              price: 2.392e+3
+              price: 2392.0
               quantity: 1
               sku: BL4438H
             ship-to:
@@ -817,8 +817,8 @@ final class SpecTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:th
                 state: MI
               family: Dumars
               given: Chris
-            tax: 2.5142e+2
-            total: 4.44352e+3
+            tax: 251.42
+            total: 4443.52
 
             """
         XCTAssertEqual(yaml, expectedYaml)

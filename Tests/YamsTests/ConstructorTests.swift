@@ -172,6 +172,7 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
         YamsAssertEqual(objects, expected)
     }
 
+    #if canImport(ObjectiveC)
     func testNSMutableMap() throws {
         let objects = try Yams.load(yaml: Self._mapExample,
                   .default,
@@ -189,6 +190,7 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
         YamsAssertEqualType(objects, expected)
         YamsAssertEqual(objects, expected)
     }
+    #endif
 
     func testMerge() throws {
         let example = """
@@ -261,20 +263,20 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
             """
         let objects = Array(try Yams.load_all(yaml: example))
         let expected: [Any] = [
-            NSNull(),
+            YAMLNull(),
             [
-                "empty": NSNull(),
-                "canonical": NSNull(),
-                "english": NSNull(),
+                "empty": YAMLNull(),
+                "canonical": YAMLNull(),
+                "english": YAMLNull(),
                 "~": "null key" // null key is not supported yet.
             ] as [String: Any],
             [
                 "sparse": [
-                    NSNull(),
+                    YAMLNull(),
                     "2nd entry",
-                    NSNull(),
+                    YAMLNull(),
                     "4th entry",
-                    NSNull(),
+                    YAMLNull(),
                     "null",
                     ""
                 ] as [Any]
@@ -416,7 +418,7 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
             "folded": "10.10\n",
             "folded single quote": "'10.10'\n",
             "folded double quote": "\"10.10\"\n",
-            "empty": NSNull(),
+            "empty": YAMLNull(),
             "single quoted empty": "",
             "double quoted empty": "",
             "literal empty": "",
@@ -469,6 +471,7 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
         YamsAssertEqual(objects, expected)
     }
 
+    #if canImport(ObjectiveC)
     func testMutableSeq() throws {
         let objects = try Yams.load(yaml: Self._seqExample,
                       .default,
@@ -487,6 +490,7 @@ final class ConstructorTests: XCTestCase, @unchecked Sendable { // swiftlint:dis
         YamsAssertEqualType(objects, expected)
         YamsAssertEqual(objects, expected)
     }
+    #endif
 
     func testTimestamp() throws {
         let example = """

@@ -6,7 +6,11 @@
 //  Copyright (c) 2017 Yams. All rights reserved.
 //
 
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#elseif canImport(Foundation)
 import Foundation
+#endif
 
 /// `Codable`-style `Decoder` that can be used to decode a `Decodable` type from a given `String` and optional
 /// user info mapping. Similar to `Foundation.JSONDecoder`.
@@ -372,7 +376,7 @@ extension _Decoder: SingleValueDecodingContainer {
 
     // MARK: - Swift.SingleValueDecodingContainer Methods
 
-    func decodeNil() -> Bool { return node.null == NSNull() }
+    func decodeNil() -> Bool { return node.null == YAMLNull() }
     func decode<T>(_ type: T.Type) throws -> T where T: Decodable & ScalarConstructible { return try _decode(type) }
     func decode<T>(_ type: T.Type) throws -> T where T: Decodable {return try _decode(type) }
 

@@ -6,7 +6,11 @@
 //  Copyright (c) 2016 Yams. All rights reserved.
 //
 
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#elseif canImport(Foundation)
 import Foundation
+#endif
 
 /// YAML Node.
 public enum Node: Hashable {
@@ -115,9 +119,9 @@ extension Node {
         return scalar.flatMap(Double.construct)
     }
 
-    /// This node as an `NSNull`, if convertible.
-    public var null: NSNull? {
-        return scalar.flatMap(NSNull.construct)
+    /// This node as a `YAMLNull`, if convertible.
+    public var null: YAMLNull? {
+        return scalar.flatMap(YAMLNull.construct)
     }
 
     /// This node as an `Int`, if convertible.
