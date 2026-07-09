@@ -17,6 +17,6 @@ jobs:
     container:
       image: ghcr.io/realm/swiftlint:0.54.0
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
       - name: SwiftLint
         run: swiftlint lint --strict

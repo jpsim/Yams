@@ -9,7 +9,6 @@ on:
       - 'Sources/**/*.[ch]'
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
-      - '!Tests/LinuxMain.swift'
   pull_request:
     paths:
       - '.github/workflows/swiftlint_analyze.yml'
@@ -17,7 +16,6 @@ on:
       - 'Sources/**/*.[ch]'
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
-      - '!Tests/LinuxMain.swift'
 
 concurrency:
   group: swiftlint-analyze-${{ github.ref }}
@@ -29,7 +27,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_15.4.app
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
       - name: Generate xcodebuild.log
         run: xcodebuild -sdk macosx -scheme Yams -project Yams.xcodeproj clean build-for-testing > xcodebuild.log
         shell: bash

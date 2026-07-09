@@ -10,7 +10,6 @@ on:
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
       - 'Tests/**/*.ya?ml'
-      - '!Tests/LinuxMain.swift'
   pull_request:
     paths:
       - '.github/workflows/xcodebuild.yml'
@@ -19,46 +18,12 @@ on:
       - 'Sources/**/*.swift'
       - 'Tests/**/*.swift'
       - 'Tests/**/*.ya?ml'
-      - '!Tests/LinuxMain.swift'
 
 concurrency:
   group: xcodebuild-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  xcodebuild_Ventura:
-    name: macOS 13 with Xcode ${{ matrix.xcode_version }}
-    strategy:
-      matrix:
-        xcode_version: ['14.3', '15.0']
-        xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
-    runs-on: macos-13
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
-    steps:
-      - uses: actions/checkout@v4
-      - run: xcodebuild -version
-      - name: macOS with UTF16
-        if: always()
-        run: set -o pipefail && YAMS_DEFAULT_ENCODING=UTF16 xcodebuild ${{ matrix.xcode_flags }} test | xcbeautify --renderer github-actions
-        shell: bash
-      - name: macOS with UTF8
-        if: always()
-        run: set -o pipefail && YAMS_DEFAULT_ENCODING=UTF8 xcodebuild ${{ matrix.xcode_flags }} test | xcbeautify --renderer github-actions
-        shell: bash
-      - name: iPhone Simulator
-        if: always()
-        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcbeautify --renderer github-actions
-        shell: bash
-      - name: Apple TV Simulator
-        if: always()
-        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (2nd generation)" | xcbeautify --renderer github-actions
-        shell: bash
-      - name: watchOS Simulator
-        if: always()
-        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcbeautify --renderer github-actions
-        shell: bash
-
   xcodebuild_Sonoma:
     name: macOS 14 with Xcode ${{ matrix.xcode_version }}
     strategy:
@@ -69,7 +34,7 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
       - run: xcodebuild -version
       - name: macOS with UTF16
         if: always()
@@ -99,13 +64,13 @@ jobs:
     name: macOS 15 with Xcode ${{ matrix.xcode_version }}
     strategy:
       matrix:
-        xcode_version: ['16.0', '16.2', '16.3']
+        xcode_version: ['16.4']
         xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
     runs-on: macos-15
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
       - run: xcodebuild -version
       - name: macOS with UTF16
         if: always()

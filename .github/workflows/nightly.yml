@@ -33,7 +33,7 @@ jobs:
     container:
       image: swiftlang/swift:nightly
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
       - run: swift --version
       - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
       - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
