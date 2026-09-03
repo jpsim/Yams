@@ -14,6 +14,14 @@ import Yams
 
 /// Tests are copied from https://github.com/apple/swift/blob/main/test/stdlib/TestJSONEncoder.swift
 final class EncoderTests: XCTestCase, @unchecked Sendable { // swiftlint:disable:this type_body_length
+    private struct CustomScalar: ScalarRepresentable, YAMLEncodable {
+        let value: String
+
+        func represented() -> Node.Scalar {
+            return Node.Scalar(value)
+        }
+    }
+
     // MARK: - Encoding Top-Level Empty Types
     func testEncodingTopLevelEmptyStruct() {
         let empty = EmptyStruct()
@@ -33,6 +41,71 @@ final class EncoderTests: XCTestCase, @unchecked Sendable { // swiftlint:disable
 
     func testEncodingTopLevelSingleValueStruct() {
         _testRoundTrip(of: Timestamp(3141592653), expectedYAML: "3.141592653e+9\n")
+    }
+
+    func testEncodingTopLevelSingleValueStructDecimalDouble() {
+        _testRoundTrip(of: Double(3.141592653),
+                        with: YAMLEncoder.Options(floatingPointNumberFormatStrategy: .decimal),
+                        expectedYAML: "3.141592653\n")
+    }
+
+    func testExistingScalarRepresentableConformanceStillEncodes() {
+        XCTAssertEqual(try Node(CustomScalar(value: "custom")), "custom")
+        XCTAssertEqual(try YAMLEncoder().encode(CustomScalar(value: "custom")), "custom\n")
+    }
+
+    func testDecimalDoubleStyle() throws {
+        _testRoundTrip(of: Double(6.8),
+                        with: YAMLEncoder.Options(floatingPointNumberFormatStrategy: .decimal),
+                        expectedYAML: "6.8\n")
+    }
+
+    func testDecimalFloatStyle() throws {
+        _testRoundTrip(of: Float(6.8),
+                        with: YAMLEncoder.Options(floatingPointNumberFormatStrategy: .decimal),
+                        expectedYAML: "6.8\n")
+    }
+
+    func testMinimumFractionDigits() throws {
+        _testRoundTrip(of: Double(6.0),
+                    with: YAMLEncoder.Options(floatingPointNumberFormatStrategy: .decimal),
+                    expectedYAML: "6.0\n")
+    }
+
+    func testDecimalDoubleGreatestFiniteMagnitude() throws {
+        _testRoundTrip(of: Double.greatestFiniteMagnitude,
+                        with: YAMLEncoder.Options(floatingPointNumberFormatStrategy: .decimal),
+                        expectedYAML: "1.7976931348623157e+308\n")
+    }
+
+    func testDecimalDoubleNegativeGreatestFiniteMagnitude() throws {
+        _testRoundTrip(of: -Double.greatestFiniteMagnitude,
+                        with: YAMLEncoder.Options(floatingPointNumberFormatStrategy: .decimal),
+                        expectedYAML: "-1.7976931348623157e+308\n")
+    }
+
+    func testDecimalFloatGreatestFiniteMagnitude() throws {
+        _testRoundTrip(of: Float.greatestFiniteMagnitude,
+                        with: YAMLEncoder.Options(floatingPointNumberFormatStrategy: .decimal),
+                        expectedYAML: "3.4028235e+38\n")
+    }
+
+    func testDecimalDoubleNegativeInfinite() throws {
+        _testRoundTrip(of: -Double.infinity,
+                        with: YAMLEncoder.Options(floatingPointNumberFormatStrategy: .decimal),
+                        expectedYAML: "-.inf\n")
+    }
+
+    func testDecimalDoublePositiveInfinite() throws {
+        _testRoundTrip(of: Double.infinity,
+                        with: YAMLEncoder.Options(floatingPointNumberFormatStrategy: .decimal),
+                        expectedYAML: ".inf\n")
+    }
+
+    func testDecimalDoubleNaN() throws {
+        let encoder = YAMLEncoder()
+        encoder.options.floatingPointNumberFormatStrategy = .decimal
+        XCTAssertEqual(try encoder.encode(Double.nan), ".nan\n")
     }
 
     func testEncodingTopLevelSingleValueClass() {
@@ -478,6 +551,20 @@ where T: Codable, T: Equatable {
 }
 
 // MARK: - Helper Global Functions
+
+private func numberDecimalFormatter(with significantDigits: Int = 7) -> NumberFormatter {
+    let formatter = NumberFormatter()
+    formatter.locale = Locale(identifier: "en_US")
+    formatter.numberStyle = .decimal
+    formatter.usesSignificantDigits = true
+    formatter.maximumSignificantDigits = significantDigits
+    formatter.positiveInfinitySymbol = ".inf"
+    formatter.negativeInfinitySymbol = "-.inf"
+    formatter.notANumberSymbol = ".nan"
+    formatter.exponentSymbol = "e+"
+    return formatter
+}
+
 public func expectEqual<T: Equatable>(
     _ expected: T, _ actual: T,
     _ message: @autoclosure () -> String = "",

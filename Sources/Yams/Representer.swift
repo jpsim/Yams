@@ -321,30 +321,76 @@ extension Date: YAMLEncodable {
     }
 }
 
-extension Double: YAMLEncodable {
+/// Internal customization point for built-in values whose encoding depends on emitter options.
+protocol YAMLEncodableWithOptions: YAMLEncodable {
+    func box(options: Emitter.Options) -> Node
+}
+
+extension Double: YAMLEncodable, YAMLEncodableWithOptions {
     /// Returns this value wrapped in a `Node.scalar`.
     public func box() -> Node {
         return Node(formattedStringForCodable, Tag(.float))
     }
+
+    func box(options: Emitter.Options) -> Node {
+        let formattedString: String = formatFloatingPoint(
+            value: self,
+            floatingPointNumberFormatStrategy: options.floatingPointNumberFormatStrategy,
+            formatter: doubleFormatter
+        )
+        return Node(formattedString, Tag(.float))
+    }
 }
 
-extension Float: YAMLEncodable {
+extension Float: YAMLEncodable, YAMLEncodableWithOptions {
     /// Returns this value wrapped in a `Node.scalar`.
     public func box() -> Node {
         return Node(formattedStringForCodable, Tag(.float))
     }
+
+    func box(options: Emitter.Options) -> Node {
+        let formattedString: String = formatFloatingPoint(
+            value: self,
+            floatingPointNumberFormatStrategy: options.floatingPointNumberFormatStrategy,
+            formatter: floatFormatter
+        )
+        return Node(formattedString, Tag(.float))
+    }
 }
 
-private extension FloatingPoint where Self: CVarArg {
+private extension FloatingPoint where Self: CustomStringConvertible & CVarArg {
     var formattedStringForCodable: String {
-        // Since `NumberFormatter` creates a string with insufficient precision for Decode,
-        // it uses with `String(format:...)`
-        let string = String(format: "%.*g", DBL_DECIMAL_DIG, self)
-        // "%*.g" does not use scientific notation if the exponent is less than –4.
-        // So fallback to using `NumberFormatter` if string does not uses scientific notation.
-        guard string.lazy.suffix(5).contains("e") else {
-            return doubleFormatter.string(for: self)!.replacingOccurrences(of: "+-", with: "-")
-        }
-        return string
+        formatFloatingPoint(
+            value: self,
+            floatingPointNumberFormatStrategy: .scientific,
+            formatter: doubleFormatter
+        )
     }
+}
+
+private func formatFloatingPoint<T: FloatingPoint & CustomStringConvertible & CVarArg>(
+    value: T,
+    floatingPointNumberFormatStrategy: Emitter.FloatingPointNumberFormatStrategy,
+    formatter: NumberFormatter
+) -> String {
+    if floatingPointNumberFormatStrategy == .decimal {
+        if value.isNaN {
+            return ".nan"
+        } else if value == .infinity {
+            return ".inf"
+        } else if value == -.infinity {
+            return "-.inf"
+        }
+        return value.description
+    }
+
+    // Since `NumberFormatter` creates a string with insufficient precision for Decode,
+    // it uses with `String(format:...)`
+    let string = String(format: "%.*g", DBL_DECIMAL_DIG, value)
+    // "%*.g" does not use scientific notation if the exponent is less than –4.
+    // So fallback to using `NumberFormatter` if string does not uses scientific notation.
+    guard string.lazy.suffix(5).contains("e") else {
+        return formatter.string(for: value)!.replacingOccurrences(of: "+-", with: "-")
+    }
+    return string
 }
