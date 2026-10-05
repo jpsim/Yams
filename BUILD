@@ -29,7 +29,12 @@ swift_interop_hint(
 swift_library(
     name = "Yams",
     srcs = glob(["Sources/Yams/*.swift"]),
-    copts = ["-DSWIFT_PACKAGE"],
+    copts = [
+        "-DSWIFT_PACKAGE",
+        # Match CYaml's static declarations when importing yaml.h
+        "-Xcc",
+        "-DYAML_DECLARE_STATIC",
+    ],
     module_name = "Yams",
     visibility = ["//visibility:public"],
     deps = ["//:CYaml"],

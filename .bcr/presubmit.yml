@@ -1,8 +1,8 @@
 tasks:
   verify_targets:
     name: Verify build targets
-    platform: macos
-    bazel: 7.x
+    platform: macos_arm64
+    bazel: 8.x
     build_targets:
       - '@yams//:Yams'
     build_flags:

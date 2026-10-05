@@ -1,6 +1,6 @@
 common --enable_bzlmod
 
-build --macos_minimum_os=10.13
-build --host_macos_minimum_os=10.15
+build --macos_minimum_os=13.0
+build --host_macos_minimum_os=13.0
 build --repo_env=CC=clang
 test --test_output=errors
