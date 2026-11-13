@@ -41,8 +41,10 @@ public class YAMLEncoder {
             try options.redundancyAliasingStrategy?.releaseAnchorReferences()
             return try serialize(node: encoder.node, options: options)
         } catch let error as EncodingError {
+            try? options.redundancyAliasingStrategy?.releaseAnchorReferences()
             throw error
         } catch {
+            try? options.redundancyAliasingStrategy?.releaseAnchorReferences()
             let description = "Unable to encode the given top-level value to YAML."
             let context = EncodingError.Context(codingPath: [],
                                                 debugDescription: description,

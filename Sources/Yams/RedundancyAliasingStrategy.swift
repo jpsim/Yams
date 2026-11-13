@@ -74,10 +74,12 @@ public class HashableAliasingStrategy: RedundancyAliasingStrategy {
 
     public func releaseAnchorReferences() throws {
         hashesToAliases.removeAll()
+        uniqueAliasProvider.releaseAnchorReferences()
     }
 
     public func remit(anchor: Anchor) throws {
         hashesToAliases.remove(keysForValue: anchor)
+        uniqueAliasProvider.remit(anchor: anchor)
     }
 }
 
@@ -107,24 +109,50 @@ public class StrictEncodableAliasingStrategy: RedundancyAliasingStrategy {
 
     public func releaseAnchorReferences() throws {
         codedToAliases.removeAll()
+        uniqueAliasProvider.releaseAnchorReferences()
     }
 
     public func remit(anchor: Anchor) throws {
         codedToAliases.remove(keysForValue: anchor)
+        uniqueAliasProvider.remit(anchor: anchor)
     }
 }
 
 class UniqueAliasProvider {
     private var counter = 0
+    private var issuedAnchorNames: Set<String> = []
+    private var anchorNames: [ObjectIdentifier: String] = [:]
 
     func uniqueAlias(for encodable: any Encodable) -> Anchor {
         if let anchorProviding = encodable as? YamlAnchorProviding,
            let anchor = anchorProviding.yamlAnchor {
-            return anchor
-        } else {
-            counter += 1
-            return Anchor(rawValue: String(counter))
+            if !issuedAnchorNames.contains(anchor.rawValue) {
+                return issue(anchor: anchor)
+            }
         }
+
+        repeat {
+            counter += 1
+        } while issuedAnchorNames.contains(String(counter))
+        return issue(anchor: Anchor(rawValue: String(counter)))
+    }
+
+    func releaseAnchorReferences() {
+        issuedAnchorNames.removeAll()
+        anchorNames.removeAll()
+    }
+
+    func remit(anchor: Anchor) {
+        guard let rawValue = anchorNames.removeValue(forKey: ObjectIdentifier(anchor)) else {
+            return
+        }
+        issuedAnchorNames.remove(rawValue)
+    }
+
+    private func issue(anchor: Anchor) -> Anchor {
+        issuedAnchorNames.insert(anchor.rawValue)
+        anchorNames[ObjectIdentifier(anchor)] = anchor.rawValue
+        return anchor
     }
 }
 
@@ -132,17 +160,17 @@ extension CodingUserInfoKey {
     internal static let redundancyAliasingStrategyKey = Self(rawValue: "redundancyAliasingStrategy")!
 }
 
-fileprivate extension Dictionary {
+fileprivate extension Dictionary where Value: AnyObject {
 
-    func removing(keysForValue: Value) -> Self where Value: Equatable {
+    func removing(keysForValue: Value) -> Self {
         var mutable = Self(minimumCapacity: self.count)
-        for (key, value) in self where value != keysForValue {
+        for (key, value) in self where value !== keysForValue {
             mutable[key] = value
         }
         return mutable
     }
 
-    mutating func remove(keysForValue value: Value) where Value: Equatable {
+    mutating func remove(keysForValue value: Value) {
         self = self.removing(keysForValue: value)
     }
 }
