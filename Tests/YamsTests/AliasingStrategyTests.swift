@@ -51,6 +51,113 @@ class AliasingStrategyTests: XCTestCase {
         try _testFailedEncodeReleasesAnchors(strategy: StrictEncodableAliasingStrategy())
     }
 
+    func testPreferredAnchorCollisionUsesSuffixes() {
+        let provider = UniqueAliasProvider()
+        let preferred = Anchor(rawValue: "preferred")
+
+        let first = provider.uniqueAlias(preferredAnchor: preferred)
+        let second = provider.uniqueAlias(preferredAnchor: preferred)
+        let third = provider.uniqueAlias(preferredAnchor: preferred)
+
+        XCTAssertTrue(first === preferred)
+        XCTAssertEqual(second.rawValue, "preferred_2")
+        XCTAssertEqual(third.rawValue, "preferred_3")
+    }
+
+    func testPreferredAnchorSuffixesSkipIndependentReservations() {
+        let provider = UniqueAliasProvider()
+        let preferred = Anchor(rawValue: "preferred")
+
+        _ = provider.uniqueAlias(preferredAnchor: preferred)
+        let independentlyReserved = provider.uniqueAlias(preferredAnchor: Anchor(rawValue: "preferred_3"))
+        let second = provider.uniqueAlias(preferredAnchor: preferred)
+        let fourth = provider.uniqueAlias(preferredAnchor: preferred)
+
+        XCTAssertEqual(independentlyReserved.rawValue, "preferred_3")
+        XCTAssertEqual(second.rawValue, "preferred_2")
+        XCTAssertEqual(fourth.rawValue, "preferred_4")
+    }
+
+    func testPreferredAnchorMatchingIsCaseSensitive() {
+        let provider = UniqueAliasProvider()
+        let uppercased = Anchor(rawValue: "Preferred")
+        let lowercased = Anchor(rawValue: "preferred")
+
+        let first = provider.uniqueAlias(preferredAnchor: uppercased)
+        let second = provider.uniqueAlias(preferredAnchor: lowercased)
+        let collision = provider.uniqueAlias(preferredAnchor: Anchor(rawValue: "Preferred"))
+
+        XCTAssertTrue(first === uppercased)
+        XCTAssertTrue(second === lowercased)
+        XCTAssertEqual(collision.rawValue, "Preferred_2")
+    }
+
+    func testEncodableAliasesPreserveBuiltInPreferredAndNumericPaths() {
+        let provider = UniqueAliasProvider()
+        let preferred = AnchoredScalar(value: 1, anchor: "preferred")
+        let unanchored = UnanchoredScalar(value: 2)
+        let colliding = AnchoredScalar(value: 3, anchor: "preferred")
+
+        let preferredAlias = provider.uniqueAlias(for: preferred)
+        let numericAlias = provider.uniqueAlias(for: unanchored)
+        let collisionAlias = provider.uniqueAlias(for: colliding)
+
+        XCTAssertTrue(preferredAlias === preferred.yamlAnchor)
+        XCTAssertEqual(numericAlias.rawValue, "1")
+        XCTAssertEqual(collisionAlias.rawValue, "2")
+    }
+
+    func testNumericAliasesSkipReservationsAndRemainMonotonicAcrossRelease() {
+        let provider = UniqueAliasProvider()
+
+        let first = provider.uniqueAlias(preferredAnchor: nil)
+        _ = provider.uniqueAlias(preferredAnchor: Anchor(rawValue: "2"))
+        let third = provider.uniqueAlias(preferredAnchor: nil)
+        _ = provider.uniqueAlias(preferredAnchor: Anchor(rawValue: "4"))
+        let fifth = provider.uniqueAlias(preferredAnchor: nil)
+
+        provider.releaseAnchorReferences()
+        let sixth = provider.uniqueAlias(preferredAnchor: nil)
+
+        XCTAssertEqual(first.rawValue, "1")
+        XCTAssertEqual(third.rawValue, "3")
+        XCTAssertEqual(fifth.rawValue, "5")
+        XCTAssertEqual(sixth.rawValue, "6")
+    }
+
+    func testRemitRequiresExactAnchorIdentity() {
+        let provider = UniqueAliasProvider()
+        let original = Anchor(rawValue: "identity")
+        let equalButDistinct = Anchor(rawValue: original.rawValue)
+
+        let issued = provider.uniqueAlias(preferredAnchor: original)
+        provider.remit(anchor: equalButDistinct)
+        let collision = provider.uniqueAlias(preferredAnchor: equalButDistinct)
+
+        provider.remit(anchor: issued)
+        let reusable = provider.uniqueAlias(preferredAnchor: equalButDistinct)
+
+        XCTAssertTrue(issued === original)
+        XCTAssertEqual(collision.rawValue, "identity_2")
+        XCTAssertTrue(reusable === equalButDistinct)
+    }
+
+    func testReleaseInvalidatesReservationsAndRetainedIdentity() {
+        let provider = UniqueAliasProvider()
+        let original = Anchor(rawValue: "released")
+        _ = provider.uniqueAlias(preferredAnchor: original)
+
+        provider.releaseAnchorReferences()
+        let replacement = Anchor(rawValue: original.rawValue)
+        let issuedReplacement = provider.uniqueAlias(preferredAnchor: replacement)
+
+        provider.remit(anchor: original)
+        let collision = provider.uniqueAlias(preferredAnchor: replacement)
+
+        XCTAssertTrue(issuedReplacement === replacement)
+        XCTAssertEqual(collision.rawValue, "released_2")
+    }
+
     private func _testRemitAnchor(strategy: any RedundancyAliasingStrategy) throws {
         let subject = "subject"
 

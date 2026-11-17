@@ -1,5 +1,19 @@
 ## Main
 
+##### Enhancements
+
+* Expose `UniqueAliasProvider` for custom redundancy aliasing strategies to
+  resolve preferred anchor-name collisions.
+  [Adora Lynch](https://github.com/lynchsft)
+  [#490](https://github.com/jpsim/Yams/issues/490)
+
+##### Bug Fixes
+
+* Prevent YAML anchor-name collisions and reset aliasing state after failed
+  encodes.
+  [Adora Lynch](https://github.com/lynchsft)
+  [#490](https://github.com/jpsim/Yams/issues/490)
+
 ## 6.2.2
 
 ##### Breaking
@@ -19,10 +33,6 @@
   `_Builtin_float` modules.  
   [Gwynne Raskind](https://github.com/gwynne)
   [#477](https://github.com/jpsim/Yams/pull/477)
-
-* Prevent YAML anchor-name collisions and reset aliasing state after failed encodes.
-  [Adora Lynch](https://github.com/lynchsft)
-  [#490](https://github.com/jpsim/Yams/issues/490)
 
 ## 6.2.1
 
