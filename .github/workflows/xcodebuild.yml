@@ -24,42 +24,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  xcodebuild_Sonoma:
-    name: macOS 14 with Xcode ${{ matrix.xcode_version }}
-    strategy:
-      matrix:
-        xcode_version: ['15.4']
-        xcode_flags: ['-scheme Yams -project Yams.xcodeproj']
-    runs-on: macos-14
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
-    steps:
-      - uses: actions/checkout@v6.0.2
-      - run: xcodebuild -version
-      - name: macOS with UTF16
-        if: always()
-        run: set -o pipefail && YAMS_DEFAULT_ENCODING=UTF16 xcodebuild ${{ matrix.xcode_flags }} test | xcbeautify --renderer github-actions
-        shell: bash
-      - name: macOS with UTF8
-        if: always()
-        run: set -o pipefail && YAMS_DEFAULT_ENCODING=UTF8 xcodebuild ${{ matrix.xcode_flags }} test | xcbeautify --renderer github-actions
-        shell: bash
-      - name: iPhone Simulator
-        if: always()
-        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk iphonesimulator -destination "name=iPhone 8" | xcbeautify --renderer github-actions
-        shell: bash
-      - name: Apple TV Simulator
-        if: always()
-        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} test -sdk appletvsimulator -destination "name=Apple TV 4K (2nd generation)" | xcbeautify --renderer github-actions
-        shell: bash
-      - name: watchOS Simulator
-        if: always()
-        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} build -sdk watchsimulator | xcbeautify --renderer github-actions
-        shell: bash
-      - name: visionOS Simulator
-        if: always()
-        run: set -o pipefail && xcodebuild ${{ matrix.xcode_flags }} build -sdk xrsimulator | xcbeautify --renderer github-actions
-        shell: bash
   xcodebuild_Sequoia:
     name: macOS 15 with Xcode ${{ matrix.xcode_version }}
     strategy:

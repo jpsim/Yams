@@ -31,8 +31,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - runner: macos-14
-            xcode_version: '15.4'
           - runner: macos-26
             xcode_version: '26.5'
     runs-on: ${{ matrix.runner }}

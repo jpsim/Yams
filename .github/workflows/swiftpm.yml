@@ -28,29 +28,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  Xcode_Sonoma:
-    name: macOS 14 with Xcode ${{ matrix.xcode_version }}
-    strategy:
-      matrix:
-        xcode_version: ['15.4']
-    runs-on: macos-14
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app
-    steps:
-      - uses: actions/checkout@v6.0.2
-      - run: swift -version
-      - run: YAMS_DEFAULT_ENCODING=UTF16 swift test --parallel
-      - run: YAMS_DEFAULT_ENCODING=UTF8 swift test --parallel
-      - name: Code Coverage
-        if: matrix.xcode_version == '15.4'
-        run: |
-          swift test --enable-code-coverage
-          xcrun llvm-cov export -format="lcov" .build/debug/YamsPackageTests.xctest/Contents/MacOS/YamsPackageTests -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
-          if [[ -n "${CODECOV_TOKEN}" ]]; then
-            bash <(curl -s https://codecov.io/bash) -f coverage.lcov
-          fi
-        env: { 'CODECOV_TOKEN': '${{ secrets.CODECOV_TOKEN }}' }
-
   Xcode_Sequoia:
     name: macOS 15 with Xcode ${{ matrix.xcode_version }}
     strategy:
@@ -110,11 +87,11 @@ jobs:
     name: Android with Swift ${{ matrix.tag }}
     strategy:
       matrix:
-        tag: ['6.3.2']
-    runs-on: ubuntu-latest
+        tag: ['6.3']
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: skiptools/swift-android-action@v2.9.4
+      - uses: skiptools/swift-android-action@2044b79660f201ccef8cbce62877e4ec5409f9c8 # v2.9.5
         with:
           swift-version: ${{ matrix.tag }}
           android-api-level: 35
