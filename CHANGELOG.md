@@ -1,5 +1,12 @@
 ## Main
 
+##### Enhancements
+
+* Update CI runners and Swift Android toolchain selection for supported
+  environments.  
+  [Adora Lynch](https://github.com/lynchsft)
+  [PR #491](https://github.com/jpsim/Yams/pull/491)
+
 ## 6.2.2
 
 ##### Breaking
